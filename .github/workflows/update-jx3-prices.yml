@@ -2,16 +2,28 @@ name: Update JX3 prices
 
 on:
   schedule:
-    # 每天 09:10 Asia/Shanghai (01:10 UTC)
-    - cron: '10 1 * * *'
+    # 每天 08:00–22:00（Asia/Shanghai）整点，每 2 小时；00:00–08:00 不更新
+    # UTC 对应：00:00, 02:00, 04:00, 06:00, 08:00, 10:00, 12:00, 14:00
+    - cron: '0 0,2,4,6,8,10,12,14 * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update-jx3-prices.mjs'
+      - 'scripts/jx3-item-map.json'
+      - '.github/workflows/update-jx3-prices.yml'
 
 permissions:
   contents: write
 
+concurrency:
+  group: update-jx3-prices
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,10 +33,30 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Check update window
+        id: window
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch: bypass window."
+            exit 0
+          fi
+          hour=$(TZ=Asia/Shanghai date +%H)
+          hour=$((10#$hour))
+          if [ "$hour" -lt 8 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Outside 08:00-24:00 Asia/Shanghai (hour=$hour); skip."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "Inside update window (hour=$hour)."
+          fi
+
       - name: Update prices and rebuild minitool zip
+        if: steps.window.outputs.skip != 'true'
         run: ./scripts/update-prices.sh
 
       - name: Commit changes
+        if: steps.window.outputs.skip != 'true'
         run: |
           git config user.name "jx3-price-bot"
           git config user.email "jx3-price-bot@users.noreply.github.com"
@@ -38,6 +70,7 @@ jobs:
           fi
 
       - name: Upload minitool artifact
+        if: steps.window.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: jx3-minitool

@@ -173,10 +173,23 @@ async function main() {
       if (server.id === primaryId) item.priceSource = 'auction';
       updated++;
     }
+    if (updated === 0 && existing[server.id] && Object.keys(existing[server.id]).length) {
+      // 接口异常/限频时不要把整服价格清空，保留上一次的有效报价。
+      serverPrices[server.id] = existing[server.id];
+      serverCoverage[server.id] = (data.meta.serverCoverage && data.meta.serverCoverage[server.id]) || { updated: 0, total: data.items.length, filtered, noQuote };
+      console.warn(`[${server.name}] 本次无有效报价，保留上次数据`);
+      continue;
+    }
     serverPrices[server.id] = bucket;
     serverCoverage[server.id] = { updated, total: data.items.length, filtered, noQuote };
     totalAccepted += updated; totalFiltered += filtered; totalNoQuote += noQuote;
     console.log(`[${server.name}] 有效 ${updated}/${data.items.length}，过滤 ${filtered}，无报价 ${noQuote}`);
+  }
+
+  if (totalAccepted === 0) {
+    console.error('全部服务器均无有效报价，疑似接口异常，跳过写入与重打 zip。');
+    process.exitCode = 1;
+    return;
   }
 
   data.serverPrices = serverPrices;

@@ -21,3 +21,6 @@ JX3-AH-Calculator/
 
 # generated delivery bundle (kept locally, not versioned)
 jianghu-ledger-delivery.zip
+
+# local deploy key (never commit)
+.deploy-key/
