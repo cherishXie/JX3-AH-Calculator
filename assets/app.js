@@ -139,7 +139,8 @@
   function priceStateBadge(p) {
     if (p.missing) return '<span class="price-state missing">缺价</span>';
     if (p.user) return '<span class="price-state user">已校准</span>';
-    return '<span class="price-state seed" title="未校准，使用示例/昨日均价">示例</span>';
+    if (p.quote) return '<span class="price-state seed" title="来自 JX3BOX 该服拍卖样本">行情</span>';
+    return '<span class="price-state seed" title="该服无报价，回退梦江南示例价">示例</span>';
   }
   function priceInput(itemId, opts) {
     opts = opts || {};
@@ -716,7 +717,7 @@
     }).join(' · ');
     return '<div class="data-foot">' + icon('shield') +
       '<div><b style="color:var(--muted)">苍生铸世 · 50 级数据口径</b> · 核验于 ' + U.esc(DATA.meta.verifiedAt) +
-      ' · 制造配方/等级/精力/材料来自 JX3BOX 当前版本 API（2026-11-18），收录 154 条代表配方；价格采用 JX3BOX 梦江南拍卖样本（' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.updated : '—') + '/' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.total : '—') + ' 项有效），其余为示例；采集产出名称已核验，数量为示例。请以本服交易行为准。' +
+      ' · 制造配方/等级/精力/材料来自 JX3BOX 当前版本 API（2026-11-18），收录 154 条代表配方；价格采用 JX3BOX 17 个服务器拍卖样本（梦江南 ' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.updated : '—') + '/' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.total : '—') + ' 项有效），无报价回退梦江南示例价；采集产出名称已核验，数量为示例。请以本服交易行为准。' +
       '<div style="margin-top:4px">来源：' + sources + '</div></div>' +
       '<div class="links"><button class="btn btn-sm" data-action="open-data">数据说明</button>' +
       '<button class="btn btn-sm" data-action="open-settings">设置</button></div></div>';
@@ -795,7 +796,7 @@
         const sk = skill(it.skillId);
         return '<tr data-item-row="' + U.esc(it.id) + '">' +
           '<td class="sticky"><div class="cell-main">' + skillIcon(sk, 'sm') + '<div class="txt"><div class="t1">' + U.esc(it.name) +
-             + (it.custom ? ' <span class="badge badge-custom">自定义</span>' : '') +
+            (it.custom ? ' <span class="badge badge-custom">自定义</span>' : '') +
             '</div><div class="t2">' + U.esc(it.origin || '') + '</div></div></div></td>' +
           '<td class="dim">' + U.esc(sk.name) + '</td>' +
           '<td><span class="dim">' + (it.kind === 'product' ? '成品' : '材料') + '</span></td>' +
@@ -808,7 +809,7 @@
         '</tr>';
       }).join('') +
       '</tbody></table></div>' +
-      '<div class="card-foot"><span>示例价：梦江南为 JX3BOX 昨日样本均价，其他服由确定性规则生成价差</span><span class="spacer"></span><span>共 ' + items.length + ' 项</span></div>';
+      '<div class="card-foot"><span>各服优先取 JX3BOX 拍卖样本；无报价回退梦江南示例价</span><span class="spacer"></span><span>共 ' + items.length + ' 项</span></div>';
     }
     html += '</section>';
 
@@ -829,7 +830,7 @@
         '<div class="info-row"><span class="k">数据版本</span><span class="v">' + U.esc(DATA.meta.version) + ' · ' + U.esc(DATA.meta.catalogVersion) + '</span></div>' +
       '</div>' +
       '<div class="hairline"></div>' +
-      '<p class="tiny dim" style="line-height:16px">物品名目来自 JX3BOX 当前版本配方；材料价优先取梦江南拍卖样本（过滤异常值），其他服按确定性规则生成示例价差。所有价格都可编辑，不代表实时行情。</p>' +
+      '<p class="tiny dim" style="line-height:16px">物品名目来自 JX3BOX 当前版本配方；各服优先取 JX3BOX 拍卖样本，过滤异常/低样本；该服无报价时回退梦江南示例价。所有价格都可编辑，不代表实时行情。</p>' +
       '<div class="flex" style="margin-top:10px"><button class="btn btn-sm" data-action="open-data">查看完整来源</button></div>' +
       '</div></section>';
     html += '</aside></div>';

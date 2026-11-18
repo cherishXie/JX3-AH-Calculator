@@ -5,7 +5,7 @@
 - 构建源目录：`minitool/`
 - 上传产物：`剑网三物价助手-minitool.zip`
 - 入口：zip 根目录 `index.html`
-- 数据版本：`cs50-v3.3`（2026-11-18）
+- 数据版本：`cs50-v3.3`（2026-11-18，含 17 服 serverPrices）
 
 ## 适配内容
 
@@ -27,7 +27,7 @@
 ```text
 Node audit:   PASS: 1 file(s), 0 warning(s)  # zip 体积检查
 Python audit: PASS: 10 file(s), 0 warning(s)
-zip:          约 78 KB（10 个文件）
+zip:          约 93 KB（10 个文件）
 index.html:   zip 根目录
 文件类型:     .html / .css / .js / .svg
 外部请求:     0
@@ -59,3 +59,7 @@ type=module:  0
 - `brand/icon-1024.png`：创服平台图标主文件
 - `brand/cover-3x4-1080x1440.png`：笔记首图/竖版封面
 - `brand/cover-16x9-1200x675.png`：平台横版卡片备用
+
+## 物价自动更新
+
+离线包不能在运行时联网。更新价格请运行 `node scripts/update-jx3-prices.mjs`（或 `./scripts/update-prices.sh`），脚本会更新数据并重打本 zip；详细规则见 `scripts/README.md`。

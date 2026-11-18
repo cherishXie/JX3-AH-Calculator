@@ -95,7 +95,11 @@ export function hash(str) {
 
 export function seedPrice(serverId, item) {
   if (!item || !(item.base > 0)) return 0;
-  if (serverId === 's_mengjiangnan') return round(item.base, 2);
+  const bucket = DATA.serverPrices && DATA.serverPrices[serverId];
+  const actual = bucket && Number(bucket[item.id]);
+  if (actual > 0) return round(actual, 2);
+  const known = DATA.servers.some(function (s) { return s.id === serverId; });
+  if (serverId === 's_mengjiangnan' || known) return round(item.base, 2);
   const h = hash(serverId + '|' + item.id);
   const jitter = 0.96 + (h % 800) / 10000;
   const skillFactor = 0.96 + (hash(serverId + '|' + item.skillId) % 700) / 10000;
@@ -111,7 +115,8 @@ export function priceOf(state, itemId, serverId) {
     return { v: Number(stored.v), t: stored.t || SEED_TS, user: true, seed: false, missing: false };
   }
   const v = seedPrice(serverId, item);
-  return { v: v, t: SEED_TS, user: false, seed: true, missing: !(v > 0) };
+  const q = DATA.serverPrices && DATA.serverPrices[serverId] && DATA.serverPrices[serverId][item.id];
+  return { v: v, t: SEED_TS, user: false, seed: true, quote: q != null, missing: !(v > 0) };
 }
 
 export function unitCost(state, itemId, opts, stack) {

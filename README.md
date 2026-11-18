@@ -4,6 +4,10 @@
 
 > 设计遵循 `docs/design/01-设计规范.md` 与 `docs/design/02-模块交互规范.md`：暗色工作台、12 列栅格、一卡一问、控件贴数据、颜色即编码、状态三态、口径常驻。
 
+> 在线版：<https://cherishxie.github.io/JX3-AH-Calculator/> · 小工具包：<https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip>
+>
+> 部署与「Web + 小红书小工具」双端同步流程见 [DEPLOY.md](DEPLOY.md)。
+
 ---
 
 ## 快速开始
@@ -48,8 +52,8 @@ python3 -m http.server 8931
 
 - 制造技艺以当前「技艺助手」名录为准：**锻造、缝纫、制药、烹饪、梓匠**。
 - 采集技艺：**神农、采金、庖丁**；神农含云芝/鸡血石，采金含辉石，庖丁含羊肉/羊杂/羊皮。
-- 制造配方已按 **JX3BOX 技艺助手 API（2026-11-18）** 重构：收录 **154 条当前版本制造配方 + 17 个当前版本采集点**；等级、精力、材料数量、产出范围来自 API，采集产出按 JX3BOX 物品资料核对，稀有掉率折算期望产值。
-- 已核验样本：**玄元星平衫** 50 级 / 200 精力 / 地脉玄元×1、蜂王浆×10、兽皮胶×20、七彩线×20、百染线×20；价格优先取 JX3BOX 梦江南拍卖样本（200/263 项有效），明显异常或低样本报价保留示例价；产出与采集数量中为示例的部分已标注。
+- 制造配方已按 **JX3BOX 技艺助手 API（2026-11-18）** 重构：收录 **154 条当前版本制造配方 + 17 个当前版本采集点**；采集按材料拆分，等级/精力按采集材料设置（如紫苏 45、黄花菜/鱼腥草 50），稀有掉率按期望值折算产值；产出名称由 JX3BOX 物品资料核对。
+- 已核验样本：**玄元星平衫** 50 级 / 200 精力 / 地脉玄元×1、蜂王浆×10、兽皮胶×20、七彩线×20、百染线×20；价格优先取 JX3BOX 17 个服务器拍卖样本（梦江南 199/263 项有效，各服独立覆盖），明显异常或低样本报价保留示例价；产出与采集数量中为示例的部分已标注。
 - 版本机制：技艺等级重返 50 级、新增等级突破与制造暴击、紫色以上产物带署名、现有配方不删除、新配方/新材料在新地图与训练师处获得。
 - 当前配方名目示例：玄元星平衫/鞋/护腕/帽/护腰/裤、风语·衣·绣、蜀锦绣·腕、苍生·巨灵磨石/熔锭、龙血磨石、百炼水煮鱼、风语·老火骨汤、云中珍馐宴（通用）、截元丹、竹沥凝心饮、云州固阵丹、清漆药柜、木板、卯榫、器物令、鱼胶、拼布自选包、隔音帐、同袍营幡、璧·苍生。
 
@@ -122,6 +126,17 @@ npm run build:xhs     # 小红书小程序 → miniapp/dist/xhs
 - 16:9 横版：`brand/cover-16x9-1200x675.png`
 - 可编辑 SVG 源文件与尺寸/安全区说明见 [brand/README.md](brand/README.md)。
 
+### JX3BOX 自动更新物价
+
+离线小工具不能在运行时联网，自动更新放在构建/发布前：`scripts/update-jx3-prices.mjs` 会从 JX3BOX 拉取 17 个服务器的拍卖价，更新 Web / 小程序 / 小工具的 serverPrices 数据，并重打 minitool zip。
+
+```bash
+node scripts/update-jx3-prices.mjs --dry-run   # 预览
+./scripts/update-prices.sh                     # 更新并重打包
+```
+
+支持 cron 定时执行；用法、样本阈值和注意事项见 [scripts/README.md](scripts/README.md)。
+
 ### 小红书小工具离线包
 
 另提供符合小红书小工具容器规范的离线 H5 zip：`剑网三物价助手-minitool.zip`。它把 Web 版适配为纯离线经典脚本、容器 Storage、无下载/无外链/无剪贴板的形态；构建源与校验结果见 [MINITOOL.md](MINITOOL.md)。
@@ -136,6 +151,8 @@ npm run build:xhs     # 小红书小程序 → miniapp/dist/xhs
 index.html                 入口
 assets/styles.css          设计令牌 + 布局 + 组件 + 响应式
 assets/data.js             苍生铸世 50 级种子数据（技能/物品/配方/服务器/来源）
+scripts/update-jx3-prices.mjs  JX3BOX 自动更新价格并重打 minitool zip
+.github/workflows/          每日自动更新工作流（可选）
 assets/core.js             状态、localStorage、价格种子、成本递归、路由
 assets/charts.js           纯 SVG 图表（条形/散点/箱线/对比）
 assets/app.js              页面渲染、抽屉/弹窗、事件、导入导出、启动

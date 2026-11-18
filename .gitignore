@@ -1,0 +1,14 @@
+# macOS / editor noise
+.DS_Store
+**/.DS_Store
+
+# build output
+_site/
+node_modules/
+dist/
+
+# local-only checkout of the GitHub scaffold (do not commit as a submodule)
+JX3-AH-Calculator/
+
+# logs
+*.log

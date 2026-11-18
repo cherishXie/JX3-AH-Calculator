@@ -265,11 +265,16 @@
 
     seedPrice: function (serverId, item) {
       if (!item || !(item.base > 0)) return 0;
-      // 梦江南使用核验到的样本价格（JX3BOX 昨日均价），其余服生成示例价差
-      if (serverId === 's_mengjiangnan') return U.round(item.base, 2);
+      // 优先使用 JX3BOX 该服的拍卖样本；各服统一由 scripts/update-jx3-prices.mjs 写入。
+      const bucket = DATA.serverPrices && DATA.serverPrices[serverId];
+      const actual = bucket && Number(bucket[item.id]);
+      if (actual > 0) return U.round(actual, 2);
+      // 已知服务器无该物品报价时回退到梦江南样本；自定义服务器保留确定性价差。
+      const known = DATA.servers.some(function (s) { return s.id === serverId; });
+      if (serverId === 's_mengjiangnan' || known) return U.round(item.base, 2);
       const h = U.hash(serverId + '|' + item.id);
-      const jitter = 0.96 + (h % 800) / 10000;              // 0.960 – 1.039
-      const skillFactor = 0.96 + (U.hash(serverId + '|' + item.skillId) % 700) / 10000; // 0.960 – 1.029
+      const jitter = 0.96 + (h % 800) / 10000;
+      const skillFactor = 0.96 + (U.hash(serverId + '|' + item.skillId) % 700) / 10000;
       return U.round(item.base * jitter * skillFactor, 2);
     },
 
@@ -285,8 +290,9 @@
         };
       }
       const v = this.seedPrice(serverId, item);
+      const q = DATA.serverPrices && DATA.serverPrices[serverId] && DATA.serverPrices[serverId][item.id];
       return {
-        v: v, t: SEED_TS, user: false, seed: true,
+        v: v, t: SEED_TS, user: false, seed: true, quote: q != null,
         missing: !(v > 0)
       };
     },

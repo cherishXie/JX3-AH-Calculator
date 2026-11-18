@@ -1,0 +1,98 @@
+name: Deploy site and minitool
+
+# Publishes:
+#   1. the static Web app to GitHub Pages
+#   2. the validated 小红书小工具 zip (download + artifact)
+#
+# One-time setup: Settings -> Pages -> Build and deployment -> Source:
+# "GitHub Actions". GITHUB_TOKEN cannot enable Pages by itself.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/**'
+      - 'minitool/**'
+      - 'scripts/build-site.sh'
+      - 'scripts/build-minitool.sh'
+      - 'scripts/check-minitool.mjs'
+      - '.github/workflows/deploy.yml'
+  workflow_run:
+    workflows: ["Update JX3 prices"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  pages:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build minitool zip
+        run: ./scripts/build-minitool.sh
+
+      - name: Build static site
+        run: ./scripts/build-site.sh
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  minitool:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and audit zip
+        run: ./scripts/build-minitool.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jx3-minitool
+          path: 剑网三物价助手-minitool.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Job summary
+        run: |
+          echo "### 小红书小工具" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 稳定下载：https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 本次构建：artifact \`jx3-minitool\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 提交审核：\`npx redminitool upload --file 剑网三物价助手-minitool.zip --type pkg --yes\`" >> "$GITHUB_STEP_SUMMARY"
