@@ -6,7 +6,7 @@ window.JX3Data = {
     "levelCap": 50,
     "version": "苍生铸世 · 50 级",
     "catalogVersion": "v3.3",
-    "seedVersion": "cs50-v3.3-p20261118221509",
+    "seedVersion": "cs50-v3.3-p20261118144504",
     "updatedAt": "2026-11-18",
     "verifiedAt": "2026-11-18",
     "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
@@ -68,7 +68,7 @@ window.JX3Data = {
       }
     ],
     "scope": "收录 154 条当前版本制造配方 + 17 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
-    "priceUpdatedAt": "2026-11-18T22:15:09+08:00",
+    "priceUpdatedAt": "2026-11-18T14:45:04+08:00",
     "priceCoverage": {
       "updated": 199,
       "total": 263,
