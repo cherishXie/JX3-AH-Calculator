@@ -8,7 +8,11 @@
   const CANON = {};
   (DATA.items || []).forEach(function (i) { CANON[i.id] = i; });
   const STORAGE_KEY = 'jx3-ledger-v1';
-  const SEED_TS = Date.parse(DATA.meta && DATA.meta.priceUpdatedAt) || Date.parse('2026-11-18T09:00:00+08:00');
+  const FALLBACK_TS = Date.parse('2026-11-18T09:00:00+08:00');
+  let SEED_TS = Date.parse(DATA.meta && DATA.meta.priceUpdatedAt) || FALLBACK_TS;
+  function seedTimestamp() {
+    return Date.parse(DATA.meta && DATA.meta.priceUpdatedAt) || SEED_TS;
+  }
 
   /* ------------------------------------------------------------------ */
   /* 工具                                                               */
@@ -291,14 +295,14 @@
       const stored = bucket[itemId];
       if (stored && Number.isFinite(Number(stored.v))) {
         return {
-          v: Number(stored.v), t: stored.t || SEED_TS, user: true,
+          v: Number(stored.v), t: stored.t || seedTimestamp(), user: true,
           seed: false, missing: false
         };
       }
       const v = this.seedPrice(serverId, item);
       const q = DATA.serverPrices && DATA.serverPrices[serverId] && DATA.serverPrices[serverId][item.id];
       return {
-        v: v, t: SEED_TS, user: false, seed: true, quote: q != null,
+        v: v, t: seedTimestamp(), user: false, seed: true, quote: q != null,
         missing: !(v > 0)
       };
     },
@@ -786,6 +790,7 @@
     serverOf: serverOf,
     itemsOfSkill: itemsOfSkill,
     recipesOfSkill: recipesOfSkill,
-    SEED_TS: SEED_TS
+    SEED_TS: SEED_TS,
+    seedTimestamp: seedTimestamp
   };
 })();

@@ -110,6 +110,194 @@
       toast('检查更新失败，请稍后重试', 'error');
     });
   }
+  var dataSyncTimer = null;
+  var dataSyncBusy = false;
+  var lastDataCheck = 0;
+  var dataSyncStarted = 0;
+  var dataSyncHideTimer = null;
+
+  function shanghaiClock() {
+    // 不依赖 Intl/时区数据库：用 UTC + 8 小时得到北京时间。
+    var now = new Date();
+    var cst = new Date(now.getTime() + 8 * 3600000);
+    return { hour: cst.getUTCHours(), minute: cst.getUTCMinutes() };
+  }
+
+  function dataSyncBox() {
+    var el = document.getElementById('data-sync');
+    if (el) return el;
+    el = document.createElement('div');
+    el.id = 'data-sync';
+    el.className = 'data-sync';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    el.innerHTML = '<span class="data-sync__spinner" aria-hidden="true"></span><span class="data-sync__text"></span>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function showDataSync(state, text) {
+    var el = dataSyncBox();
+    var label = el.querySelector('.data-sync__text');
+    if (dataSyncHideTimer) {
+      clearTimeout(dataSyncHideTimer);
+      dataSyncHideTimer = null;
+    }
+    el.hidden = false;
+    el.className = 'data-sync is-' + state;
+    el.setAttribute('aria-busy', state === 'loading' ? 'true' : 'false');
+    if (label) label.textContent = text || '';
+    if (state !== 'loading') {
+      dataSyncHideTimer = setTimeout(function () {
+        el.hidden = true;
+        el.className = 'data-sync';
+      }, state === 'done' ? 2400 : 3200);
+    }
+  }
+
+  function finishDataSync(state, text) {
+    var wait = Math.max(0, 700 - (Date.now() - dataSyncStarted));
+    setTimeout(function () { showDataSync(state, text); }, wait);
+  }
+
+  function fetchWithTimeout(url, options, timeout) {
+    return new Promise(function (resolve, reject) {
+      var settled = false;
+      var timer = setTimeout(function () {
+        if (settled) return;
+        settled = true;
+        reject(new Error('timeout'));
+      }, timeout);
+      fetch(url, options).then(function (response) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        resolve(response);
+      }, function (error) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        reject(error);
+      });
+    });
+  }
+
+  function mergePriceData(next) {
+    if (!next || !next.meta || !next.meta.priceUpdatedAt || !next.serverPrices) return false;
+    if (DATA.meta.seedVersion && next.meta.seedVersion && next.meta.seedVersion !== DATA.meta.seedVersion) {
+      return false;
+    }
+    DATA.serverPrices = next.serverPrices || {};
+    DATA.meta.priceUpdatedAt = next.meta.priceUpdatedAt;
+    if (next.meta.priceCoverage) DATA.meta.priceCoverage = next.meta.priceCoverage;
+    if (next.meta.serverCoverage) DATA.meta.serverCoverage = next.meta.serverCoverage;
+
+    var byId = {};
+    (next.items || []).forEach(function (it) { byId[it.id] = it; });
+    DATA.items.forEach(function (it) {
+      var fresh = byId[it.id];
+      if (fresh) {
+        it.base = fresh.base;
+        it.priceSource = fresh.priceSource;
+      }
+    });
+    return true;
+  }
+
+  function renderAfterDataSync() {
+    var x = window.scrollX || window.pageXOffset || 0;
+    var y = window.scrollY || window.pageYOffset || 0;
+    var path = location.hash;
+    var wraps = document.querySelectorAll('.table-wrap');
+    var lefts = [];
+    for (var i = 0; i < wraps.length; i++) lefts.push(wraps[i].scrollLeft);
+
+    render();
+    if (ui.drawer) renderDrawer();
+    if (ui.modal) renderModal();
+
+    var next = document.querySelectorAll('.table-wrap');
+    for (var j = 0; j < next.length && j < lefts.length; j++) next[j].scrollLeft = lefts[j];
+
+    requestAnimationFrame(function () {
+      if (location.hash === path) window.scrollTo(x, y);
+    });
+  }
+
+  function checkForDataUpdate(force) {
+    if (dataSyncBusy) return;
+    var clock = shanghaiClock();
+    if (!force && (clock.hour < 8 || clock.hour >= 23)) return;
+    if (!force && Date.now() - lastDataCheck < 60000) return;
+    if (ui.drawer || ui.modal) return;
+    var active = document.activeElement;
+    if (active && active.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)) return;
+
+    dataSyncBusy = true;
+    lastDataCheck = Date.now();
+
+    fetchWithTimeout('./version.json?t=' + Date.now(), { cache: 'no-store' }, 10000)
+      .then(function (response) { return response.ok ? response.json() : null; })
+      .then(function (version) {
+        if (!version || !version.dataUpdatedAt) return;
+        if (version.dataUpdatedAt === DATA.meta.priceUpdatedAt) return;
+
+        dataSyncStarted = Date.now();
+        showDataSync('loading', '行情更新中…');
+
+        return fetchWithTimeout('./assets/data.js?t=' + Date.now(), { cache: 'no-store' }, 15000)
+          .then(function (response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.text();
+          })
+          .then(function (text) {
+            var marker = text.indexOf('window.JX3Data');
+            var start = text.indexOf('{', marker);
+            var end = text.lastIndexOf('}');
+            if (marker < 0 || start < 0 || end < 0) throw new Error('invalid data');
+            var next = JSON.parse(text.slice(start, end + 1));
+
+            if (!mergePriceData(next)) {
+              finishDataSync('error', '数据目录已变化，请刷新页面');
+              return;
+            }
+            if (ui.drawer || ui.modal) {
+              finishDataSync('done', '行情已更新');
+              return;
+            }
+            var current = document.activeElement;
+            if (current && current.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(current.tagName)) {
+              finishDataSync('done', '行情已更新');
+              return;
+            }
+
+            renderAfterDataSync();
+            finishDataSync('done', '行情已更新 · ' + U.fmtTime(Date.parse(next.meta.priceUpdatedAt)));
+          })
+          .catch(function () {
+            finishDataSync('error', '行情更新失败，稍后重试');
+          });
+      })
+      .catch(function () { /* 版本检查失败时静默，等下一轮 */ })
+      .then(function () { dataSyncBusy = false; });
+  }
+
+  function dataSyncTick() {
+    var clock = shanghaiClock();
+    if (clock.hour >= 8 && clock.hour < 23) {
+      var slotWindow = (clock.hour % 2 === 0) && clock.minute < 20;
+      var gap = slotWindow ? 120000 : 600000;
+      if (Date.now() - lastDataCheck >= gap) checkForDataUpdate();
+    }
+    dataSyncTimer = setTimeout(dataSyncTick, 60000);
+  }
+
+  window.__JX3_DATA_SYNC__ = {
+    check: function () { return checkForDataUpdate(true); },
+    tick: dataSyncTick,
+    merge: mergePriceData
+  };
+
   function skill(id) { return C.skillOf(id); }
   function tier(id) { return C.tierOf(id); }
   function item(id) { return C.itemOf(id); }
@@ -200,7 +388,7 @@
       const t = bucket[k] && bucket[k].t;
       if (t && t > ts) ts = t;
     });
-    return ts ? U.fmtTime(ts) : U.fmtTime(C.SEED_TS);
+    return ts ? U.fmtTime(ts) : U.fmtTime(C.seedTimestamp ? C.seedTimestamp() : C.SEED_TS);
   }
 
   /* ------------------------------------------------------------------ */
@@ -2412,6 +2600,11 @@
     };
     bindEvents();
     renderSkeleton();
+    setTimeout(dataSyncTick, 5000);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) checkForDataUpdate();
+    });
+
     setTimeout(function () {
       ui.booted = true;
       setBootStatus('正在计算精力收益…');
