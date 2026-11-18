@@ -70,6 +70,7 @@ git push --force-with-lease -u origin main
 - 页面检测到 waiting SW 后弹出更新提示，展示 `updates.json` 的标题和 notes；
 - 点「立即更新」→ `skipWaiting` → `controllerchange` → 自动重载；`localStorage` 里的价格和配方保留；
 - 点「稍后」本次会话不再提示，下次打开仍可更新。
+- 顶部刷新图标或「设置 → 应用 → 检查更新」可手动检测；没有新版本会提示「已是最新版本」。
 
 更新内容来源：
 

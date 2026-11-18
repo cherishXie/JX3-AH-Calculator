@@ -60,16 +60,19 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.includes('/downloads/')) return;
 
   if (request.mode === 'navigate') {
+    // 优先使用缓存中的 index.html，保证 HTML 与 assets 来自同一个版本；
+    // 新版本由 waiting SW + 更新提示切换，避免新旧文件混用导致布局错乱。
     event.respondWith(
-      fetch(request)
-        .then((response) => {
+      caches.match('./index.html').then((hit) => {
+        if (hit) return hit;
+        return fetch(request).then((response) => {
           if (response.ok) {
             const copy = response.clone();
             caches.open(CACHE).then((cache) => cache.put('./index.html', copy)).catch(() => {});
           }
           return response;
-        })
-        .catch(() => caches.match('./index.html').then((hit) => hit || caches.match('./')))
+        });
+      })
     );
     return;
   }

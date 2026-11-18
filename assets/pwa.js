@@ -95,10 +95,54 @@
       .catch(function () { return null; });
   }
 
+  function waitForWaiting(reg, timeout) {
+    return new Promise(function (resolve) {
+      if (reg.waiting) return resolve(true);
+      var started = Date.now();
+      var timer = setInterval(function () {
+        if (reg.waiting) {
+          clearInterval(timer);
+          resolve(true);
+          return;
+        }
+        if (Date.now() - started >= timeout) {
+          clearInterval(timer);
+          resolve(false);
+        }
+      }, 200);
+    });
+  }
+
+  function checkForUpdate() {
+    if (!registration) return Promise.resolve({ status: 'unsupported' });
+    return registration.update().then(function () {
+      return waitForWaiting(registration, 8000);
+    }).then(function (waiting) {
+      return fetchUpdates().then(function (data) {
+        var appVersion = data && (data.appVersion || data.version || data.latest);
+        if (waiting && appVersion && appVersion !== APP_VERSION) {
+          render(data);
+          return { status: 'available' };
+        }
+        if (waiting && !data) {
+          announce();
+          return { status: 'available' };
+        }
+        if (appVersion && appVersion !== APP_VERSION) {
+          return { status: 'pending' };
+        }
+        return { status: 'latest' };
+      });
+    }).catch(function () {
+      return { status: 'error' };
+    });
+  }
+
   function announce() {
     fetchUpdates().then(function (data) {
       if (data && data.latest) {
-        if (data.latest === APP_VERSION) return;
+        var appVersion = data.appVersion || data.version || data.latest;
+        if (appVersion === APP_VERSION) return;
         try {
           if (sessionStorage.getItem('pwa-later:' + data.latest)) return;
         } catch (e) { /* ignore */ }
@@ -153,7 +197,7 @@
     window.__JX3_PWA__ = {
       registration: reg,
       announce: announce,
-      check: function () { return reg.update(); }
+      check: checkForUpdate
     };
   }).catch(function (error) {
     if (window.console) console.warn('[pwa] service worker registration failed', error);

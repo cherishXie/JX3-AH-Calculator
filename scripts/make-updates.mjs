@@ -50,7 +50,10 @@ const notes = isPriceUpdate
       : ['修复已知问题', '优化加载与交互']);
 
 const payload = {
-  latest: version,
+  // latest 是“发布 ID”，故意与 appVersion 区分：
+  // 旧版 PWA 逻辑用 latest 对比页面版本，必须能感知到新版本。
+  latest: version + '-r',
+  appVersion: version,
   version,
   date,
   title,

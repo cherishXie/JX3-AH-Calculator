@@ -83,6 +83,33 @@
   /* ------------------------------------------------------------------ */
   function state() { return Store.state; }
   function settings() { return Store.state.settings; }
+
+  function appVersion() {
+    const meta = document.querySelector('meta[name="app-version"]');
+    return meta ? (meta.getAttribute('content') || 'dev') : 'dev';
+  }
+
+  function checkForUpdates() {
+    const api = window.__JX3_PWA__;
+    if (!api || typeof api.check !== 'function') {
+      toast('当前浏览器不支持更新检查', 'warn');
+      return;
+    }
+    if (ui.updateChecking) return;
+    ui.updateChecking = true;
+    toast('正在检查更新…');
+    api.check().then(function (result) {
+      ui.updateChecking = false;
+      if (result && result.status === 'available') toast('发现新版本，请查看底部更新提示');
+      else if (result && result.status === 'latest') toast('已是最新版本');
+      else if (result && result.status === 'pending') toast('发现新版本，正在准备，请稍后再试');
+      else if (result && result.status === 'unsupported') toast('当前浏览器不支持更新检查', 'warn');
+      else toast('检查更新失败，请稍后重试', 'error');
+    }).catch(function () {
+      ui.updateChecking = false;
+      toast('检查更新失败，请稍后重试', 'error');
+    });
+  }
   function skill(id) { return C.skillOf(id); }
   function tier(id) { return C.tierOf(id); }
   function item(id) { return C.itemOf(id); }
@@ -373,6 +400,7 @@
             '<button class="menu-item" data-action="open-settings">' + icon('settings') + '<span>服务器与数据设置</span><span class="sub">⌘,</span></button>' +
           '</div>' +
         '</div>' +
+        '<button class="icon-btn" data-action="check-update" aria-label="检查更新" title="检查更新">' + icon('refresh') + '</button>' +
         '<button class="icon-btn" data-action="toggle-theme" aria-label="切换明暗主题">' + icon(ui.theme === 'light' ? 'moon' : 'sun') + '</button>' +
         '<button class="icon-btn" data-action="open-data" aria-label="数据说明">' + icon('info') + '</button>' +
       '</div>';
@@ -1556,6 +1584,12 @@
       '<button class="btn btn-sm" data-action="reset-catalog">' + icon('refresh') + '恢复示例配方</button>' +
       '<button class="btn btn-sm btn-danger" data-action="reset-all">' + icon('trash') + '重置全部数据</button>' +
     '</div>' +
+    '<div class="section-title">应用<span class="line"></span></div>' +
+    '<div class="flex" style="flex-wrap:wrap;align-items:center;gap:10px">' +
+      '<button class="btn btn-sm" data-action="check-update">' + icon('refresh') + '检查更新</button>' +
+      '<span class="tiny dim">当前版本 ' + U.esc(appVersion()) + '</span>' +
+      '<span class="tiny dim">PWA 会自动检测，也可以手动检查</span>' +
+    '</div>' +
     '<div class="verification" style="margin-top:12px"><span class="ok">' + U.esc(DATA.meta.version) + '</span><span>数据版本 ' + U.esc(DATA.meta.catalogVersion) +
       ' · 核验于 ' + U.esc(DATA.meta.verifiedAt) + ' · 自定义配方 ' + Store.state.recipes.filter(function (r) { return r.custom; }).length + ' 个</span></div>';
   }
@@ -1710,6 +1744,7 @@
         break;
       }
       case 'open-settings': closeMenu(); openModal('settings'); break;
+      case 'check-update': checkForUpdates(); break;
       case 'open-data': closeMenu(); openModal('data'); break;
       case 'open-import-json': closeModal(); openModal('import-json'); break;
       case 'open-add-server': closeMenu(); openModal('add-server'); break;
