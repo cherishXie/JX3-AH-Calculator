@@ -1,0 +1,17 @@
+{
+  "miniprogramRoot": "dist/weapp/",
+  "projectname": "jianghu-ledger",
+  "description": "剑网三物价助手 · 剑网3 苍生铸世生活技艺成本与精力收益计算器",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.0.0",
+  "condition": {}
+}

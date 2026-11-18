@@ -1,0 +1,10784 @@
+/* 小工具离线数据 v3.3 */
+window.JX3Data = {
+  "meta": {
+    "game": "剑网3",
+    "expansion": "苍生铸世",
+    "levelCap": 50,
+    "version": "苍生铸世 · 50 级",
+    "catalogVersion": "v3.3",
+    "seedVersion": "cs50-v3.3",
+    "updatedAt": "2026-11-18",
+    "verifiedAt": "2026-11-18",
+    "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据（2026-11-18）；采集按「目标材料 + 稀有副产物掉率」折算期望产值，等级/精力按采集材料设置，稀有掉率为示例。物品价格优先取梦江南拍卖样本（200/263 项有效），其余为示例。请以本服交易行为准。",
+    "sources": [
+      {
+        "label": "JX3BOX 技艺助手",
+        "url": "",
+        "note": "2026-11-18 核验：制造技艺为锻造/缝纫/制药/烹饪/梓匠；玄元星平衫 50 级、200 精力、材料与梦江南昨日均价"
+      },
+      {
+        "label": "官网 9-24 生活技艺焕新",
+        "url": "",
+        "note": "技艺等级重返 50 级、等级突破、产物暴击、紫色以上署名、新配方与新地图材料"
+      },
+      {
+        "label": "咸鱼有话说 305 期（11-14）",
+        "url": "",
+        "note": "家园采集/梓匠配方等级下调；芦苇、珊瑚、竹子、木料、马草、拼布、木板、器物令、路菜、挂件包"
+      },
+      {
+        "label": "剑网3 苍生铸世公测公告（10-29）",
+        "url": "",
+        "note": "50 级数值重构，生活技艺全面重塑，新服「九天」"
+      },
+      {
+        "label": "JX3BOX 物品百科 · 苍生·巨灵磨石（仇恨）",
+        "url": "",
+        "note": "核验名目、配方类型与获取途径（铸世行游商店）"
+      },
+      {
+        "label": "JX3BOX 技艺助手 API · 配方详情",
+        "url": "",
+        "note": "2026-11-18 抓取：等级、精力、材料数量、CreateItemMin/Max 产出范围"
+      },
+      {
+        "label": "JX3BOX 技艺助手 · 当前配方名录",
+        "url": "",
+        "note": "缝纫 / 烹饪 / 制药 / 锻造 / 梓匠 五个制造技艺的当前配方"
+      },
+      {
+        "label": "JX3BOX 物品百科 · 云芝",
+        "url": "",
+        "note": "神农采集有几率获得，神农专精提高掉落概率"
+      },
+      {
+        "label": "JX3BOX 物品百科 · 鸡血石",
+        "url": "",
+        "note": "各类采集额外掉落、采集精英怪产出"
+      },
+      {
+        "label": "JX3BOX 物品百科 · 辉石",
+        "url": "",
+        "note": "采金采集有几率获得，采金专精提高掉落概率"
+      },
+      {
+        "label": "JX3BOX 物品百科 · 羊肉/羊杂/羊皮",
+        "url": "",
+        "note": "黑山羊掉落：羊肉、羊杂、羊皮"
+      }
+    ],
+    "scope": "收录 154 条当前版本制造配方 + 17 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
+    "priceUpdatedAt": "2026-11-18",
+    "priceCoverage": {
+      "updated": 200,
+      "total": 263,
+      "source": "JX3BOX 拍卖 · 梦江南",
+      "filtered": 17
+    }
+  },
+  "tiers": [
+    {
+      "id": 1,
+      "name": "凡品",
+      "color": "#94A3B8",
+      "text": "白"
+    },
+    {
+      "id": 2,
+      "name": "良品",
+      "color": "#4ADE80",
+      "text": "绿"
+    },
+    {
+      "id": 3,
+      "name": "上品",
+      "color": "#60A5FA",
+      "text": "蓝"
+    },
+    {
+      "id": 4,
+      "name": "精品",
+      "color": "#C084FC",
+      "text": "紫"
+    },
+    {
+      "id": 5,
+      "name": "极品",
+      "color": "#FBBF24",
+      "text": "橙"
+    }
+  ],
+  "skills": [
+    {
+      "id": "shennong",
+      "name": "神农",
+      "type": "gather",
+      "verb": "采集",
+      "icon": "leaf",
+      "color": "#2E9E78",
+      "desc": "采集紫苏、黄花菜、鱼腥草、虫草、甘草、芍药与珊瑚等草药，并有几率获得云芝、鸡血石；掉率与专精影响期望产值。"
+    },
+    {
+      "id": "caijin",
+      "name": "采金",
+      "type": "gather",
+      "verb": "采集",
+      "icon": "pickaxe",
+      "color": "#D99A2B",
+      "desc": "开采铁矿、铜矿、锡矿、铅锌矿、金沙、青石与辉石，并有几率获得鸡血石；掉率影响期望产值。"
+    },
+    {
+      "id": "paoding",
+      "name": "庖丁",
+      "type": "gather",
+      "verb": "庖丁",
+      "icon": "knife",
+      "color": "#D45A8A",
+      "desc": "庖丁黑山羊、山野野兽与河鲜，获得羊肉、羊杂、羊皮、精肉、骨头、血、杂碎与鱼肉。"
+    },
+    {
+      "id": "duanzao",
+      "name": "锻造",
+      "type": "craft",
+      "verb": "锻造",
+      "icon": "hammer",
+      "color": "#1D6FE0",
+      "desc": "打造武器、防具、磨石与熔锭。当前版本制造技艺为锻造（旧称铸造）。"
+    },
+    {
+      "id": "fengren",
+      "name": "缝纫",
+      "type": "craft",
+      "verb": "缝纫",
+      "icon": "thread",
+      "color": "#A75BE0",
+      "desc": "制作玄元/风语装备、附魔绣、背包、挂件包与隔音帐。"
+    },
+    {
+      "id": "zhiyao",
+      "name": "制药",
+      "type": "craft",
+      "verb": "制药",
+      "icon": "flask",
+      "color": "#2AA5B8",
+      "desc": "制作万灵丹、固阵丹、截元丹等药品与药引材料。"
+    },
+    {
+      "id": "pengren",
+      "name": "烹饪",
+      "type": "craft",
+      "verb": "烹饪",
+      "icon": "pot",
+      "color": "#E06A2E",
+      "desc": "制作宴席、路菜、汤品与烹饪材料。"
+    },
+    {
+      "id": "zijiang",
+      "name": "梓匠",
+      "type": "craft",
+      "verb": "梓匠",
+      "icon": "home",
+      "color": "#7A9E2E",
+      "desc": "苍生铸世家园制造：木板、卯榫、鱼胶、器物令与家具景观。"
+    }
+  ],
+  "items": [
+    {
+      "id": "xuan_yuan_shan",
+      "name": "玄元星平衫",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 30811.87,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "dimai",
+      "name": "地脉玄元",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 24000,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "fengwangjiang",
+      "name": "蜂王浆",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 186.1,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006736
+    },
+    {
+      "id": "shoupijiao",
+      "name": "兽皮胶",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 52.86,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006749
+    },
+    {
+      "id": "qicaixian",
+      "name": "七彩线",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 177.7,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006787
+    },
+    {
+      "id": "bairanxian",
+      "name": "百染线",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.69,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006664
+    },
+    {
+      "id": "xuan_yuan_xie",
+      "name": "玄元星平鞋",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 30811.87,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "xuan_yuan_wan",
+      "name": "玄元星平护腕",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 38743.64,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "fengyu_yi",
+      "name": "风语·衣·绣（气血）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1034.91,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794927575
+    },
+    {
+      "id": "m_m_5_30852",
+      "name": "猫眼石",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 15.05,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006679
+    },
+    {
+      "id": "m_m_5_30853",
+      "name": "珠贝母",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 94.97,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006719
+    },
+    {
+      "id": "m_m_5_30828",
+      "name": "宝石",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 6.21,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006114
+    },
+    {
+      "id": "m_m_5_89165",
+      "name": "绢带",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 10.64,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794990866
+    },
+    {
+      "id": "m_m_5_32000",
+      "name": "棉线",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.63,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002219
+    },
+    {
+      "id": "guajian_bei",
+      "name": "挂件包·背部",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 58.02,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006783
+    },
+    {
+      "id": "baihua_bu",
+      "name": "百花布",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 89.79,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005399
+    },
+    {
+      "id": "guajian_yao",
+      "name": "挂件包·腰部",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 89.46,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006389
+    },
+    {
+      "id": "shuran_bu",
+      "name": "蜀染布",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 133.91,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003739
+    },
+    {
+      "id": "m_m_5_32001",
+      "name": "纺丝",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794992985
+    },
+    {
+      "id": "shuran_bag",
+      "name": "蜀染布包",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 18.32,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794993159
+    },
+    {
+      "id": "m_m_5_10173",
+      "name": "百股线",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 281,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002227
+    },
+    {
+      "id": "jinfeng_bag",
+      "name": "锦缝春山囊",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5666.66,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794876994
+    },
+    {
+      "id": "wuseshi",
+      "name": "五色石",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 140.73,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795000705
+    },
+    {
+      "id": "m_m_5_30856",
+      "name": "鸡血石",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 4,
+      "source": "采集",
+      "base": 20,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006798
+    },
+    {
+      "id": "m_m_5_30855",
+      "name": "沉香木",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 178.9,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006446
+    },
+    {
+      "id": "geyin_zhang",
+      "name": "隔音帐",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 165.5,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795000206
+    },
+    {
+      "id": "m_m_5_89298",
+      "name": "青魄玉",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 52.77,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006797
+    },
+    {
+      "id": "m_m_5_30679",
+      "name": "硼砂",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 15.07,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006578
+    },
+    {
+      "id": "m_m_5_32004",
+      "name": "石灰",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.58,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794991076
+    },
+    {
+      "id": "m_m_5_30847",
+      "name": "银鳞",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 9.05,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006790
+    },
+    {
+      "id": "m_m_5_30846",
+      "name": "玛瑙",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 0.98,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006696
+    },
+    {
+      "id": "yinsi_duan",
+      "name": "银丝缎",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 166.69,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006711
+    },
+    {
+      "id": "m_m_5_32003",
+      "name": "百花线",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.61,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794928908
+    },
+    {
+      "id": "m_m_5_30848",
+      "name": "紫檀",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 16.7,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006794
+    },
+    {
+      "id": "m_m_5_32002",
+      "name": "金线",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.7,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794992989
+    },
+    {
+      "id": "m_m_7_112589",
+      "name": "玄元木声衫",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 34789.34,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_30850",
+      "name": "辉石",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 3,
+      "source": "采集",
+      "base": 142.95,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006434
+    },
+    {
+      "id": "m_m_7_112588",
+      "name": "玄元松绿衫",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 42041.09,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_30845",
+      "name": "云芝",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 3,
+      "source": "采集",
+      "base": 210.5,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006778
+    },
+    {
+      "id": "m_m_5_31231",
+      "name": "绝世上衣·【寒】",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 6739.79,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_31397",
+      "name": "蜃楼珠",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 1.04,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794982247
+    },
+    {
+      "id": "m_m_5_89433",
+      "name": "蜀锦绣·腕（身法）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 9000,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794928812
+    },
+    {
+      "id": "m_m_5_89435",
+      "name": "蜀锦绣·腕（力道）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 9500.34,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795000436
+    },
+    {
+      "id": "m_m_5_31253",
+      "name": "寻踪觅宝·护手",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 530.22,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795001071
+    },
+    {
+      "id": "tongpao_fan",
+      "name": "同袍营幡",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 867.08,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_30844",
+      "name": "黄花菜",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 0.63,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006689
+    },
+    {
+      "id": "m_m_5_89166",
+      "name": "黄蜡",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 0.01,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89568",
+      "name": "璧·苍生",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 37783.26,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_7_112569",
+      "name": "玄元烽火鞋",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 36377.81,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_90338",
+      "name": "境华",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 0.1,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1795006138
+    },
+    {
+      "id": "m_m_7_112568",
+      "name": "玄元赤地鞋",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 37121.15,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_31239",
+      "name": "绝世鞋子·【寒】",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4311.98,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_7_112556",
+      "name": "玄元赤地护腕",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 35999.4,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_7_112557",
+      "name": "玄元烽火护腕",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 38428.18,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_31235",
+      "name": "绝世护腕·【寒】",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4681.69,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_90210",
+      "name": "驾驾伪装",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 72,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_35718",
+      "name": "麻絮",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 16.18,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794991184
+    },
+    {
+      "id": "m_m_5_35719",
+      "name": "滑石粉",
+      "skillId": "fengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 32.39,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794991189
+    },
+    {
+      "id": "m_m_5_30873",
+      "name": "羊皮",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 14.49,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006544
+    },
+    {
+      "id": "m_m_5_90205",
+      "name": "哼唧伪装",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 48.11,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794998574
+    },
+    {
+      "id": "m_m_8_614",
+      "name": "灯笼",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 395.98,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794978879
+    },
+    {
+      "id": "shanshui_juan",
+      "name": "山水刺绣手绢",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 270.39,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794992074
+    },
+    {
+      "id": "m_m_5_3819",
+      "name": "刺绣手绢",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 200,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794996894
+    },
+    {
+      "id": "m_m_5_3779",
+      "name": "小香包",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 9.99,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794930555
+    },
+    {
+      "id": "m_m_8_36148",
+      "name": "彩缕花绫包",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 939.55,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794999262
+    },
+    {
+      "id": "m_m_8_19",
+      "name": "棉布包",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 0.48,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794994263
+    },
+    {
+      "id": "m_m_5_89475",
+      "name": "河洛纹·鞋（跑速）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 1335.66,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89474",
+      "name": "河洛纹·衣（御劲）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 2534.8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005438
+    },
+    {
+      "id": "m_m_5_3820",
+      "name": "丹青染布画",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 5.3,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794916585
+    },
+    {
+      "id": "shuizhuyu",
+      "name": "百炼水煮鱼",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3562.88,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_30827",
+      "name": "鱼肉",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 1.2,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006788
+    },
+    {
+      "id": "m_m_5_89970",
+      "name": "酱料",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 174.36,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006793
+    },
+    {
+      "id": "m_m_5_32014",
+      "name": "今朝醉",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 233,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794893373
+    },
+    {
+      "id": "m_m_5_31978",
+      "name": "胡椒粉",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794962296
+    },
+    {
+      "id": "m_m_5_31985",
+      "name": "红辣椒",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.65,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006788
+    },
+    {
+      "id": "lucai",
+      "name": "路菜",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 18.09,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006641
+    },
+    {
+      "id": "m_m_5_1831",
+      "name": "西市腔",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 30.34,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002366
+    },
+    {
+      "id": "m_m_5_31973",
+      "name": "精制面粉",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.65,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002215
+    },
+    {
+      "id": "m_m_5_30849",
+      "name": "人参",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 5.33,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006786
+    },
+    {
+      "id": "m_m_5_71293",
+      "name": "风语·老火骨汤",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 52,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004277
+    },
+    {
+      "id": "m_m_5_30826",
+      "name": "骨头",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 0.76,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006553
+    },
+    {
+      "id": "m_m_5_30825",
+      "name": "血",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 0.09,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005021
+    },
+    {
+      "id": "m_m_5_89171",
+      "name": "藤椒",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 10.77,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794941188
+    },
+    {
+      "id": "m_m_5_31974",
+      "name": "料酒",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.65,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795001933
+    },
+    {
+      "id": "m_m_5_31968",
+      "name": "菌菇",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.45,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794752373
+    },
+    {
+      "id": "m_m_5_71292",
+      "name": "风语·三鲜汤",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 55.64,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003150
+    },
+    {
+      "id": "m_m_5_30824",
+      "name": "精肉",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 0.59,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005673
+    },
+    {
+      "id": "m_m_5_31967",
+      "name": "新鲜冬瓜",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794843040
+    },
+    {
+      "id": "m_m_5_71281",
+      "name": "风语·鲜肉包子",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 22.4,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004230
+    },
+    {
+      "id": "m_m_5_30823",
+      "name": "碎肉",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 0.61,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005178
+    },
+    {
+      "id": "m_m_5_31969",
+      "name": "老姜",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.66,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794919677
+    },
+    {
+      "id": "m_m_5_71277",
+      "name": "风语·水煮肉片",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 84.6,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794973471
+    },
+    {
+      "id": "m_m_5_89315",
+      "name": "云中珍馐宴（通用）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 1588.54,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005638
+    },
+    {
+      "id": "m_m_5_1829",
+      "name": "竹叶青",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 0.22,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794939525
+    },
+    {
+      "id": "m_m_5_89969",
+      "name": "馅料",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 164.78,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006796
+    },
+    {
+      "id": "m_m_5_31976",
+      "name": "调料",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.68,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002650
+    },
+    {
+      "id": "m_m_5_89303",
+      "name": "巴渝珍馐宴（通用）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3499.95,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006016
+    },
+    {
+      "id": "m_m_5_89971",
+      "name": "卤料",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 180.95,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006746
+    },
+    {
+      "id": "lushui",
+      "name": "露水",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 3,
+      "source": "采集",
+      "base": 12.37,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006798
+    },
+    {
+      "id": "m_m_5_30875",
+      "name": "羊杂",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 2,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006745
+    },
+    {
+      "id": "m_m_5_30829",
+      "name": "蛋",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.75,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794941224
+    },
+    {
+      "id": "m_m_5_30843",
+      "name": "鱼腥草",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 0.67,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006686
+    },
+    {
+      "id": "m_m_5_30874",
+      "name": "羊肉",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 31.5,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006757
+    },
+    {
+      "id": "m_m_5_30842",
+      "name": "紫苏",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 0.78,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006773
+    },
+    {
+      "id": "m_m_5_5270",
+      "name": "饺子馅",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 2.84,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795001925
+    },
+    {
+      "id": "m_m_5_31970",
+      "name": "大葱",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.59,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795000652
+    },
+    {
+      "id": "m_m_5_5269",
+      "name": "饺子皮",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 0.1,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005517
+    },
+    {
+      "id": "m_m_5_31977",
+      "name": "生粉",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794931002
+    },
+    {
+      "id": "m_m_5_31013",
+      "name": "转神餐",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 194.8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006574
+    },
+    {
+      "id": "gancao",
+      "name": "甘草",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 1.97,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006766
+    },
+    {
+      "id": "m_m_5_31012",
+      "name": "佛跳墙",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 310.09,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006771
+    },
+    {
+      "id": "m_m_5_90034",
+      "name": "安营炊鼎",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2213.84,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89172",
+      "name": "酥油",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 22.39,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794917851
+    },
+    {
+      "id": "m_m_5_89304",
+      "name": "巴山夜雨宴（外攻）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4099.9,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003543
+    },
+    {
+      "id": "m_m_5_24212",
+      "name": "炼狱水煮鱼",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 879.3,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_26057",
+      "name": "膘然心动",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4999,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002356
+    },
+    {
+      "id": "m_m_5_26231",
+      "name": "如意饺",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 2.91,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794993063
+    },
+    {
+      "id": "m_m_5_89352",
+      "name": "云州刀削面",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 637.02,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006655
+    },
+    {
+      "id": "m_m_5_89350",
+      "name": "山城毛血旺",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 549.76,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005921
+    },
+    {
+      "id": "m_m_5_71269",
+      "name": "风语·红烧排骨",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 167.99,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006348
+    },
+    {
+      "id": "m_m_5_89346",
+      "name": "云芝竹沥羹",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 707.66,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006699
+    },
+    {
+      "id": "m_m_5_89167",
+      "name": "竹沥",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 10.64,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794939068
+    },
+    {
+      "id": "m_m_5_31984",
+      "name": "老豆腐",
+      "skillId": "pengren",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.01,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794962976
+    },
+    {
+      "id": "m_m_5_89348",
+      "name": "开锅豆腐",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 227.5,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006699
+    },
+    {
+      "id": "m_m_5_71285",
+      "name": "风语·杂锦鱼球粥",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 107.39,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006088
+    },
+    {
+      "id": "jieyuan_dan",
+      "name": "截元丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 10.9,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794987882
+    },
+    {
+      "id": "m_m_5_30836",
+      "name": "虫草",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 0.71,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005416
+    },
+    {
+      "id": "m_m_5_30832",
+      "name": "千里香",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 1.19,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006760
+    },
+    {
+      "id": "m_m_5_30833",
+      "name": "枸杞",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 2.84,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006620
+    },
+    {
+      "id": "m_m_5_31997",
+      "name": "葫芦",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.55,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794934455
+    },
+    {
+      "id": "m_m_5_89324",
+      "name": "竹沥凝心饮",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 99,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006167
+    },
+    {
+      "id": "m_m_5_30831",
+      "name": "大黄",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 0.5,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006767
+    },
+    {
+      "id": "m_m_5_89973",
+      "name": "药丸",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 138,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006788
+    },
+    {
+      "id": "m_m_5_31996",
+      "name": "药囊",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.67,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794978630
+    },
+    {
+      "id": "m_m_5_71241",
+      "name": "风语·中品万灵丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 16.26,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794740009
+    },
+    {
+      "id": "m_m_5_71240",
+      "name": "风语·上品万灵丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 43.27,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003955
+    },
+    {
+      "id": "m_m_5_31995",
+      "name": "药罐",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.65,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006358
+    },
+    {
+      "id": "m_m_5_71266",
+      "name": "风语·中品大力丸",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 80.13,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003166
+    },
+    {
+      "id": "m_m_5_30838",
+      "name": "彼岸花",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 0.72,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004882
+    },
+    {
+      "id": "shanhu",
+      "name": "珊瑚",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 3.27,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006723
+    },
+    {
+      "id": "m_m_5_6646",
+      "name": "药料",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.54,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794990998
+    },
+    {
+      "id": "m_m_5_89333",
+      "name": "云州固阵丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 128,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_30835",
+      "name": "五味子",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 1.71,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006755
+    },
+    {
+      "id": "m_m_5_89974",
+      "name": "药膏",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 89.73,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794997034
+    },
+    {
+      "id": "m_m_5_6648",
+      "name": "药用黄丹",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 1,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_71267",
+      "name": "风语·中品静心丸",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 82.92,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004239
+    },
+    {
+      "id": "m_m_5_90029",
+      "name": "回神丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 416.31,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89168",
+      "name": "药曲",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 22.3,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794927368
+    },
+    {
+      "id": "yaoyin",
+      "name": "药引",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 226.66,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006779
+    },
+    {
+      "id": "m_m_5_31100",
+      "name": "金针·影",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 9.73,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1795005591
+    },
+    {
+      "id": "m_m_5_89322",
+      "name": "竹沥清心露",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 679.91,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794987047
+    },
+    {
+      "id": "shaoyao",
+      "name": "芍药",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 2,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006769
+    },
+    {
+      "id": "m_m_5_90206",
+      "name": "踏波露",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 72,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794930127
+    },
+    {
+      "id": "m_m_5_31102",
+      "name": "飞鱼丸",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 0.12,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006279
+    },
+    {
+      "id": "m_m_5_30834",
+      "name": "川贝",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 1.97,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006684
+    },
+    {
+      "id": "m_m_5_31998",
+      "name": "金针",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.89,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794903393
+    },
+    {
+      "id": "m_m_5_90035",
+      "name": "定魂丹砂",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 8888,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002791
+    },
+    {
+      "id": "m_m_5_89328",
+      "name": "巴山凝神丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 848.4,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004283
+    },
+    {
+      "id": "m_m_5_89332",
+      "name": "河洛生息丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 827.07,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002008
+    },
+    {
+      "id": "m_m_5_89340",
+      "name": "巴山凝神散",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 96.07,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006663
+    },
+    {
+      "id": "m_m_5_89325",
+      "name": "五气归元丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 716.03,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006758
+    },
+    {
+      "id": "m_m_5_71258",
+      "name": "风语·上品健体丸",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 122.08,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003688
+    },
+    {
+      "id": "m_m_5_31999",
+      "name": "银针",
+      "skillId": "zhiyao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794987490
+    },
+    {
+      "id": "m_m_5_89327",
+      "name": "五气培元丸",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 100.11,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006690
+    },
+    {
+      "id": "juling_chou",
+      "name": "苍生·巨灵磨石（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 135.64,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89966",
+      "name": "镔铁锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 119,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005670
+    },
+    {
+      "id": "m_m_5_10176",
+      "name": "炼火石",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 2,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794929644
+    },
+    {
+      "id": "m_m_5_31991",
+      "name": "火墨",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.98,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794934155
+    },
+    {
+      "id": "m_m_5_89377",
+      "name": "苍生·絮泊磨石（疗伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 490,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005547
+    },
+    {
+      "id": "m_m_5_89968",
+      "name": "铅锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 110.15,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004532
+    },
+    {
+      "id": "m_m_5_31993",
+      "name": "煤炭",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.88,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794941608
+    },
+    {
+      "id": "m_m_5_89376",
+      "name": "苍生·坠宵磨石（攻击）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 230.74,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004464
+    },
+    {
+      "id": "m_m_5_89965",
+      "name": "锡锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 108.86,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006751
+    },
+    {
+      "id": "m_m_5_31992",
+      "name": "木炭",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.81,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794993574
+    },
+    {
+      "id": "m_m_5_89375",
+      "name": "苍生·瀑沙磨石（武伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 222.97,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004468
+    },
+    {
+      "id": "m_m_5_89963",
+      "name": "黄铜锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 87.66,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795004518
+    },
+    {
+      "id": "m_m_5_89370",
+      "name": "苍生·巨灵熔锭（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 612.75,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_71192",
+      "name": "风语·巨灵磨石（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 13.14,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89169",
+      "name": "松脂",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 10.63,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794979874
+    },
+    {
+      "id": "m_m_5_71188",
+      "name": "风语·兵·甲（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 620.01,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794830387
+    },
+    {
+      "id": "m_m_5_31994",
+      "name": "菜籽油",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.67,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794935740
+    },
+    {
+      "id": "m_m_7_112584",
+      "name": "玄元星平帽",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 29202.03,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89962",
+      "name": "密银锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 128.9,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003926
+    },
+    {
+      "id": "m_m_7_112566",
+      "name": "玄元星平护腰",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 36576.28,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_7_112578",
+      "name": "玄元星平裤",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 33036.64,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_31139",
+      "name": "龙血磨石",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3388.81,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006238
+    },
+    {
+      "id": "m_m_5_89964",
+      "name": "青铜锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 100,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005368
+    },
+    {
+      "id": "m_m_5_10027",
+      "name": "素银钥匙",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 54.88,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002501
+    },
+    {
+      "id": "m_m_5_89961",
+      "name": "熟铁锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 120.95,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005578
+    },
+    {
+      "id": "m_m_5_10029",
+      "name": "素银钥匙模",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.03,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794882612
+    },
+    {
+      "id": "tiekuang",
+      "name": "铁矿",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 2.97,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005515
+    },
+    {
+      "id": "m_m_5_30676",
+      "name": "铅锌矿",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 1.94,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006473
+    },
+    {
+      "id": "m_m_5_30678",
+      "name": "银矿",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 2.23,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003854
+    },
+    {
+      "id": "m_m_5_30674",
+      "name": "铜矿",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 3,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006634
+    },
+    {
+      "id": "m_m_5_30675",
+      "name": "锡矿",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 3.15,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006719
+    },
+    {
+      "id": "m_m_5_89967",
+      "name": "生铁锭",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 100,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795001626
+    },
+    {
+      "id": "m_m_5_89367",
+      "name": "苍生·瀑沙熔锭（武伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 950.59,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794906990
+    },
+    {
+      "id": "m_m_5_6246",
+      "name": "青铜钥匙",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 0.19,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006193
+    },
+    {
+      "id": "m_m_5_6249",
+      "name": "青铜钥匙模",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.26,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794928656
+    },
+    {
+      "id": "m_m_7_112575",
+      "name": "玄元烽火裤",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 31377,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_7_112573",
+      "name": "玄元风鹤裤",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 26792.24,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_31209",
+      "name": "绝世下装·【兹】",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4698.26,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_32787",
+      "name": "切玉骨",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 99.86,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794930400
+    },
+    {
+      "id": "m_m_7_112564",
+      "name": "玄元松绿护腰",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 34631.78,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_7_112561",
+      "name": "玄元风鹤护腰",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 33199.08,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_31211",
+      "name": "绝世腰带·【兹】",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3417.94,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_8_25762",
+      "name": "寄青荷",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 15.04,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005989
+    },
+    {
+      "id": "m_m_5_30841",
+      "name": "荷叶",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 2.87,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006633
+    },
+    {
+      "id": "m_m_5_10172",
+      "name": "旦火油",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794858087
+    },
+    {
+      "id": "m_m_5_35708",
+      "name": "皮革",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 11.17,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794999418
+    },
+    {
+      "id": "m_m_8_17541",
+      "name": "银龙笼套",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 1537.02,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_8_17538",
+      "name": "铁纹鞍具",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 313.36,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794420741
+    },
+    {
+      "id": "m_m_7_112582",
+      "name": "玄元松绿帽",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 39887.1,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_7_112583",
+      "name": "玄元木声帽",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 34510.09,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_31210",
+      "name": "绝世头饰·【兹】",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2820.47,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_90032",
+      "name": "定营铁桩",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1901.21,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89170",
+      "name": "熟矾",
+      "skillId": "duanzao",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 0.01,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_89567",
+      "name": "珠·苍生",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 26321.23,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_8_632",
+      "name": "玄武腰刀",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 270.78,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794937799
+    },
+    {
+      "id": "m_m_8_634",
+      "name": "青龙腰刀",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 305.2,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794837554
+    },
+    {
+      "id": "m_m_8_636",
+      "name": "麒麟腰刀",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 324,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794910021
+    },
+    {
+      "id": "m_m_5_90353",
+      "name": "同门饕餮鼎",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 525.04,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_90257",
+      "name": "飞高高",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 72,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_2578",
+      "name": "铜偶",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 8,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794751102
+    },
+    {
+      "id": "m_m_5_6072",
+      "name": "鞭炮",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 32,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794970538
+    },
+    {
+      "id": "m_m_5_6068",
+      "name": "龙凤呈祥",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 8.97,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794970526
+    },
+    {
+      "id": "m_m_5_6066",
+      "name": "元宝灯",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 2,
+      "source": "制造",
+      "base": 0.01,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794965005
+    },
+    {
+      "id": "muban",
+      "name": "木板",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 29.09,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006800
+    },
+    {
+      "id": "muliao",
+      "name": "木料",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 2.89,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006800
+    },
+    {
+      "id": "m_m_5_35707",
+      "name": "清漆",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 11.97,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794999808
+    },
+    {
+      "id": "m_m_5_35703",
+      "name": "绳索",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.56,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794995300
+    },
+    {
+      "id": "qiwuling",
+      "name": "器物令",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 27.55,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006542
+    },
+    {
+      "id": "m_m_5_35716",
+      "name": "鱼胶",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 16.93,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006674
+    },
+    {
+      "id": "m_m_5_35702",
+      "name": "黏土",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.56,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794843051
+    },
+    {
+      "id": "m_m_5_35715",
+      "name": "篾条",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 10.55,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795001649
+    },
+    {
+      "id": "zhuzi",
+      "name": "竹子",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 1.77,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005968
+    },
+    {
+      "id": "m_m_5_35567",
+      "name": "芦苇杆",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 1.68,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005582
+    },
+    {
+      "id": "m_m_5_35704",
+      "name": "油布",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.57,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794999655
+    },
+    {
+      "id": "m_m_5_35714",
+      "name": "雕花",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 15,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794997916
+    },
+    {
+      "id": "m_m_5_35701",
+      "name": "石材",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0.64,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795001545
+    },
+    {
+      "id": "m_m_5_35713",
+      "name": "卯榫",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 17.42,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006777
+    },
+    {
+      "id": "m_m_5_35705",
+      "name": "楔子",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 1,
+      "source": "交易行",
+      "base": 3.55,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794998817
+    },
+    {
+      "id": "m_m_10_1778",
+      "name": "清漆药柜",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 1267.83,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794663425
+    },
+    {
+      "id": "m_m_10_948",
+      "name": "简素椅",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 310.17,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795002116
+    },
+    {
+      "id": "m_m_5_89260",
+      "name": "归营旌",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 35000,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794847820
+    },
+    {
+      "id": "m_m_10_1779",
+      "name": "锻炉",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 600.82,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794663430
+    },
+    {
+      "id": "m_m_10_1880",
+      "name": "残烛柜架",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1568.07,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794607481
+    },
+    {
+      "id": "m_m_10_2034",
+      "name": "矩形回纹格",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1430.11,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794607436
+    },
+    {
+      "id": "m_m_10_93",
+      "name": "葵草席",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 64.21,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794948186
+    },
+    {
+      "id": "m_m_10_1882",
+      "name": "禅心悬旗",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1459,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794607513
+    },
+    {
+      "id": "m_m_5_35717",
+      "name": "阎家样",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 2,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795006790
+    },
+    {
+      "id": "m_m_10_2037",
+      "name": "铜雕踩球对狮·右",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1460.83,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794607450
+    },
+    {
+      "id": "m_m_10_164",
+      "name": "素髹桑木灯檠",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 1,
+      "source": "制造",
+      "base": 130,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794756888
+    },
+    {
+      "id": "m_m_5_52337",
+      "name": "地下室·8米木质标准包",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1869.66,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003562
+    },
+    {
+      "id": "m_m_5_40232",
+      "name": "竹篾篱·套件",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2798.69,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794937619
+    },
+    {
+      "id": "m_m_5_35772",
+      "name": "兖石地墁·套件",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3460.23,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005272
+    },
+    {
+      "id": "m_m_5_90211",
+      "name": "飞毛腿伪装",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 21.71,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "seed",
+      "priceAt": 1794853525
+    },
+    {
+      "id": "m_m_5_87917",
+      "name": "拼布自选包",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 291.5,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794995713
+    },
+    {
+      "id": "m_m_5_45721",
+      "name": "铃兰·混彩",
+      "skillId": "zijiang",
+      "kind": "material",
+      "tier": 4,
+      "source": "交易行",
+      "base": 128,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本材料",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "m_m_5_87881",
+      "name": "拼布72色全包",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 8600.76,
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 当前版本配方",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1794920750
+    },
+    {
+      "id": "zasui",
+      "name": "杂碎",
+      "skillId": "paoding",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 1.7,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005242
+    },
+    {
+      "id": "g_5_30681",
+      "name": "金沙",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 1.43,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795003105
+    },
+    {
+      "id": "g_5_30680",
+      "name": "青石",
+      "skillId": "caijin",
+      "kind": "material",
+      "tier": 2,
+      "source": "采集",
+      "base": 1.51,
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 当前版本采集产出",
+      "custom": false,
+      "priceSource": "auction",
+      "priceAt": 1795005723
+    }
+  ],
+  "recipes": [
+    {
+      "id": "m_tailoring_1480",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元星平衫",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "xuan_yuan_shan",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "上衣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1486",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元星平鞋",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "xuan_yuan_xie",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "鞋 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1492",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元星平护腕",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "xuan_yuan_wan",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "护手 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1384",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "风语·衣·绣（气血）",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "fengyu_yi",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30852",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30828",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89165",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 20
+        }
+      ],
+      "note": "刺绣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_519",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "挂件包·背部",
+      "level": 13,
+      "tier": 3,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "guajian_bei",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "baihua_bu",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 5
+        }
+      ],
+      "note": "背包 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_520",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "挂件包·腰部",
+      "level": 13,
+      "tier": 3,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "guajian_yao",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "shuran_bu",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_32001",
+          "qty": 5
+        }
+      ],
+      "note": "背包 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_694",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀染布包",
+      "level": 14,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "shuran_bag",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "shuran_bu",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 3
+        }
+      ],
+      "note": "背包 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1497",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "锦缝春山囊",
+      "level": 50,
+      "tier": 4,
+      "energy": 150,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "jinfeng_bag",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "shuran_bu",
+          "qty": 10
+        },
+        {
+          "item": "wuseshi",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        }
+      ],
+      "note": "背包 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1432",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "隔音帐",
+      "level": 10,
+      "tier": 4,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "geyin_zhang",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_10173",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_30852",
+          "qty": 2
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1289",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "七彩线",
+      "level": 9,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "qicaixian",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32004",
+          "qty": 10
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1286",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀染布",
+      "level": 6,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "shuran_bu",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30847",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32001",
+          "qty": 10
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1285",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "百花布",
+      "level": 1,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "baihua_bu",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30846",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 10
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1288",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "银丝缎",
+      "level": 8,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "yinsi_duan",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30828",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 10
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1287",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "五色石",
+      "level": 7,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "wuseshi",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30848",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32002",
+          "qty": 10
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1478",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元木声衫",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112589",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "wuseshi",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "上衣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1479",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元松绿衫",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112588",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "上衣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1222",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "绝世上衣·【寒】",
+      "level": 9,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31231",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_31397",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30847",
+          "qty": 20
+        },
+        {
+          "item": "wuseshi",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "上衣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1446",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（身法）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89433",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 10
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 20
+        }
+      ],
+      "note": "刺绣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1448",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（力道）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89435",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "qicaixian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32004",
+          "qty": 20
+        }
+      ],
+      "note": "刺绣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1236",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "寻踪觅宝·护腕",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31253",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30848",
+          "qty": 1
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32001",
+          "qty": 20
+        }
+      ],
+      "note": "刺绣 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1493",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "同袍营幡",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "tongpao_fan",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "baihua_bu",
+          "qty": 6
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_30844",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89165",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_89166",
+          "qty": 2
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1498",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "璧·苍生",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89568",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30828",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1482",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元烽火鞋",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112569",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "鞋 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1481",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元赤地鞋",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112568",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "wuseshi",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "鞋 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1230",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "绝世鞋子·【寒】",
+      "level": 9,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31239",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_31397",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30828",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "鞋 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1487",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元赤地护腕",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112556",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "wuseshi",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "护手 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1488",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元烽火护腕",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112557",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "护手 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1226",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "绝世护腕·【寒】",
+      "level": 9,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31235",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_31397",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30852",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30848",
+          "qty": 20
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "护手 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1495",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "驾驾伪装",
+      "level": 45,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90210",
+          "qty": 8,
+          "qtyMin": 7,
+          "qtyMax": 9
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35718",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_35719",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30873",
+          "qty": 4
+        }
+      ],
+      "note": "其他 · JX3BOX 当前版本配方 · 产出 7~9",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1494",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "哼唧伪装",
+      "level": 35,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90205",
+          "qty": 8,
+          "qtyMin": 7,
+          "qtyMax": 9
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35718",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_35719",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30873",
+          "qty": 4
+        }
+      ],
+      "note": "其他 · JX3BOX 当前版本配方 · 产出 7~9",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_13",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "灯笼",
+      "level": 1,
+      "tier": 1,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_614",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "baihua_bu",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_32002",
+          "qty": 10
+        }
+      ],
+      "note": "其他 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_183",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "山水刺绣手绢",
+      "level": 11,
+      "tier": 2,
+      "energy": 27,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "shanshui_juan",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "wuseshi",
+          "qty": 2
+        },
+        {
+          "item": "bairanxian",
+          "qty": 8
+        },
+        {
+          "item": "m_m_5_32004",
+          "qty": 20
+        }
+      ],
+      "note": "礼品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_143",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "刺绣手绢",
+      "level": 10,
+      "tier": 2,
+      "energy": 21,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_3819",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "qicaixian",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 8
+        },
+        {
+          "item": "m_m_5_32001",
+          "qty": 20
+        }
+      ],
+      "note": "礼品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_9",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "小香包",
+      "level": 1,
+      "tier": 1,
+      "energy": 6,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_3779",
+          "qty": 5,
+          "qtyMin": 4,
+          "qtyMax": 6
+        }
+      ],
+      "materials": [
+        {
+          "item": "baihua_bu",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 5
+        }
+      ],
+      "note": "礼品 · JX3BOX 当前版本配方 · 产出 4~6",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1437",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "彩缕花绫包",
+      "level": 30,
+      "tier": 3,
+      "energy": 150,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_36148",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "shuran_bu",
+          "qty": 10
+        },
+        {
+          "item": "baihua_bu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30852",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        }
+      ],
+      "note": "背包 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_19",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "棉布包",
+      "level": 2,
+      "tier": 1,
+      "energy": 15,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_19",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32000",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 5
+        }
+      ],
+      "note": "背包 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1474",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "河洛纹·鞋（跑速）",
+      "level": 46,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89475",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "shoupijiao",
+          "qty": 5
+        },
+        {
+          "item": "wuseshi",
+          "qty": 5
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32002",
+          "qty": 20
+        }
+      ],
+      "note": "印染 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1473",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "河洛纹·衣（御劲）",
+      "level": 44,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89474",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "shoupijiao",
+          "qty": 5
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 5
+        },
+        {
+          "item": "bairanxian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 20
+        }
+      ],
+      "note": "印染 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_146",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "丹青染布画",
+      "level": 10,
+      "tier": 2,
+      "energy": 21,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_3820",
+          "qty": 5,
+          "qtyMin": 4,
+          "qtyMax": 6
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89165",
+          "qty": 1
+        },
+        {
+          "item": "bairanxian",
+          "qty": 8
+        },
+        {
+          "item": "m_m_5_32001",
+          "qty": 20
+        }
+      ],
+      "note": "印染 · JX3BOX 当前版本配方 · 产出 4~6",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_417",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "百炼水煮鱼",
+      "level": 20,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "shuizhuyu",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30827",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_32014",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 20
+        }
+      ],
+      "note": "宴席 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_418",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "路菜",
+      "level": 30,
+      "tier": 3,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "lucai",
+          "qty": 11.5,
+          "qtyMin": 10,
+          "qtyMax": 13
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_1831",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30849",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 10
+        }
+      ],
+      "note": "特殊食品 · JX3BOX 当前版本配方 · 产出 10~13",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_409",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·老火骨汤",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71293",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30826",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31968",
+          "qty": 10
+        }
+      ],
+      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_408",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·三鲜汤",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71292",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30824",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31968",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31967",
+          "qty": 10
+        }
+      ],
+      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_397",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·鲜肉包子",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71281",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30823",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31969",
+          "qty": 10
+        }
+      ],
+      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_393",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·水煮肉片",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71277",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30824",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 10
+        }
+      ],
+      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_431",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "云中珍馐宴（通用）",
+      "level": 18,
+      "tier": 3,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89315",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89969",
+          "qty": 7
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 20
+        }
+      ],
+      "note": "宴席 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_419",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "巴渝珍馐宴（通用）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89303",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 20
+        }
+      ],
+      "note": "宴席 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_363",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "馅料",
+      "level": 5,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89969",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "lushui",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89298",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30844",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30875",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30829",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_362",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "酱料",
+      "level": 3,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89970",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "lushui",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89298",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30843",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_361",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "卤料",
+      "level": 4,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89971",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "lushui",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89298",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30873",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_121",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "饺子馅",
+      "level": 2,
+      "tier": 1,
+      "energy": 7,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_5270",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30823",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31970",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_120",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "饺子皮",
+      "level": 1,
+      "tier": 1,
+      "energy": 7,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_5269",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_31973",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31977",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_329",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "转神餐",
+      "level": 9,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31013",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 2
+        },
+        {
+          "item": "gancao",
+          "qty": 3
+        }
+      ],
+      "note": "回复类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_328",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "佛跳墙",
+      "level": 9,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31012",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 10
+        }
+      ],
+      "note": "回复类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_451",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "安营炊鼎",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90034",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89971",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_30843",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30873",
+          "qty": 8
+        },
+        {
+          "item": "m_m_5_89172",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 4
+        }
+      ],
+      "note": "烹饪材料 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_420",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "巴山夜雨宴（外攻）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89304",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        }
+      ],
+      "note": "宴席 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_302",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "炼狱水煮鱼",
+      "level": 5,
+      "tier": 4,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_24212",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30827",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 10
+        }
+      ],
+      "note": "宴席 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_452",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "膘然心动",
+      "level": 50,
+      "tier": 4,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_26057",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89969",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_89172",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30843",
+          "qty": 3
+        }
+      ],
+      "note": "特殊食品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_358",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "如意饺",
+      "level": 3,
+      "tier": 3,
+      "energy": 37,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_26231",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_5269",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_5270",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 2
+        }
+      ],
+      "note": "特殊食品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_441",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "云州刀削面",
+      "level": 50,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89352",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89969",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        }
+      ],
+      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_439",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "山城毛血旺",
+      "level": 50,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89350",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30875",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 10
+        }
+      ],
+      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_385",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·红烧排骨",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71269",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31970",
+          "qty": 10
+        }
+      ],
+      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_437",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "云芝竹沥羹",
+      "level": 50,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89346",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 10
+        }
+      ],
+      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_444",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "开锅豆腐",
+      "level": 36,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89348",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30845",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 18
+        }
+      ],
+      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_401",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·杂锦鱼球粥",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71285",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 10
+        }
+      ],
+      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_353",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "截元丹",
+      "level": 8,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "jieyuan_dan",
+          "qty": 1.5,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30836",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30833",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30847",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31997",
+          "qty": 10
+        }
+      ],
+      "note": "特殊药品 · JX3BOX 当前版本配方 · 产出 1~2",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_401",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "竹沥凝心饮",
+      "level": 18,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89324",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        }
+      ],
+      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_366",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品万灵丹",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71241",
+          "qty": 3.5,
+          "qtyMin": 3,
+          "qtyMax": 4
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        }
+      ],
+      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 3~4",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_365",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品万灵丹",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71240",
+          "qty": 3.5,
+          "qtyMin": 3,
+          "qtyMax": 4
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 20
+        }
+      ],
+      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 3~4",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_391",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品大力丸",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71266",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30832",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 5
+        },
+        {
+          "item": "shanhu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 10
+        }
+      ],
+      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_400",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "云州固阵丹",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89333",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89974",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 20
+        }
+      ],
+      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_392",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品静心丸",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71267",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30833",
+          "qty": 5
+        },
+        {
+          "item": "shanhu",
+          "qty": 5
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 10
+        }
+      ],
+      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_410",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "回神丹",
+      "level": 45,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90029",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89167",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89168",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30844",
+          "qty": 6
+        },
+        {
+          "item": "yaoyin",
+          "qty": 1
+        }
+      ],
+      "note": "特殊药品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_352",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "金针·影",
+      "level": 7,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31100",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30835",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30849",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        }
+      ],
+      "note": "特殊药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_362",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "药丸",
+      "level": 3,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89973",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30848",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        }
+      ],
+      "note": "医术材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_363",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "药膏",
+      "level": 4,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89974",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30849",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        }
+      ],
+      "note": "医术材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_361",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "药引",
+      "level": 2,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "yaoyin",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30847",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        }
+      ],
+      "note": "医术材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_393",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "竹沥清心露",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89322",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "shaoyao",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 20
+        }
+      ],
+      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_412",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "踏波露",
+      "level": 48,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90206",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_89168",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 4
+        }
+      ],
+      "note": "特殊药品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_354",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "飞鱼丸",
+      "level": 1,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31102",
+          "qty": 7.5,
+          "qtyMin": 5,
+          "qtyMax": 10
+        }
+      ],
+      "materials": [
+        {
+          "item": "shaoyao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30833",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30834",
+          "qty": 10
+        },
+        {
+          "item": "lushui",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31998",
+          "qty": 10
+        }
+      ],
+      "note": "特殊药品 · JX3BOX 当前版本配方 · 产出 5~10",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_411",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "定魂丹砂",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90035",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "yaoyin",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89168",
+          "qty": 10
+        }
+      ],
+      "note": "医术材料 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_395",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "巴山凝神丹",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89328",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 4
+        },
+        {
+          "item": "yaoyin",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 20
+        }
+      ],
+      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_399",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "河洛生息丹",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89332",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 20
+        }
+      ],
+      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_403",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "巴山凝神散",
+      "level": 25,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89340",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 2
+        },
+        {
+          "item": "shaoyao",
+          "qty": 10
+        },
+        {
+          "item": "yaoyin",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31998",
+          "qty": 10
+        }
+      ],
+      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_394",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "五气归元丹",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89325",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 4
+        },
+        {
+          "item": "yaoyin",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 20
+        }
+      ],
+      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_383",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品健体丸",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71258",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31999",
+          "qty": 20
+        }
+      ],
+      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_402",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "五气培元丸",
+      "level": 22,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89327",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 12
+        },
+        {
+          "item": "yaoyin",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 10
+        }
+      ],
+      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1282",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·巨灵磨石（仇恨）",
+      "level": 50,
+      "tier": 3,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "juling_chou",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30850",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_89966",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 10
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1281",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·絮泊磨石（疗伤）",
+      "level": 48,
+      "tier": 3,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89377",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "shoupijiao",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 10
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1280",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·坠宵磨石（攻击）",
+      "level": 46,
+      "tier": 3,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89376",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30845",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 10
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1279",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·瀑沙磨石（武伤）",
+      "level": 44,
+      "tier": 3,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89375",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30850",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 10
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1278",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·巨灵熔锭（仇恨）",
+      "level": 50,
+      "tier": 4,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89370",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89966",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 10
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1245",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "风语·巨灵磨石（仇恨）",
+      "level": 30,
+      "tier": 3,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71192",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30846",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_89169",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 10
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1241",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "风语·兵·甲（仇恨）",
+      "level": 30,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_71188",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30846",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89169",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1324",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元星平帽",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112584",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89962",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "帽子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1330",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元星平护腰",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112566",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89962",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "腰带 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1336",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元星平裤",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112578",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89962",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "裤子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1007",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "龙血磨石",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31139",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 7
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 7
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89964",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_458",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "素银钥匙",
+      "level": 8,
+      "tier": 2,
+      "energy": 10,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_10027",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89961",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10029",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 5
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1157",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "镔铁锭",
+      "level": 7,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89966",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "tiekuang",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30676",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1153",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "密银锭",
+      "level": 8,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89962",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30678",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1152",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "熟铁锭",
+      "level": 7,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89961",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "tiekuang",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1155",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "青铜锭",
+      "level": 2,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89964",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30674",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30675",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1156",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "锡锭",
+      "level": 2,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89965",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30675",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1154",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "黄铜锭",
+      "level": 4,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89963",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30674",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30676",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1159",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "铅锭",
+      "level": 4,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89968",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30676",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1158",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "生铁锭",
+      "level": 6,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89967",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89298",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 2
+        },
+        {
+          "item": "tiekuang",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1275",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·瀑沙熔锭（武伤）",
+      "level": 50,
+      "tier": 4,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89367",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 10
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_268",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "青铜钥匙",
+      "level": 1,
+      "tier": 2,
+      "energy": 4,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_6246",
+          "qty": 4.5,
+          "qtyMin": 4,
+          "qtyMax": 5
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30674",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6249",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 1
+        }
+      ],
+      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 4~5",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1332",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元烽火裤",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112575",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "裤子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1333",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元风鹤裤",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112573",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "裤子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1076",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "绝世下装·【兹】",
+      "level": 9,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31209",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32787",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30847",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "裤子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1329",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元松绿护腰",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112564",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89967",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "腰带 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1327",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元风鹤护腰",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112561",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "腰带 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1078",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "绝世腰带·【兹】",
+      "level": 9,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31211",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32787",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30828",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "腰带 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1169",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "寄青荷",
+      "level": 16,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_25762",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30841",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_10172",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_35708",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30675",
+          "qty": 10
+        }
+      ],
+      "note": "马具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_164",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "银龙笼套",
+      "level": 15,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_17541",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89967",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89962",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 10
+        }
+      ],
+      "note": "马具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_103",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "铁制鞍具",
+      "level": 7,
+      "tier": 2,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_17538",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89967",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 10
+        }
+      ],
+      "note": "马具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1323",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元松绿帽",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112582",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89967",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "帽子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1322",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元木声帽",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_7_112583",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89966",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "帽子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1077",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "绝世头饰·【兹】",
+      "level": 9,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_31210",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32787",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30852",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30848",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "帽子 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1337",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "定营铁桩",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90032",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89961",
+          "qty": 8
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89169",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89170",
+          "qty": 3
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1343",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "珠·苍生",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89567",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30847",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89966",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "制品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_120",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄武腰刀",
+      "level": 9,
+      "tier": 2,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_632",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89967",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89962",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10172",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 10
+        }
+      ],
+      "note": "挂件 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_146",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "青龙腰刀",
+      "level": 9,
+      "tier": 2,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_634",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89962",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10172",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 10
+        }
+      ],
+      "note": "挂件 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_163",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "麒麟腰刀",
+      "level": 3,
+      "tier": 2,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_8_636",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89964",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10172",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 10
+        }
+      ],
+      "note": "挂件 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1340",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "同门饕餮鼎",
+      "level": 50,
+      "tier": 4,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90353",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89166",
+          "qty": 8
+        },
+        {
+          "item": "m_m_5_89169",
+          "qty": 8
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 4
+        }
+      ],
+      "note": "礼品 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1339",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "飞高高",
+      "level": 45,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90257",
+          "qty": 8,
+          "qtyMin": 7,
+          "qtyMax": 9
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35718",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_35719",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 2
+        }
+      ],
+      "note": "礼品 · JX3BOX 当前版本配方 · 产出 7~9",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_5",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "铜偶",
+      "level": 7,
+      "tier": 1,
+      "energy": 6,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_2578",
+          "qty": 5,
+          "qtyMin": 4,
+          "qtyMax": 6
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89963",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 5
+        }
+      ],
+      "note": "礼品 · JX3BOX 当前版本配方 · 产出 4~6",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_263",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "鞭炮",
+      "level": 9,
+      "tier": 2,
+      "energy": 2,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_6072",
+          "qty": 1.5,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30678",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_32004",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 2
+        }
+      ],
+      "note": "烟火 · JX3BOX 当前版本配方 · 产出 1~2",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_262",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "龙凤呈祥",
+      "level": 7,
+      "tier": 2,
+      "energy": 2,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_6068",
+          "qty": 1.5,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "tiekuang",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 2
+        }
+      ],
+      "note": "烟火 · JX3BOX 当前版本配方 · 产出 1~2",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_founding_259",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "元宝灯",
+      "level": 1,
+      "tier": 2,
+      "energy": 2,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_6066",
+          "qty": 1.5,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30674",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 2
+        }
+      ],
+      "note": "烟火 · JX3BOX 当前版本配方 · 产出 1~2",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_58",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "木板",
+      "level": 5,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "muban",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "muliao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35707",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35703",
+          "qty": 5
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_203",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "器物令",
+      "level": 7,
+      "tier": 3,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "qiwuling",
+          "qty": 3,
+          "qtyMin": 3,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "tiekuang",
+          "qty": 15
+        },
+        {
+          "item": "shanhu",
+          "qty": 15
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_62",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "鱼胶",
+      "level": 5,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_35716",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30827",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35708",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35702",
+          "qty": 5
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_61",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "篾条",
+      "level": 5,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_35715",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "zhuzi",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35567",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35704",
+          "qty": 5
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_60",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "雕花",
+      "level": 5,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_35714",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "muliao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35707",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35701",
+          "qty": 5
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_59",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "卯榫",
+      "level": 5,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_35713",
+          "qty": 2.5,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "muliao",
+          "qty": 5
+        },
+        {
+          "item": "zhuzi",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35705",
+          "qty": 5
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_301",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "清漆药柜",
+      "level": 20,
+      "tier": 3,
+      "energy": 57,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_1778",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "muban",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_35713",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30848",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35707",
+          "qty": 20
+        }
+      ],
+      "note": "家具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_232",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "简素椅",
+      "level": 16,
+      "tier": 4,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_948",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35716",
+          "qty": 5
+        },
+        {
+          "item": "muban",
+          "qty": 5
+        }
+      ],
+      "note": "家具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_425",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "归营旌",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_89260",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_90032",
+          "qty": 1
+        },
+        {
+          "item": "tongpao_fan",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_90034",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_90035",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_302",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "锻炉",
+      "level": 20,
+      "tier": 4,
+      "energy": 69,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_1779",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30852",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 10
+        }
+      ],
+      "note": "景观 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_305",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "残烛柜架",
+      "level": 30,
+      "tier": 4,
+      "energy": 57,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_1880",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "muban",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_35714",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30848",
+          "qty": 5
+        }
+      ],
+      "note": "家具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_319",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "矩形回纹格",
+      "level": 27,
+      "tier": 4,
+      "energy": 57,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_2034",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "muban",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_35714",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_35713",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 2
+        }
+      ],
+      "note": "家具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_63",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "葵草席",
+      "level": 6,
+      "tier": 1,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_93",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35715",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_35567",
+          "qty": 1
+        }
+      ],
+      "note": "家具 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_312",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "禅心悬旗",
+      "level": 30,
+      "tier": 4,
+      "energy": 69,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_1882",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35717",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_35713",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_10172",
+          "qty": 10
+        }
+      ],
+      "note": "景观 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_322",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "铜雕踩球对狮·右",
+      "level": 29,
+      "tier": 4,
+      "energy": 69,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_2037",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35717",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30852",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_35713",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30674",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 10
+        }
+      ],
+      "note": "景观 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_134",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "素髹桑木灯檠",
+      "level": 6,
+      "tier": 1,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_10_164",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35715",
+          "qty": 1
+        },
+        {
+          "item": "muban",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_35704",
+          "qty": 5
+        }
+      ],
+      "note": "景观 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_281",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "地下室·8米木质标准包",
+      "level": 20,
+      "tier": 4,
+      "energy": 350,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_52337",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35717",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_35713",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_35715",
+          "qty": 6
+        },
+        {
+          "item": "muban",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 10
+        }
+      ],
+      "note": "建筑 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_204",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "竹篾篱·套件",
+      "level": 18,
+      "tier": 4,
+      "energy": 800,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_40232",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "muban",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_35716",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_35715",
+          "qty": 20
+        }
+      ],
+      "note": "建筑 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_54",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "兖石地墁·套件",
+      "level": 11,
+      "tier": 4,
+      "energy": 800,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_35772",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "muliao",
+          "qty": 20
+        },
+        {
+          "item": "zhuzi",
+          "qty": 20
+        },
+        {
+          "item": "muban",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_35701",
+          "qty": 20
+        }
+      ],
+      "note": "建筑 · JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_426",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "飞毛腿伪装",
+      "level": 45,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_90211",
+          "qty": 8,
+          "qtyMin": 7,
+          "qtyMax": 9
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35718",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_35719",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30873",
+          "qty": 4
+        }
+      ],
+      "note": "材料 · JX3BOX 当前版本配方 · 产出 7~9",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_423",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "拼布自选包",
+      "level": 30,
+      "tier": 4,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_87917",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_10173",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_35715",
+          "qty": 3
+        },
+        {
+          "item": "zhuzi",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_45721",
+          "qty": 5
+        }
+      ],
+      "note": "JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_424",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "拼布72色全包",
+      "level": 30,
+      "tier": 4,
+      "energy": 100,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_87881",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 15
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 20
+        },
+        {
+          "item": "zhuzi",
+          "qty": 20
+        }
+      ],
+      "note": "JX3BOX 当前版本配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "custom": false
+    },
+    {
+      "id": "r_g_sn_zisu",
+      "kind": "gather",
+      "skillId": "shennong",
+      "name": "神农·紫苏",
+      "level": 45,
+      "tier": 4,
+      "energy": 45,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30842",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1,
+          "chance": 0.02
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.01
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_sn_huanghuacai",
+      "kind": "gather",
+      "skillId": "shennong",
+      "name": "神农·黄花菜",
+      "level": 50,
+      "tier": 4,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30844",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1,
+          "chance": 0.02
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.01
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_sn_yuxingcao",
+      "kind": "gather",
+      "skillId": "shennong",
+      "name": "神农·鱼腥草",
+      "level": 50,
+      "tier": 4,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30843",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1,
+          "chance": 0.02
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.01
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_sn_chongcao",
+      "kind": "gather",
+      "skillId": "shennong",
+      "name": "神农·虫草",
+      "level": 50,
+      "tier": 4,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30836",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1,
+          "chance": 0.02
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.01
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_sn_gancao",
+      "kind": "gather",
+      "skillId": "shennong",
+      "name": "神农·甘草",
+      "level": 10,
+      "tier": 3,
+      "energy": 10,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "gancao",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "lushui",
+          "qty": 1,
+          "chance": 0.2
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_sn_shaoyao",
+      "kind": "gather",
+      "skillId": "shennong",
+      "name": "神农·芍药",
+      "level": 15,
+      "tier": 3,
+      "energy": 15,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "shaoyao",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "lushui",
+          "qty": 1,
+          "chance": 0.2
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_sn_shanhu",
+      "kind": "gather",
+      "skillId": "shennong",
+      "name": "神农·珊瑚",
+      "level": 40,
+      "tier": 3,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "shanhu",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "lushui",
+          "qty": 1,
+          "chance": 0.2
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1,
+          "chance": 0.01
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_cj_huishi",
+      "kind": "gather",
+      "skillId": "caijin",
+      "name": "采金·辉石",
+      "level": 50,
+      "tier": 4,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30850",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.01
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_cj_tiekuang",
+      "kind": "gather",
+      "skillId": "caijin",
+      "name": "采金·铁矿",
+      "level": 20,
+      "tier": 4,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "tiekuang",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 1,
+          "chance": 0.01
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.005
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_cj_tongkuang",
+      "kind": "gather",
+      "skillId": "caijin",
+      "name": "采金·铜矿",
+      "level": 20,
+      "tier": 4,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30674",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 1,
+          "chance": 0.01
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.005
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_cj_xikuang",
+      "kind": "gather",
+      "skillId": "caijin",
+      "name": "采金·锡矿",
+      "level": 30,
+      "tier": 4,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30675",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 1,
+          "chance": 0.01
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.005
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_cj_qianxinkuang",
+      "kind": "gather",
+      "skillId": "caijin",
+      "name": "采金·铅锌矿",
+      "level": 35,
+      "tier": 4,
+      "energy": 35,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30676",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 1,
+          "chance": 0.01
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.005
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_cj_jinsha",
+      "kind": "gather",
+      "skillId": "caijin",
+      "name": "采金·金沙",
+      "level": 40,
+      "tier": 4,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "g_5_30681",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 1,
+          "chance": 0.01
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 1,
+          "chance": 0.005
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_cj_qingshi",
+      "kind": "gather",
+      "skillId": "caijin",
+      "name": "采金·青石",
+      "level": 25,
+      "tier": 3,
+      "energy": 25,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "g_5_30680",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 1,
+          "chance": 0.01
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_pd_heishanyang",
+      "kind": "gather",
+      "skillId": "paoding",
+      "name": "庖丁·黑山羊",
+      "level": 50,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30874",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30875",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30873",
+          "qty": 1,
+          "chance": 1
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_pd_shanye",
+      "kind": "gather",
+      "skillId": "paoding",
+      "name": "庖丁·山野野兽",
+      "level": 30,
+      "tier": 2,
+      "energy": 30,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30824",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "zasui",
+          "qty": 1,
+          "chance": 1
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    },
+    {
+      "id": "r_g_pd_hexian",
+      "kind": "gather",
+      "skillId": "paoding",
+      "name": "庖丁·河鲜",
+      "level": 20,
+      "tier": 2,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_m_5_30827",
+          "qty": 1,
+          "chance": 1
+        },
+        {
+          "item": "zasui",
+          "qty": 1,
+          "chance": 1
+        }
+      ],
+      "materials": [],
+      "note": "等级/精力按当前采集材料；稀有掉率为示例，产值按掉率折算",
+      "verified": true,
+      "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
+      "custom": false
+    }
+  ],
+  "servers": [
+    {
+      "id": "s_mengjiangnan",
+      "name": "梦江南",
+      "region": "电信一区"
+    },
+    {
+      "id": "s_pozhenzi",
+      "name": "破阵子",
+      "region": "双线一区"
+    },
+    {
+      "id": "s_dielianhua",
+      "name": "蝶恋花",
+      "region": "双线一区"
+    },
+    {
+      "id": "s_jiandan",
+      "name": "剑胆琴心",
+      "region": "双线一区"
+    },
+    {
+      "id": "s_youyuelun",
+      "name": "幽月轮",
+      "region": "双线一区"
+    },
+    {
+      "id": "s_longzheng",
+      "name": "龙争虎斗",
+      "region": "双线二区"
+    },
+    {
+      "id": "s_changancheng",
+      "name": "长安城",
+      "region": "双线二区"
+    },
+    {
+      "id": "s_douzhuang",
+      "name": "斗转星移",
+      "region": "电信一区"
+    },
+    {
+      "id": "s_qiankun",
+      "name": "乾坤一掷",
+      "region": "电信一区"
+    },
+    {
+      "id": "s_weiwo",
+      "name": "唯我独尊",
+      "region": "电信一区"
+    },
+    {
+      "id": "s_juedai",
+      "name": "绝代天骄",
+      "region": "电信五区"
+    },
+    {
+      "id": "s_tianeping",
+      "name": "天鹅坪",
+      "region": "电信五区"
+    },
+    {
+      "id": "s_feilong",
+      "name": "飞龙在天",
+      "region": "双线二区"
+    },
+    {
+      "id": "s_jiutian",
+      "name": "九天",
+      "region": "电信新区"
+    },
+    {
+      "id": "s_meijianxue",
+      "name": "眉间雪",
+      "region": "电信五区"
+    },
+    {
+      "id": "s_shanhai",
+      "name": "山海相逢",
+      "region": "电信五区"
+    },
+    {
+      "id": "s_aoxue",
+      "name": "傲血戰意",
+      "region": "双线三区"
+    }
+  ]
+};

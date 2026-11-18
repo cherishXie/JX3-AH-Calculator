@@ -1,0 +1,13 @@
+{
+  "miniprogramRoot": "dist/xhs/",
+  "projectname": "jianghu-ledger",
+  "description": "剑网三物价助手 · 剑网3 苍生铸世生活技艺成本与精力收益计算器（小红书小程序）",
+  "appid": "",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true
+  },
+  "compileType": "miniprogram"
+}

@@ -1,0 +1,29 @@
+export default {
+  pages: [
+    'pages/overview/index',
+    'pages/skills/index',
+    'pages/prices/index',
+    'pages/analysis/index',
+    'pages/recipe/index',
+    'pages/settings/index'
+  ],
+  window: {
+    backgroundTextStyle: 'dark',
+    navigationBarBackgroundColor: '#020817',
+    navigationBarTitleText: '剑网三物价助手',
+    navigationBarTextStyle: 'white',
+    backgroundColor: '#020817'
+  },
+  tabBar: {
+    color: '#94A3B8',
+    selectedColor: '#F8FAFC',
+    backgroundColor: '#0F172A',
+    borderStyle: 'black',
+    list: [
+      { pagePath: 'pages/overview/index', text: '总览', iconPath: 'assets/tabs/home.png', selectedIconPath: 'assets/tabs/home-on.png' },
+      { pagePath: 'pages/skills/index', text: '技艺', iconPath: 'assets/tabs/skills.png', selectedIconPath: 'assets/tabs/skills-on.png' },
+      { pagePath: 'pages/prices/index', text: '价格', iconPath: 'assets/tabs/prices.png', selectedIconPath: 'assets/tabs/prices-on.png' },
+      { pagePath: 'pages/analysis/index', text: '分析', iconPath: 'assets/tabs/analysis.png', selectedIconPath: 'assets/tabs/analysis-on.png' }
+    ]
+  }
+};

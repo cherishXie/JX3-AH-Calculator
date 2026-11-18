@@ -1,0 +1,173 @@
+/* ============================================================
+   小工具容器兼容层（Chrome 61 / WebView 61）
+   仅补充基线能力；现代浏览器中的原始样式仍然优先。
+   ============================================================ */
+
+html { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+:root {
+  --safe-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --safe-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+}
+.app { min-height: 100vh; min-height: var(--app-height, 100vh); }
+.header { height: calc(64px + var(--safe-top)); padding-top: var(--safe-top); }
+.page { padding-bottom: calc(24px + var(--safe-bottom)); }
+.toast-root { bottom: calc(16px + var(--safe-bottom)); }
+.sidebar { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); }
+
+/* inset / min() 基线回退 */
+.sidebar { top: 0; right: auto; bottom: 0; left: 0; }
+.scrim, .modal-wrap { top: 0; right: 0; bottom: 0; left: 0; }
+.modal-card { width: 700px; max-width: calc(100% - 24px); }
+.menu { max-height: 70vh; }
+.data-note, .source-ref { display: inline; }
+
+/* 浏览器地址栏/软键盘变化时由 compat.js 维护变量；无 JS 时保留 100vh */
+.page, .main { min-height: 0; }
+
+/* 触摸滚动 */
+.side-scroll, .drawer-body, .modal-card, .table-wrap, .skill-nav { -webkit-overflow-scrolling: touch; }
+
+/* 图表 PNG 下载在容器内不提供 */
+[data-action="export-chart"] { display: none !important; }
+
+/* 首屏静态内容 */
+.boot-page .kpi-value { font-size: 26px; line-height: 32px; }
+.boot-status { color: var(--text); font-size: 14px; line-height: 22px; margin: 8px 0 6px; }
+.noscript { padding: 24px; color: var(--text); background: var(--bg); font-size: 14px; line-height: 22px; }
+.source-ref { color: var(--muted); border-bottom: 1px dotted var(--border); }
+.src-url { word-break: break-all; margin-top: 3px; }
+
+/* Chrome 61 无 :focus-visible；保留可见的键盘焦点 */
+.btn:focus, .icon-btn:focus, .nav-item:focus, .side-link:focus, .seg-item:focus,
+.input:focus, .select:focus, .textarea:focus, .price-input:focus, a:focus {
+  outline: 2px solid var(--info);
+  outline-offset: 2px;
+}
+
+/* no-inset 时给固定层补位 */
+.no-inset .sidebar { top: 0; bottom: 0; left: 0; right: auto; }
+.no-inset .scrim, .no-inset .modal-wrap { top: 0; right: 0; bottom: 0; left: 0; }
+
+/* no-color-mix：静态半透明色兜底，保持状态可辨识 */
+.no-color-mix .header { background: var(--bg); }
+.no-color-mix .seg { background: #101b2f; }
+.no-color-mix .badge-info { background: rgba(37, 99, 235, 0.14); border-color: rgba(37, 99, 235, 0.30); color: #93c5fd; }
+.no-color-mix .badge-positive, .no-color-mix .badge-verified { background: rgba(34, 197, 94, 0.13); border-color: rgba(34, 197, 94, 0.26); color: #86efac; }
+.no-color-mix .badge-danger { background: rgba(239, 68, 68, 0.13); border-color: rgba(239, 68, 68, 0.26); color: #fca5a5; }
+.no-color-mix .badge-warning { background: rgba(245, 158, 11, 0.13); border-color: rgba(245, 158, 11, 0.26); color: #fcd34d; }
+.no-color-mix .badge-peak { background: rgba(167, 139, 250, 0.15); border-color: rgba(167, 139, 250, 0.30); color: #c4b5fd; }
+.no-color-mix .badge-custom { background: rgba(56, 189, 248, 0.14); border-color: rgba(56, 189, 248, 0.28); color: #7dd3fc; }
+.no-color-mix .notice, .no-color-mix .notice.warning { background: rgba(245, 158, 11, 0.07); border-color: rgba(245, 158, 11, 0.26); }
+.no-color-mix .notice.info { background: rgba(37, 99, 235, 0.06); border-color: rgba(37, 99, 235, 0.24); }
+.no-color-mix .skill-icon { background: #101b2f; }
+.no-color-mix .skeleton { background: linear-gradient(90deg, var(--border) 20%, #334155 40%, var(--border) 60%); }
+.no-color-mix .btn:hover, .no-color-mix .price-input:hover, .no-color-mix .input:hover,
+.no-color-mix .select:hover, .no-color-mix .textarea:hover { border-color: var(--muted-2); }
+.no-color-mix .btn-primary:hover { background: #e2e8f0; }
+.no-color-mix .btn-danger:hover, .no-color-mix .mat-row .del:hover { background: rgba(239, 68, 68, 0.12); }
+.no-color-mix .price-input:focus, .no-color-mix .input:focus, .no-color-mix .select:focus,
+.no-color-mix .textarea:focus { box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.20); }
+.no-color-mix .badge-verified { color: #86efac; }
+
+/* no-flex-gap：按原 gap 值生成子项 margin；首项不偏移 */
+.no-flex-gap .brand > * + * { margin-left: 10px; }
+.no-flex-gap .nav-item > * + * { margin-left: 10px; }
+.no-flex-gap .crumbs > * + * { margin-left: 8px; }
+.no-flex-gap .header-right > * + * { margin-left: 8px; }
+.no-flex-gap .header-version > * + * { margin-left: 6px; }
+.no-flex-gap .server-trigger > * + * { margin-left: 8px; }
+.no-flex-gap .page-head > * + * { margin-left: 20px; }
+.no-flex-gap .page-title > * + * { margin-left: 10px; }
+.no-flex-gap .page-tools > * + * { margin-left: 8px; }
+.no-flex-gap .page-tools > * + * { margin-top: 8px; }
+.no-flex-gap .card-head > * + * { margin-left: 12px; }
+.no-flex-gap .card-title > * + * { margin-left: 7px; }
+.no-flex-gap .card-tools > * + * { margin-left: 6px; }
+.no-flex-gap .card-tools > * + * { margin-top: 6px; }
+.no-flex-gap .card-foot > * + * { margin-left: 8px; }
+.no-flex-gap .card-foot > * + * { margin-top: 8px; }
+.no-flex-gap .kpi-label > * + * { margin-left: 6px; }
+.no-flex-gap .kpi-value > * + * { margin-left: 4px; }
+.no-flex-gap .kpi-meta > * + * { margin-left: 6px; }
+.no-flex-gap .seg > * + * { margin-left: 2px; }
+.no-flex-gap .switch > * + * { margin-left: 7px; }
+.no-flex-gap .check > * + * { margin-left: 6px; }
+.no-flex-gap .tier-badge > * + * { margin-left: 5px; }
+.no-flex-gap .skill-chip > * + * { margin-left: 6px; }
+.no-flex-gap .cell-main > * + * { margin-left: 9px; }
+.no-flex-gap .cell-right > * + * { margin-top: 1px; }
+.no-flex-gap .price-cell > * + * { margin-left: 6px; }
+.no-flex-gap .flex > * + * { margin-left: 8px; }
+.no-flex-gap .flex-col > * + * { margin-top: 8px; }
+.no-flex-gap .skill-group-label > * + * { margin-left: 6px; }
+.no-flex-gap .skill-list > * + * { margin-top: 4px; }
+.no-flex-gap .skill-item > * + * { margin-left: 10px; }
+.no-flex-gap .skill-item .nm > * + * { margin-left: 6px; }
+.no-flex-gap .skill-head > * + * { margin-left: 12px; }
+.no-flex-gap .skill-stats > * + * { margin-left: 18px; }
+.no-flex-gap .skill-stats > * + * { margin-top: 18px; }
+.no-flex-gap .skill-stat > * + * { margin-top: 1px; }
+.no-flex-gap .chart-legend > * + * { margin-left: 12px; }
+.no-flex-gap .chart-legend > * + * { margin-top: 12px; }
+.no-flex-gap .chart-legend .item > * + * { margin-left: 5px; }
+.no-flex-gap .cost-legend .row > * + * { margin-left: 7px; }
+.no-flex-gap .rec-item > * + * { margin-left: 10px; }
+.no-flex-gap .info-row > * + * { margin-left: 12px; }
+.no-flex-gap .drawer-head > * + * { margin-left: 12px; }
+.no-flex-gap .drawer-head h2 > * + * { margin-left: 8px; }
+.no-flex-gap .drawer-head h2 > * + * { margin-top: 8px; }
+.no-flex-gap .drawer-foot > * + * { margin-left: 8px; }
+.no-flex-gap .section-title > * + * { margin-left: 8px; }
+.no-flex-gap .form-field > * + * { margin-top: 5px; }
+.no-flex-gap .modal-head > * + * { margin-left: 12px; }
+.no-flex-gap .modal-foot > * + * { margin-left: 8px; }
+.no-flex-gap .menu-item > * + * { margin-left: 8px; }
+.no-flex-gap .menu-foot > * + * { margin-left: 6px; }
+.no-flex-gap .toast-root > * + * { margin-top: 8px; }
+.no-flex-gap .toast > * + * { margin-left: 8px; }
+.no-flex-gap .data-foot > * + * { margin-left: 10px; }
+.no-flex-gap .data-foot .links > * + * { margin-left: 10px; }
+.no-flex-gap .data-foot .links > * + * { margin-top: 10px; }
+.no-flex-gap .tag-row > * + * { margin-left: 6px; }
+.no-flex-gap .tag-row > * + * { margin-top: 6px; }
+.no-flex-gap .kv-inline > * + * { margin-left: 6px; }
+.no-flex-gap .kv-inline > * + * { margin-top: 6px; }
+.no-flex-gap .verification > * + * { margin-left: 8px; }
+.no-flex-gap .toolbar-wrap > * + * { margin-left: 8px; }
+.no-flex-gap .toolbar-wrap > * + * { margin-top: 8px; }
+.no-flex-gap .server-option > * + * { margin-left: 8px; }
+.no-flex-gap .field-stack > * + * { margin-top: 4px; }
+.no-flex-gap .card-foot a > * + * { margin-left: 4px; }
+.no-flex-gap .side-link > * + * { margin-left: 8px; }
+
+.grid { grid-gap: 16px; }
+.cost-legend { grid-gap: 6px 14px; }
+.drawer-kpis { grid-gap: 1px; }
+.form-grid { grid-gap: 12px; }
+.mat-row { grid-gap: 6px; }
+.mat-head { grid-gap: 6px; }
+.split-2 { grid-gap: 16px; }
+.split-3 { grid-gap: 12px; }
+.skill-nav { grid-gap: 12px; }
+.mat-head.out { grid-gap: 6px; }
+
+
+@media (max-width: 768px) {
+  .header { height: calc(56px + var(--safe-top)); padding-top: var(--safe-top); }
+  .page { padding-bottom: calc(24px + var(--safe-bottom)); }
+.toast-root { bottom: calc(16px + var(--safe-bottom)); }
+}
+
+/* 移动端 page-head 的工具行本身是 100% 宽，补 margin 会撑出横向滚动 */
+.no-flex-gap .page-head > * + * { margin-left: 0 !important; }
+
+/* 亮色主题下的静态兜底 */
+.light.no-color-mix .seg { background: #e2e8f0; }
+.light.no-color-mix .skill-icon { background: #e8eef7; }
+.light.no-color-mix .badge-info { background: rgba(37, 99, 235, 0.10); color: #1d4ed8; }
+.light.no-color-mix .badge-positive, .light.no-color-mix .badge-verified { background: rgba(22, 163, 74, 0.10); color: #15803d; }
+.light.no-color-mix .badge-danger { background: rgba(220, 38, 38, 0.10); color: #b91c1c; }
+.light.no-color-mix .badge-warning { background: rgba(217, 119, 6, 0.10); color: #b45309; }
+.light.no-color-mix .badge-peak { background: rgba(124, 58, 237, 0.10); color: #6d28d9; }
+.light.no-color-mix .btn-primary:hover { background: #cbd5e1; }
+.light.no-color-mix .header { background: var(--bg); }
