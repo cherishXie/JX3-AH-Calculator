@@ -25,6 +25,8 @@ git add -- \
   minitool \
   miniapp \
   brand \
+  docs \
+  screenshots \
   scripts \
   .github \
   README.md \
@@ -41,12 +43,21 @@ else
   git commit -m "$MSG"
 fi
 
-GH_DIR="${GH_CONFIG_DIR:-$PWD/.gh-config}"
-if command -v gh >/dev/null 2>&1 && GH_CONFIG_DIR="$GH_DIR" gh auth status >/dev/null 2>&1; then
-  export GH_CONFIG_DIR="$GH_DIR"
-  git -c credential.helper='!gh auth git-credential' push -u "$REMOTE" "$BRANCH"
+# Prefer an explicit GH_CONFIG_DIR, then the repo-local one used in sandboxes,
+# then the user's normal ~/.config/gh.
+GH_DIR="${GH_CONFIG_DIR:-}"
+if [ -z "$GH_DIR" ] && [ -d "$PWD/.gh-config" ]; then GH_DIR="$PWD/.gh-config"; fi
+
+if command -v gh >/dev/null 2>&1; then
+  if [ -n "$GH_DIR" ]; then export GH_CONFIG_DIR="$GH_DIR"; fi
+  if gh auth status >/dev/null 2>&1; then
+    git -c credential.helper='!gh auth git-credential' push -u "$REMOTE" "$BRANCH"
+  else
+    echo "gh is not logged in; falling back to your git credential helper" >&2
+    git push -u "$REMOTE" "$BRANCH"
+  fi
 else
-  echo "gh not logged in; falling back to your git credential helper" >&2
+  echo "gh not installed; falling back to your git credential helper" >&2
   git push -u "$REMOTE" "$BRANCH"
 fi
 
