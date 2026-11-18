@@ -2246,6 +2246,25 @@
     if (ui.modal) renderModal();
   }
 
+  function setBootStatus(text) {
+    if (typeof window.setBootStatus === 'function') window.setBootStatus(text);
+  }
+
+  function hideBootLoader() {
+    const el = document.getElementById('boot-loader');
+    if (!el || el.classList.contains('is-done')) return;
+    el.setAttribute('aria-busy', 'false');
+    const elapsed = (window.performance && performance.now) ? performance.now() : 0;
+    const wait = Math.max(0, 520 - elapsed);
+    setTimeout(function () {
+      el.classList.add('is-done');
+      document.body.classList.remove('booting');
+      setTimeout(function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      }, 320);
+    }, wait);
+  }
+
   function renderSkeleton() {
     const page = document.getElementById('page');
     if (!page) return;
@@ -2359,7 +2378,17 @@
     renderSkeleton();
     setTimeout(function () {
       ui.booted = true;
-      render();
+      setBootStatus('正在计算精力收益…');
+      try {
+        render();
+        hideBootLoader();
+      } catch (err) {
+        if (window.console) console.error(err);
+        if (typeof window.bootLoaderFail === 'function') {
+          window.bootLoaderFail('加载失败，请刷新重试');
+        }
+        return;
+      }
       if (Store.state.migratedFrom) {
         toast('已切换到苍生铸世 50 级内置配方目录，自定义配方已保留', 'warn');
       }
