@@ -60,6 +60,39 @@ git push --force-with-lease -u origin main
    - 部署 Web 版到 GitHub Pages；
    - 上传小工具 zip 为 artifact，并随 Pages 发布到 `/downloads/jx3-minitool.zip`。
 
+## PWA 自动更新
+
+站点现在是可安装的 PWA：
+
+- `manifest.webmanifest` + `icons/`：可添加到主屏幕；
+- `sw.js`：构建时注入版本，缓存应用壳，新版本安装后进入 waiting 状态；
+- `version.json` / `updates.json`：当前版本与本次更新说明；
+- 页面检测到 waiting SW 后弹出更新提示，展示 `updates.json` 的标题和 notes；
+- 点「立即更新」→ `skipWaiting` → `controllerchange` → 自动重载；`localStorage` 里的价格和配方保留；
+- 点「稍后」本次会话不再提示，下次打开仍可更新。
+
+更新内容来源：
+
+- `content/updates.json`：手动维护 `title` / `notes` / `history`；
+- 每日价格机器人提交（`chore: update JX3BOX prices`）会自动换成“价格数据已更新”三条说明；
+- 想改某次更新的文案，提交前改 `content/updates.json` 即可。
+
+本地验证：
+
+```bash
+VERSION_OVERRIDE=1.0.0 ./scripts/build-site.sh
+cd _site && python3 -m http.server 8940
+# 打开 http://localhost:8940，等 Service Worker 激活
+# 另开终端：VERSION_OVERRIDE=2.0.0 ./scripts/build-site.sh
+# 回到页面刷新/等待 15 分钟检查，或 DevTools → Application → Service Workers → Update
+```
+
+注意：
+
+- GitHub Pages 不能自定义 `Cache-Control`；SW 用 `updateViaCache: 'none'`，检测仍可能有几分钟延迟。
+- 更新提示只在 HTTPS 或 localhost、且 `app-version` 已由构建替换时启用。
+- 小红书小工具不加载 PWA（`minitool/index.html` 没有引用 `pwa.js`），继续保持离线 zip 形态。
+
 ### 小红书最后一步（人工）
 
 小红书小工具**不能**像 Pages 一样全自动发布：

@@ -23,6 +23,8 @@ git add -- \
   index.html \
   assets \
   minitool \
+  site \
+  content \
   miniapp \
   brand \
   docs \
