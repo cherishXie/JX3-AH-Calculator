@@ -87,6 +87,7 @@ git push --force-with-lease -u origin main
 
 - **Pages 404**：确认 Settings → Pages 的 Source 是 “GitHub Actions”；确认 deploy job 成功；首次发布等 1–2 分钟。
 - **`configure-pages` 报 Pages not enabled**：回到 Settings → Pages 手动开启一次。
+- **push 被拒，提示 OAuth App 不能改 workflow**：运行 `gh auth refresh -h github.com -s workflow` 后重试。
 - **小工具 zip 超过 10 MiB**：`scripts/check-minitool.mjs` 会直接失败，先压缩素材或删无用文件。
 - **页面更新了但手机还是旧版**：Pages CDN 有约 10 分钟缓存，强制刷新或换隐私窗口；小工具是离线包，必须重新上传并审核才会更新。
 - **子路径**：Pages 地址带 `/JX3-AH-Calculator/`，项目内全部使用相对路径，无需改 `base`。
