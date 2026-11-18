@@ -225,12 +225,10 @@ async function main() {
   const stampParts = {};
   for (const part of stampFmt.formatToParts(stampDate)) stampParts[part.type] = part.value;
   const priceStamp = `${stampParts.year}-${stampParts.month}-${stampParts.day}T${stampParts.hour}:${stampParts.minute}:${stampParts.second}+08:00`;
-  const compactStamp = `${stampParts.year}${stampParts.month}${stampParts.day}${stampParts.hour}${stampParts.minute}${stampParts.second}`;
   const primaryCoverage = serverCoverage[primaryId] || { updated: 0, total: data.items.length, filtered: 0, noQuote: 0 };
   data.meta.priceUpdatedAt = priceStamp;
   data.meta.priceCoverage = { updated: primaryCoverage.updated, total: data.items.length, source: 'JX3BOX 拍卖 · ' + Object.keys(serverCoverage).length + ' 个服务器', filtered: primaryCoverage.filtered, noQuote: primaryCoverage.noQuote };
   data.meta.serverCoverage = serverCoverage;
-  data.meta.seedVersion = String(data.meta.seedVersion || 'cs50-v3.3').replace(/-p\d+$/, '') + '-p' + compactStamp;
   data.meta.disclaimer = '制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。';
 
   writeData(data);

@@ -1,15 +1,15 @@
 /* 剑网三物价助手 · PWA service worker
- * 构建时 __APP_VERSION__ 会被替换成当前提交版本。
+ * 构建时 __APP_VERSION__ 会被替换成“应用壳”版本（不含 data.js）。
  * 新版本安装后不自动 skipWaiting，等页面上的更新提示确认后再切换。
  */
 const VERSION = '__APP_VERSION__';
 const CACHE = 'jx3-shell-' + VERSION;
+const DATA_CACHE = 'jx3-data';
 const SHELL = [
   './',
   './index.html',
   './assets/styles.css',
   './assets/pwa.css',
-  './assets/data.js',
   './assets/core.js',
   './assets/charts.js',
   './assets/app.js',
@@ -20,11 +20,15 @@ const SHELL = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
+  event.waitUntil(Promise.all([
     caches.open(CACHE).then((cache) => {
       return cache.addAll(SHELL.map((url) => new Request(url, { cache: 'reload' })));
-    })
-  );
+    }),
+    // 价格数据单独放一个缓存：应用壳更新时仍保留，数据更新不触发 SW 升级。
+    caches.open(DATA_CACHE).then((cache) => {
+      return cache.add(new Request('./assets/data.js', { cache: 'reload' }));
+    }).catch(() => {})
+  ]));
 });
 
 self.addEventListener('activate', (event) => {
@@ -53,6 +57,27 @@ self.addEventListener('fetch', (event) => {
   // 版本/更新说明永远走网络，避免被缓存成旧内容。
   if (url.pathname.endsWith('/version.json') || url.pathname.endsWith('/updates.json')) {
     event.respondWith(fetch(request, { cache: 'no-store' }));
+    return;
+  }
+
+  // 价格数据网络优先：后台更新只改 data.js，不新增 SW、不弹更新提示。
+  // 离线时回退到上一次缓存的数据。
+  if (url.pathname.endsWith('/assets/data.js')) {
+    event.respondWith(
+      fetch(request, { cache: 'no-cache' })
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(DATA_CACHE).then((cache) => cache.put('./assets/data.js', copy)).catch(() => {});
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.open(DATA_CACHE)
+            .then((cache) => cache.match('./assets/data.js'))
+            .then((hit) => hit || caches.match(request));
+        })
+    );
     return;
   }
 

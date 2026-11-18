@@ -15,6 +15,8 @@
 
   var registration = null;
   var reloading = false;
+  var updating = false;
+  var progressValue = 0;
   var banner = null;
 
   function escapeHtml(value) {
@@ -70,20 +72,74 @@
     });
 
     root.querySelector('.pwa-update__go').addEventListener('click', function () {
-      applyUpdate();
+      beginUpdate();
     });
 
     document.body.appendChild(root);
     banner = root;
   }
 
-  function applyUpdate() {
+  function setProgress(value, text) {
+    progressValue = value;
+    if (!banner) return;
+    var track = banner.querySelector('.pwa-update__track');
+    var fill = banner.querySelector('.pwa-update__track i');
+    var status = banner.querySelector('.pwa-update__status');
+    if (track) track.setAttribute('aria-valuenow', String(value));
+    if (fill) fill.style.width = Math.max(0, Math.min(100, value)) + '%';
+    if (status) status.textContent = text;
+  }
+
+  function beginUpdate() {
+    if (updating) return;
+    updating = true;
+    if (!banner) { location.reload(); return; }
+
+    var notes = banner.querySelector('.pwa-update__notes');
+    var actions = banner.querySelector('.pwa-update__actions');
+    if (notes) notes.style.display = 'none';
+    if (actions) actions.style.display = 'none';
+
+    var progress = document.createElement('div');
+    progress.className = 'pwa-update__progress';
+    progress.innerHTML =
+      '<div class="pwa-update__track" role="progressbar" aria-label="更新进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>' +
+      '<div class="pwa-update__status" aria-live="polite">正在准备新版本…</div>';
+    banner.appendChild(progress);
+    setProgress(12, '正在准备新版本…');
+
+    setTimeout(function () {
+      if (updating && progressValue < 45) setProgress(45, '正在切换版本…');
+    }, 280);
+    setTimeout(function () {
+      if (updating && progressValue < 65) setProgress(65, '正在应用更新…');
+    }, 700);
+    setTimeout(function () {
+      if (updating && progressValue < 75) setProgress(75, '网络较慢，仍在更新…');
+    }, 3000);
+
     if (registration && registration.waiting) {
-      reloading = true;
       registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-      return;
+    } else {
+      setProgress(70, '正在应用更新…');
+      setTimeout(function () {
+        if (reloading) return;
+        setProgress(100, '更新完成，正在刷新…');
+        reloading = true;
+        location.reload();
+      }, 900);
     }
-    location.reload();
+
+    // 兜底：controllerchange 没触发时也不能让用户一直等。
+    setTimeout(function () {
+      if (!updating || reloading) return;
+      setProgress(92, '正在刷新页面…');
+      setTimeout(function () {
+        if (reloading) return;
+        reloading = true;
+        location.reload();
+      }, 500);
+    }, 6000);
   }
 
   function fetchUpdates() {
@@ -166,7 +222,13 @@
   }
 
   navigator.serviceWorker.addEventListener('controllerchange', function () {
-    if (reloading) location.reload();
+    if (!updating || reloading) return;
+    setProgress(100, '更新完成，正在刷新…');
+    setTimeout(function () {
+      if (reloading) return;
+      reloading = true;
+      location.reload();
+    }, 700);
   });
 
   navigator.serviceWorker.register('./sw.js', {

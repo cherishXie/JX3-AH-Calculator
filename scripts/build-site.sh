@@ -3,10 +3,35 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-VERSION="${VERSION_OVERRIDE:-$(git rev-parse --short HEAD 2>/dev/null || echo dev)}"
-if [ -z "${VERSION_OVERRIDE:-}" ] && [ -z "${CI:-}" ] && [ -n "$(git status --porcelain 2>/dev/null || true)" ]; then
-  VERSION="${VERSION}-dirty$(date +%s)"
-fi
+# 应用壳版本 = 除 data.js 外的静态资源哈希。
+# 只更新价格时 data.js 变了但壳版本不变，SW 不升级，也就不会弹 PWA 更新提示。
+SHELL_VERSION="${SHELL_VERSION_OVERRIDE:-$(python3 - <<'PY'
+import hashlib
+import pathlib
+
+files = [
+    'index.html',
+    'assets/styles.css',
+    'assets/pwa.css',
+    'assets/core.js',
+    'assets/charts.js',
+    'assets/app.js',
+    'assets/pwa.js',
+    'site/sw.js',
+    'site/manifest.webmanifest',
+    'brand/icon-192.png',
+    'brand/icon-512.png'
+]
+h = hashlib.sha256()
+for name in files:
+    h.update(name.encode())
+    h.update(b'\0')
+    h.update(pathlib.Path(name).read_bytes())
+    h.update(b'\0')
+print(h.hexdigest()[:10])
+PY
+)}"
+GIT_COMMIT="$(git rev-parse --short HEAD 2>/dev/null || echo dev)"
 BUILD_DATE="${BUILD_DATE_OVERRIDE:-$(git log -1 --format=%cI 2>/dev/null || date -u +%Y-%m-%dT%H:%M:%SZ)}"
 
 rm -rf _site
@@ -21,15 +46,15 @@ find _site -name '.DS_Store' -delete
 touch _site/.nojekyll
 
 
-node scripts/make-updates.mjs "$VERSION" "$BUILD_DATE" _site/updates.json
+node scripts/make-updates.mjs "$SHELL_VERSION" "$BUILD_DATE" _site/updates.json
 
-python3 - "$VERSION" "$BUILD_DATE" <<'PY'
+python3 - "$SHELL_VERSION" "$BUILD_DATE" "$GIT_COMMIT" <<'PY'
 import json
 import pathlib
 import re
 import sys
 
-version, build_date = sys.argv[1], sys.argv[2]
+version, build_date, commit = sys.argv[1], sys.argv[2], sys.argv[3]
 root = pathlib.Path('_site')
 
 for rel in ('index.html', 'sw.js'):
@@ -40,11 +65,16 @@ for rel in ('index.html', 'sw.js'):
         sys.exit(1)
     path.write_text(text.replace('__APP_VERSION__', version), encoding='utf-8')
 
+data_text = (root / 'assets/data.js').read_text(encoding='utf-8')
+match = re.search(r'"priceUpdatedAt"\s*:\s*"([^"]+)"', data_text)
+data_updated = match.group(1) if match else ''
+
 (root / 'version.json').write_text(
     json.dumps({
         'version': version,
+        'commit': commit,
         'builtAt': build_date,
-        'commit': version.split('-', 1)[0],
+        'dataUpdatedAt': data_updated,
     }, ensure_ascii=False, indent=2) + '\n',
     encoding='utf-8'
 )
@@ -104,5 +134,5 @@ fi
 
 printf 'built _site (%s), version %s, downloads: %s\n' \
   "$(du -sh _site | cut -f1)" \
-  "$VERSION" \
+  "$SHELL_VERSION" \
   "$([ -f _site/downloads/jx3-minitool.zip ] && echo yes || echo no)"

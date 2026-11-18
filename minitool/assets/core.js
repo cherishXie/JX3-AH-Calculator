@@ -5,6 +5,8 @@
   'use strict';
 
   const DATA = window.JX3Data;
+  const CANON = {};
+  (DATA.items || []).forEach(function (i) { CANON[i.id] = i; });
   const STORAGE_KEY = 'jx3-ledger-v1';
   const SEED_TS = Date.parse(DATA.meta && DATA.meta.priceUpdatedAt) || Date.parse('2026-11-18T09:00:00+08:00');
 
@@ -259,16 +261,18 @@
     },
 
     seedPrice: function (serverId, item) {
-      if (!item || !(item.base > 0)) return 0;
+      if (!item) return 0;
+      const canonical = (!item.custom && CANON[item.id]) ? CANON[item.id] : item;
+      if (!(canonical.base > 0)) return 0;
       const bucket = DATA.serverPrices && DATA.serverPrices[serverId];
-      const actual = bucket && Number(bucket[item.id]);
+      const actual = bucket && Number(bucket[canonical.id]);
       if (actual > 0) return U.round(actual, 2);
       const known = DATA.servers.some(function (s) { return s.id === serverId; });
-      if (serverId === 's_mengjiangnan' || known) return U.round(item.base, 2);
-      const h = U.hash(serverId + '|' + item.id);
+      if (serverId === 's_mengjiangnan' || known) return U.round(canonical.base, 2);
+      const h = U.hash(serverId + '|' + canonical.id);
       const jitter = 0.96 + (h % 800) / 10000;
-      const skillFactor = 0.96 + (U.hash(serverId + '|' + item.skillId) % 700) / 10000;
-      return U.round(item.base * jitter * skillFactor, 2);
+      const skillFactor = 0.96 + (U.hash(serverId + '|' + canonical.skillId) % 700) / 10000;
+      return U.round(canonical.base * jitter * skillFactor, 2);
     },
 
     price: function (serverId, itemId) {

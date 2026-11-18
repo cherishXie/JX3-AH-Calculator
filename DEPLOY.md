@@ -65,11 +65,15 @@ git push --force-with-lease -u origin main
 站点现在是可安装的 PWA：
 
 - `manifest.webmanifest` + `icons/`：可添加到主屏幕；
-- `sw.js`：构建时注入版本，缓存应用壳，新版本安装后进入 waiting 状态；
+- `sw.js`：构建时注入**应用壳版本**（不含 `data.js`），缓存应用壳，代码新版本安装后进入 waiting 状态；
 - `version.json` / `updates.json`：当前版本与本次更新说明；
 - 页面检测到 waiting SW 后弹出更新提示，展示 `updates.json` 的标题和 notes；
 - 点「立即更新」→ `skipWaiting` → `controllerchange` → 自动重载；`localStorage` 里的价格和配方保留；
 - 点「稍后」本次会话不再提示，下次打开仍可更新。
+- 价格数据 `assets/data.js` 单独缓存并网络优先：**定时价格更新不会生成新 SW、不会弹更新提示**，下次打开/刷新直接拿新价格；
+- 只有 HTML/CSS/JS 等应用壳变化时才提示更新；点「立即更新」后更新卡会显示进度条和阶段文字，完成自动刷新；
+- 更新中会展示「准备 → 切换 → 应用 → 刷新」进度，避免点击后无反馈；
+- 360、Edge 等 Chromium 浏览器做了降级：宽度/安全区用回退值，按钮间距不用 flex gap，360 老内核也能正常显示提示卡。
 - 顶部刷新图标或「设置 → 应用 → 检查更新」可手动检测；没有新版本会提示「已是最新版本」。
 
 更新内容来源：
@@ -81,11 +85,13 @@ git push --force-with-lease -u origin main
 本地验证：
 
 ```bash
-VERSION_OVERRIDE=1.0.0 ./scripts/build-site.sh
+SHELL_VERSION_OVERRIDE=1.0.0 ./scripts/build-site.sh
 cd _site && python3 -m http.server 8940
 # 打开 http://localhost:8940，等 Service Worker 激活
-# 另开终端：VERSION_OVERRIDE=2.0.0 ./scripts/build-site.sh
+# 另开终端：SHELL_VERSION_OVERRIDE=2.0.0 ./scripts/build-site.sh
 # 回到页面刷新/等待 15 分钟检查，或 DevTools → Application → Service Workers → Update
+# 价格静默更新验证：只改 _site/assets/data.js 的 priceUpdatedAt 再刷新，
+# 应看到版本不变、无更新提示、数据已变新。
 ```
 
 注意：
