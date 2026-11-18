@@ -6,7 +6,7 @@
 
   const DATA = window.JX3Data;
   const STORAGE_KEY = 'jx3-ledger-v1';
-  const SEED_TS = Date.parse('2026-11-18T09:00:00+08:00');
+  const SEED_TS = Date.parse(DATA.meta && DATA.meta.priceUpdatedAt) || Date.parse('2026-11-18T09:00:00+08:00');
 
   /* ------------------------------------------------------------------ */
   /* 工具                                                               */

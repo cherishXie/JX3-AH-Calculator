@@ -6,7 +6,7 @@ import catalog from './catalog.json';
 import { num, round } from './format';
 
 export const DATA = catalog;
-export const SEED_TS = Date.parse('2026-11-18T09:00:00+08:00');
+export const SEED_TS = Date.parse(catalog.meta && catalog.meta.priceUpdatedAt) || Date.parse('2026-11-18T09:00:00+08:00');
 export const SCHEMA = 4;
 
 export function clone(v) {
