@@ -146,6 +146,9 @@ async function main() {
   if (!servers.length) throw new Error('没有匹配的服务器：' + ONE_SERVER);
 
   const existing = data.serverPrices && typeof data.serverPrices === 'object' ? data.serverPrices : {};
+  const beforePrices = JSON.stringify(existing);
+  const beforeBase = JSON.stringify(data.items.map((i) => [i.id, i.base]));
+  const beforeCoverage = JSON.stringify(data.meta.serverCoverage || {});
   const serverPrices = Object.assign({}, existing);
   const serverCoverage = Object.assign({}, data.meta.serverCoverage || {});
   const primaryId = 's_mengjiangnan';
@@ -177,10 +180,39 @@ async function main() {
   }
 
   data.serverPrices = serverPrices;
+
+  const afterBase = JSON.stringify(data.items.map((i) => [i.id, i.base]));
+  const priceChanged =
+    JSON.stringify(serverPrices) !== beforePrices ||
+    afterBase !== beforeBase ||
+    JSON.stringify(serverCoverage) !== beforeCoverage;
+
+  console.log(`全服合计：有效 ${totalAccepted}，过滤 ${totalFiltered}，无报价 ${totalNoQuote}`);
+  if (DRY) {
+    console.log(`[dry-run] 价格变化：${priceChanged ? '有' : '无'}；未写入文件、未重打 zip。`);
+    return;
+  }
+  if (!priceChanged) {
+    console.log('价格无变化，跳过写入与重打 zip。');
+    if (mapChanges) console.log(`映射更新 ${mapChanges} 项，已写入 scripts/jx3-item-map.json。`);
+    return;
+  }
+
   const stampDate = new Date();
-  const pad = (n) => String(n).padStart(2, '0');
-  const priceStamp = `${stampDate.getFullYear()}-${pad(stampDate.getMonth() + 1)}-${pad(stampDate.getDate())}T${pad(stampDate.getHours())}:${pad(stampDate.getMinutes())}:${pad(stampDate.getSeconds())}+08:00`;
-  const compactStamp = `${stampDate.getFullYear()}${pad(stampDate.getMonth() + 1)}${pad(stampDate.getDate())}${pad(stampDate.getHours())}${pad(stampDate.getMinutes())}${pad(stampDate.getSeconds())}`;
+  const stampFmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23'
+  });
+  const stampParts = {};
+  for (const part of stampFmt.formatToParts(stampDate)) stampParts[part.type] = part.value;
+  const priceStamp = `${stampParts.year}-${stampParts.month}-${stampParts.day}T${stampParts.hour}:${stampParts.minute}:${stampParts.second}+08:00`;
+  const compactStamp = `${stampParts.year}${stampParts.month}${stampParts.day}${stampParts.hour}${stampParts.minute}${stampParts.second}`;
   const primaryCoverage = serverCoverage[primaryId] || { updated: 0, total: data.items.length, filtered: 0, noQuote: 0 };
   data.meta.priceUpdatedAt = priceStamp;
   data.meta.priceCoverage = { updated: primaryCoverage.updated, total: data.items.length, source: 'JX3BOX 拍卖 · ' + Object.keys(serverCoverage).length + ' 个服务器', filtered: primaryCoverage.filtered, noQuote: primaryCoverage.noQuote };
@@ -188,10 +220,8 @@ async function main() {
   data.meta.seedVersion = String(data.meta.seedVersion || 'cs50-v3.3').replace(/-p\d+$/, '') + '-p' + compactStamp;
   data.meta.disclaimer = '制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。';
 
-  console.log(`全服合计：有效 ${totalAccepted}，过滤 ${totalFiltered}，无报价 ${totalNoQuote}`);
-  if (DRY) { console.log('[dry-run] 未写入文件、未重打 zip。'); return; }
   writeData(data);
-  console.log('已写入 assets/data.js、miniapp/src/shared/catalog.json、minitool/assets/data.js');
+  console.log(`已写入 assets/data.js、miniapp/src/shared/catalog.json、minitool/assets/data.js（${priceStamp}）`);
 
   if (!NO_ZIP) {
     const zip = path.join(ROOT, '剑网三物价助手-minitool.zip');

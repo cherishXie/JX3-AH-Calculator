@@ -45,6 +45,8 @@ node scripts/update-jx3-prices.mjs --dry-run
   - `minitool/assets/data.js`
   - `剑网三物价助手-minitool.zip`
 - 每次运行会给 `seedVersion` 加 `-p<时间戳>`，让已有浏览器缓存重新载入新价格；用户手动校准过的价格仍会保留。
+- 价格与上次完全一致时：不写文件、不重打 zip、不产生提交，避免每日空提交和 PWA 更新提示；
+- 只有价格发生变化时才更新 `priceUpdatedAt` / `seedVersion`；时间统一按 `Asia/Shanghai` 生成。
 
 ## 定时任务
 
