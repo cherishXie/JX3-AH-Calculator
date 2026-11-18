@@ -41,7 +41,14 @@ else
   git commit -m "$MSG"
 fi
 
-git push -u "$REMOTE" "$BRANCH"
+GH_DIR="${GH_CONFIG_DIR:-$PWD/.gh-config}"
+if command -v gh >/dev/null 2>&1 && GH_CONFIG_DIR="$GH_DIR" gh auth status >/dev/null 2>&1; then
+  export GH_CONFIG_DIR="$GH_DIR"
+  git -c credential.helper='!gh auth git-credential' push -u "$REMOTE" "$BRANCH"
+else
+  echo "gh not logged in; falling back to your git credential helper" >&2
+  git push -u "$REMOTE" "$BRANCH"
+fi
 
 cat <<EOF
 

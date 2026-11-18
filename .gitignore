@@ -12,3 +12,9 @@ JX3-AH-Calculator/
 
 # logs
 *.log
+
+# local auth/tooling (never commit tokens)
+.gh-config/
+.gh-cache/
+.git-askpass.sh
+.dsh-artifacts/
