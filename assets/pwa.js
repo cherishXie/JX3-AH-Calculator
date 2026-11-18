@@ -116,7 +116,13 @@
   function checkForUpdate() {
     if (!registration) return Promise.resolve({ status: 'unsupported' });
     return registration.update().then(function () {
-      return waitForWaiting(registration, 8000);
+      if (registration.waiting) return true;
+      if (!registration.installing) {
+        return new Promise(function (resolve) { setTimeout(resolve, 300); }).then(function () {
+          return !!(registration.waiting || registration.installing);
+        });
+      }
+      return waitForWaiting(registration, 4000);
     }).then(function (waiting) {
       return fetchUpdates().then(function (data) {
         var appVersion = data && (data.appVersion || data.version || data.latest);

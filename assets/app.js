@@ -369,6 +369,7 @@
       '</div>' +
       '<div class="side-scroll">' + navHtml + '</div>' +
       '<div class="side-foot">' +
+        '<button class="side-link" data-action="check-update">' + icon('refresh') + '<span class="label">检查更新</span></button>' +
         '<button class="side-link" data-action="open-data">' + icon('shield') + '<span class="label">数据说明</span></button>' +
         '<button class="side-link" data-action="open-settings">' + icon('settings') + '<span class="label">设置与备份</span></button>' +
         '<button class="side-link" data-action="export-json">' + icon('download') + '<span class="label">导出备份</span><span class="ext">JSON</span></button>' +
