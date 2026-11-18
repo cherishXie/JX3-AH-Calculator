@@ -71,12 +71,13 @@ git push --force-with-lease -u origin main
 所以 CI 负责“构建 + 校验 + 可下载”，发布保留一步人工：
 
 1. 手机打开 https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip 下载；
-2. `npx redminitool login`；
-3. `npx redminitool upload --file "剑网三物价助手-minitool.zip" --type pkg --yes --json`；
-4. `npx redminitool submit --file submit.json --yes`；
-5. 审核通过后在创作服务平台点发布，再挂到笔记。
+2. 安装并登录官方 CLI：`npm i -g redskillhub-upload`，然后 `redapp login --agent`；
+3. 上传 zip：`redapp upload --file "剑网三物价助手-minitool.zip" --type pkg --agent --dry-run`，核对回执后用同一个 `planHash` 执行 `--confirm "<PLAN_HASH>"`；
+4. 生成预览二维码：`redapp preview --source thirdAgent --agent --file preview.json --qr-out preview.png`，手机扫码确认；
+5. 送审：`redapp submit --source thirdAgent --agent --file submit.json --dry-run`，确认后 `--confirm "<PLAN_HASH>"`；
+6. 审核通过后在创作服务平台点发布，再挂到笔记。
 
-> 如果以后确实要全自动提交，可以把 `~/.redminitool` 的登录态放进 Actions secret，但每次 push 都会产生一个待审版本，且 token 失效会影响发布；不建议默认开启。
+> 如果以后确实要全自动提交，可以把 CLI 的登录态放进 Actions secret，但每次 push 都会产生一个待审版本，且 token 失效会影响发布；不建议默认开启。
 
 ## 定时价格更新
 

@@ -59,8 +59,8 @@ cat <<EOF
 
 小红书小工具（需手动提交审核）：
   1. 手机打开上面的「小工具包」下载 zip，或从 Actions artifact 下载
-  2. npx redminitool login
-  3. npx redminitool upload --file "剑网三物价助手-minitool.zip" --type pkg --yes --json
-  4. npx redminitool submit --file submit.json --yes
+  2. npm i -g redskillhub-upload && redapp login --agent
+  3. redapp upload --file "剑网三物价助手-minitool.zip" --type pkg --agent --dry-run
+  4. 按 redapp 回执完成 preview / submit（先扫码预览，再送审）
   审核通过后在创作服务平台点发布，再挂到笔记
 EOF
