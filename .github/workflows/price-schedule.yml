@@ -1,0 +1,24 @@
+name: Price schedule
+
+on:
+  schedule:
+    # 临时每 5 分钟，用于验证 GitHub schedule 是否注册；验证后改为 2 小时。
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/price-schedule.yml'
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger price update
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run "update-jx3-prices.yml" --repo "$GITHUB_REPOSITORY" --ref main
