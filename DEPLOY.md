@@ -140,7 +140,7 @@ cd _site && python3 -m http.server 8940
 
 ## 定时价格更新
 
-`update-jx3-prices.yml` 每天 **08:07–22:07（Asia/Shanghai）每 2 小时**运行一次，**00:00–08:00 不更新**；更新 `assets/data.js`、`minitool/assets/data.js`、`miniapp/src/shared/catalog.json` 并提交。提交完成后通过 `workflow_run` 自动触发 `deploy.yml`，所以定时更新也会同步 Pages 和小工具 zip。即使 GitHub 把 22:17 的任务延迟到凌晨，工作流里的时区窗口检查也会直接跳过。
+`update-jx3-prices.yml` 每天 **08:17–22:17（Asia/Shanghai）每 2 小时**直接定时运行一次；`price-schedule.yml` 在 **08:47–22:47** 检查，过去 90 分钟没有成功或活跃的更新时补跑。**00:00–08:00 不更新**；更新 `assets/data.js`、`minitool/assets/data.js`、`miniapp/src/shared/catalog.json` 并提交。提交完成后通过 `workflow_run` 自动触发 `deploy.yml`，所以定时更新也会同步 Pages 和小工具 zip。任务延迟到凌晨时，工作流里的时区窗口检查会跳过。调度排查与外部调度说明见 `scripts/README.md`。
 
 ## 常见问题
 

@@ -67,7 +67,11 @@ GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交
 
 ## GitHub Actions
 
-仓库已提供 `.github/workflows/update-jx3-prices.yml`：每天北京时间 **08:07–22:07、每 2 小时**运行（00:00–08:00 不更新），更新 17 个服务器数据并提交；同时上传 `剑网三物价助手-minitool.zip` artifact。cron 使用 UTC：`7 0,2,4,6,8,10,12,14 * * *`。若仓库受保护分支限制，可把 push 改为创建 PR。
+主工作流 `.github/workflows/update-jx3-prices.yml` 每天北京时间 **08:17–22:17、每 2 小时**直接运行，更新 17 个服务器数据并提交，同时上传小工具 ZIP。cron 使用 UTC：`17 0,2,4,6,8,10,12,14 * * *`。
+
+备用工作流 `price-schedule.yml` 在 **08:47–22:47、每 2 小时**检查：过去 90 分钟没有成功或正在执行/排队的更新时，补跑主工作流。两个工作流都可手动运行；备用检查的结果写入 Actions 的运行摘要。主任务通过 concurrency 串行执行，防止同时写价格。
+
+排查时先按 `event=schedule` 查看 Actions 记录：没有记录表示 GitHub 尚未派发定时事件；存在失败记录则检查日志。`active` 和手动执行成功不能证明定时调度已生效。GitHub 的 schedule 可能延迟或漏发，因此备用检查也不能替代独立的外部调度器；Cloudflare 方案见 `cloudflare/price-cron/README.md`，需另行部署并配置凭据。若仓库受保护分支限制，可把 push 改为创建 PR。
 
 ---
 
