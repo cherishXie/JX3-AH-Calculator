@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#020817">
+  <meta name="theme-color" content="#f5f5f5">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="app-version" content="__APP_VERSION__">
   <meta name="app-release" content="2026-11-19-stones">
@@ -175,6 +175,20 @@ body.booting { overflow: hidden; }
   animation: none;
 }
 
+html.light .boot-loader {
+  background:
+    radial-gradient(circle at 50% 34%, rgba(200, 16, 46, 0.08), transparent 46%),
+    radial-gradient(circle at 78% 72%, rgba(29, 111, 224, 0.07), transparent 42%),
+    #f5f5f5;
+  color: #0f172a;
+}
+html.light .boot-loader__ring::before { border-color: #e2e8f0; border-top-color: #c8102e; border-right-color: #d99a2b; }
+html.light .boot-loader__sub { color: #64748b; }
+html.light .boot-loader__status { color: #475569; }
+html.light .boot-loader__bar { background: #e2e8f0; }
+html.light .boot-loader__hint { color: #94a3b8; }
+html.light .boot-loader__retry { background: #ffffff; border-color: #cbd5e1; color: #0f172a; }
+html.light .boot-loader__retry:hover { background: #f1f5f9; }
 @keyframes boot-spin { to { transform: rotate(360deg); } }
 @keyframes boot-bar {
   0% { background-position: 120% 0; }

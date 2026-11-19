@@ -148,7 +148,9 @@
         includeIncomplete: false,
         taxRate: 0.05,
         taxRateVersion: 1,
-        theme: 'dark'
+        theme: 'light',
+        themePicked: false,
+        themeVersion: 1
       },
       seq: { item: 1, recipe: 1 },
       activity: []
@@ -181,6 +183,11 @@
       const base = seedState();
       const state = Object.assign(base, saved);
       state.settings = Object.assign({}, base.settings, saved.settings || {});
+      // v3.6 起默认亮色；旧数据若从未手动选过主题，迁移到亮色。
+      if (!saved.settings || saved.settings.themeVersion !== 1) {
+        if (!(saved.settings && saved.settings.themePicked)) state.settings.theme = 'light';
+        state.settings.themeVersion = 1;
+      }
       // 旧版本没有税额概念，或曾把默认税率存成 0：迁移到默认 5%。
       // 迁移后写入 taxRateVersion=1，用户之后可主动改为 0%。
       if (!saved.settings || saved.settings.taxRateVersion !== 1) {

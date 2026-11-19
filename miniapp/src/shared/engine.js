@@ -42,6 +42,8 @@ export function seedState() {
     prices: {},
     stonePrices: {},
     stoneChances: {},
+    stoneRecipeEdits: {},
+    stoneCustomRecipes: [],
     settings: {
       energyBudget: 3000,
       gatherEnergy: 40,
@@ -58,6 +60,10 @@ export function normalize(saved) {
   const base = seedState();
   const state = Object.assign(base, saved || {});
   state.settings = Object.assign({}, base.settings, state.settings || {});
+  if (!saved || !saved.settings || saved.settings.themeVersion !== 1) {
+    if (!(saved && saved.settings && saved.settings.themePicked)) state.settings.theme = 'light';
+    state.settings.themeVersion = 1;
+  }
   if (!saved || !saved.settings || saved.settings.taxRateVersion !== 1) {
     state.settings.taxRate = 0.05;
     state.settings.taxRateVersion = 1;
@@ -66,6 +72,8 @@ export function normalize(saved) {
   state.prices = state.prices && typeof state.prices === 'object' ? state.prices : {};
   state.stonePrices = state.stonePrices && typeof state.stonePrices === 'object' ? state.stonePrices : {};
   state.stoneChances = state.stoneChances && typeof state.stoneChances === 'object' ? state.stoneChances : {};
+  state.stoneRecipeEdits = state.stoneRecipeEdits && typeof state.stoneRecipeEdits === 'object' ? state.stoneRecipeEdits : {};
+  state.stoneCustomRecipes = Array.isArray(state.stoneCustomRecipes) ? state.stoneCustomRecipes : [];
   if (!Array.isArray(state.servers) || !state.servers.length) state.servers = clone(DATA.servers);
   if (!findServer(state, state.serverId)) state.serverId = state.servers[0].id;
 

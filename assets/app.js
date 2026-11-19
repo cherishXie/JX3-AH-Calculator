@@ -18,7 +18,7 @@
 
   const ui = {
     booted: false,
-    theme: 'dark',
+    theme: 'light',
     focusKey: null,
     searchTimer: null,
     drawer: null,
@@ -2464,7 +2464,7 @@
     return '<div class="form-grid">' +
       '<label class="form-field"><span>精力预算（模拟用）</span><input class="input" type="number" min="0" step="100" data-setting="energyBudget" value="' + st.energyBudget + '"><span class="hint">用于满精力预估与对比次数</span></label>' +
       '<label class="form-field"><span>交易税率（%）</span><input class="input" type="number" min="0" max="100" step="0.5" data-setting="taxRate" value="' + U.fmt(currentTaxRate() * 100, 1) + '"><span class="hint">默认 5%，按产物售价扣除</span></label>' +
-      '<label class="form-field"><span>默认主题</span><select class="select" data-setting="theme"><option value="dark"' + (st.theme !== 'light' ? ' selected' : '') + '>暗色</option><option value="light"' + (st.theme === 'light' ? ' selected' : '') + '>亮色</option></select></label>' +
+      '<label class="form-field"><span>默认主题</span><select class="select" data-setting="theme"><option value="light"' + (st.theme === 'light' ? ' selected' : '') + '>亮色</option><option value="dark"' + (st.theme !== 'light' ? ' selected' : '') + '>暗色</option></select></label>' +
       '<label class="form-field"><span>新建采集默认精力</span><input class="input" type="number" min="1" step="1" data-setting="gatherEnergy" value="' + st.gatherEnergy + '"></label>' +
       '<label class="form-field"><span>新建制造默认精力</span><input class="input" type="number" min="1" step="1" data-setting="craftEnergy" value="' + st.craftEnergy + '"></label>' +
       '<label class="form-field full"><span>默认成本口径</span><select class="select" data-setting="basis"><option value="market"' + (st.basis !== 'min' ? ' selected' : '') + '>市场价</option><option value="min"' + (st.basis === 'min' ? ' selected' : '') + '>取最低（仅优化材料成本）</option></select></label>' +
@@ -2721,7 +2721,7 @@
       case 'open-add-server': closeMenu(); openModal('add-server'); break;
       case 'toggle-theme': {
         const next = ui.theme === 'light' ? 'dark' : 'light';
-        Store.updateSettings({ theme: next });
+        Store.updateSettings({ theme: next, themePicked: true });
         applyTheme(next);
         render();
         toast('已切换到' + (next === 'light' ? '亮色' : '暗色') + '主题');
@@ -2997,6 +2997,7 @@
             }
           });
         }
+        if (patch.theme) patch.themePicked = true;
         if (patch.taxRate != null) patch.taxRate = Math.max(0, Math.min(100, Number(patch.taxRate) || 0)) / 100;
         if (patch.energyBudget != null) patch.energyBudget = Math.max(0, Math.round(patch.energyBudget));
         if (patch.gatherEnergy != null) patch.gatherEnergy = Math.max(1, Math.round(patch.gatherEnergy));
@@ -3207,7 +3208,7 @@
       if (t.type === 'number' && !Number.isFinite(v)) v = 0;
       if (key === 'taxRate') v = Math.max(0, Math.min(100, v)) / 100;
       if (key === 'energyBudget') v = Math.max(0, Math.round(v));
-      Store.updateSettings({ [key]: v });
+      Store.updateSettings(key === 'theme' ? { theme: v, themePicked: true } : { [key]: v });
       render();
       toast('已更新「' + (key === 'energyBudget' ? '精力预算' : key) + '」');
       return;
@@ -3370,6 +3371,8 @@
   function applyTheme(theme) {
     ui.theme = theme === 'light' ? 'light' : 'dark';
     document.documentElement.classList.toggle('light', ui.theme === 'light');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', ui.theme === 'light' ? '#f5f5f5' : '#020817');
   }
 
   function refreshAll() {
