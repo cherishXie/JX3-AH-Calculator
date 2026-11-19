@@ -52,7 +52,7 @@ export default function Breakthrough() {
   const gateDone = result.gates.filter(function (g) { return !g.missing; }).length;
 
   return (
-    <View className='page'>
+    <View className='page bt-page'>
       <TopBar title='突破升级 · 1→50' subtitle={BT.meta.expansion + ' · 晋秩突破与最优冲级路线'} />
 
       <View className='card'>
@@ -85,19 +85,19 @@ export default function Breakthrough() {
           </View>
           <Text className='tiny dim'>
             {isGather
-              ? '精力只按最少精力选择；金币按本档净花费最少选择。'
-              : '精力优先不按价格筛选；金币优先计算实际所需净花费。'}
+              ? '精力只按最少精力选择；金币按本档收益最高选择。'
+              : '精力优先不按价格筛选；金币优先计算升级与突破的实际收益。'}
           </Text>
         </View>
       </View>
 
       {strategy === 'gold' ? (
       <View className='card'>
-        <View className='card-head'><View className='flex1'><Text className='card-title'>{result.meta.name} · 金币路线三档</Text><Text className='card-sub'>按每级可用、报价完整配方的金/精力数值范围三等分，计算各档算术均值，选择本档净花费最少的实际配方。</Text></View></View>
+        <View className='card-head'><View className='flex1'><Text className='card-title'>{result.meta.name} · 金币路线三档</Text><Text className='card-sub'>按每级可用、报价完整配方的金/精力数值范围三等分，计算各档算术均值，选择本档收益最高的实际配方。</Text></View></View>
         <View className='card-body'>
-          {scenarios.map(function (sc) { const st = sc.result.totals; return <View key={sc.mode.key} className={'bt-scenario' + (mode === sc.mode.key ? ' active' : '')} onClick={function () { setMode(sc.mode.key); setOpen(''); }}><Text className='tiny dim'>{sc.mode.label} · {mode === sc.mode.key ? '当前路线' : '查看路线'}</Text><Text className={'bt-scenario-value ' + (st.total > 0 ? 'pos' : st.total < 0 ? 'neg' : 'warn')}>{st.netCost == null ? '无法完整核算' : '净花费 ' + fmt(st.netCost, 0) + ' 金'}</Text><Text className='tiny dim'>逐级档均值按精力加权 {fmt(st.bandMean, 2)} 金/精力 · 突破 {fmt(st.gateCost, 0)} 金</Text></View>; })}
+          {scenarios.map(function (sc) { const st = sc.result.totals; return <View key={sc.mode.key} className={'bt-scenario' + (mode === sc.mode.key ? ' active' : '')} onClick={function () { setMode(sc.mode.key); setOpen(''); }}><Text className='tiny dim'>合计收益 · {sc.mode.label} · {mode === sc.mode.key ? '当前路线' : '查看路线'}</Text><Text className={'bt-scenario-value ' + (st.total > 0 ? 'pos' : st.total < 0 ? 'neg' : st.total == null ? 'bt-scenario-empty' : '')}>{st.total == null ? '无法完整核算' : <>{fmtSigned(st.total, 0)}<Text className='bt-scenario-unit'>金</Text></>}</Text><Text className='tiny dim'>逐级档均值按精力加权 {fmt(st.bandMean, 2)} 金/精力</Text><Text className='tiny dim'>突破材料 {fmt(st.gateCost, 0)} 金{st.total == null ? ' · 点击查看缺失项' : ''}</Text></View>; })}
         </View>
-        <View className='card-foot'>净花费=材料成本−税后产出价值+突破材料，越低越省，负数表示净赚。各档均值供参考，产量统一取中点乘概率，空档不跨档补位。优先本服目录脚本 JX3BOX 报价，突破快照补充；手动价、示例价与跨服价不参与。经验门槛为估算，未计未核实任务奖励。成本口径：{state.settings.basis === 'min' ? '市场与自制成本取低（不计中间产物精力）；任务材料缺市价仍提示缺价' : '市场价'}。</View>
+        <View className='card-foot'>收益=税后产出价值−材料成本−突破材料；赚钱显示绿色 +，亏损显示红色 −。各档均值供参考，产量统一取中点乘概率，空档不跨档补位。优先本服目录脚本 JX3BOX 报价，突破快照补充；手动价、示例价与跨服价不参与。经验门槛为估算，未计未核实任务奖励。成本口径：{state.settings.basis === 'min' ? '市场与自制成本取低（不计中间产物精力）；任务材料缺市价仍提示缺价' : '市场价'}。</View>
       </View>
       ) : null}
       {!result.enough ? <View className='notice'><Text className='ic'>!</Text><Text>无法完整核算：{t.missingLevels ? t.missingLevels + ' 个等级无可用配方或所选收益比档无样本。' : ''}{result.gates.filter(function (g) { return g.missing; }).map(function (g) { return g.level + ' 级任务缺价：' + g.missingItems.map(function (i) { return i.name + '×' + i.qty; }).join('、'); }).join('；')} 缺价不按 0 计算，总收益暂不提供。</Text></View> : null}
@@ -117,9 +117,9 @@ export default function Breakthrough() {
         <Kpi label='1→50 总经验' value={fmtInt(t.exp)} unit='经验' meta='5 点观测校准，其余等级推算' />
         <Kpi label='总精力' value={fmtInt(t.energy)} unit='精力' meta={'约 ' + fmtInt(rounds) + ' 次满精力（' + fmtInt(budget) + '）'} />
         {strategy === 'gold' ? <>
-        <Kpi label='升级净花费' value={fmt(t.profit == null ? null : -t.profit, 0)} unit='金' meta='材料成本 − 税后产出价值' tone={t.profit > 0 ? 'pos' : t.profit < 0 ? 'neg' : ''} />
+        <Kpi label='升级收益' value={fmtSigned(t.profit, 0)} unit='金' meta='税后产出价值 − 材料成本' tone={t.profit > 0 ? 'pos' : t.profit < 0 ? 'neg' : ''} />
         <Kpi label='突破材料' value={fmt(t.gateCost, 0)} unit='金' meta={gateDone + '/' + result.gates.length + ' 个门槛可算价'} />
-        <Kpi label='合计净花费' value={fmt(t.netCost, 0)} unit='金' meta='越低越省；负数为净赚' tone={t.total > 0 ? 'pos' : t.total < 0 ? 'neg' : ''} />
+        <Kpi label='合计收益' value={fmtSigned(t.total, 0)} unit='金' meta='升级收益 − 突破材料费用' tone={t.total > 0 ? 'pos' : t.total < 0 ? 'neg' : ''} />
         </> : null}
         <Kpi label='制作/采集次数' value={fmtInt(t.crafts)} unit='次' meta='按每级经验取整累计' />
       </View>
@@ -127,14 +127,14 @@ export default function Breakthrough() {
       <View className='card'>
         <View className='card-head'>
           <View className='flex1'>
-            <Text className='card-title'>两阶段{strategy === 'gold' ? '净花费' : '精力'}</Text>
+            <Text className='card-title'>两阶段{strategy === 'gold' ? '收益' : '精力'}</Text>
             <Text className='card-sub'>1→30 级（含晋秩·学徒）/ 30→50 级（含巧匠·名师·宗师→50）</Text>
           </View>
         </View>
         <View className='card-body'>
           <View className='bt-phase-head'>
             <Text className='c1'>阶段</Text><Text className='c2'>经验</Text><Text className='c2'>精力</Text>
-            {strategy === 'gold' ? <><Text className='c3'>升级净花费</Text><Text className='c3'>突破</Text><Text className='c3'>合计净花费</Text></> : <Text className='c3'>次数</Text>}
+            {strategy === 'gold' ? <><Text className='c3'>升级收益</Text><Text className='c3'>突破</Text><Text className='c3'>合计收益</Text></> : <Text className='c3'>次数</Text>}
           </View>
           {result.phases.map(function (p) {
             return (
@@ -143,9 +143,9 @@ export default function Breakthrough() {
                 <Text className='c2'>{fmtInt(p.exp)}</Text>
                 <Text className='c2'>{fmtInt(p.energy)}</Text>
                 {strategy === 'gold' ? <>
-                <Text className={'c3 ' + (p.profit > 0 ? 'pos' : p.profit < 0 ? 'neg' : '')}>{fmt(p.profit == null ? null : -p.profit, 0)}</Text>
+                <Text className={'c3 ' + (p.profit > 0 ? 'pos' : p.profit < 0 ? 'neg' : '')}>{fmtSigned(p.profit, 0)}</Text>
                 <Text className='c3'>{fmt(p.gateCost, 0)}</Text>
-                <Text className={'c3 strong ' + (p.total > 0 ? 'pos' : p.total < 0 ? 'neg' : '')}>{fmt(p.netCost, 0)}</Text>
+                <Text className={'c3 strong ' + (p.total > 0 ? 'pos' : p.total < 0 ? 'neg' : '')}>{fmtSigned(p.total, 0)}</Text>
                 </> : <Text className='c3'>{fmtInt(p.crafts)}</Text>}
               </View>
             );
@@ -196,8 +196,8 @@ export default function Breakthrough() {
                       </Text>
                     </View>
                     <View className='bt-val'>
-                      <Text className={'v ' + (strategy === 'gold' ? (row.profit > 0 ? 'pos' : row.profit < 0 ? 'neg' : '') : '')}>{strategy === 'gold' ? fmt(row.profit == null ? null : -row.profit, 0) : fmtInt(row.totalEnergy)}</Text>
-                      <Text className='u'>{strategy === 'gold' ? '净花费·金' : '精力'}</Text>
+                      <Text className={'v ' + (strategy === 'gold' ? (row.profit > 0 ? 'pos' : row.profit < 0 ? 'neg' : '') : '')}>{strategy === 'gold' ? fmtSigned(row.profit, 0) : fmtInt(row.totalEnergy)}</Text>
+                      <Text className='u'>{strategy === 'gold' ? '收益·金' : '精力'}</Text>
                     </View>
                   </View>
                   <View className='bt-sub'>
@@ -211,7 +211,7 @@ export default function Breakthrough() {
           }) : <Empty title='暂无可用路线' desc='补齐材料价格后再试。' />}
         </View>
         <View className='card-foot'>
-          {strategy === 'gold' ? '净花费=材料成本−税后产出价值+突破材料；越低越省，负数为净赚。' : '只比较完成每级所需总精力，同精力时优先较少次数，不以收益或报价筛选。'}
+          {strategy === 'gold' ? '收益=税后产出价值−材料成本−突破材料；绿色 + 为赚，红色 − 为亏。' : '只比较完成每级所需总精力，同精力时优先较少次数，不以收益或报价筛选。'}
         </View>
       </View>
 
@@ -235,7 +235,7 @@ export default function Breakthrough() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>八技艺横评</Text>
-            <Text className='card-sub'>{strategy === 'gold' ? '同一收益比档按净花费从少到多排序' : '只按总精力（省心按次数）从少到多排序'}</Text>
+            <Text className='card-sub'>{strategy === 'gold' ? '同一收益比档按收益从高到低排序' : '只按总精力（省心按次数）从少到多排序'}</Text>
           </View>
         </View>
         <View className='card-body' style={{ paddingTop: '4rpx' }}>
@@ -249,8 +249,8 @@ export default function Breakthrough() {
                   <Text className='ds'>精力 {fmtInt(s.energy)} · 次数 {fmtInt(s.crafts)}{strategy === 'gold' ? ' · 突破 ' + fmt(s.gateCost, 0) + ' 金' : ''}</Text>
                 </View>
                 <View className='bt-val'>
-                  <Text className={'v ' + (strategy === 'gold' ? (s.total > 0 ? 'pos' : s.total < 0 ? 'neg' : '') : '')}>{strategy === 'gold' ? fmt(s.netCost, 0) : fmtInt(s.energy)}</Text>
-                  <Text className='u'>{strategy === 'gold' ? '净花费·金' : '精力'}</Text>
+                  <Text className={'v ' + (strategy === 'gold' ? (s.total > 0 ? 'pos' : s.total < 0 ? 'neg' : '') : '')}>{strategy === 'gold' ? fmtSigned(s.total, 0) : fmtInt(s.energy)}</Text>
+                  <Text className='u'>{strategy === 'gold' ? '收益·金' : '精力'}</Text>
                 </View>
               </View>
             );
@@ -301,7 +301,7 @@ function RouteDetail(props) {
   }
   return (
     <View className='bt-detail'>
-      {row.band ? <Text className='tiny dim'>本档范围 {fmt(row.band.min, 2)}–{fmt(row.band.max, 2)} 金/精力；均值 {fmt(row.band.mean, 2)}，{row.band.count} 个样本。选本档净花费最少配方。</Text> : null}
+      {row.band ? <Text className='tiny dim'>本档范围 {fmt(row.band.min, 2)}–{fmt(row.band.max, 2)} 金/精力；均值 {fmt(row.band.mean, 2)}，{row.band.count} 个样本。选本档收益最高配方。</Text> : null}
       <View className='bt-detail-cols'>
         <View className='bt-detail-col'>
           <Text className='bt-detail-h'>材料</Text>
@@ -328,7 +328,7 @@ function RouteDetail(props) {
         </View>
       </View>
       <View className='bt-detail-foot'>
-        <Text className='tiny dim'>本段 {fmtInt(row.count)} 次 · 精力 {fmtInt(row.totalEnergy)} · 材料 {fmt(row.matCost, 0)} 金 · 产出 {fmt(row.outValue, 0)} 金 · 收益 {fmtSigned(row.profit, 0)} 金</Text>
+        <Text className='tiny dim'>本段 {fmtInt(row.count)} 次 · 精力 {fmtInt(row.totalEnergy)} · 材料 {fmt(row.matCost, 0)} 金 · 产出 {fmt(row.outValue, 0)} 金 · 收益 <Text className={row.profit > 0 ? 'pos' : row.profit < 0 ? 'neg' : ''}>{fmtSigned(row.profit, 0)} 金</Text></Text>
       </View>
     </View>
   );

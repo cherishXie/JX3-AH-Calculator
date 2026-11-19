@@ -1547,3 +1547,19 @@ html.no-color-mix table.data tr.is-current td { background: rgba(59, 130, 246, 0
 @media (max-width: 640px) { .bt-scenarios { grid-template-columns: 1fr; } .bt-scenario strong { font-size: 22px; } }
 html.light .bt-scenarios { --positive: #15803d; --warning: #a16207; --danger: #be123c; }
 html.light .bt-experience { --positive: #15803d; --warning: #a16207; }
+
+/* 盈亏符号在浅色主题下保持清晰。 */
+html.light .bt-page { --positive: #15803d; --danger: #be123c; }
+/* docs/design §3/5/7：16px 节奏、24px 数值、单位同行、颜色只编码盈亏。 */
+.bt-page .bt-scenarios { gap: 16px; }
+.bt-page .bt-scenario { min-width: 0; padding: 16px; border-radius: var(--radius); gap: 8px; transition: background-color 150ms ease-out, border-color 150ms ease-out; }
+.bt-page .bt-scenario:hover { background: var(--accent-2); }
+.bt-page .bt-scenario.active { border-color: var(--muted); background: var(--accent-2); }
+.bt-page .bt-scenario:focus-visible { outline: 2px solid var(--info); outline-offset: 2px; }
+.bt-page .bt-scenario strong { display: flex; align-items: baseline; gap: 4px; font-size: 24px; line-height: 32px; font-weight: 700; white-space: nowrap; }
+.bt-page .bt-scenario strong small { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--muted); }
+.bt-page .bt-scenario strong.bt-scenario-empty { font-size: 14px; font-weight: 500; color: var(--muted); }
+.bt-page .bt-scenario .tiny { font-size: 12px; line-height: 18px; }
+.bt-page .bt-val, .bt-page .kpi-value { white-space: nowrap; }
+@media (max-width: 768px) { .bt-page .bt-scenarios { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .bt-page .bt-scenario { transition: none; } }
