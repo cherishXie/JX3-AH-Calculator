@@ -11,8 +11,8 @@ export default function BreakthroughMini() {
     return allSkillsSummary(state, 'gold');
   }, [state]);
   const top = list.slice(0, 4);
-  const energyMin = Math.min.apply(null, list.map(function (s) { return s.energy; }));
-  const energyMax = Math.max.apply(null, list.map(function (s) { return s.energy; }));
+  const energyMin = Math.min.apply(null, list.filter(function (s) { return s.energy != null; }).map(function (s) { return s.energy; }));
+  const energyMax = Math.max.apply(null, list.filter(function (s) { return s.energy != null; }).map(function (s) { return s.energy; }));
 
   function open(skillId) {
     Taro.navigateTo({ url: '/pages/breakthrough/index?skill=' + (skillId || 'duanzao') });

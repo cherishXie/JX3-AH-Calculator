@@ -11,38 +11,35 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 MSG="${1:-chore: sync web and minitool}"
+if [ "$#" -gt 0 ]; then shift; fi
 BRANCH="${BRANCH:-main}"
 REMOTE="${REMOTE:-origin}"
 
+node scripts/test-changelog.mjs
+node scripts/sync-breakthrough-model.mjs
+node scripts/test-breakthrough.cjs
 ./scripts/build-minitool.sh
 ./scripts/build-site.sh
 
 # Explicit paths: avoid committing the nested scaffold checkout and 8 MB
 # delivery zip by accident.
-git add -- \
-  index.html \
-  assets \
-  minitool \
-  site \
-  content \
-  miniapp \
-  brand \
-  docs \
-  screenshots \
-  scripts \
-  .github \
-  README.md \
-  MINITOOL.md \
-  DEPLOY.md \
-  LICENSE \
-  .gitignore \
-  .gitattributes \
-  "剑网三物价助手-minitool.zip"
+if [ "$#" -gt 0 ]; then
+  COMMIT_PATHS=("$@")
+else
+  COMMIT_PATHS=(
+    index.html assets minitool site content miniapp brand docs screenshots scripts
+    .github README.md MINITOOL.md DEPLOY.md LICENSE .gitignore .gitattributes
+    AGENTS.md "剑网三物价助手-minitool.zip"
+  )
+  if [ -f CHANGELOG.md ]; then COMMIT_PATHS+=(CHANGELOG.md); fi
+fi
+git add -- "${COMMIT_PATHS[@]}"
 
-if git diff --cached --quiet; then
+if git diff --cached --quiet -- "${COMMIT_PATHS[@]}"; then
   echo "nothing to commit"
 else
-  git commit -m "$MSG"
+  # --only prevents unrelated already-staged files from entering this release.
+  git commit --only -m "$MSG" -- "${COMMIT_PATHS[@]}"
 fi
 
 # Prefer an explicit GH_CONFIG_DIR, then the repo-local one used in sandboxes,

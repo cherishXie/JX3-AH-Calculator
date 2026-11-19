@@ -12,6 +12,7 @@ const SHELL = [
   './assets/pwa.css',
   './assets/core.js',
   './assets/breakthrough.js',
+  './assets/breakthrough-model.js',
   './assets/breakthrough-data.js',
   './assets/stones.js',
   './assets/charts.js',
@@ -61,7 +62,7 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   // 版本/更新说明永远走网络，避免被缓存成旧内容。
-  if (url.pathname.endsWith('/version.json') || url.pathname.endsWith('/updates.json')) {
+  if (url.pathname.endsWith('/version.json') || url.pathname.endsWith('/updates.json') || url.pathname.endsWith('/CHANGELOG.md')) {
     event.respondWith(fetch(request, { cache: 'no-store' }));
     return;
   }

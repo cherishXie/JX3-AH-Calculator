@@ -3,6 +3,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+node scripts/sync-breakthrough-model.mjs
+
 # 应用壳版本 = 除 data.js 外的静态资源哈希。
 # 只更新价格时 data.js 变了但壳版本不变，SW 不升级，也就不会弹 PWA 更新提示。
 SHELL_VERSION="${SHELL_VERSION_OVERRIDE:-$(python3 - <<'PY'
@@ -16,6 +18,7 @@ files = [
     'assets/install.css',
     'assets/core.js',
     'assets/breakthrough.js',
+    'assets/breakthrough-model.js',
     'assets/breakthrough-data.js',
     'assets/stones.js',
     'assets/charts.js',
@@ -44,6 +47,7 @@ rm -rf _site
 mkdir -p _site/icons _site/downloads
 cp index.html _site/index.html
 cp -R assets _site/assets
+if [ -f CHANGELOG.md ]; then cp CHANGELOG.md _site/CHANGELOG.md; fi
 cp site/sw.js _site/sw.js
 cp site/manifest.webmanifest _site/manifest.webmanifest
 cp brand/icon-180.png _site/icons/icon-180.png

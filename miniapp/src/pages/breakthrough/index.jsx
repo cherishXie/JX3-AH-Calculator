@@ -10,7 +10,7 @@ import { useStore } from '../../store';
 import { DATA } from '../../shared/engine';
 import {
   analyze, allSkillsSummary, strategyLabel, formatRange, itemsText, matsText,
-  itemOf, gatherOutputs, BT
+  itemOf, gatherOutputs, BT, MODES
 } from '../../shared/breakthrough';
 import { fmt, fmtInt, fmtSigned, fmtPct } from '../../shared/format';
 
@@ -27,18 +27,21 @@ export default function Breakthrough() {
   const [skillId, setSkillId] = useState(params.skill || 'duanzao');
   const [strategy, setStrategy] = useState(params.strategy || 'gold');
   const [open, setOpen] = useState('');
+  const [mode, setMode] = useState(['low', 'high'].indexOf(params.yield) !== -1 ? params.yield : 'mid');
+  const [showExperience, setShowExperience] = useState(false);
+  const scenarios = useMemo(function () { return MODES.map(function (m) { return { mode: m, result: analyze(state, skillId, strategy, null, m.key) }; }); }, [state, skillId, strategy]);
 
   const result = useMemo(function () {
-    return analyze(state, skillId, strategy);
-  }, [state, skillId, strategy]);
+    return scenarios.find(function (s) { return s.mode.key === mode; }).result;
+  }, [scenarios, mode]);
 
   const summary = useMemo(function () {
-    return allSkillsSummary(state, strategy);
-  }, [state, strategy]);
+    return allSkillsSummary(state, strategy, null, mode);
+  }, [state, strategy, mode]);
 
   const t = result.totals;
   const budget = Math.max(1, Number(state.settings.energyBudget) || 1);
-  const rounds = Math.ceil((t.energy + 0) / budget);
+  const rounds = t.energy == null ? null : Math.ceil(t.energy / budget);
   const isGather = result.meta.type === 'gather';
   const taxRate = state.settings.taxRate;
 
@@ -82,10 +85,23 @@ export default function Breakthrough() {
           </View>
           <Text className='tiny dim'>
             {isGather
-              ? '采集按「单次经验 ÷ 精力」与产出价值取优；采集经验为估算值。'
-              : '制造配方经验恒为精力 ×2；「精力最优」优先选单次经验小的配方，减少升级取整浪费，代价是制作次数更多。'}
+              ? '金最优按每经验净收益取优；无符合等级且报价完整的采集点时暂停核算。'
+              : '金最优按每经验净收益取优；精力与省心策略按每级次数取整后比较。'}
           </Text>
         </View>
+      </View>
+
+      <View className='card'>
+        <View className='card-head'><View className='flex1'><Text className='card-title'>{result.meta.name} · 产量三档收益估算</Text><Text className='card-sub'>低：最低产量 · 中：区间中点 · 高：最高产量；均乘产出概率，同本服售价、每档独立选路线。</Text></View></View>
+        <View className='card-body'>
+          {scenarios.map(function (sc) { const st = sc.result.totals; return <View key={sc.mode.key} className={'bt-scenario' + (mode === sc.mode.key ? ' active' : '')} onClick={function () { setMode(sc.mode.key); setOpen(''); }}><Text className='tiny dim'>{sc.mode.label} · {mode === sc.mode.key ? '当前路线' : '查看路线'}</Text><Text className={'bt-scenario-value ' + (st.total > 0 ? 'pos' : st.total < 0 ? 'neg' : 'warn')}>{st.total == null ? '无法完整核算' : fmtSigned(st.total, 0) + ' 金'}</Text><Text className='tiny dim'>升级收益 {fmtSigned(st.profit, 0)} · 突破 {fmt(st.gateCost, 0)} 金</Text></View>; })}
+        </View>
+        <View className='card-foot'>区间中点不是统计中位数。优先本服目录脚本 JX3BOX 报价，突破快照补充；手动价、示例价与跨服价不参与。经验门槛为估算，未计未核实任务奖励。成本口径：{state.settings.basis === 'min' ? '市场与自制成本取低（不计中间产物精力）；任务材料缺市价仍提示缺价' : '市场价'}。</View>
+      </View>
+      {!result.enough ? <View className='notice'><Text className='ic'>!</Text><Text>无法完整核算：{t.missingLevels ? t.missingLevels + ' 个等级缺少符合等级且报价完整的路线。' : ''}{result.gates.filter(function (g) { return g.missing; }).map(function (g) { return g.level + ' 级任务缺价：' + g.missingItems.map(function (i) { return i.name + '×' + i.qty; }).join('、'); }).join('；')} 缺价不按 0 计算，总收益暂不提供。</Text></View> : null}
+      <View className='card'>
+        <View className='card-head' onClick={function () { setShowExperience(!showExperience); }}><View className='flex1'><Text className='card-title'>{result.meta.name} · 逐级所需经验 {showExperience ? '⌃' : '⌄'}</Text><Text className='card-sub'>待核实 · 估算模型 · 1→2 至 49→50 共 49 级</Text></View></View>
+        {showExperience ? <ScrollView scrollY style={{ height: '600rpx' }}><View className='card-body'><Text className='tiny dim'>当前版本实际经验门槛尚未核实，以下为现有线性模型估算值。</Text>{result.experience.map(function (xp) { return <View className='bt-line' key={xp.from}><Text>{xp.from}→{xp.to} 级</Text><Text>{fmtInt(xp.need)} 经验 · 累计 {fmtInt(xp.cumulative)}</Text></View>; })}</View></ScrollView> : null}
       </View>
 
       {BT.meta.hints && BT.meta.hints[skillId] ? (
@@ -128,7 +144,7 @@ export default function Breakthrough() {
               </View>
             );
           })}
-          <Text className='tiny dim mt'>第一阶段只做「晋秩·学徒」一次突破；第二阶段要过 35/40/45 三道晋秩，其中 45 级「晋秩·宗师」就是 50 级突破，完成后满级。</Text>
+          <Text className='tiny dim mt'>第一阶段只做「晋秩·学徒」一次突破；第二阶段要过 35/40/45 三道晋秩，45 级「晋秩·宗师」完成后继续升级至 50；50 级无独立任务。</Text>
         </View>
         <View className='card-foot'>阶段按等级切分：1–30 级的配方与 30 级突破计入第一阶段，30 级之后的配方与 35/40/45 突破计入第二阶段。</View>
       </View>
@@ -137,7 +153,7 @@ export default function Breakthrough() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>{result.meta.name} · 最优升级路线</Text>
-            <Text className='card-sub'>{strategyLabel(strategy)} · 点击展开材料与产出明细</Text>
+            <Text className='card-sub'>{strategyLabel(strategy)} · {MODES.find(function (m) { return m.key === mode; }).label} · 点击展开材料与产出明细</Text>
           </View>
           <View className='card-tool'><Text className='badge badge-info'>{result.routes.length} 段</Text></View>
         </View>
@@ -152,8 +168,8 @@ export default function Breakthrough() {
                   <View className='bt-row-head'>
                     <View className='bt-band'><Text>50 级</Text></View>
                     <View className='bt-main'>
-                      <Text className='nm'>满级 · 晋秩·宗师（50 级突破）已完成</Text>
-                      <Text className='ds'>1→50 路线结束；后续只有 50 级配方与专精内容</Text>
+                      <Text className='nm'>50 级满级 · 无独立突破任务</Text>
+                      <Text className='ds'>45 级晋秩后继续升级至 50；此处为等级终点</Text>
                     </View>
                   </View>
                 </View>
@@ -197,12 +213,12 @@ export default function Breakthrough() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>晋秩突破任务</Text>
-            <Text className='card-sub'>30/35/40/45 级 · 最后一道「晋秩·宗师」就是 50 级突破，完成后满级 50</Text>
+            <Text className='card-sub'>30/35/40/45 级 · 45 级完成晋秩·宗师后继续升至 50；无独立 50 级任务</Text>
           </View>
         </View>
         <View className='card-body'>
           {(BT.gates[skillId] || []).map(function (g) {
-            return <GateBlock key={'gate' + g.l} k={'gate' + g.l} gate={result.gates.find(function (x) { return x.level === g.l; }) || { level: g.l, name: g.n, items: [], cost: 0 }} open={open} toggle={toggle} full />;
+            return <GateBlock key={'gate' + g.l} k={'gate' + g.l} gate={result.gates.find(function (x) { return x.level === g.l; }) || { level: g.l, name: g.n, items: [], missingItems: [], cost: null }} open={open} toggle={toggle} full />;
           })}
           {!(BT.gates[skillId] || []).length ? <Empty title='该技艺无突破数据' desc='请检查数据版本。' /> : null}
         </View>
@@ -213,7 +229,7 @@ export default function Breakthrough() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>八技艺横评</Text>
-            <Text className='card-sub'>同样 1→50，按合计收益排序（产出 − 材料 − 突破材料）</Text>
+            <Text className='card-sub'>同一产量档位比较估算收益；缺价或缺路线者不参与排名</Text>
           </View>
         </View>
         <View className='card-body' style={{ paddingTop: '4rpx' }}>
@@ -221,7 +237,7 @@ export default function Breakthrough() {
             const active = s.skillId === skillId;
             return (
               <View className={'bt-sum-row' + (active ? ' active' : '')} key={s.skillId} onClick={function () { setSkillId(s.skillId); setOpen(''); }}>
-                <View className='rank'>{i + 1}</View>
+                <View className='rank'>{s.enough ? i + 1 : '—'}</View>
                 <View className='bt-sum-main'>
                   <Text className='nm'>{s.name}<Text className='tiny dim'> · {s.type === 'gather' ? '采集' : '制造'}</Text></Text>
                   <Text className='ds'>精力 {fmtInt(s.energy)} · 升级收益 {fmtSigned(s.profit, 0)} 金 · 突破 {fmt(s.gateCost, 0)} 金</Text>
@@ -240,7 +256,7 @@ export default function Breakthrough() {
       <View className='notice'>
         <Text className='ic'>!</Text>
         <Text>
-          经验门槛为估算（每级 {fmtInt(BT.meta.expModel.base)}+{fmtInt(BT.meta.expModel.step)}×(等级−1)），仅影响总量，不改变单级最优配方；
+          经验门槛为估算（每级 {fmtInt(BT.meta.expModel.base)}+{fmtInt(BT.meta.expModel.step)}×(等级−1)），实际门槛尚未核实，可能影响次数、路线及收益；
           采集经验按 {fmtInt(BT.meta.gatherExp)} 估算。突破材料与门槛来自 JX3BOX 攻略，配方数据来自技艺接口，价格为拍卖快照；
           产出按拍卖价成交估算，未计市场深度与暴击，量产会压低实际成交价。
         </Text>
@@ -296,7 +312,7 @@ function RouteDetail(props) {
           {econ.outs.map(function (o, i) {
             return (
               <View className='bt-line' key={i}>
-                <Text className='n'>{itemOf(o.idx).n} ×{o.min === o.max ? o.min : o.min + '~' + o.max}</Text>
+                <Text className='n'>{itemOf(o.idx).n} ×{fmt(o.qty, 2)}（当前档折算量）</Text>
                 <Text className={'v ' + (o.missing ? 'warn' : '')}>{o.missing ? '缺价' : fmt(o.unit, 2)}</Text>
               </View>
             );
@@ -314,14 +330,14 @@ function GateBlock(props) {
   const gate = props.gate;
   const key = props.k || ('gate' + gate.level);
   const expanded = props.open === key;
-  const total = gate.items.reduce(function (s, i) { return s + (i.missing ? 0 : i.sub); }, 0);
+  const total = gate.cost;
   return (
     <View className={'bt-gate' + (props.full ? ' full' : '')}>
       <View className='bt-gate-head' onClick={function () { props.toggle(key); }}>
-        <View className='bt-gate-ic'><Text>{gate.level === 45 ? 50 : gate.level}</Text></View>
+        <View className='bt-gate-ic'><Text>{gate.level}</Text></View>
         <View className='bt-main'>
-          <Text className='nm'>{gate.level === 45 ? '50 级突破 · 晋秩·宗师（45 级接取）' : gate.name + ' · ' + gate.level + ' 级突破'}</Text>
-          <Text className='ds'>{gate.items.length} 种材料 · 合计 {fmt(total, 0)} 金 {gate.missing ? '· 部分缺价' : ''}</Text>
+          <Text className='nm'>{gate.name + ' · ' + gate.level + ' 级突破'}</Text>
+          <Text className='ds'>{gate.items.length} 种材料 · 合计 {fmt(total, 0)} 金 {gate.missing ? '· 缺价：' + gate.missingItems.map(function (i) { return i.name + '×' + i.qty; }).join('、') : ''}</Text>
         </View>
         <Text className='chev'>{expanded ? '⌃' : '⌄'}</Text>
       </View>
@@ -337,14 +353,14 @@ function GateBlock(props) {
                       ? '自制：' + it.recipe.n + '（需 ' + it.recipe.l + ' 级，' + matsText(it.recipe, 3) + '）'
                       : '交易行 / 采集'}
                   </Text>
-                  <Text className='tiny dim'>单价 {fmt(it.unit, 2)} 金 · 小计 {fmt(it.sub, 0)} 金</Text>
+                  <Text className='tiny dim'>{it.missing ? '本服缺价，费用待核算' : '单价 ' + fmt(it.unit, 2) + ' 金 · 小计 ' + fmt(it.sub, 0) + ' 金'}</Text>
                 </View>
                 <Text className='v'>{it.missing ? '缺价' : fmt(it.sub, 0)}</Text>
               </View>
             );
           })}
           <View className='bt-detail-foot'>
-            <Text className='tiny dim'>合计 {fmt(total, 0)} 金 · 全按交易行约 {fmt(gate.marketCost, 0)} 金；自制可省差价并可能暴击。</Text>
+            <Text className='tiny dim'>合计 {fmt(total, 0)} 金 · 全按交易行约 {fmt(gate.marketCost, 0)} 金；任务奖励材料不可提交。任务接口未列普通奖励，脚本奖励尚未核实，收益未计入奖励。</Text>
           </View>
         </View>
       ) : null}

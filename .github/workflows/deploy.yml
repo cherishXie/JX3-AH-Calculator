@@ -10,19 +10,6 @@ name: Deploy site and minitool
 on:
   push:
     branches: [main]
-    paths:
-      - 'index.html'
-      - 'assets/**'
-      - 'minitool/**'
-      - 'site/**'
-      - 'content/**'
-      - 'assets/pwa.js'
-      - 'assets/pwa.css'
-      - 'scripts/build-site.sh'
-      - 'scripts/make-updates.mjs'
-      - 'scripts/build-minitool.sh'
-      - 'scripts/check-minitool.mjs'
-      - '.github/workflows/deploy.yml'
   workflow_run:
     workflows: ["Update JX3 prices"]
     types: [completed]
@@ -37,8 +24,44 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  changelog:
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      revision: ${{ steps.release.outputs.revision }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate release scripts and breakthrough calculations
+        run: |
+          node scripts/test-changelog.mjs
+          node scripts/sync-breakthrough-model.mjs
+          node scripts/test-breakthrough.cjs
+          ./scripts/build-minitool.sh
+          ./scripts/build-site.sh
+      - name: Update changelog and application release notes
+        id: release
+        run: |
+          node scripts/update-changelog.mjs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md content/updates.json
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: update changelog"
+            git push origin HEAD:main
+          fi
+          echo "revision=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      # GITHUB_TOKEN pushes do not trigger push workflows. Dependent jobs deploy
+      # the committed changelog in this same run, without a PAT or another dispatch.
   pages:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    needs: changelog
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -46,6 +69,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.changelog.outputs.revision }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Build minitool zip
         run: ./scripts/build-minitool.sh
@@ -76,12 +105,18 @@ jobs:
         uses: actions/deploy-pages@v4
 
   minitool:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    needs: changelog
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.changelog.outputs.revision }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Build and audit zip
         run: ./scripts/build-minitool.sh

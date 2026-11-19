@@ -11,6 +11,20 @@
 
 Pages 发布的是仓库根目录的 Web 版（`index.html` + `assets/`）；小红书小工具仍是离线 zip，两者共用同一份业务代码和价格数据。
 
+## 自动提交与发布
+
+用户已授权后续完成修改和验证后自动提交推送，规则保存在根目录 `AGENTS.md`。本地执行 `./scripts/sync.sh "fix: 具体变化"` 会验证日志脚本与突破计算、构建站点和小工具，再提交推送。消息后可以追加本次文件路径，避免提交其他任务的修改。GitHub Action 无法读取本机未提交的文件。
+
+推送 `main` 后，`Deploy site and minitool` 自动完成：
+
+1. 验证并从真实提交生成 `CHANGELOG.md`、`content/updates.json`，提交日志变更。
+2. 使用已验证且包含日志的同一提交构建 Pages 和离线小工具，部署 GitHub Pages。
+3. 提供线上 `CHANGELOG.md`、`updates.json` 与稳定小工具下载地址。
+
+不需要新增 PAT 或 Secret：日志步骤使用 `contents: write`，Pages 使用 `pages: write` 与 `id-token: write`。日志机器人的推送不会触发普通 push 工作流，部署由同一工作流的后续 job 完成；价格机器人的更新由已有 `workflow_run` 入口发布。日志使用北京时间；纯价格更新不会覆盖最近一次应用发布说明。
+
+发布后必须确认 Action 成功，并核对线上 `version.json` / `updates.json`；失败不能报告为已上线。`workflow_dispatch` 可手动重跑发布。
+
 > 微信小程序「精力做什么」单独发布：源码在 `miniapp/`，构建产物在 `miniapp/dist/weapp/`，AppID、备案、上传与提审流程见 [miniapp/WECHAT-DEPLOY.md](miniapp/WECHAT-DEPLOY.md)，头像见 [wechat/](wechat/README.md)。
 
 ## 一次配置（只做一次）

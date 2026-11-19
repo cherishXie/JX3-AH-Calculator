@@ -48,7 +48,7 @@ const TYPE_KEYS = Object.keys(TYPES);
 const MAX_ID = 2000;
 const ID_BATCH = 20;
 
-// 经验门槛为估算：游戏内数值未公开，按每级线性递增建模，仅影响总量不影响单级最优配方。
+// 当前版本逐级门槛尚未核实，暂用线性估算；可能影响次数、路线和收益。
 const EXP_MODEL = { base: 500, step: 25 };
 // 采集单次经验估算：制造配方经验恒为精力的 2 倍，采集按同一比例取 40 精力 = 80 经验。
 const GATHER_EXP = 80;
@@ -373,7 +373,7 @@ function main() {
         gatherExp: GATHER_EXP,
         priceServers: servers.length,
         priceUpdatedAt: new Date().toISOString(),
-        disclaimer: '突破任务材料与等级门槛来自 JX3BOX 攻略与成就库（30/35/40/45 级晋秩）；配方等级/经验/精力来自 JX3BOX 技艺接口。每级经验门槛与采集经验未公开，为估算模型，只影响需求总量，不改变单级最优配方。任务奖励材料不可提交突破，材料需自制或交易行购买。',
+        disclaimer: '突破任务材料与等级门槛来自 JX3BOX 攻略与成就库（30/35/40/45 级晋秩，无独立 50 级任务）；配方等级/经验/精力来自 JX3BOX 技艺接口。当前版本逐级经验门槛与采集经验尚未核实，使用估算模型，可能影响次数、路线和收益。任务奖励材料不可提交；未核实的任务脚本奖励未计入收益。',
         sources: [
           { label: 'JX3BOX · 生活技艺升级攻略（2026-11-12）', url: 'https://www.jx3box.com/bps/109793' },
           { label: 'JX3BOX · 技艺配方接口', url: 'https://node.jx3box.com/manufactures' },

@@ -1508,3 +1508,13 @@ html.no-color-mix table.data tr.is-current td { background: rgba(59, 130, 246, 0
 /* 突破升级 · 满级行 */
 .bt-row.bt-max .nm { color: var(--positive); }
 .bt-row.bt-max .ds { color: var(--muted); }
+
+/* 突破：同价三档产量比较与逐级门槛 */
+.bt-scenarios { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.bt-scenario { display: flex; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 8px; color: inherit; }
+.bt-scenario.active { border-color: var(--info); background: var(--accent-2); }
+.bt-scenario strong { font-size: 24px; font-variant-numeric: tabular-nums; }
+.bt-experience > summary { cursor: pointer; }
+.bt-exp-table { max-height: 360px; overflow: auto; }
+@media (max-width: 640px) { .bt-scenarios { grid-template-columns: 1fr; } .bt-scenario strong { font-size: 22px; } }
+html.light .bt-scenarios { --positive: #15803d; --warning: #a16207; --danger: #be123c; }

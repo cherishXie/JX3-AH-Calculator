@@ -1,31 +1,42 @@
 {
-  "title": "突破升级：八技艺 1→50 最优路线",
+  "date": "2026-11-19",
+  "title": "技艺突破：三档产量独立核算与缺价提示",
   "notes": [
-    "分析页新增「突破升级」入口卡与独立页，覆盖全部 8 项生活技艺",
-    "30/35/40/45 级晋秩材料与自制配方；45 级「晋秩·宗师」即 50 级突破",
-    "按 1–30 级 / 30–50 级两阶段汇总精力、升级收益、突破材料与合计收益",
-    "收益口径：产出税后价值 − 材料成本，正数为赚；Web、小工具、小程序同步"
+    "突破任务仅有 30/35/40/45 级，50 级为满级终点；缺价材料逐项提示，费用与总收益不按 0 计算",
+    "优先使用本服脚本 JX3BOX 报价，最低产量、区间中点、最高产量分别选路线并独立核算",
+    "每个技艺新增 49 行逐级经验表并标注估算状态，修正 1→30 / 30→50 阶段切分",
+    "Web、小工具、小程序共用计算模型；后续推送自动维护 CHANGELOG、更新说明并发布 GitHub Pages"
   ],
   "history": [
     {
-      "version": "2026-11-19-svg-fix",
+      "version": "084cdf9",
       "date": "2026-11-19",
-      "title": "外链图标尺寸修复"
+      "title": "update price schedule times and recovery audit"
     },
     {
-      "version": "2026-11-19-breakthrough",
+      "version": "0b1cc50",
       "date": "2026-11-19",
-      "title": "突破升级模块"
+      "title": "re-register price schedule under repository owner"
     },
     {
-      "version": "2026-11-19-stones",
+      "version": "1c5a2df",
       "date": "2026-11-19",
-      "title": "五行石模块与交易税"
+      "title": "re-register price schedule under repository owner"
     },
     {
-      "version": "618e73e",
-      "date": "2026-11-18",
-      "title": "价格时间显示修复"
+      "version": "b190e05",
+      "date": "2026-11-19",
+      "title": "label the final ranked quest as the level-50 breakthrough and show the 50 endpoint"
+    },
+    {
+      "version": "7bc9462",
+      "date": "2026-11-19",
+      "title": "restore direct price schedule and add recovery checks"
+    },
+    {
+      "version": "9200682",
+      "date": "2026-11-19",
+      "title": "profit-based breakthrough results and 1-30/30-50 stage summary"
     }
   ]
 }
