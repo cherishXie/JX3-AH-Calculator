@@ -1,17 +1,11 @@
 {
   "sourceCommit": "b6c3d2a00b6ea0a096feec769a93f5a71404a49e",
   "date": "2026-11-19",
-<<<<<<< HEAD
-  "title": "support inline-string price sheets in Excel patcher",
-  "notes": [
-    "support inline-string price sheets in Excel patcher"
-=======
   "title": "WPS 也能用最新物价：新增本地刷新脚本",
   "notes": [
     "WPS / LibreOffice 不支持 Power Query，双击 excel/刷新物价.command 即可把最新物价写进工作簿",
     "脚本只改「物价」表的数值，图表、格式、宏都保留，并设置打开时自动重算收益",
     "Pages 下载的 jx3-excel / -auto / .xlsm 每次发布都自带当次最新快照，重新下载即可看到新价"
->>>>>>> e0b1905 (docs: update changelog)
   ],
   "history": [
     {
