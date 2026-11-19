@@ -48,10 +48,10 @@ export default function BreakthroughMini() {
               <View className='rank'>{i + 1}</View>
               <View className='bt-sum-main'>
                 <Text className='nm'>{s.name}<Text className='tiny dim'> · {s.type === 'gather' ? '采集' : '制造'}</Text></Text>
-                <Text className='ds'>精力 {fmtInt(s.energy)} · 突破材料 {fmt(s.gateCost, 0)} 金 · 产出 {fmt(s.outValue, 0)} 金</Text>
+                <Text className='ds'>精力 {fmtInt(s.energy)} · 升级收益 {fmtSigned(s.profit, 0)} 金 · 突破材料 {fmt(s.gateCost, 0)} 金</Text>
               </View>
               <View className='bt-val'>
-                <Text className={'v ' + (s.total <= 0 ? 'pos' : '')}>{fmtSigned(s.total, 0)}</Text>
+                <Text className={'v ' + (s.total > 0 ? 'pos' : s.total < 0 ? 'neg' : '')}>{fmtSigned(s.total, 0)}</Text>
                 <Text className='u'>金</Text>
               </View>
             </View>
@@ -59,7 +59,7 @@ export default function BreakthroughMini() {
         })}
       </View>
       <View className='card-foot'>
-        合计 = 升级净金 + 突破材料；负数代表升级途中能回本。当前展示性价比前 4 项，共 {SKILL_IDS.length} 项技艺。
+        合计收益 = 升级收益（产出 − 材料）− 突破材料；正数为赚。当前展示前 4 项，共 {SKILL_IDS.length} 项技艺。
       </View>
     </View>
   );

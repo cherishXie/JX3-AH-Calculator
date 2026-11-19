@@ -1654,12 +1654,12 @@
         }).join('') + '</div></div>';
     }
     return '<div class="bt-detail">' + body + '<div class="bt-foot">本段 ' + U.fmtInt(row.count) + ' 次 · 精力 ' +
-      U.fmtInt(row.totalEnergy) + ' · 材料 ' + U.fmt(row.matCost, 0) + ' 金 · 产出 ' + U.fmt(row.outValue, 0) + ' 金</div></div>';
+      U.fmtInt(row.totalEnergy) + ' · 材料 ' + U.fmt(row.matCost, 0) + ' 金 · 产出 ' + U.fmt(row.outValue, 0) + ' 金 · 收益 ' +
+      U.fmtSigned(row.profit, 0) + ' 金</div></div>';
   }
 
   function btLevelRow(row, isGather) {
     const B = bt();
-    const pos = isGather ? row.net > 0 : row.net <= 0;
     return '<details class="bt-row">' +
       '<summary class="bt-row-head">' +
         '<span class="bt-band">' + B.formatRange(row.from, row.to) + '</span>' +
@@ -1668,7 +1668,7 @@
             '经验 ' + U.fmtInt(row.exp) + ' / 精力 ' + U.fmtInt(row.energy) + ' · ×' + U.fmtInt(row.count) + '</em>' +
           '<small class="ds">产出：' + U.esc(B.itemsText(row.recipe, 2) || '—') + ' · 材料：' + U.esc(B.matsText(row.recipe, 3) || '无（采集）') + '</small>' +
         '</span>' +
-        '<span class="bt-val' + (pos ? ' pos' : '') + '">' + btMoney(row.net) + '<small>金</small></span>' +
+        '<span class="bt-val' + (row.profit > 0 ? ' pos' : row.profit < 0 ? ' neg' : '') + '">' + btMoney(row.profit) + '<small>金</small></span>' +
       '</summary>' + btRecipeDetail(row) + '</details>';
   }
 
@@ -1725,11 +1725,25 @@
     html += '<div class="kpi-grid section-gap">' +
       '<div class="kpi"><div class="kpi-label">1→50 总经验</div><div class="kpi-value">' + U.fmtInt(t.exp) + '<span class="kpi-unit">经验</span></div><div class="kpi-meta"><span>按每级经验模型估算</span></div></div>' +
       '<div class="kpi"><div class="kpi-label">总精力</div><div class="kpi-value">' + U.fmtInt(t.energy) + '<span class="kpi-unit">精力</span></div><div class="kpi-meta"><span>约 ' + U.fmtInt(rounds) + ' 次满精力（' + U.fmtInt(budget) + '）</span></div></div>' +
-      '<div class="kpi"><div class="kpi-label">升级净金</div><div class="kpi-value ' + (isGather ? (t.net > 0 ? 'pos' : '') : (t.net <= 0 ? 'pos' : '')) + '">' + U.fmtSigned(t.net, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>' + (isGather ? '升级途中的产出价值' : '材料成本 − 产出税后价值') + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">升级收益</div><div class="kpi-value ' + (t.profit > 0 ? 'pos' : t.profit < 0 ? 'neg' : '') + '">' + U.fmtSigned(t.profit, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>产出税后价值 − 材料成本</span></div></div>' +
       '<div class="kpi"><div class="kpi-label">突破材料</div><div class="kpi-value">' + U.fmt(t.gateCost, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>' + r.gates.filter(function (g) { return !g.missing; }).length + '/' + r.gates.length + ' 个门槛可算价</span></div></div>' +
-      '<div class="kpi"><div class="kpi-label">合计净投入</div><div class="kpi-value ' + (t.total <= 0 ? 'pos' : 'neg') + '">' + U.fmtSigned(t.total, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>含突破材料 · 产出 ' + U.fmt(t.outValue, 0) + ' 金</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">合计收益</div><div class="kpi-value ' + (t.total > 0 ? 'pos' : t.total < 0 ? 'neg' : '') + '">' + U.fmtSigned(t.total, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>扣突破材料 · 产出 ' + U.fmt(t.outValue, 0) + ' 金</span></div></div>' +
       '<div class="kpi"><div class="kpi-label">制作 / 采集次数</div><div class="kpi-value">' + U.fmtInt(t.crafts) + '<span class="kpi-unit">次</span></div><div class="kpi-meta"><span>' + (isGather ? '采集点按最高价值取优' : '按每次经验取整累计') + '</span></div></div>' +
     '</div>';
+
+    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">两阶段收益</h2><p class="card-sub">1→30 级（含晋秩·学徒）/ 30→50 级（含巧匠·名师·宗师）</p></div></div>' +
+      '<div class="table-wrap"><table class="data compact"><thead><tr><th>阶段</th><th class="num">经验</th><th class="num">精力</th><th class="num">产出</th><th class="num">升级收益</th><th class="num">突破材料</th><th class="num">合计收益</th></tr></thead><tbody>' +
+      r.phases.map(function (ph) {
+        return '<tr><td><b>' + (ph.from === 1 ? '1–30 级' : '30–50 级') + '</b></td>' +
+          '<td class="num">' + U.fmtInt(ph.exp) + '</td>' +
+          '<td class="num">' + U.fmtInt(ph.energy) + '</td>' +
+          '<td class="num dim">' + U.fmt(ph.outValue, 0) + '</td>' +
+          '<td class="num ' + (ph.profit > 0 ? 'pos' : ph.profit < 0 ? 'neg' : '') + '">' + U.fmtSigned(ph.profit, 0) + '</td>' +
+          '<td class="num">' + U.fmt(ph.gateCost, 0) + '</td>' +
+          '<td class="num"><b class="' + (ph.total > 0 ? 'pos' : ph.total < 0 ? 'neg' : '') + '">' + U.fmtSigned(ph.total, 0) + '</b></td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<div class="card-foot"><span>第一阶段只需过「晋秩·学徒」一次突破；第二阶段要过 35/40/45 三道晋秩，突破材料费明显更高。</span></div></section></div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">' + U.esc(r.meta.name) + ' · 最优升级路线</h2><p class="card-sub">' + BT_STRAT_LABEL[strategy] + ' · 点击任一段展开材料与产出明细</p></div>' +
@@ -1738,10 +1752,7 @@
       (r.routes.length ? r.routes.map(function (row) {
         return row.kind === 'gate' ? btGateRow(row) : btLevelRow(row, isGather);
       }).join('') : emptyState('暂无可用路线', '补齐材料价格后再试。', '', 'search')) +
-      '</div><div class="card-foot"><span>' + (isGather
-        ? '净金 = 产出税后价值（税 ' + U.fmtPct(taxRate, 0) + '）；采集不占材料成本，数值越高越划算。'
-        : '净金 = 材料成本 − 产出税后价值（税 ' + U.fmtPct(taxRate, 0) + '）；负数代表升级途中还能回本。') +
-      '</span></div></section></div>';
+      '</div><div class="card-foot"><span>收益 = 产出税后价值 − 材料成本（税 ' + U.fmtPct(taxRate, 0) + '）；正数为赚、负数为亏。合计收益 = 升级收益 − 突破材料。</span></div></section></div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">晋秩突破任务</h2><p class="card-sub">30 / 35 / 40 / 45 级 · 材料需自制或交易行购买，任务奖励材料不可提交</p></div></div>' +
@@ -1750,17 +1761,17 @@
       '</div><div class="card-foot"><span>晋秩·学徒 30 级 / 晋秩·巧匠 35 级 / 晋秩·名师 40 级 / 晋秩·宗师 45 级；完成后才能继续升级至 50。</span></div></section></div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">八技艺横评</h2><p class="card-sub">同样 1→50，按合计净投入排序（不含时间成本）</p></div></div>' +
-      '<div class="table-wrap medium"><table class="data compact"><thead><tr><th>#</th><th>技艺</th><th>类型</th><th class="num">总精力</th><th class="num">升级净金</th><th class="num">突破材料</th><th class="num">合计净投入</th><th class="num">产出价值</th></tr></thead><tbody>' +
+      '<h2 class="card-title">八技艺横评</h2><p class="card-sub">同样 1→50，按合计收益排序（产出 − 材料 − 突破材料）</p></div></div>' +
+      '<div class="table-wrap medium"><table class="data compact"><thead><tr><th>#</th><th>技艺</th><th>类型</th><th class="num">总精力</th><th class="num">升级收益</th><th class="num">突破材料</th><th class="num">合计收益</th><th class="num">产出价值</th></tr></thead><tbody>' +
       sum.map(function (s, i) {
         return '<tr class="clickable' + (s.skillId === skillId ? ' is-current' : '') + '" data-bt-skill="' + U.esc(s.skillId) + '" tabindex="0">' +
           '<td class="num dim">' + (i + 1) + '</td>' +
           '<td><b>' + U.esc(s.name) + '</b></td>' +
           '<td class="dim">' + (s.type === 'gather' ? '采集' : '制造') + '</td>' +
           '<td class="num">' + U.fmtInt(s.energy) + '</td>' +
-          '<td class="num ' + (s.net <= 0 ? 'pos' : '') + '">' + U.fmtSigned(s.net, 0) + '</td>' +
+          '<td class="num ' + (s.profit > 0 ? 'pos' : s.profit < 0 ? 'neg' : '') + '">' + U.fmtSigned(s.profit, 0) + '</td>' +
           '<td class="num">' + U.fmt(s.gateCost, 0) + '</td>' +
-          '<td class="num"><b class="' + (s.total <= 0 ? 'pos' : '') + '">' + U.fmtSigned(s.total, 0) + '</b></td>' +
+          '<td class="num"><b class="' + (s.total > 0 ? 'pos' : s.total < 0 ? 'neg' : '') + '">' + U.fmtSigned(s.total, 0) + '</b></td>' +
           '<td class="num dim">' + U.fmt(s.outValue, 0) + '</td></tr>';
       }).join('') + '</tbody></table></div>' +
       '<div class="card-foot"><span>横评使用当前服务器价格与「' + BT_STRAT_LABEL[strategy] + '」策略；点击行可切换到该技艺。</span></div></section></div>';
@@ -1793,10 +1804,10 @@
       top.map(function (s) {
         return '<a class="bt-sum-row" href="' + Route.href('/breakthrough', { skill: s.skillId }) + '">' +
           '<span class="bt-sum-main"><b class="nm">' + U.esc(s.name) + ' <span class="tiny dim">· ' + (s.type === 'gather' ? '采集' : '制造') + '</span></b>' +
-          '<span class="ds">精力 ' + U.fmtInt(s.energy) + ' · 突破材料 ' + U.fmt(s.gateCost, 0) + ' 金 · 产出 ' + U.fmt(s.outValue, 0) + ' 金</span></span>' +
-          '<span class="bt-val' + (s.total <= 0 ? ' pos' : '') + '">' + U.fmtSigned(s.total, 0) + '<small>金</small></span></a>';
+          '<span class="ds">精力 ' + U.fmtInt(s.energy) + ' · 升级收益 ' + U.fmtSigned(s.profit, 0) + ' 金 · 突破材料 ' + U.fmt(s.gateCost, 0) + ' 金</span></span>' +
+          '<span class="bt-val' + (s.total > 0 ? ' pos' : s.total < 0 ? ' neg' : '') + '">' + U.fmtSigned(s.total, 0) + '<small>金</small></span></a>';
       }).join('') +
-      '</div><div class="card-foot"><span>合计 = 升级净金 + 突破材料；负数代表升级途中能回本。展示性价比前 4 项，共 8 项技艺。</span></div></section></div>';
+      '</div><div class="card-foot"><span>合计收益 = 升级收益（产出 − 材料）− 突破材料；正数为赚。展示前 4 项，共 8 项技艺。</span></div></section></div>';
     return html;
   }
 

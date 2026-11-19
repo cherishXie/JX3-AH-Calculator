@@ -121,11 +121,12 @@
     const tax = gross * taxRate;
     const netValue = gross - tax;
     const exp = U.num(r.x);
-    const net = matCost - netValue;
+    // 收益口径：产出税后价值 − 材料成本，正数为赚、负数为亏
+    const profit = netValue - matCost;
     return {
       mats: mats, outs: outs, matCost: matCost, gross: gross, tax: tax, netValue: netValue,
-      net: net, exp: exp, energy: U.num(r.e), missing: mats.some(function (m) { return m.missing; }),
-      netPerExp: exp > 0 ? net / exp : null
+      profit: profit, exp: exp, energy: U.num(r.e), missing: mats.some(function (m) { return m.missing; }),
+      profitPerExp: exp > 0 ? profit / exp : null
     };
   }
 
@@ -173,10 +174,10 @@
       return econCache[r.i];
     }
     function score(e, need) {
-      if (!e || e.netPerExp == null) return Infinity;
+      if (!e || e.profitPerExp == null) return Infinity;
       if (strategy === 'effort') return -e.exp;
       if (strategy === 'energy') return Math.ceil(need / e.exp) * e.energy;
-      return e.netPerExp;
+      return -e.profitPerExp;
     }
 
     const levels = [];
@@ -192,7 +193,7 @@
         const s = score(e, need);
         const bs = score(pickEcon, need);
         if (s < bs - 1e-9) { pick = r; pickEcon = e; }
-        else if (Math.abs(s - bs) <= 1e-9 && e.netPerExp < pickEcon.netPerExp) { pick = r; pickEcon = e; }
+        else if (Math.abs(s - bs) <= 1e-9 && e.profitPerExp > pickEcon.profitPerExp) { pick = r; pickEcon = e; }
       });
       levels.push({ level: L, need: need, recipe: pick, econ: pickEcon, count: pick && pickEcon ? Math.ceil(need / pickEcon.exp) : 0 });
     }
@@ -218,7 +219,7 @@
         exp: b.recipe ? b.recipe.x : 0, energy: b.recipe ? b.recipe.e : 0,
         count: b.count, need: b.need,
         matCost: e ? e.matCost * b.count : 0, outValue: e ? e.netValue * b.count : 0,
-        net: e ? e.net * b.count : 0, totalEnergy: e ? e.energy * b.count : 0,
+        profit: e ? e.profit * b.count : 0, totalEnergy: e ? e.energy * b.count : 0,
         recipe: b.recipe, econ: e
       };
     });
@@ -234,14 +235,14 @@
       if (!all.some(function (x) { return x.kind === 'gate' && x.level === g.level; })) all.push(Object.assign({ kind: 'gate' }, g));
     });
 
-    const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, net: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
+    const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, profit: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
     levels.forEach(function (r) { totals.exp += r.need; if (!r.recipe) totals.missingLevels++; });
     routes.forEach(function (r) {
       totals.energy += r.totalEnergy; totals.matCost += r.matCost; totals.outValue += r.outValue;
-      totals.net += r.net; totals.crafts += r.count;
+      totals.profit += r.profit; totals.crafts += r.count;
     });
     gates.forEach(function (g) { totals.gateCost += g.cost; totals.gateMarket += g.marketCost; });
-    totals.total = totals.net + totals.gateCost;
+    totals.total = totals.profit - totals.gateCost;
     return { kind: 'craft', skillId: skillId, strategy: strategy, routes: all, gates: gates, totals: totals, enough: !totals.missingLevels };
   }
 
@@ -260,8 +261,8 @@
       });
       value *= (1 - taxRate);
       const e = {
-        exp: GATHER_EXP, energy: U.num(r.energy), value: value, net: value,
-        netPerExp: value / GATHER_EXP, valuePerEnergy: value / (U.num(r.energy) || 1),
+        exp: GATHER_EXP, energy: U.num(r.energy), value: value, profit: value,
+        profitPerExp: value / GATHER_EXP, valuePerEnergy: value / (U.num(r.energy) || 1),
         energyPerExp: U.num(r.energy) / GATHER_EXP
       };
       econCache[r.id] = e;
@@ -307,7 +308,7 @@
         name: b.node ? b.node.name : '无可用采集点', level: b.node ? b.node.level : null,
         exp: e ? e.exp : 0, energy: b.node ? b.node.energy : 0,
         count: b.count, need: b.need, matCost: 0,
-        outValue: e ? e.value * b.count : 0, net: e ? e.value * b.count : 0,
+        outValue: e ? e.value * b.count : 0, profit: e ? e.value * b.count : 0,
         totalEnergy: b.node ? U.num(b.node.energy) * b.count : 0,
         recipe: b.node, econ: e, estimated: !!b.estimated
       };
@@ -324,14 +325,36 @@
       if (!all.some(function (x) { return x.kind === 'gate' && x.level === g.level; })) all.push(Object.assign({ kind: 'gate' }, g));
     });
 
-    const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, net: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
+    const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, profit: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
     levels.forEach(function (r) { totals.exp += r.need; if (!r.node) totals.missingLevels++; });
     routes.forEach(function (r) {
-      totals.energy += r.totalEnergy; totals.outValue += r.outValue; totals.net += r.net; totals.crafts += r.count;
+      totals.energy += r.totalEnergy; totals.outValue += r.outValue; totals.profit += r.profit; totals.crafts += r.count;
     });
     gates.forEach(function (g) { totals.gateCost += g.cost; totals.gateMarket += g.marketCost; });
-    totals.total = totals.net + totals.gateCost;
+    totals.total = totals.profit - totals.gateCost;
     return { kind: 'gather', skillId: skillId, strategy: strategy, routes: all, gates: gates, totals: totals, enough: !totals.missingLevels };
+  }
+
+  function phaseSummary(routes, gates) {
+    const mk = function (from, to) {
+      return { from: from, to: to, exp: 0, energy: 0, crafts: 0, outValue: 0, profit: 0, gateCost: 0, total: 0 };
+    };
+    const p1 = mk(1, 30);
+    const p2 = mk(30, 50);
+    (routes || []).forEach(function (r) {
+      const p = r.from < 30 ? p1 : p2;
+      p.exp += r.need || 0;
+      p.energy += r.totalEnergy || 0;
+      p.crafts += r.count || 0;
+      p.outValue += r.outValue || 0;
+      p.profit += r.profit || 0;
+    });
+    (gates || []).forEach(function (g) {
+      const p = g.level <= 30 ? p1 : p2;
+      p.gateCost += g.cost || 0;
+    });
+    [p1, p2].forEach(function (p) { p.total = p.profit - p.gateCost; });
+    return [p1, p2];
   }
 
   function analyze(skillId, strategy) {
@@ -344,6 +367,7 @@
       ? gatherRoute(skillId, strategy, serverId, basis, taxRate)
       : craftRoute(skillId, strategy, serverId, basis, taxRate);
     r.meta = meta;
+    r.phases = phaseSummary(r.routes, r.gates);
     return r;
   }
 
@@ -353,10 +377,10 @@
       const t = r.totals;
       return {
         skillId: id, name: r.meta.name, color: r.meta.color, type: r.meta.type,
-        energy: t.energy, net: t.net, gateCost: t.gateCost, total: t.total,
+        energy: t.energy, profit: t.profit, gateCost: t.gateCost, total: t.total,
         outValue: t.outValue, crafts: t.crafts, exp: t.exp, enough: r.enough
       };
-    }).sort(function (a, b) { return a.total - b.total; });
+    }).sort(function (a, b) { return b.total - a.total; });
   }
 
   function itemsText(recipe, limit) {
