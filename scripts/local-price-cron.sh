@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # 本地兜底：在独立克隆里拉价、提交并通过 SSH deploy key 推送。
-# macOS launchd 每天 08:09–22:09 每 2 小时调用一次；不依赖 GitHub schedule。
+# 由 scripts/install-local-price-cron.sh 安装到 ~/.local/share/jx3-price-cron，
+# launchd 每天 08:09–22:09 每 2 小时调用；不依赖 GitHub schedule。
+# 不要用 launchd 直接执行本仓库路径：macOS TCC 会拦截，报 exit 126。
 set -euo pipefail
 
 SELF_DIR="$(cd "$(dirname "$0")/.." && pwd)"

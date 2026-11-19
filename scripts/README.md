@@ -50,11 +50,19 @@ node scripts/update-jx3-prices.mjs --dry-run
 
 ## 定时任务
 
-本机 cron 示例（Asia/Shanghai，每天 08:07–22:07、每 2 小时）：
+本机兜底由 launchd 运行 `scripts/local-price-cron.sh`（Asia/Shanghai，每天 08:09–22:09、每 2 小时）：
 
-```cron
-7 8,10,12,14,16,18,20,22 * * * cd /Users/cherishxie/Documents/ChatGPT/JX3-AH-Calculator && ./scripts/update-prices.sh >> /tmp/jx3-price-update.log 2>&1
+```bash
+./scripts/install-local-price-cron.sh           # 安装 / 更新定时任务
+./scripts/install-local-price-cron.sh --status  # 查看 state / runs / 退出码
+launchctl kickstart -k gui/$(id -u)/com.cherish.jx3-price-cron  # 立刻跑一次
+tail -f /tmp/jx3-price-cron.log                 # 运行日志
 ```
+
+- 每次在独立克隆 `~/.cache/jx3-price-cron` 里拉取最新 `main`、运行 `update-prices.sh`，价格有变化才提交并推送到 `main`；无变化时直接退出。
+- 推送使用 `.deploy-key/jx3_deploy`，走 `deploy.yml` 自动部署 Pages 与小工具包。
+- macOS 的 TCC 隐私保护会阻止 launchd 读取 `~/Documents`，plist 直接指向仓库里的脚本会以 `exit 126`（`Operation not permitted`）失败。因此安装脚本把 `local-price-cron.sh` 和 deploy key 复制到 `~/.local/share/jx3-price-cron`，plist 指向该副本。
+- 改完 `scripts/local-price-cron.sh` 要重新执行安装脚本，实际运行的副本才会同步。
 
 GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交变更/上传 artifact。
 
