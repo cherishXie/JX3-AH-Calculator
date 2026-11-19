@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "228d13e20da888820a32a5a27d88b5b5543a1165",
+  "sourceCommit": "b6c3d2a00b6ea0a096feec769a93f5a71404a49e",
   "date": "2026-11-19",
-  "title": "refresh Excel prices in WPS without Power Query",
+  "title": "support inline-string price sheets in Excel patcher",
   "notes": [
-    "refresh Excel prices in WPS without Power Query"
+    "support inline-string price sheets in Excel patcher"
   ],
   "history": [
+    {
+      "version": "b6c3d2a",
+      "date": "2026-11-19",
+      "title": "support inline-string price sheets in Excel patcher"
+    },
     {
       "version": "228d13e",
       "date": "2026-11-19",
@@ -30,11 +35,6 @@
       "version": "a6c6bdd",
       "date": "2026-11-19",
       "title": "auto-refresh on open and no-macro auto workbook"
-    },
-    {
-      "version": "8d8fd73",
-      "date": "2026-11-19",
-      "title": "add overview, gem module and one-click price refresh"
     }
   ]
 }
