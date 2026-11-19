@@ -12,7 +12,7 @@ export default function TopBar(props) {
   return (
     <View className='topbar'>
       <View className='topbar-main'>
-        {props.showTitle === false ? null : <Text className='topbar-title'>{props.title || '剑网三物价助手'}</Text>}
+        {props.showTitle === false ? null : <Text className='topbar-title'>{props.title || '精力做什么'}</Text>}
         {props.subtitle ? <Text className='topbar-sub'>{props.subtitle}</Text> : null}
         <Text className='brand-tag'>苍生铸世 · 50级</Text>
       </View>

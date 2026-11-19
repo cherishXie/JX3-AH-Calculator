@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View, Text } from '@tarojs/components';
-import Taro from '@tarojs/taro';
+import Taro, { useDidShow } from '@tarojs/taro';
 import TopBar from '../../components/TopBar';
 import Kpi from '../../components/Kpi';
 import BarList from '../../components/BarList';
@@ -8,13 +8,20 @@ import Seg from '../../components/Seg';
 import SkillIcon from '../../components/SkillIcon';
 import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
-import { useStore } from '../../store';
+import { syncRemotePrices } from '../../shared/remotePrices';
+import { isCloudConfigured } from '../../shared/cloudConfig';
+import StoneMiniCard from '../../components/StoneMiniCard';
+import { useStore, getState } from '../../store';
 import { DATA, rowsOf, statsOf, simulate, median, avg, sortRows } from '../../shared/engine';
 import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
 
 export default function Overview() {
   const [state, actions] = useStore();
   const [type, setType] = useState('all');
+
+  useDidShow(function () {
+    if (isCloudConfigured()) syncRemotePrices(actions, false, getState());
+  });
 
   const rows = useMemo(function () {
     return rowsOf(state, { serverId: state.serverId, basis: state.settings.basis });
@@ -37,6 +44,8 @@ export default function Overview() {
       };
     });
   const recs = sortRows(rows.filter(function (r) { return !r.calc.missing && r.calc.profit > 0; }), 'perEnergy', 'desc').slice(0, 3);
+  const gatherAvg = avg(rows.filter(function (r) { return r.type === 'gather' && !r.calc.missing; }).map(function (r) { return r.calc.perEnergy; }));
+  const craftAvg = avg(rows.filter(function (r) { return r.type === 'craft' && !r.calc.missing; }).map(function (r) { return r.calc.perEnergy; }));
 
   function openRecipe(id) {
     Taro.navigateTo({ url: '/pages/recipe/index?id=' + id });
@@ -58,7 +67,7 @@ export default function Overview() {
         <Kpi label='盈利配方' value={String(positives)} unit={'/ ' + rows.length + ' 个'}
           meta={'亏损 ' + negatives + ' · 缺价 ' + missing} />
         <Kpi label='本服校准' value={String(Math.round(stats.calibrated * 100))} unit='%'
-          meta={stats.user + ' 项已校准 · ' + stats.seed + ' 项示例'} progress={stats.calibrated * 100} progressTone='warn' />
+          meta={stats.user + ' 项已校准 · ' + (stats.market ? stats.market + ' 项行情' : stats.seed + ' 项示例')} progress={stats.calibrated * 100} progressTone='warn' />
         <Kpi label='满精力预估' value={fmt(sim.profit, 2)} unit='金'
           meta={'预算 ' + fmtInt(budget) + ' · 用尽 ' + fmtInt(sim.used)} tone='pos' />
       </View>
@@ -120,8 +129,10 @@ export default function Overview() {
             </View>
           ) : <Empty title='暂无正向收益配方' desc='补齐价格或切换到市场价口径。' />}
         </View>
-        <View className='card-foot'>不含交易税、暴击额外产出与市场深度</View>
+        <View className='card-foot'>已扣 {fmtPct(state.settings.taxRate, 0)} 交易税，不含暴击额外产出与市场深度</View>
       </View>
+
+      <StoneMiniCard />
 
       <View className='card'>
         <View className='card-head'>
@@ -131,6 +142,10 @@ export default function Overview() {
           </View>
         </View>
         <View className='card-body' style={{ paddingTop: '4rpx' }}>
+          <View className='row-between' style={{ padding: '0 0 10rpx' }}>
+            <Text className='tiny dim'>采集平均 {gatherAvg == null ? '—' : fmt(gatherAvg, 2)} 金/精力</Text>
+            <Text className='tiny dim'>制造平均 {craftAvg == null ? '—' : fmt(craftAvg, 2)} 金/精力</Text>
+          </View>
           {DATA.skills.map(function (s) {
             const srows = rows.filter(function (r) { return r.recipe.skillId === s.id; });
             const sv = srows.filter(function (r) { return !r.calc.missing; });
@@ -164,6 +179,7 @@ export default function Overview() {
         <View className='card-body'>
           <View className='kv'><Text className='k'>当前服务器</Text><Text className='v'>{state.servers.find(function (s) { return s.id === state.serverId; })?.name || '—'}</Text></View>
           <View className='kv'><Text className='k'>已校准价格</Text><Text className='v'>{stats.user} / {stats.total}</Text></View>
+          <View className='kv'><Text className='k'>云端行情</Text><Text className='v'>{stats.market} 项</Text></View>
           <View className='kv'><Text className='k'>示例价</Text><Text className='v'>{stats.seed} 项</Text></View>
           <View className='kv'><Text className='k'>缺少价格</Text><Text className={'v ' + (stats.missing ? 'neg' : 'pos')}>{stats.missing} 项</Text></View>
           <View className='progress'><View className='progress-fill warn' style={{ width: Math.round(stats.calibrated * 100) + '%' }} /></View>

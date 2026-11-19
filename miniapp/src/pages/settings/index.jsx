@@ -4,7 +4,9 @@ import Taro, { useRouter } from '@tarojs/taro';
 import TopBar from '../../components/TopBar';
 import { useStore } from '../../store';
 import { DATA } from '../../shared/engine';
-import { fmt } from '../../shared/format';
+import { fmt, fmtTime } from '../../shared/format';
+import { syncRemotePrices } from '../../shared/remotePrices';
+import { isCloudConfigured } from '../../shared/cloudConfig';
 
 export default function Settings() {
   const [state, actions] = useStore();
@@ -14,8 +16,10 @@ export default function Settings() {
   const [budget, setBudget] = useState(String(state.settings.energyBudget));
   const [gatherEnergy, setGatherEnergy] = useState(String(state.settings.gatherEnergy));
   const [craftEnergy, setCraftEnergy] = useState(String(state.settings.craftEnergy));
+  const [tax, setTax] = useState(String(Number(((state.settings.taxRate || 0) * 100).toFixed(1))));
   const [backup, setBackup] = useState('');
   const [importText, setImportText] = useState('');
+  const [syncing, setSyncing] = useState(false);
 
   function copyText(text, okText) {
     try {
@@ -83,6 +87,33 @@ export default function Settings() {
     }
     actions.setSetting(key, key === 'energyBudget' ? Math.round(n) : Math.max(1, Math.round(n)));
     Taro.showToast({ title: label + '已保存', icon: 'none' });
+  }
+
+  async function syncCloud() {
+    if (syncing) return;
+    if (!isCloudConfigured()) {
+      Taro.showToast({ title: '未配置云环境', icon: 'none' });
+      return;
+    }
+    setSyncing(true);
+    Taro.showLoading({ title: '同步行情...' });
+    const res = await syncRemotePrices(actions, true, state);
+    Taro.hideLoading();
+    setSyncing(false);
+    if (res.ok) Taro.showToast({ title: '行情已更新', icon: 'none' });
+    else if (res.skipped) Taro.showToast({ title: '未配置云环境', icon: 'none' });
+    else Taro.showToast({ title: res.error || '同步失败', icon: 'none' });
+  }
+
+  function saveTax(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n) || n < 0 || n > 100) {
+      Taro.showToast({ title: '税率需在 0–100% 之间', icon: 'none' });
+      setTax(String(Number(((state.settings.taxRate || 0) * 100).toFixed(1))));
+      return;
+    }
+    actions.setTaxRate(n);
+    Taro.showToast({ title: '交易税已保存', icon: 'none' });
   }
 
   function copyBackup() {
@@ -195,6 +226,12 @@ export default function Settings() {
             <Input className='input' type='number' value={budget} onInput={function (e) { setBudget(e.detail.value); }}
               onBlur={function () { saveNum('energyBudget', budget, '精力预算'); }} />
           </View>
+          <View className='form-field'>
+            <Text className='form-label'>交易税率（%）</Text>
+            <Input className='input tax-rate' type='digit' value={tax} onInput={function (e) { setTax(e.detail.value); }}
+              onBlur={function () { saveTax(tax); }} />
+            <Text className='tiny dim'>默认 5%，所有产物售价按此税率扣除；可改为 0% 查看税前收益。</Text>
+          </View>
           <View className='form-grid'>
             <View className='form-field'>
               <Text className='form-label'>新建采集默认精力</Text>
@@ -219,14 +256,16 @@ export default function Settings() {
       </View>
 
       <View className='card' id='data-section'>
-        <View className='card-head'><View className='flex1'><Text className='card-title'>数据与备份</Text><Text className='card-sub'>本地存储 · 不联网</Text></View></View>
+        <View className='card-head'><View className='flex1'><Text className='card-title'>数据与备份</Text><Text className='card-sub'>{isCloudConfigured() ? '本地存储 · 可选云端行情' : '本地存储 · 不联网'}</Text></View></View>
         <View className='card-body'>
           <View className='kv'><Text className='k'>数据版本</Text><Text className='v'>{DATA.meta.version} · {DATA.meta.catalogVersion}</Text></View>
           <View className='kv'><Text className='k'>核验日期</Text><Text className='v'>{DATA.meta.verifiedAt}</Text></View>
           <View className='kv'><Text className='k'>物品 / 配方 / 服务器</Text><Text className='v'>{state.items.length} / {state.recipes.length} / {state.servers.length}</Text></View>
           <View className='kv'><Text className='k'>自定义配方</Text><Text className='v'>{state.recipes.filter(function (r) { return r.custom; }).length} 个</Text></View>
+          <View className='kv'><Text className='k'>云端行情</Text><Text className='v'>{!isCloudConfigured() ? '未配置云环境' : state.marketMeta ? fmtTime(Date.parse(state.marketMeta.priceUpdatedAt)) : '未同步'}</Text></View>
 
           <View className='btn-row mt'>
+            {isCloudConfigured() ? <View className='btn btn-ghost btn-sm' onClick={syncCloud}>{syncing ? '同步中' : '同步行情'}</View> : null}
             <View className='btn btn-ghost btn-sm' onClick={copyBackup}>复制 JSON 备份</View>
             <View className='btn btn-ghost btn-sm' onClick={resetPrices}>清空本服价格</View>
             <View className='btn btn-ghost btn-sm' onClick={resetCatalog}>恢复示例配方</View>
@@ -260,7 +299,7 @@ export default function Settings() {
             <Text>制造配方/等级/精力/材料/产出范围来自 JX3BOX 技艺助手 API（2026-11-18）；产出价优先用样本价，缺失/异常时按成本估算示例。旧版本（90/100/130 级）数值不适用。</Text>
           </View>
           <Text className='tiny dim' style={{ display: 'block', marginBottom: '8rpx' }}>
-            当前版本：苍生铸世 50 级。制造技艺：锻造、缝纫、制药、烹饪、梓匠；采集：神农、采金、庖丁。紫色以上产物带署名，制造暴击、交易税、市场深度未自动计入。
+            当前版本：苍生铸世 50 级。制造技艺：锻造、缝纫、制药、烹饪、梓匠；采集：神农、采金、庖丁。紫色以上产物带署名，制造暴击与市场深度未自动计入；交易税按设置税率扣除。
           </Text>
           {DATA.meta.sources.map(function (s, i) {
             return (

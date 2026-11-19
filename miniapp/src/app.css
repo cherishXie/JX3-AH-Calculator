@@ -1,4 +1,4 @@
-/* 剑网三物价助手 · 小程序端（微信 / 小红书）暗色移动工作台 */
+/* 精力做什么 · 小程序端（微信 / 小红书）暗色移动工作台 */
 page {
   background: #020817;
   color: #f8fafc;
@@ -267,3 +267,132 @@ button::after { border: none; }
 .price-box { width: 138rpx; }
 .price-state { display: block; text-align: right; padding-right: 4rpx; }
 .toggle .track { background: #475569; border: 1rpx solid #64748b; }
+
+/* 五行石 */
+.stone-row { padding: 18rpx 0; border-bottom: 1rpx solid rgba(148, 163, 184, 0.1); }
+.stone-row:last-child { border-bottom: 0; }
+.stone-row-head { display: flex; align-items: center; }
+.stone-lv {
+  width: 46rpx; height: 46rpx; border-radius: 9rpx; flex-shrink: 0; margin-right: 10rpx;
+  display: flex; align-items: center; justify-content: center;
+  color: #020817; font-size: 18rpx; font-weight: 700;
+}
+.stone-row-title { flex: 1; min-width: 0; padding-right: 10rpx; }
+.stone-row-title .nm { display: block; font-size: 24rpx; font-weight: 600; line-height: 32rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stone-row-title .ds { display: block; font-size: 18rpx; color: #94a3b8; line-height: 26rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stone-row-val { text-align: right; flex-shrink: 0; }
+.stone-row-val .v { display: block; font-size: 26rpx; font-weight: 700; line-height: 32rpx; }
+.stone-row-val .u { display: block; font-size: 17rpx; color: #64748b; }
+.stone-metrics { display: flex; margin-top: 10rpx; padding-left: 56rpx; }
+.stone-metrics > view { flex: 1; }
+.stone-metrics .k { display: block; font-size: 17rpx; color: #64748b; line-height: 24rpx; }
+.stone-metrics .v { display: block; font-size: 21rpx; font-weight: 600; line-height: 28rpx; margin-top: 2rpx; }
+.stone-jack-row { padding: 16rpx 0; border-bottom: 1rpx solid rgba(148, 163, 184, 0.1); }
+.stone-jack-row:last-child { border-bottom: 0; }
+.stone-jack-head { display: flex; align-items: center; justify-content: space-between; }
+.stone-jack-head .nm { display: block; font-size: 23rpx; font-weight: 600; line-height: 32rpx; flex: 1; min-width: 0; padding-right: 8rpx; }
+.stone-jack-row .ds { display: block; font-size: 19rpx; color: #94a3b8; line-height: 28rpx; margin-top: 3rpx; }
+.rate-box {
+  width: 100rpx; height: 48rpx; padding: 0 8rpx; background: #0b1220;
+  border: 1rpx solid #1e293b; border-radius: 8rpx; text-align: right;
+  font-size: 21rpx; color: #f8fafc;
+}
+.stone-strip-row { display: flex; align-items: center; padding: 14rpx 0; border-bottom: 1rpx solid rgba(148, 163, 184, 0.1); }
+.stone-strip-row:last-child { border-bottom: 0; }
+.stone-strip-row .main { flex: 1; min-width: 0; padding-right: 10rpx; }
+.stone-strip-row .nm { display: block; font-size: 23rpx; font-weight: 600; line-height: 30rpx; }
+.stone-strip-row .ds { display: block; font-size: 18rpx; color: #94a3b8; line-height: 26rpx; }
+.stone-strip-row .val { text-align: right; flex-shrink: 0; }
+.stone-strip-row .val .v { display: block; font-size: 24rpx; font-weight: 700; line-height: 30rpx; }
+.stone-strip-row .val .u { display: block; font-size: 17rpx; color: #64748b; }
+.stone-strip-row .val .tiny { display: block; margin-top: 2rpx; }
+
+/* 五行石迷你卡（总览 / 分析） */
+.stone-mini-grid { display: flex; flex-wrap: wrap; justify-content: space-between; }
+.stone-mini { width: 48.5%; background: #0b1220; border: 1rpx solid #1e293b; border-radius: 12rpx; padding: 14rpx 16rpx; margin-bottom: 12rpx; }
+.stone-mini .k { display: block; font-size: 18rpx; color: #94a3b8; line-height: 26rpx; }
+.stone-mini .v { display: block; font-size: 30rpx; font-weight: 700; line-height: 40rpx; margin-top: 4rpx; }
+.stone-mini .s { display: block; font-size: 17rpx; color: #64748b; line-height: 24rpx; margin-top: 2rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 五行石公式编辑 */
+.chance-box { width: 120rpx; text-align: right; }
+
+/* 成本 × 精力收益散点（View 实现，不用 Canvas） */
+.scatter { position: relative; height: 340rpx; margin: 16rpx 10rpx 16rpx; border-left: 1rpx solid #334155; border-bottom: 1rpx solid #334155; }
+.scatter-dot { position: absolute; width: 14rpx; height: 14rpx; border-radius: 50%; transform: translate(-50%, 50%); opacity: 0.9; }
+
+/* 各技艺箱线图 */
+.box-row { display: flex; align-items: center; padding: 10rpx 0; }
+.box-name { width: 70rpx; font-size: 19rpx; color: #94a3b8; flex-shrink: 0; }
+.box-track { flex: 1; position: relative; height: 26rpx; margin: 0 10rpx; }
+.box-whisker { position: absolute; top: 12rpx; height: 2rpx; background: #475569; }
+.box-body { position: absolute; top: 4rpx; height: 18rpx; border-radius: 4rpx; opacity: 0.65; }
+.box-median { position: absolute; top: 0; width: 2rpx; height: 26rpx; background: #f8fafc; }
+.box-val { width: 80rpx; text-align: right; font-size: 18rpx; color: #94a3b8; }
+
+/* 云端行情状态 */
+.price-state.market { color: #7ab8ff; }
+
+/* 突破升级 */
+.bt-skill-scroll { width: 100%; white-space: nowrap; }
+.bt-skill-tabs { display: inline-flex; padding: 2rpx 0; }
+.bt-skill-tab {
+  display: inline-flex; align-items: center; height: 56rpx; padding: 0 16rpx;
+  margin-right: 10rpx; border-radius: 12rpx; border: 1rpx solid #1e293b;
+  background: #071020; color: #94a3b8; font-size: 22rpx; flex-shrink: 0;
+}
+.bt-skill-tab text { color: inherit; }
+.bt-skill-tab.active { background: #f8fafc; color: #020817; border-color: #f8fafc; font-weight: 600; }
+.bt-dot { width: 10rpx; height: 10rpx; border-radius: 50%; margin-right: 8rpx; flex-shrink: 0; }
+.bt-strategy { margin: 16rpx 0 12rpx; }
+
+.bt-row { border-bottom: 1rpx solid rgba(148, 163, 184, 0.12); padding: 16rpx 0; }
+.bt-row:last-child { border-bottom: 0; }
+.bt-row-head { display: flex; align-items: center; }
+.bt-band { width: 132rpx; flex-shrink: 0; }
+.bt-band text {
+  display: inline-block; font-size: 19rpx; line-height: 30rpx; color: #7ab8ff;
+  background: rgba(59, 130, 246, 0.12); border: 1rpx solid rgba(59, 130, 246, 0.25);
+  border-radius: 6rpx; padding: 2rpx 8rpx;
+}
+.bt-main { flex: 1; min-width: 0; padding: 0 10rpx; }
+.bt-main .nm { display: block; font-size: 24rpx; font-weight: 500; line-height: 32rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bt-main .ds { display: block; font-size: 19rpx; color: #94a3b8; line-height: 27rpx; margin-top: 2rpx; }
+.bt-val { text-align: right; flex-shrink: 0; min-width: 130rpx; }
+.bt-val .v { display: block; font-size: 25rpx; font-weight: 700; line-height: 32rpx; }
+.bt-val .u { display: block; font-size: 17rpx; color: #64748b; }
+.bt-sub { display: flex; flex-direction: column; padding-left: 142rpx; margin-top: 4rpx; }
+.bt-sub .tiny { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.bt-detail { margin-top: 12rpx; background: #0b1220; border: 1rpx solid #1e293b; border-radius: 10rpx; padding: 14rpx; }
+.bt-detail-cols { display: flex; }
+.bt-detail-col { flex: 1; min-width: 0; }
+.bt-detail-col + .bt-detail-col { margin-left: 16rpx; }
+.bt-detail-h { display: block; font-size: 18rpx; color: #64748b; line-height: 26rpx; margin-bottom: 6rpx; }
+.bt-line { display: flex; align-items: flex-start; justify-content: space-between; padding: 6rpx 0; }
+.bt-line-main { flex: 1; min-width: 0; padding-right: 10rpx; }
+.bt-line .n { display: block; font-size: 21rpx; line-height: 28rpx; }
+.bt-line .v { font-size: 20rpx; color: #cbd5e1; flex-shrink: 0; }
+.bt-detail-foot { border-top: 1rpx solid rgba(148, 163, 184, 0.12); margin-top: 10rpx; padding-top: 8rpx; }
+
+.bt-gate { border: 1rpx solid rgba(245, 179, 1, 0.28); background: rgba(245, 179, 1, 0.05); border-radius: 12rpx; padding: 14rpx; margin: 12rpx 0; }
+.bt-gate.full { margin: 0 0 14rpx; }
+.bt-gate-head { display: flex; align-items: center; }
+.bt-gate-ic {
+  width: 54rpx; height: 54rpx; border-radius: 10rpx; flex-shrink: 0; margin-right: 12rpx;
+  background: rgba(245, 179, 1, 0.16); color: #f5b301;
+  display: flex; align-items: center; justify-content: center; font-size: 22rpx; font-weight: 700;
+}
+
+.bt-sum-row { display: flex; align-items: center; padding: 14rpx 0; border-bottom: 1rpx solid rgba(148, 163, 184, 0.1); }
+.bt-sum-row:last-child { border-bottom: 0; }
+.bt-sum-row.active { background: rgba(29, 111, 224, 0.08); }
+.bt-sum-main { flex: 1; min-width: 0; padding-right: 10rpx; }
+.bt-sum-main .nm { display: block; font-size: 24rpx; font-weight: 500; line-height: 32rpx; }
+.bt-sum-main .ds { display: block; font-size: 19rpx; color: #94a3b8; line-height: 27rpx; }
+
+.bt-mini-kpis { display: flex; margin-bottom: 6rpx; }
+.bt-mini { flex: 1; min-width: 0; padding-right: 10rpx; }
+.bt-mini .k { display: block; font-size: 19rpx; color: #94a3b8; line-height: 27rpx; }
+.bt-mini .v { display: block; font-size: 28rpx; font-weight: 700; line-height: 38rpx; }
+.bt-mini .s { display: block; font-size: 17rpx; color: #64748b; line-height: 25rpx; }

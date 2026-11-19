@@ -8,9 +8,20 @@ import Seg from '../../components/Seg';
 import Toggle from '../../components/Toggle';
 import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
+import StoneMiniCard from '../../components/StoneMiniCard';
+import BreakthroughMini from '../../components/BreakthroughMini';
 import { useStore, getState } from '../../store';
 import { DATA, rowsOf, filterRows, sortRows, median, simulate } from '../../shared/engine';
 import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
+
+function quantile(arr, q) {
+  if (!arr.length) return null;
+  const a = arr.slice().sort(function (x, y) { return x - y; });
+  const pos = (a.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  return a[base] + (a[base + 1] != null ? (a[base + 1] - a[base]) * rest : 0);
+}
 
 export default function Analysis() {
   const [state, actions] = useStore();
@@ -46,6 +57,61 @@ export default function Analysis() {
   const chartRows = filtered.filter(function (r) { return !r.calc.missing; }).slice(0, 12).map(function (r, i) {
     return { id: r.recipe.id, label: r.recipe.name, meta: (i + 1) + ' · ' + r.skill.name, value: r.calc.perEnergy, type: r.type };
   });
+
+  const scatter = useMemo(function () {
+    const pts = filtered.filter(function (r) {
+      return !r.calc.missing && r.calc.perEnergy != null && Number.isFinite(r.calc.totalCost);
+    }).slice(0, 80);
+    if (!pts.length) return { pts: [], maxCost: 0, maxY: 0, minY: 0 };
+    const costs = pts.map(function (r) { return r.calc.totalCost; });
+    const ys = pts.map(function (r) { return r.calc.perEnergy; });
+    const maxCost = Math.max.apply(null, costs) || 1;
+    const maxY = Math.max.apply(null, ys);
+    const minY = Math.min.apply(null, ys);
+    const spanY = maxY - minY || 1;
+    return {
+      maxCost: maxCost,
+      maxY: maxY,
+      minY: minY,
+      pts: pts.map(function (r) {
+        return {
+          id: r.recipe.id,
+          name: r.recipe.name,
+          left: 2 + Math.max(0, Math.min(1, r.calc.totalCost / maxCost)) * 96,
+          bottom: 2 + Math.max(0, Math.min(1, (r.calc.perEnergy - minY) / spanY)) * 96,
+          color: r.type === 'gather' ? '#45d483' : '#45a3ff'
+        };
+      })
+    };
+  }, [filtered]);
+
+  const boxData = useMemo(function () {
+    const groups = {};
+    filtered.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; }).forEach(function (r) {
+      if (!groups[r.recipe.skillId]) groups[r.recipe.skillId] = [];
+      groups[r.recipe.skillId].push(r.calc.perEnergy);
+    });
+    const all = [];
+    Object.keys(groups).forEach(function (k) { all.push.apply(all, groups[k]); });
+    const min = all.length ? Math.min.apply(null, all) : 0;
+    const max = all.length ? Math.max.apply(null, all) : 1;
+    return {
+      min: min,
+      max: max,
+      rows: DATA.skills.map(function (s) {
+        const vals = groups[s.id] || [];
+        if (!vals.length) return { skill: s, empty: true };
+        return {
+          skill: s,
+          min: Math.min.apply(null, vals),
+          q1: quantile(vals, 0.25),
+          med: quantile(vals, 0.5),
+          q3: quantile(vals, 0.75),
+          max: Math.max.apply(null, vals)
+        };
+      })
+    };
+  }, [filtered]);
 
   const pool = filtered.filter(function (r) { return !r.calc.missing; });
   const a = pool.find(function (r) { return r.recipe.id === aId; }) || pool[0];
@@ -86,6 +152,8 @@ export default function Analysis() {
         <Kpi label='满精力预估' value={fmt(sim.profit, 2)} unit='金' meta={'预算 ' + fmtInt(state.settings.energyBudget)} tone='pos' />
       </View>
 
+      <BreakthroughMini />
+
       <View className='card'>
         <View className='card-head'>
           <View className='flex1'>
@@ -112,8 +180,73 @@ export default function Analysis() {
           <BarList rows={chartRows} limit={12} onPick={function (id) { Taro.navigateTo({ url: '/pages/recipe/index?id=' + id }); }} />
           <Text className='tiny dim mt'>虚线基准：全站中位 {med == null ? '—' : fmt(med, 2)} 金/精力</Text>
         </View>
-        <View className='card-foot'>数字为「利润 ÷ 精力」；不含交易税与暴击产出</View>
+        <View className='card-foot'>数字为「利润 ÷ 精力」；已扣 {fmtPct(state.settings.taxRate, 0)} 交易税，不含暴击产出</View>
       </View>
+
+      <View className='card'>
+        <View className='card-head'>
+          <View className='flex1'>
+            <Text className='card-title'>成本 × 精力收益</Text>
+            <Text className='card-sub'>每个点是一个配方 · 越靠左上越值得做</Text>
+          </View>
+        </View>
+        <View className='card-body'>
+          {scatter.pts.length ? (
+            <View>
+              <View className='scatter'>
+                {scatter.pts.map(function (p) {
+                  return (
+                    <View className='scatter-dot' key={p.id} style={{ left: p.left + '%', bottom: p.bottom + '%', background: p.color }}
+                      onClick={function () { Taro.navigateTo({ url: '/pages/recipe/index?id=' + p.id }); }} />
+                  );
+                })}
+              </View>
+              <View className='row-between' style={{ padding: '0 6rpx' }}>
+                <Text className='tiny dim'>0 金</Text>
+                <Text className='tiny dim'>{fmt(scatter.maxCost, 0)} 金</Text>
+              </View>
+              <View className='row mt'>
+                <View className='type-dot' style={{ background: '#45d483' }} /><Text className='tiny dim' style={{ marginRight: '14rpx' }}>采集</Text>
+                <View className='type-dot' style={{ background: '#45a3ff' }} /><Text className='tiny dim'>制造</Text>
+                <Text className='tiny dim' style={{ marginLeft: 'auto' }}>纵轴 {fmt(scatter.minY, 2)} ~ {fmt(scatter.maxY, 2)}</Text>
+              </View>
+            </View>
+          ) : <Empty title='暂无可绘制的配方' desc='补齐价格或清空筛选后再试。' />}
+        </View>
+        <View className='card-foot'>横轴为单次总成本，纵轴为金/精力；最多显示 80 个数据完整配方，点可打开详情。</View>
+      </View>
+
+      <View className='card'>
+        <View className='card-head'>
+          <View className='flex1'>
+            <Text className='card-title'>各技艺收益分布</Text>
+            <Text className='card-sub'>箱体 Q1–Q3 · 白线中位 · 须线最小/最大</Text>
+          </View>
+        </View>
+        <View className='card-body'>
+          {boxData.rows.filter(function (r) { return !r.empty; }).length ? boxData.rows.map(function (r) {
+            if (r.empty) return null;
+            function pct(v) {
+              const span = boxData.max - boxData.min || 1;
+              return 2 + Math.max(0, Math.min(1, (v - boxData.min) / span)) * 96;
+            }
+            return (
+              <View className='box-row' key={r.skill.id}>
+                <Text className='box-name'>{r.skill.name}</Text>
+                <View className='box-track'>
+                  <View className='box-whisker' style={{ left: pct(r.min) + '%', width: Math.max(0.5, pct(r.max) - pct(r.min)) + '%' }} />
+                  <View className='box-body' style={{ left: pct(r.q1) + '%', width: Math.max(0.8, pct(r.q3) - pct(r.q1)) + '%', background: r.skill.color }} />
+                  <View className='box-median' style={{ left: pct(r.med) + '%' }} />
+                </View>
+                <Text className='box-val'>{fmt(r.med, 2)}</Text>
+              </View>
+            );
+          }) : <Empty title='暂无可统计的配方' desc='补齐价格或清空筛选后再试。' />}
+        </View>
+        <View className='card-foot'>中位数是「精力收益」的稳健基准；样本为当前筛选下数据完整配方。</View>
+      </View>
+
+      <StoneMiniCard />
 
       <View className='card'>
         <View className='card-head'>
@@ -191,7 +324,7 @@ export default function Analysis() {
             );
           })}
         </View>
-        <View className='card-foot'>模拟不计交易税、暴击额外产出与市场深度</View>
+        <View className='card-foot'>模拟已扣 {fmtPct(state.settings.taxRate, 0)} 交易税，不含暴击额外产出与市场深度</View>
       </View>
 
       <View className='card'>

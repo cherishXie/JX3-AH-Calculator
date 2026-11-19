@@ -1,1 +1,1 @@
-export default { navigationBarTitleText: '剑网三物价助手' };
+export default { navigationBarTitleText: '精力做什么' };

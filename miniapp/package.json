@@ -1,14 +1,18 @@
 {
-  "name": "jianghu-ledger-miniapp",
+  "name": "jingli-zuoshenme-miniapp",
   "version": "1.0.0",
   "private": true,
-  "description": "剑网三物价助手 · 剑网3 苍生铸世生活技艺收益计算器（微信 / 小红书小程序）",
+  "description": "精力做什么 · 剑网3 苍生铸世生活技艺与五行石收益计算器（微信 / 小红书小程序）",
   "scripts": {
     "build:weapp": "taro build --type weapp",
     "build:xhs": "taro build --type xhs",
     "dev:weapp": "npm run build:weapp -- --watch",
     "dev:xhs": "npm run build:xhs -- --watch",
     "sync:catalog": "node scripts/sync-catalog.js",
+    "set-appid": "node scripts/set-appid.js",
+    "verify:weapp": "node scripts/verify-weapp.js",
+    "build:prices": "node scripts/build-remote-prices.mjs",
+    "sync:cloud": "node scripts/sync-cloudbase-prices.mjs",
     "postinstall": "node scripts/check-platform.js",
     "build:h5": "taro build --type h5",
     "dev:h5": "npm run build:h5 -- --watch"

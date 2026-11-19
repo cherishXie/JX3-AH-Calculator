@@ -1,17 +1,43 @@
 {
   "miniprogramRoot": "./",
-  "projectname": "jianghu-ledger",
-  "description": "剑网三物价助手 · 剑网3 苍生铸世生活技艺成本与精力收益计算器",
-  "appid": "touristappid",
+  "projectname": "jingli-zuoshenme",
+  "description": "精力做什么 · 剑网3 苍生铸世生活技艺与五行石收益计算器",
+  "appid": "wx81eaf2a1a09a996a",
+  "compileType": "miniprogram",
+  "libVersion": "3.18.0",
   "setting": {
     "urlCheck": false,
     "es6": true,
     "enhance": true,
     "postcss": true,
     "minified": true,
-    "newFeature": true
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
-  "compileType": "miniprogram",
-  "libVersion": "3.0.0",
-  "condition": {}
+  "packOptions": {
+    "ignore": [
+      {
+        "value": ".LICENSE.txt",
+        "type": "suffix"
+      }
+    ],
+    "include": []
+  },
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
 }

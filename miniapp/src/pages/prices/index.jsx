@@ -1,15 +1,18 @@
 import { useMemo, useState } from 'react';
 import { View, Text, Input, Picker, Textarea } from '@tarojs/components';
-import Taro from '@tarojs/taro';
+import Taro, { useDidShow } from '@tarojs/taro';
 import TopBar from '../../components/TopBar';
 import Kpi from '../../components/Kpi';
 import PriceInput from '../../components/PriceInput';
 import Toggle from '../../components/Toggle';
 import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
-import { useStore } from '../../store';
+import { useStore, getState } from '../../store';
 import { DATA, priceOf, statsOf, serverSpreads, skillOf, tierOf } from '../../shared/engine';
-import { fmt, fmtPct } from '../../shared/format';
+import StonePriceCard from '../../components/StonePriceCard';
+import { syncRemotePrices } from '../../shared/remotePrices';
+import { isCloudConfigured } from '../../shared/cloudConfig';
+import { fmt, fmtPct, fmtTime } from '../../shared/format';
 
 export default function Prices() {
   const [state, actions] = useStore();
@@ -19,9 +22,15 @@ export default function Prices() {
   const [onlyMissing, setOnlyMissing] = useState(false);
   const [showBulk, setShowBulk] = useState(false);
   const [bulk, setBulk] = useState('');
+  const [syncing, setSyncing] = useState(false);
   const stats = statsOf(state, state.serverId);
   const allSpreads = serverSpreads(state);
   const spreads = allSpreads.slice(0, 5);
+  const priceStamp = Date.parse((state.marketMeta && state.marketMeta.priceUpdatedAt) || DATA.meta.priceUpdatedAt);
+
+  useDidShow(function () {
+    if (isCloudConfigured()) syncRemotePrices(actions, false, getState());
+  });
 
   const items = useMemo(function () {
     const list = state.items.map(function (it) {
@@ -45,6 +54,26 @@ export default function Prices() {
   const kindNames = ['全部类型', '材料', '成品'];
   const kindIdx = kind === 'material' ? 1 : kind === 'product' ? 2 : 0;
 
+  async function syncNow() {
+    if (syncing) return;
+    if (!isCloudConfigured()) {
+      Taro.showToast({ title: '未配置云环境', icon: 'none' });
+      return;
+    }
+    setSyncing(true);
+    Taro.showLoading({ title: '同步行情...' });
+    const res = await syncRemotePrices(actions, true, getState());
+    Taro.hideLoading();
+    setSyncing(false);
+    if (res.ok) {
+      Taro.showToast({ title: res.updatedAt ? '行情已更新' : '已是最新', icon: 'none' });
+    } else if (res.skipped) {
+      Taro.showToast({ title: '未配置云环境', icon: 'none' });
+    } else {
+      Taro.showToast({ title: res.error || '同步失败', icon: 'none' });
+    }
+  }
+
   function savePrice(itemId, val) {
     if (!actions.setPrice(itemId, val)) {
       Taro.showToast({ title: '价格需为非负数字', icon: 'none' });
@@ -52,6 +81,7 @@ export default function Prices() {
       Taro.showToast({ title: '已保存本服价格', icon: 'none' });
     }
   }
+
 
   function applyBulk() {
     const res = actions.importPrices(bulk, state.serverId);
@@ -72,18 +102,23 @@ export default function Prices() {
 
       <View className='kpi-grid'>
         <Kpi label='已校准' value={String(stats.user)} unit={'/ ' + stats.total + ' 项'} progress={stats.calibrated * 100} progressTone='green' meta='手动填入的本服价格' />
-        <Kpi label='示例价' value={String(stats.seed)} unit='项' meta='未校准，直接参与计算' />
+        <Kpi label='行情/示例' value={String(stats.market + stats.seed)} unit='项' meta={'行情 ' + stats.market + ' · 示例 ' + stats.seed} />
         <Kpi label='缺价' value={String(stats.missing)} unit='项' meta='缺价按 0 计' tone={stats.missing ? 'warn' : ''} />
         <Kpi label='跨服价差' value={String(allSpreads.length)} unit='项' meta='最高/最低价差 ≥ 12%' />
       </View>
+
+      <StonePriceCard />
 
       <View className='card'>
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>本服物品价格</Text>
-            <Text className='card-sub'>失焦或回车即保存 · {items.length} 项</Text>
+            <Text className='card-sub'>失焦或回车即保存 · {items.length} 项 · 行情 {fmtTime(priceStamp)}</Text>
           </View>
           <View className='card-tool'>
+            {isCloudConfigured() ? (
+              <View className='btn btn-ghost btn-sm' style={{ marginRight: '8rpx' }} onClick={syncNow}>{syncing ? '同步中' : '同步行情'}</View>
+            ) : null}
             <View className='btn btn-ghost btn-sm' onClick={function () { setShowBulk(!showBulk); }}>{showBulk ? '收起' : '批量'}</View>
           </View>
         </View>
@@ -130,16 +165,17 @@ export default function Prices() {
                 </View>
                 <View style={{ textAlign: 'right' }}>
                   <PriceInput value={p.missing ? '' : p.v} onSave={function (v) { savePrice(it.id, v); }} />
-                  <Text className={'price-state ' + (p.missing ? 'missing' : p.user ? 'user' : '')}>
-                    {p.missing ? '缺价' : p.user ? '已校准' : '示例'}
+                  <Text className={'price-state ' + (p.missing ? 'missing' : p.user ? 'user' : p.market ? 'market' : '')}>
+                    {p.missing ? '缺价' : p.user ? '已校准' : p.market ? '行情' : '示例'}
                   </Text>
                 </View>
               </View>
             );
           }) : <Empty title='没有匹配的物品' desc='调整搜索或筛选条件，或去生活技艺新增物品。' />}
         </View>
-        <View className='card-foot'>示例价来自当前版本样本行情，不代表实时交易行</View>
+        <View className='card-foot'>行情时间 {fmtTime(priceStamp)} · 示例价来自包内样本，云端行情不覆盖你的手动校准</View>
       </View>
+
 
       {spreads.length ? (
         <View className='card'>
@@ -168,7 +204,7 @@ export default function Prices() {
         </View>
       ) : null}
 
-      <DataNote extra='价格仅保存在本机' />
+      <DataNote extra='手动校准只存本机，云端行情单独同步' />
     </View>
   );
 }

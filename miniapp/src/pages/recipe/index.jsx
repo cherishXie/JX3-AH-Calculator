@@ -498,7 +498,7 @@ export default function Recipe() {
           <View className='kv'><Text className='k'>满 {fmtInt(state.settings.energyBudget)} 精力可做</Text><Text className='v'>{calc.energy > 0 ? Math.floor(state.settings.energyBudget / calc.energy) : 0} 次</Text></View>
           <View className='kv'><Text className='k'>毛利率</Text><Text className='v'>{calc.margin == null ? '—' : fmtPct(calc.margin, 1)}</Text></View>
           <Text className='tiny dim mt' style={{ display: 'block', lineHeight: '30rpx' }}>
-            成本 = 材料 + 手续费；利润 = 产值 − 成本；精力收益 = 利润 ÷ 精力。交易税、暴击额外产出与署名溢价未自动计入。
+            成本 = 材料 + 手续费；利润 = 产值 − 成本；精力收益 = 利润 ÷ 精力。售价已扣 {fmtPct(state.settings.taxRate, 0)} 交易税；暴击额外产出与署名溢价未自动计入。
           </Text>
           {recipe.note ? <Text className='tiny dim mt' style={{ display: 'block' }}>备注：{recipe.note}</Text> : null}
           <Text className='tiny dim mt' style={{ display: 'block' }}>来源：{recipe.origin || '示例配方'}</Text>

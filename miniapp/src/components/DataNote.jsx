@@ -1,10 +1,11 @@
 import { View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
+import { DATA } from '../shared/engine';
 
 export default function DataNote(props) {
   return (
     <View className='data-note'>
-      <Text>苍生铸世 · 50 级 · 154 条制造配方来自 JX3BOX 当前版本 API（2026-11-18）；价格为示例 </Text>
+      <Text>苍生铸世 · 50 级 · {DATA.recipes.length} 条配方 · 数据 {DATA.meta.catalogVersion}（核验 {DATA.meta.verifiedAt}）；价格为样本/示例 </Text>
       <Text
         className='link'
         onClick={function () { Taro.navigateTo({ url: '/pages/settings/index?section=data' }); }}

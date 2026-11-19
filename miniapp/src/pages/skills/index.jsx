@@ -9,7 +9,7 @@ import Toggle from '../../components/Toggle';
 import DataNote from '../../components/DataNote';
 import { useStore } from '../../store';
 import { DATA, priceOf, rowsOf, filterRows, sortRows, avg, findItem } from '../../shared/engine';
-import { fmt, fmtInt, fmtSigned } from '../../shared/format';
+import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
 
 export default function Skills() {
   const [state, actions] = useStore();
@@ -160,7 +160,7 @@ export default function Skills() {
             );
           }) : <Empty title='没有匹配的配方' desc='换一个关键词、品阶，或新建自定义配方。' />}
         </View>
-        <View className='card-foot'>成本 = 材料 + 手续费；精力收益 = 利润 ÷ 精力</View>
+        <View className='card-foot'>成本 = 材料 + 手续费；精力收益 = 利润 ÷ 精力；售价已扣 {fmtPct(state.settings.taxRate, 0)} 交易税</View>
       </View>
 
       <View className='card'>

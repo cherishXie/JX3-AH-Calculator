@@ -44,6 +44,9 @@ export function seedState() {
     stoneChances: {},
     stoneRecipeEdits: {},
     stoneCustomRecipes: [],
+    marketPrices: {},
+    stoneMarketPrices: {},
+    marketMeta: null,
     settings: {
       energyBudget: 3000,
       gatherEnergy: 40,
@@ -70,6 +73,9 @@ export function normalize(saved) {
   }
   state.seq = Object.assign({}, base.seq, state.seq || {});
   state.prices = state.prices && typeof state.prices === 'object' ? state.prices : {};
+  state.marketPrices = state.marketPrices && typeof state.marketPrices === 'object' ? state.marketPrices : {};
+  state.stoneMarketPrices = state.stoneMarketPrices && typeof state.stoneMarketPrices === 'object' ? state.stoneMarketPrices : {};
+  state.marketMeta = state.marketMeta && typeof state.marketMeta === 'object' ? state.marketMeta : null;
   state.stonePrices = state.stonePrices && typeof state.stonePrices === 'object' ? state.stonePrices : {};
   state.stoneChances = state.stoneChances && typeof state.stoneChances === 'object' ? state.stoneChances : {};
   state.stoneRecipeEdits = state.stoneRecipeEdits && typeof state.stoneRecipeEdits === 'object' ? state.stoneRecipeEdits : {};
@@ -136,6 +142,15 @@ export function priceOf(state, itemId, serverId) {
   const stored = bucket[itemId];
   if (stored && Number.isFinite(Number(stored.v))) {
     return { v: Number(stored.v), t: stored.t || SEED_TS, user: true, seed: false, missing: false };
+  }
+  const marketBucket = state.marketPrices && state.marketPrices[serverId];
+  const market = marketBucket && marketBucket[itemId];
+  if (market != null && Number.isFinite(Number(market))) {
+    const mt = state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+    return {
+      v: Number(market), t: Number.isFinite(mt) ? mt : SEED_TS,
+      user: false, seed: false, market: true, quote: true, missing: false
+    };
   }
   const v = seedPrice(serverId, item);
   const q = DATA.serverPrices && DATA.serverPrices[serverId] && DATA.serverPrices[serverId][item.id];
@@ -247,14 +262,18 @@ export function rowsOf(state, opts) {
 
 export function statsOf(state, serverId) {
   serverId = serverId || state.serverId;
-  let user = 0, seed = 0, missing = 0;
+  let user = 0, market = 0, seed = 0, missing = 0;
   state.items.forEach(function (i) {
     const p = priceOf(state, i.id, serverId);
     if (p.user) user++;
+    else if (p.market) market++;
     else if (p.v > 0) seed++;
     else missing++;
   });
-  return { total: state.items.length, user: user, seed: seed, missing: missing, calibrated: state.items.length ? user / state.items.length : 0 };
+  return {
+    total: state.items.length, user: user, market: market, seed: seed, missing: missing,
+    calibrated: state.items.length ? user / state.items.length : 0
+  };
 }
 
 export function median(values) {

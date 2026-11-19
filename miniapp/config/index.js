@@ -1,7 +1,7 @@
 const path = require('path');
 
 const config = {
-  projectName: 'jianghu-ledger',
+  projectName: 'jingli-zuoshenme',
   date: '2026-11-18',
   designWidth: 750,
   deviceRatio: {

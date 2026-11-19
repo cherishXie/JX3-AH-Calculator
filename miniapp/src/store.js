@@ -7,6 +7,7 @@ import {
   clone
 } from './shared/engine';
 import { num, round } from './shared/format';
+import { isDefaultStoneRecipe, sanitizeStoneRecipe } from './shared/stones';
 
 const KEY = 'jx3-ledger-mp-v1';
 const DATA_ITEMS = DATA.items;
@@ -77,6 +78,17 @@ export const actions = {
     });
   },
 
+  setTaxRate: function (pct) {
+    const n = Number(pct);
+    if (!Number.isFinite(n) || n < 0 || n > 100) return false;
+    commit(function (s) {
+      s.settings = s.settings || {};
+      s.settings.taxRate = Math.round(n * 100) / 10000;
+      s.settings.taxRateVersion = 1;
+    });
+    return true;
+  },
+
   setPrice: function (itemId, value, serverId) {
     serverId = serverId || state.serverId;
     if (value === '' || value == null) {
@@ -99,6 +111,105 @@ export const actions = {
     commit(function (s) {
       if (s.prices[serverId]) delete s.prices[serverId][itemId];
     });
+  },
+
+  setStonePrice: function (level, value, serverId) {
+    serverId = serverId || state.serverId;
+    commit(function (s) {
+      if (!s.stonePrices[serverId]) s.stonePrices[serverId] = {};
+      if (value === '' || value == null) {
+        delete s.stonePrices[serverId][String(level)];
+        return;
+      }
+      const n = Number(value);
+      if (!Number.isFinite(n) || n < 0) return;
+      s.stonePrices[serverId][String(level)] = { v: round(n, 2), t: Date.now() };
+    });
+    return value === '' || value == null || (Number.isFinite(Number(value)) && Number(value) >= 0);
+  },
+
+  setStoneChance: function (recipeId, level, chance) {
+    const n = Number(chance);
+    if (!Number.isFinite(n) || n < 0 || n > 1) return false;
+    commit(function (s) {
+      if (!s.stoneChances[recipeId]) s.stoneChances[recipeId] = {};
+      s.stoneChances[recipeId][String(level)] = n;
+    });
+    return true;
+  },
+
+  applyMarketPrices: function (payload) {
+    if (!payload) return false;
+    commit(function (s) {
+      s.marketPrices = payload.serverPrices || {};
+      s.stoneMarketPrices = payload.stonePrices || {};
+      s.marketMeta = {
+        schema: payload.schema || 1,
+        catalogVersion: payload.catalogVersion || '',
+        priceUpdatedAt: payload.priceUpdatedAt || new Date().toISOString(),
+        stonePriceUpdatedAt: payload.stonePriceUpdatedAt || payload.priceUpdatedAt || new Date().toISOString(),
+        fetchedAt: Date.now()
+      };
+    });
+    return true;
+  },
+
+  resetStone: function () {
+    commit(function (s) {
+      s.stonePrices = {};
+      s.stoneChances = {};
+    });
+    return true;
+  },
+
+  saveStoneRecipe: function (input) {
+    const recipe = sanitizeStoneRecipe(input);
+    let saved = null;
+    commit(function (s) {
+      if (recipe.id && isDefaultStoneRecipe(recipe.id)) {
+        if (!s.stoneRecipeEdits) s.stoneRecipeEdits = {};
+        s.stoneRecipeEdits[recipe.id] = Object.assign({}, recipe, { id: recipe.id, custom: false, edited: true });
+        if (s.stoneChances) delete s.stoneChances[recipe.id];
+        saved = s.stoneRecipeEdits[recipe.id];
+        return;
+      }
+      const id = recipe.id && recipe.id.indexOf('stone_custom_') === 0 ? recipe.id : 'stone_custom_' + Date.now().toString(36);
+      const next = Object.assign({}, recipe, { id: id, custom: true, edited: true });
+      if (!Array.isArray(s.stoneCustomRecipes)) s.stoneCustomRecipes = [];
+      const idx = s.stoneCustomRecipes.findIndex(function (x) { return x.id === id; });
+      if (idx >= 0) s.stoneCustomRecipes[idx] = next;
+      else s.stoneCustomRecipes.push(next);
+      if (s.stoneChances) delete s.stoneChances[id];
+      saved = next;
+    });
+    return saved;
+  },
+
+  deleteStoneRecipe: function (id) {
+    if (!id || isDefaultStoneRecipe(id)) return false;
+    commit(function (s) {
+      s.stoneCustomRecipes = (s.stoneCustomRecipes || []).filter(function (r) { return r.id !== id; });
+      if (s.stoneChances) delete s.stoneChances[id];
+    });
+    return true;
+  },
+
+  resetStoneRecipe: function (id) {
+    if (!id || !isDefaultStoneRecipe(id)) return false;
+    commit(function (s) {
+      if (s.stoneRecipeEdits) delete s.stoneRecipeEdits[id];
+      if (s.stoneChances) delete s.stoneChances[id];
+    });
+    return true;
+  },
+
+  resetAllStoneFormulas: function () {
+    commit(function (s) {
+      s.stoneRecipeEdits = {};
+      s.stoneCustomRecipes = [];
+      s.stoneChances = {};
+    });
+    return true;
   },
 
   clearServerPrices: function (serverId) {
@@ -125,6 +236,9 @@ export const actions = {
     commit(function (s) {
       s.servers = s.servers.filter(function (x) { return x.id !== id; });
       delete s.prices[id];
+      if (s.stonePrices) delete s.stonePrices[id];
+      if (s.marketPrices) delete s.marketPrices[id];
+      if (s.stoneMarketPrices) delete s.stoneMarketPrices[id];
       if (s.serverId === id) s.serverId = s.servers[0].id;
     });
     return true;
