@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "8d8fd73972718d46580fa71acdb97fc6e4f671a9",
+  "sourceCommit": "a6c6bdd8d1d941793e3436f3630602c0a6db8b34",
   "date": "2026-11-19",
-  "title": "add overview, gem module and one-click price refresh",
+  "title": "auto-refresh on open and no-macro auto workbook",
   "notes": [
-    "add overview, gem module and one-click price refresh"
+    "auto-refresh on open and no-macro auto workbook"
   ],
   "history": [
+    {
+      "version": "a6c6bdd",
+      "date": "2026-11-19",
+      "title": "auto-refresh on open and no-macro auto workbook"
+    },
     {
       "version": "8d8fd73",
       "date": "2026-11-19",
@@ -30,11 +35,6 @@
       "version": "9500739",
       "date": "2026-11-19",
       "title": "calibrate skill experience and separate energy and gold routes"
-    },
-    {
-      "version": "1186c72",
-      "date": "2026-11-19",
-      "title": "include root offline assets in automatic releases"
     }
   ]
 }
