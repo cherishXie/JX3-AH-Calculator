@@ -1,9 +1,11 @@
 {
   "sourceCommit": "373ea555f69d0c6e68a72c413d824881997126e1",
   "date": "2026-11-19",
-  "title": "make local price fallback work under launchd",
+  "title": "物价刷新更稳定：每 2 小时自动更新",
   "notes": [
-    "make local price fallback work under launchd"
+    "GitHub 定时任务未按期触发，新增本机定时兜底：每天 08:09–22:09 每 2 小时检查一次各服物价",
+    "价格有变化才提交并部署到 Web 与小工具包；价格未变时不产生提交，也不会弹出页面更新提示",
+    "价格库页脚可直接查看当前快照时间，判断数据是否新鲜"
   ],
   "history": [
     {
