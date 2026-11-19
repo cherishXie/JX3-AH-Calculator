@@ -2,13 +2,10 @@ name: Price schedule
 
 on:
   schedule:
-    # 临时每 5 分钟，用于验证 GitHub schedule 是否注册；验证后改为 2 小时。
-    - cron: '*/5 * * * *'
+    # 每天 08:07–22:07（Asia/Shanghai），每 2 小时；00:00–08:00 不更新
+    # UTC 对应：00:07, 02:07, 04:07, 06:07, 08:07, 10:07, 12:07, 14:07
+    - cron: '7 0,2,4,6,8,10,12,14 * * *'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/price-schedule.yml'
 
 permissions:
   actions: write

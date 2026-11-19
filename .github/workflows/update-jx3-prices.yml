@@ -1,10 +1,7 @@
 name: Update JX3 prices
 
 on:
-  schedule:
-    # 每天 08:07–22:07（Asia/Shanghai），每 2 小时；00:00–08:00 不更新
-    # UTC 对应：00:07, 02:07, 04:07, 06:07, 08:07, 10:07, 12:07, 14:07
-    - cron: '7 0,2,4,6,8,10,12,14 * * *'
+  # 定时由 price-schedule.yml 负责，避免 schedule 注册丢失时整条更新链路一起失效。
   workflow_dispatch:
   push:
     branches: [main]
@@ -36,11 +33,6 @@ jobs:
       - name: Check update window
         id: window
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-            echo "Manual dispatch: bypass window."
-            exit 0
-          fi
           hour=$(TZ=Asia/Shanghai date +%H)
           hour=$((10#$hour))
           if [ "$hour" -lt 8 ]; then
