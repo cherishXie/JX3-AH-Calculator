@@ -1271,10 +1271,11 @@ html.light .data-sync {
 
 .stone-formula-sub {
   margin-top: 2px;
+  max-width: 230px;
   font-size: 10px;
-  line-height: 14px;
+  line-height: 13px;
   color: var(--muted);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .stone-table td { vertical-align: middle; }
@@ -1371,8 +1372,8 @@ html.light .data-sync {
 
 .stone-analysis-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
   align-items: start;
 }
 
@@ -1403,3 +1404,6 @@ table.data.stone-table tbody td { padding-left: 6px; padding-right: 6px; }
 table.data.analysis-table thead th,
 table.data.analysis-table tbody td { padding-left: 6px; padding-right: 6px; }
 table.data.analysis-table { font-size: 12px; }
+
+table.data.skill-table thead th,
+table.data.skill-table tbody td { padding-left: 6px; padding-right: 6px; }

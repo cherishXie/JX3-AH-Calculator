@@ -700,6 +700,7 @@
       U.fmtPct(tax, 0) + ' 交易税。</p></div>' +
       '<div class="page-tools">' +
         '<span class="badge badge-outline" title="在设置中修改交易税率">交易税 ' + U.fmtPct(tax, 0) + '</span>' +
+        '<span class="badge badge-outline">' + icon('clock') + ' 核验 ' + U.esc(Stone.meta.verifiedAt || DATA.meta.verifiedAt) + '</span>' +
         '<button class="btn btn-sm" data-action="stone-new">' + icon('plus') + '新增公式</button>' +
         '<button class="btn btn-sm" data-action="export-csv" data-csv="stones">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
         '<button class="btn btn-sm" data-action="stone-reset-all">' + icon('refresh') + '恢复默认</button>' +
@@ -734,7 +735,7 @@
       '<div class="card-tools">' +
         '<label class="switch"><input type="checkbox" data-toggle="stone-all" data-value="1"' + (showAll ? ' checked' : '') + '><span class="track"></span>显示全部公式</label>' +
       '</div></div>' +
-      '<div class="table-wrap medium"><table class="data stone-table"><thead><tr>' +
+      '<div class="table-wrap"><table class="data stone-table"><thead><tr>' +
         '<th>目标</th><th>方式</th><th>最终配方</th><th class="num">单次金币</th><th class="num">精力/颗</th>' +
         '<th class="num">单颗成本</th><th class="num">净售价</th><th class="num">利润/颗</th><th class="num">精力收益</th><th></th>' +
       '</tr></thead><tbody>' +
@@ -980,7 +981,7 @@
         }).join('') +
         '</tbody></table></div></div>' +
         '<div class="stone-analysis-chart"><div class="tiny dim" style="margin-bottom:2px">5/6级快速 vs 最优 · 精力收益（金/精力）</div>' +
-        Charts.columns(chartItems, { palette: Charts.palette(ui.theme), unit: '金/精力', width: 420, height: 220, labelWidth: 9 }) +
+        Charts.columns(chartItems, { palette: Charts.palette(ui.theme), unit: '金/精力', width: 760, height: 220, labelWidth: 10 }) +
         '</div>' +
       '</div></div>' +
       '<div class="card-foot"><span>精力收益 = 单颗税后利润 ÷ 累计精力；7/8级只有爆率高于盈亏线才值得赌</span>' +
@@ -1072,11 +1073,12 @@
     if (!filtered.length) {
       html += emptyState('没有匹配的配方', '换一个关键词或品阶，或新建自定义配方。', '<button class="btn btn-sm" data-action="new-recipe" data-skill="' + sk.id + '">' + icon('plus') + '新增</button>', 'list');
     } else {
-      html += '<div class="table-wrap tall" style="margin-top:12px"><table class="data"><thead><tr>' +
+      html += '<div class="table-wrap tall" style="margin-top:12px"><table class="data skill-table"><thead><tr>' +
         '<th class="sticky">' + (sk.type === 'gather' ? '采集点' : '配方 / 产物') + '</th>' +
         '<th>品阶</th>' +
         '<th class="num">' + (sk.type === 'gather' ? '单次产出' : '成本') + '</th>' +
         '<th class="num">税后产值</th>' +
+        '<th class="num">交易税</th>' +
         '<th class="num">利润</th>' +
         '<th class="num">精力</th>' +
         sortHeader('收益/精力', 'perEnergy', p, 'num') +
@@ -1092,6 +1094,7 @@
             '<td>' + tierBadge(r.tier) + '</td>' +
             '<td class="num">' + (sk.type === 'gather' ? U.esc(r.outputNames) : U.fmt(c.totalCost, 2)) + '</td>' +
             '<td class="num">' + U.fmt(c.outputValue, 2) + '</td>' +
+            '<td class="num dim">' + U.fmt(c.tax, 2) + '</td>' +
             '<td class="num ' + profitCls + '">' + (c.missing ? '—' : U.fmtSigned(c.profit, 2)) + '</td>' +
             '<td class="num">' + U.fmtInt(c.energy) + '</td>' +
             '<td class="num"><b class="' + (c.missing ? 'dim' : c.perEnergy >= 0 ? 'pos' : 'neg') + '">' + perEnergyText(c.perEnergy) + '</b></td>' +
@@ -1101,10 +1104,10 @@
         }).join('') +
         '</tbody></table></div>';
     }
-    html += '<div class="card-foot"><span>成本 = 材料 + 手续费；利润 = 税后产值 − 成本；精力收益 = 利润 / 精力</span>' +
+    html += '<div class="card-foot"><span>成本 = 材料 + 手续费；利润 = 税后产值 − 成本；精力收益 = 利润 / 精力；售价已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税</span>' +
       '<span class="sep">·</span><span>' + (basis === 'min' ? '取最低：仅优化材料成本，不计自制中间产物的精力' : '市场价：材料按本服单价计') + '</span>' +
       '<span class="spacer"></span>' +
-      (sk.type === 'gather' ? '<span>采集期望产值 = Σ（数量 × 掉率 × 单价）；精力按单次采集折算</span>' : '<span>点击行查看配方详情</span>') + '</div>';
+      (sk.type === 'gather' ? '<span>采集期望产值（税后）= Σ（数量 × 掉率 × 税后单价）；精力按单次采集折算</span>' : '<span>点击行查看配方详情</span>') + '</div>';
     html += '</section>';
 
     html += renderMaterialPrices(sk, rows);
@@ -1681,7 +1684,7 @@
     const d = ui.drawer.draft;
     document.querySelectorAll('[data-draft-stone]').forEach(function (el) {
       const k = el.getAttribute('data-draft-stone');
-      if (el.type === 'number') d[k] = Number(el.value) || 0;
+      if (el.type === 'number' || k === 'target' || k === 'primary') d[k] = Number(el.value) || 0;
       else d[k] = el.value;
     });
     const inputs = [];
@@ -1709,6 +1712,8 @@
     if (d.target < 2) errors.push('目标等级至少为 2 级');
     if (!d.inputs.length) errors.push('至少需要一种投入材料');
     if (!d.outcomes.length) errors.push('至少需要一种产出');
+    if (!d.outcomes.some(function (o) { return o.level === d.target; })) errors.push('产出里缺少目标等级（' + d.target + '级）');
+    if (!d.outcomes.some(function (o) { return o.level === d.primary; })) errors.push('产出里缺少保底等级（' + d.primary + '级）');
     const sum = d.outcomes.reduce(function (a, o) { return a + o.chance; }, 0);
     if (sum > 1.0001) errors.push('产出概率合计不能超过 100%（当前 ' + U.fmtPct(sum, 1) + '）');
     if (d.energy < 0 || d.fee < 0) errors.push('加工费与精力不能为负');

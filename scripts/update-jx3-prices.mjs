@@ -21,10 +21,13 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const args = process.argv.slice(2);
 function opt(name, fallback) {
   const prefix = '--' + name + '=';
-  const hit = args.find((a) => a === '--' + name || a.startsWith(prefix));
-  if (!hit) return fallback;
-  if (hit === '--' + name) return true;
-  return hit.slice(prefix.length);
+  const eq = args.find((a) => a.startsWith(prefix));
+  if (eq) return eq.slice(prefix.length);
+  const idx = args.indexOf('--' + name);
+  if (idx < 0) return fallback;
+  const next = args[idx + 1];
+  if (next && !next.startsWith('--')) return next;
+  return true;
 }
 const DRY = !!opt('dry-run', false);
 const NO_ZIP = !!opt('no-zip', false);

@@ -358,7 +358,7 @@
       svg += '<g class="chart-column" tabindex="0" data-tip="' + attr(tip) + '" aria-label="' + attr(tip) + '">';
       svg += '<rect x="' + (cx - barW / 2).toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + barW.toFixed(1) +
         '" height="' + h.toFixed(1) + '" rx="3" fill="' + color + '" fill-opacity=".86"/>';
-      svg += '<text x="' + cx.toFixed(1) + '" y="' + (v >= 0 ? top - 6 : bottom + 13).toFixed(1) +
+      svg += '<text x="' + cx.toFixed(1) + '" y="' + (v >= 0 ? top - 6 : top + 12).toFixed(1) +
         '" text-anchor="middle" font-size="10" font-weight="600" fill="' + (v >= 0 ? P.text : COLOR.danger) + '">' +
         U.fmt(v, 2) + '</text>';
       const label = d.label || '';

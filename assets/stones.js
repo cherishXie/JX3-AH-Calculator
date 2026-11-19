@@ -109,10 +109,9 @@
     serverId = serverId || Store.state.serverId;
     if (Store.state.stonePrices[serverId]) {
       delete Store.state.stonePrices[serverId][String(level)];
-      Store.save();
-      return true;
     }
-    return false;
+    Store.save();
+    return true;
   }
 
   function netPrice(serverId, level, rate) {
