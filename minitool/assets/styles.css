@@ -1546,3 +1546,4 @@ html.no-color-mix table.data tr.is-current td { background: rgba(59, 130, 246, 0
 .bt-exp-table { max-height: 360px; overflow: auto; }
 @media (max-width: 640px) { .bt-scenarios { grid-template-columns: 1fr; } .bt-scenario strong { font-size: 22px; } }
 html.light .bt-scenarios { --positive: #15803d; --warning: #a16207; --danger: #be123c; }
+html.light .bt-experience { --positive: #15803d; --warning: #a16207; }

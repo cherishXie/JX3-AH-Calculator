@@ -4,7 +4,7 @@ import catalog from './catalog.json';
 import createBreakthrough from './breakthrough-model';
 export { BT };
 export const SKILL_IDS = ['shennong', 'caijin', 'paoding', 'duanzao', 'fengren', 'zhiyao', 'pengren', 'zijiang'];
-export const MODES = [{ key: 'low', label: '低产量' }, { key: 'mid', label: '中间产量' }, { key: 'high', label: '高产量' }];
+export const MODES = [{ key: 'low', label: '低收益比档' }, { key: 'mid', label: '中收益比档' }, { key: 'high', label: '高收益比档' }];
 const cache = new WeakMap();
 function model(state, serverId) {
   let models = cache.get(state);
@@ -22,4 +22,4 @@ export const itemOf = textModel.itemOf;
 export const itemsText = textModel.itemsText;
 export const matsText = textModel.matsText;
 export const expToNext = textModel.expToNext;
-export function strategyLabel(k) { return { gold: '金最优', energy: '精力最优', effort: '省心（次数最少）' }[k] || '金最优'; }
+export function strategyLabel(k) { return { gold: '金币优先', energy: '精力优先', effort: '省心（次数最少）' }[k] || '金最优'; }

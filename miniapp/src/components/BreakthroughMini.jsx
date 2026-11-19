@@ -34,7 +34,7 @@ export default function BreakthroughMini() {
           <View className='bt-mini'>
             <Text className='k'>1→50 经验</Text>
             <Text className='v'>{fmtInt(list[0] ? list[0].exp : 0)}</Text>
-            <Text className='s'>按级别估算，八技艺一致</Text>
+            <Text className='s'>5 点观测校准，暂共用门槛</Text>
           </View>
           <View className='bt-mini'>
             <Text className='k'>精力区间</Text>

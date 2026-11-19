@@ -6,7 +6,7 @@ function createBreakthrough(BT, catalog, getState) {
   const CAP = Number(META.levelCap) || 50;
   const GATE_LEVELS = [30, 35, 40, 45];
   const SKILL_IDS = ['shennong', 'caijin', 'paoding', 'duanzao', 'fengren', 'zhiyao', 'pengren', 'zijiang'];
-  const MODES = [{ key: 'low', label: '低产量' }, { key: 'mid', label: '中间产量' }, { key: 'high', label: '高产量' }];
+  const MODES = [{ key: 'low', label: '低收益比档' }, { key: 'mid', label: '中收益比档' }, { key: 'high', label: '高收益比档' }];
   const items = BT.items || [], recipes = BT.recipes || [];
   const byName = {}, byId = {}, indexByName = {}, producers = {};
   (catalog.items || []).forEach(function (i) { byName[i.name] = i; byId[i.id] = i; });
@@ -65,14 +65,27 @@ function createBreakthrough(BT, catalog, getState) {
     const profit = matCost == null || netValue == null ? null : netValue - matCost;
     return { mats: mats, outs: outs, matCost: matCost, gross: gross, netValue: netValue, profit: profit, exp: num(r.x), energy: num(r.e), missing: profit == null, profitPerExp: profit == null || !(r.x > 0) ? null : profit / r.x };
   }
-  function expToNext(level) {
-    if (level < 1 || level >= CAP) return null;
-    const model = META.expModel || { base: 500, step: 25 };
-    return Math.max(1, Math.round(num(model.base) + num(model.step) * (level - 1)));
+  const expModel = META.expModel || { base: 500, step: 25 };
+  const observations = (expModel.observations || []).slice().sort(function (a, b) { return a.level - b.level; });
+  if (expModel.method === 'piecewise-linear' && (observations.length < 2 || observations.some(function (p, i) { return !Number.isInteger(p.level) || p.level < 1 || p.level >= CAP || !Number.isFinite(p.exp) || p.exp <= 0 || (i > 0 && (p.level === observations[i - 1].level || p.exp < observations[i - 1].exp)); }))) throw new Error('Invalid experience observations');
+  function experienceAt(level) {
+    if (!Number.isInteger(level) || level < 1 || level >= CAP) return { need: null, source: 'unavailable', estimated: true };
+    if (expModel.method !== 'piecewise-linear') return { need: Math.max(1, Math.round(num(expModel.base) + num(expModel.step) * (level - 1))), source: 'estimated', estimated: true };
+    const observed = observations.find(function (p) { return p.level === level; });
+    if (observed) return { need: observed.exp, source: 'observed', estimated: false };
+    let upper = observations.findIndex(function (p) { return p.level > level; });
+    const extrapolated = upper < 0 || upper === 0;
+    if (upper < 0) upper = observations.length - 1;
+    if (upper === 0) upper = 1;
+    const a = observations[upper - 1], b = observations[upper];
+    const estimate = a.exp + (b.exp - a.exp) * (level - a.level) / (b.level - a.level);
+    const step = num(expModel.roundTo) || 1;
+    return { need: Math.max(1, Math.round(estimate / step) * step), source: extrapolated ? 'extrapolated' : 'interpolated', estimated: true };
   }
+  function expToNext(level) { return experienceAt(level).need; }
   function experienceRows() {
     let cumulative = 0;
-    return Array.from({ length: CAP - 1 }, function (_, i) { const need = expToNext(i + 1); cumulative += need; return { from: i + 1, to: i + 2, need: need, cumulative: cumulative, estimated: true }; });
+    return Array.from({ length: CAP - 1 }, function (_, i) { const point = experienceAt(i + 1); cumulative += point.need; return { from: i + 1, to: i + 2, need: point.need, cumulative: cumulative, source: point.source, estimated: point.estimated }; });
   }
   function gateInfo(g, serverId, basis, table) {
     const entries = (g.r || []).map(function (m) {
@@ -94,26 +107,44 @@ function createBreakthrough(BT, catalog, getState) {
     });
   }
   function aggregate(rows, gates) {
-    const t = { exp: 0, energy: 0, crafts: 0, matCost: 0, outValue: 0, profit: 0, gateCost: 0, gateMarket: 0, knownGateCost: 0, missingLevels: 0, missingGates: 0 };
+    const t = { exp: 0, energy: 0, crafts: 0, matCost: 0, outValue: 0, profit: 0, gateCost: 0, gateMarket: 0, knownGateCost: 0, missingLevels: 0, missingGates: 0, missingPriceLevels: 0 };
+    let bandValue = 0, bandEnergy = 0;
     rows.forEach(function (r) {
       t.exp += r.need;
       if (!r.recipe) { t.missingLevels++; return; }
-      t.energy += r.totalEnergy; t.crafts += r.count; t.matCost += r.matCost; t.outValue += r.outValue; t.profit += r.profit;
+      t.energy += r.totalEnergy; t.crafts += r.count;
+      if (r.band && r.band.mean != null) { bandValue += r.band.mean * r.totalEnergy; bandEnergy += r.totalEnergy; }
+      if (r.profit == null) t.missingPriceLevels++;
+      ['matCost', 'outValue', 'profit'].forEach(function (k) { t[k] = t[k] == null || r[k] == null ? null : t[k] + r[k]; });
     });
     gates.forEach(function (g) { t.knownGateCost += g.knownCost; if (g.missing) t.missingGates++; else t.gateCost += g.cost; });
     t.gateMarket = gates.some(function (g) { return g.marketCost == null; }) ? null : gates.reduce(function (s, g) { return s + g.marketCost; }, 0);
     if (t.missingLevels) ['energy', 'crafts', 'matCost', 'outValue', 'profit'].forEach(function (k) { t[k] = null; });
     if (t.missingGates) t.gateCost = null;
     t.total = t.profit == null || t.gateCost == null ? null : t.profit - t.gateCost;
+    t.netCost = t.total == null ? null : -t.total;
+    t.bandMean = !t.missingLevels && bandEnergy > 0 ? bandValue / bandEnergy : null;
     return t;
   }
+  function profitBand(available, mode) {
+    if (!available.length) return { key: mode, count: 0, mean: null, min: null, max: null, pool: [] };
+    const ratios = available.map(function (c) { return c.e.profit / c.e.energy; });
+    const min = Math.min.apply(null, ratios), max = Math.max.apply(null, ratios), width = (max - min) / 3;
+    const slot = { low: 0, mid: 1, high: 2 }[mode];
+    const lower = min + width * slot, upper = min + width * (slot + 1);
+    const pool = available.filter(function (c) { const ratio = c.e.profit / c.e.energy; return width < 1e-9 || (ratio >= lower && (slot === 2 ? ratio <= max : ratio < upper)); });
+    return { key: mode, min: lower, max: upper, count: pool.length, mean: pool.length ? pool.reduce(function (s, c) { return s + c.e.profit / c.e.energy; }, 0) / pool.length : null, pool: pool };
+  }
   function analyze(skillId, strategy, mode) {
-    mode = MODES.some(function (m) { return m.key === mode; }) ? mode : 'mid';
+    mode = MODES.some(function (m) { return m.key === mode; }) ? mode : 'high';
+    // 精力/次数策略只生成一条路线，产量统一使用区间中点。
+    if (strategy !== 'gold') mode = 'mid';
     const state = getState(), serverId = state.serverId;
     const basis = state.settings && state.settings.basis || 'market';
     const taxRate = Math.max(0, Math.min(1, num(state.settings && state.settings.taxRate)));
     const meta = skillMeta(skillId), gather = meta.type === 'gather';
-    const table = costTable(serverId, basis, mode);
+    // 档位表示金/精力的数值区间，不表示产量；所有策略统一用产量中点。
+    const table = costTable(serverId, basis, 'mid');
     const pool = gather ? (catalog.recipes || []).filter(function (r) { return r.kind === 'gather' && r.skillId === skillId; }) : recipes.filter(function (r) { return r.s === skillId; }).sort(function (a, b) { return a.l - b.l || String(a.n).localeCompare(String(b.n), 'zh-CN'); });
     const candidates = pool.map(function (r) {
       let e;
@@ -122,24 +153,27 @@ function createBreakthrough(BT, catalog, getState) {
         const value = missing ? null : outs.reduce(function (s, o) { return s + o.sub; }, 0);
         e = { exp: num(META.gatherExp) || 80, energy: num(r.energy), matCost: 0, netValue: value, profit: value, missing: missing };
         e.profitPerExp = value == null ? null : value / e.exp;
-      } else e = recipeEcon(r, serverId, table, taxRate, mode);
+      } else e = recipeEcon(r, serverId, table, taxRate, 'mid');
       return { r: r, e: e };
     });
     const levels = experienceRows().map(function (xp) {
       let pick = null;
-      candidates.forEach(function (c) {
-        if ((gather ? c.r.level : c.r.l) > xp.from || c.e.missing || !(c.e.exp > 0)) return;
-        function score(e) { if (strategy === 'effort') return Math.ceil(xp.need / e.exp); if (strategy === 'energy') return Math.ceil(xp.need / e.exp) * e.energy; return -e.profitPerExp; }
-        if (!pick || score(c.e) < score(pick.e) - 1e-9 || (Math.abs(score(c.e) - score(pick.e)) <= 1e-9 && c.e.profitPerExp > pick.e.profitPerExp)) pick = c;
+      const available = candidates.filter(function (c) { return (gather ? c.r.level : c.r.l) <= xp.from && c.e.exp > 0 && c.e.energy > 0 && (strategy !== 'gold' || !c.e.missing); });
+      const band = strategy === 'gold' ? profitBand(available, mode) : null;
+      (band ? band.pool : available).forEach(function (c) {
+        function score(e) { const count = Math.ceil(xp.need / e.exp); if (strategy === 'effort') return count; if (strategy === 'energy') return count * e.energy; return -count * e.profit; }
+        const tied = pick && Math.abs(score(c.e) - score(pick.e)) <= 1e-9;
+        const tieBetter = pick && (strategy === 'gold' ? c.e.energy / c.e.exp < pick.e.energy / pick.e.exp : strategy === 'energy' ? Math.ceil(xp.need / c.e.exp) < Math.ceil(xp.need / pick.e.exp) : Math.ceil(xp.need / c.e.exp) * c.e.energy < Math.ceil(xp.need / pick.e.exp) * pick.e.energy);
+        if (!pick || score(c.e) < score(pick.e) - 1e-9 || (tied && tieBetter)) pick = c;
       });
       const r = pick && pick.r, e = pick && pick.e, count = e ? Math.ceil(xp.need / e.exp) : null;
-      return { kind: 'level', from: xp.from, to: xp.to, need: xp.need, name: r ? (r.n || r.name) : '无可用路线（等级或报价不足）', level: r ? (gather ? r.level : r.l) : null, recipe: r, econ: e, exp: e ? e.exp : null, energy: e ? e.energy : null, count: count, matCost: e ? e.matCost * count : null, outValue: e ? e.netValue * count : null, profit: e ? e.profit * count : null, totalEnergy: e ? e.energy * count : null };
+      return { kind: 'level', from: xp.from, to: xp.to, need: xp.need, name: r ? (r.n || r.name) : band && available.length ? '本级该收益比档无样本' : '无符合等级的可用路线', level: r ? (gather ? r.level : r.l) : null, recipe: r, econ: e, band: band ? { key: mode, min: band.min, max: band.max, mean: band.mean, count: band.count } : null, exp: e ? e.exp : null, energy: e ? e.energy : null, count: count, matCost: e && e.matCost != null ? e.matCost * count : null, outValue: e && e.netValue != null ? e.netValue * count : null, profit: e && e.profit != null ? e.profit * count : null, totalEnergy: e ? e.energy * count : null };
     });
     const gates = (BT.gates[skillId] || []).filter(function (g) { return GATE_LEVELS.indexOf(g.l) !== -1; }).map(function (g) { return gateInfo(g, serverId, basis, table); });
     const bands = [];
     levels.forEach(function (r) {
       const prev = bands[bands.length - 1];
-      if (prev && prev.recipe === r.recipe && GATE_LEVELS.indexOf(prev.to) === -1) {
+      if (prev && prev.recipe === r.recipe && JSON.stringify(prev.band) === JSON.stringify(r.band) && GATE_LEVELS.indexOf(prev.to) === -1) {
         prev.to = r.to; prev.need += r.need;
         ['count', 'matCost', 'outValue', 'profit', 'totalEnergy'].forEach(function (k) { prev[k] = prev[k] == null || r[k] == null ? null : prev[k] + r[k]; });
       } else bands.push(Object.assign({}, r));
@@ -149,10 +183,10 @@ function createBreakthrough(BT, catalog, getState) {
     routes.push({ kind: 'max', level: CAP, name: '50 级 · 满级（无独立突破任务）' });
     const totals = aggregate(levels, gates);
     const phases = [{ from: 1, to: 30 }, { from: 30, to: CAP }].map(function (p) { return Object.assign({}, p, aggregate(levels.filter(function (r) { return r.from >= p.from && r.from < p.to; }), gates.filter(function (g) { return p.from === 1 ? g.level === 30 : g.level > 30; }))); });
-    return { kind: gather ? 'gather' : 'craft', skillId: skillId, strategy: strategy, mode: mode, meta: meta, levels: levels, experience: experienceRows(), routes: routes, gates: gates, phases: phases, totals: totals, enough: totals.total != null };
+    return { kind: gather ? 'gather' : 'craft', skillId: skillId, strategy: strategy, mode: mode, meta: meta, levels: levels, experience: experienceRows(), routes: routes, gates: gates, phases: phases, totals: totals, enough: strategy === 'gold' ? totals.total != null : !totals.missingLevels };
   }
   function summary(strategy, mode) {
-    return SKILL_IDS.map(function (id) { const r = analyze(id, strategy, mode); return Object.assign({ skillId: id, name: r.meta.name, color: r.meta.color, type: r.meta.type, enough: r.enough }, r.totals); }).sort(function (a, b) { if (a.total == null) return b.total == null ? 0 : 1; if (b.total == null) return -1; return b.total - a.total; });
+    return SKILL_IDS.map(function (id) { const r = analyze(id, strategy, mode); return Object.assign({ skillId: id, name: r.meta.name, color: r.meta.color, type: r.meta.type, enough: r.enough }, r.totals); }).sort(function (a, b) { const key = strategy === 'energy' ? 'energy' : strategy === 'effort' ? 'crafts' : 'netCost'; if (a[key] == null) return b[key] == null ? 0 : 1; if (b[key] == null) return -1; return a[key] - b[key]; });
   }
   function itemsText(r, limit) {
     if (!r) return '';
