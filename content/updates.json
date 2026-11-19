@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "0ea8b9ad29cd9a1fd9ce2182bdd795330b0caca9",
+  "sourceCommit": "373ea555f69d0c6e68a72c413d824881997126e1",
   "date": "2026-11-19",
-  "title": "add Excel craft-profit workbook and Pages price feed",
+  "title": "make local price fallback work under launchd",
   "notes": [
-    "add Excel craft-profit workbook and Pages price feed"
+    "make local price fallback work under launchd"
   ],
   "history": [
+    {
+      "version": "373ea55",
+      "date": "2026-11-19",
+      "title": "make local price fallback work under launchd"
+    },
     {
       "version": "0ea8b9a",
       "date": "2026-11-19",
@@ -30,11 +35,6 @@
       "version": "5d142be",
       "date": "2026-11-19",
       "title": "align breakthrough calculations and automate Pages releases"
-    },
-    {
-      "version": "084cdf9",
-      "date": "2026-11-19",
-      "title": "update price schedule times and recovery audit"
     }
   ]
 }

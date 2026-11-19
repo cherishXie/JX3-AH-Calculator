@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-19 · 373ea55
+
+make local price fallback work under launchd
+
 ## 2026-11-19 · 8d39dcd
 
 update JX3BOX prices (local cron)
