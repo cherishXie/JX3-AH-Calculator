@@ -1,6 +1,6 @@
 {
   "sourceCommit": "b1f7eb0c72d59876b3846c48cb36b930f1b088ca",
-  "date": "2026-11-19",
+  "date": "2026-11-20",
   "title": "WPS 也能用最新物价：新增本地刷新脚本",
   "notes": [
     "WPS / LibreOffice 不支持 Power Query，双击 excel/刷新物价.command（或把工作簿拖到它上面）就能写入最新物价",
