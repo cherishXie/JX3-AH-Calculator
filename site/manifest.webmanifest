@@ -9,7 +9,10 @@
   "orientation": "portrait",
   "background_color": "#020817",
   "theme_color": "#020817",
-  "categories": ["utilities", "productivity"],
+  "categories": [
+    "utilities",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "./icons/icon-192.png",
@@ -22,6 +25,13 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
-  ]
+  ],
+  "id": "./"
 }

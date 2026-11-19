@@ -60,6 +60,14 @@ git push --force-with-lease -u origin main
    - 部署 Web 版到 GitHub Pages；
    - 上传小工具 zip 为 artifact，并随 Pages 发布到 `/downloads/jx3-minitool.zip`。
 
+## iPhone 添加到主屏幕
+
+- 必须用 **Safari** 打开 `https://cherishxie.github.io/JX3-AH-Calculator/`，微信/小红书/Chrome 的 iOS 内置浏览器不会显示“添加到主屏幕”。
+- Safari → 分享 → 添加到主屏幕 → 添加。
+- 网页不能通过 JS 直接触发该菜单；应用只在 iOS Safari 下显示步骤提示。
+- 若菜单没有该项：退出私密浏览、检查“屏幕使用时间 → 内容和隐私访问限制”、确认 HTTPS、确认未重复添加。
+- `icons/icon-180.png` 为 iOS 主屏幕图标；`manifest.webmanifest` 和 `sw.js` 提供独立窗口与离线应用壳。
+
 ## PWA 自动更新
 
 站点现在是可安装的 PWA：

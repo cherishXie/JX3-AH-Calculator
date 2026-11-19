@@ -11,10 +11,14 @@ const SHELL = [
   './assets/styles.css',
   './assets/pwa.css',
   './assets/core.js',
+  './assets/stones.js',
   './assets/charts.js',
   './assets/app.js',
+  './assets/install.css',
+  './assets/install.js',
   './assets/pwa.js',
   './manifest.webmanifest',
+  './icons/icon-180.png',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];

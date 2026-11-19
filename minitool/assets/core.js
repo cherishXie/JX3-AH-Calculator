@@ -146,6 +146,7 @@
         craftEnergy: 100,
         basis: 'market',
         includeIncomplete: false,
+        taxRate: 0.05,
         theme: 'dark'
       },
       seq: { item: 1, recipe: 1 },
@@ -266,11 +267,15 @@
 
     seedPrice: function (serverId, item) {
       if (!item) return 0;
+      // 价格数据单独热更新时，state.items 里的 base 可能还是旧的；
+      // 内置物品统一用当前 DATA 里的基准价，自定义物品才用自身 base。
       const canonical = (!item.custom && CANON[item.id]) ? CANON[item.id] : item;
       if (!(canonical.base > 0)) return 0;
+      // 优先使用 JX3BOX 该服的拍卖样本；各服统一由 scripts/update-jx3-prices.mjs 写入。
       const bucket = DATA.serverPrices && DATA.serverPrices[serverId];
       const actual = bucket && Number(bucket[canonical.id]);
       if (actual > 0) return U.round(actual, 2);
+      // 已知服务器无该物品报价时回退到梦江南样本；自定义服务器保留确定性价差。
       const known = DATA.servers.some(function (s) { return s.id === serverId; });
       if (serverId === 's_mengjiangnan' || known) return U.round(canonical.base, 2);
       const h = U.hash(serverId + '|' + canonical.id);
@@ -554,7 +559,7 @@
       const totalCost = materialCost + fee;
 
       const outputs = [];
-      let outputValue = 0;
+      let outputValueGross = 0;
       let missingOutputs = 0;
       (recipe.outputs || []).forEach(function (o) {
         const item = itemOf(o.item);
@@ -562,7 +567,7 @@
         const chance = o.chance == null ? 1 : Math.max(0, Math.min(1, Number(o.chance)));
         const expectedQty = o.qty * chance;
         const sub = p.v * expectedQty;
-        outputValue += sub;
+        outputValueGross += sub;
         if (p.missing) missingOutputs++;
         outputs.push({
           itemId: o.item, name: item ? item.name : o.item, qty: o.qty,
@@ -573,6 +578,9 @@
       });
 
       const energy = U.num(recipe.energy);
+      const taxRate = Math.max(0, Math.min(1, Number(Store.state.settings.taxRate)));
+      const tax = outputValueGross * (Number.isFinite(taxRate) ? taxRate : 0);
+      const outputValue = outputValueGross - tax;
       const profit = outputValue - totalCost;
       const perEnergy = energy > 0 ? profit / energy : null;
       return {
@@ -582,6 +590,9 @@
         fee: fee,
         totalCost: totalCost,
         outputs: outputs,
+        outputValueGross: outputValueGross,
+        taxRate: Number.isFinite(taxRate) ? taxRate : 0,
+        tax: tax,
         outputValue: outputValue,
         missingOutputs: missingOutputs,
         missing: missingMaterials + missingOutputs > 0,

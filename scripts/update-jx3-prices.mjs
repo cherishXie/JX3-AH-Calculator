@@ -48,12 +48,16 @@ function writeData(data) {
    价格修订：${stamp} · JX3BOX 全服拍卖
    制造：JX3BOX 技艺助手 API · 154 条代表配方
    采集：${data.recipes.filter((r) => r.kind === 'gather').length} 条按材料拆分；产值按掉率折算
+   五行石：1-8 级拍卖价 + 快速/最优合成 + 7/8 爆率盈亏线
    ========================================================================= */
 `;
   fs.writeFileSync(path.join(ROOT, 'assets/data.js'), header + 'window.JX3Data = ' + json + ';\n');
   fs.writeFileSync(path.join(ROOT, 'miniapp/src/shared/catalog.json'), json + '\n');
   const mini = JSON.parse(json);
   mini.meta.sources = (mini.meta.sources || []).map((s) => Object.assign({}, s, { url: '' }));
+  if (mini.stoneMeta && Array.isArray(mini.stoneMeta.sources)) {
+    mini.stoneMeta.sources = mini.stoneMeta.sources.map((s) => Object.assign({}, s, { url: '' }));
+  }
   fs.writeFileSync(path.join(ROOT, 'minitool/assets/data.js'), '/* 小工具离线数据 · 全服自动价格修订 */\nwindow.JX3Data = ' + JSON.stringify(mini, null, 2) + ';\n');
 }
 function loadMap() {
@@ -140,12 +144,15 @@ async function main() {
   if (mapChanges) saveMap(map);
 
   const keys = [...new Set(data.items.map((i) => map[i.name]).filter(Boolean))];
+  const stoneKeys = (data.stones || []).map((s) => s.itemId).filter(Boolean);
   const servers = ONE_SERVER
     ? data.servers.filter((s) => s.name === ONE_SERVER || s.id === ONE_SERVER)
     : data.servers;
   if (!servers.length) throw new Error('没有匹配的服务器：' + ONE_SERVER);
 
   const existing = data.serverPrices && typeof data.serverPrices === 'object' ? data.serverPrices : {};
+  const existingStone = data.stonePrices && typeof data.stonePrices === 'object' ? data.stonePrices : {};
+  const beforeStonePrices = JSON.stringify(existingStone);
   const beforePrices = JSON.stringify(existing);
   const beforeBase = JSON.stringify(data.items.map((i) => [i.id, i.base]));
   const beforeCoverage = JSON.stringify(data.meta.serverCoverage || {});
@@ -157,6 +164,16 @@ async function main() {
   for (const server of servers) {
     console.log(`[${server.name}] 拉取 ${keys.length} 项…`);
     const quotes = await fetchQuotes(keys, server.name);
+    const stoneQuotes = stoneKeys.length ? await fetchQuotes(stoneKeys, server.name) : {};
+    const stoneBucket = {};
+    for (const st of (data.stones || [])) {
+      const q = stoneQuotes[st.itemId];
+      if (!q || !(q.copper > 0)) continue;
+      const gold = q.copper / 10000;
+      if (gold > 0 && gold < 10000000 && (q.sample || 0) >= 1) {
+        stoneBucket[String(st.level)] = Math.round(gold * 100) / 100;
+      }
+    }
     const bucket = {};
     let updated = 0, filtered = 0, noQuote = 0;
     for (const item of data.items) {
@@ -181,6 +198,13 @@ async function main() {
       continue;
     }
     serverPrices[server.id] = bucket;
+    if (Object.keys(stoneBucket).length) {
+      data.stonePrices = data.stonePrices || {};
+      data.stonePrices[server.id] = stoneBucket;
+    } else if (existingStone[server.id]) {
+      data.stonePrices = data.stonePrices || {};
+      data.stonePrices[server.id] = existingStone[server.id];
+    }
     serverCoverage[server.id] = { updated, total: data.items.length, filtered, noQuote };
     totalAccepted += updated; totalFiltered += filtered; totalNoQuote += noQuote;
     console.log(`[${server.name}] 有效 ${updated}/${data.items.length}，过滤 ${filtered}，无报价 ${noQuote}`);
@@ -198,6 +222,7 @@ async function main() {
   const priceChanged =
     JSON.stringify(serverPrices) !== beforePrices ||
     afterBase !== beforeBase ||
+    JSON.stringify(data.stonePrices || {}) !== beforeStonePrices ||
     JSON.stringify(serverCoverage) !== beforeCoverage;
 
   console.log(`全服合计：有效 ${totalAccepted}，过滤 ${totalFiltered}，无报价 ${totalNoQuote}`);
@@ -227,6 +252,7 @@ async function main() {
   const priceStamp = `${stampParts.year}-${stampParts.month}-${stampParts.day}T${stampParts.hour}:${stampParts.minute}:${stampParts.second}+08:00`;
   const primaryCoverage = serverCoverage[primaryId] || { updated: 0, total: data.items.length, filtered: 0, noQuote: 0 };
   data.meta.priceUpdatedAt = priceStamp;
+  data.meta.stonePriceUpdatedAt = priceStamp;
   data.meta.priceCoverage = { updated: primaryCoverage.updated, total: data.items.length, source: 'JX3BOX 拍卖 · ' + Object.keys(serverCoverage).length + ' 个服务器', filtered: primaryCoverage.filtered, noQuote: primaryCoverage.noQuote };
   data.meta.serverCoverage = serverCoverage;
   data.meta.disclaimer = '制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。';

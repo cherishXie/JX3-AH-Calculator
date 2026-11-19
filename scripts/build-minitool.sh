@@ -15,11 +15,11 @@ rm -f "$OUT"
   zip -rX "../$OUT" index.html assets -x '*.DS_Store' >/dev/null
 )
 
-if ! unzip -Z1 "$OUT" | grep -qx 'index.html'; then
+if ! unzip -l "$OUT" | awk '{print $4}' | grep -qx 'index.html'; then
   echo "ERROR: zip root is missing index.html" >&2
   exit 1
 fi
-if unzip -Z1 "$OUT" | grep -q '__MACOSX'; then
+if unzip -l "$OUT" | grep -q '__MACOSX'; then
   echo "ERROR: zip contains __MACOSX metadata" >&2
   exit 1
 fi

@@ -1240,3 +1240,166 @@ html.light .data-sync {
 @media (prefers-reduced-motion: reduce) {
   .data-sync__spinner { animation: none; }
 }
+
+/* ------------------------------------------------------------------ */
+/* 五行石                                                             */
+/* ------------------------------------------------------------------ */
+.stone-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, var(--sc) 34%, transparent);
+  background: color-mix(in srgb, var(--sc) 13%, transparent);
+  color: var(--sc);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.stone-formula {
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.stone-formula-sub {
+  margin-top: 2px;
+  font-size: 10px;
+  line-height: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.stone-table td { vertical-align: middle; }
+.stone-table tbody tr.selected { box-shadow: inset 2px 0 0 var(--peak); }
+
+.stone-price-table .price-input,
+.stone-price-input {
+  width: 92px;
+  text-align: right;
+}
+
+.stone-be-bar {
+  height: 3px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.stone-be-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--warning), var(--danger));
+}
+
+.stone-prob-input {
+  width: 72px;
+  height: 26px;
+  padding: 0 6px;
+  text-align: right;
+  font-size: 11px;
+}
+
+.stone-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stone-mini {
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 42%, transparent);
+}
+
+.stone-mini .k {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.stone-mini .v {
+  margin-top: 7px;
+  font-size: 21px;
+  line-height: 25px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.stone-mini .v small {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.stone-mini .v.warn { color: var(--warning); }
+.stone-mini .s {
+  margin-top: 5px;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stone-conclusions { display: flex; flex-direction: column; gap: 10px; }
+.stone-conclusion { display: flex; gap: 8px; align-items: flex-start; font-size: 11.5px; line-height: 17px; color: var(--muted); }
+.stone-conclusion b {
+  flex: none;
+  min-width: 30px;
+  color: var(--text);
+  font-weight: 700;
+}
+.stone-conclusion span { min-width: 0; }
+
+.stone-analysis-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.stone-analysis-chart {
+  min-width: 0;
+}
+
+.stone-edit-rows { display: flex; flex-direction: column; gap: 6px; }
+.stone-edit-row { display: flex; align-items: center; gap: 6px; }
+.stone-edit-row .select { width: 104px; }
+.stone-edit-row .input[type="number"] { width: 90px; }
+.stone-edit-row .icon-btn { margin-left: auto; }
+
+@media (max-width: 1000px) {
+  .stone-overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stone-analysis-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .stone-overview-grid { grid-template-columns: 1fr; }
+  .stone-formula { white-space: normal; }
+}
+
+table.data.stone-table thead th,
+table.data.stone-table tbody td { padding-left: 6px; padding-right: 6px; }
+.stone-table .stone-formula { font-size: 11px; }
+
+table.data.analysis-table thead th,
+table.data.analysis-table tbody td { padding-left: 6px; padding-right: 6px; }
+table.data.analysis-table { font-size: 12px; }

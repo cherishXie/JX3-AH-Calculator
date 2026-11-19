@@ -13,12 +13,16 @@ files = [
     'index.html',
     'assets/styles.css',
     'assets/pwa.css',
+    'assets/install.css',
     'assets/core.js',
+    'assets/stones.js',
     'assets/charts.js',
     'assets/app.js',
     'assets/pwa.js',
+    'assets/install.js',
     'site/sw.js',
     'site/manifest.webmanifest',
+    'brand/icon-180.png',
     'brand/icon-192.png',
     'brand/icon-512.png'
 ]
@@ -40,6 +44,7 @@ cp index.html _site/index.html
 cp -R assets _site/assets
 cp site/sw.js _site/sw.js
 cp site/manifest.webmanifest _site/manifest.webmanifest
+cp brand/icon-180.png _site/icons/icon-180.png
 cp brand/icon-192.png _site/icons/icon-192.png
 cp brand/icon-512.png _site/icons/icon-512.png
 find _site -name '.DS_Store' -delete
@@ -91,9 +96,9 @@ for rel in re.findall(r"'(\./[^']+)'", sw):
 
 required = [
     'sw.js', 'manifest.webmanifest', 'version.json', 'updates.json',
-    'assets/app.js', 'assets/core.js', 'assets/data.js', 'assets/charts.js',
-    'assets/styles.css', 'assets/pwa.css', 'assets/pwa.js',
-    'icons/icon-192.png', 'icons/icon-512.png',
+    'assets/app.js', 'assets/core.js', 'assets/stones.js', 'assets/data.js', 'assets/charts.js',
+    'assets/styles.css', 'assets/pwa.css', 'assets/pwa.js', 'assets/install.css', 'assets/install.js',
+    'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png',
 ]
 for rel in required:
     if not (root / rel).exists():

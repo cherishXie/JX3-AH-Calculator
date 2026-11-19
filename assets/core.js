@@ -151,6 +151,7 @@
         craftEnergy: 100,
         basis: 'market',
         includeIncomplete: false,
+        taxRate: 0.05,
         theme: 'dark'
       },
       seq: { item: 1, recipe: 1 },
@@ -563,7 +564,7 @@
       const totalCost = materialCost + fee;
 
       const outputs = [];
-      let outputValue = 0;
+      let outputValueGross = 0;
       let missingOutputs = 0;
       (recipe.outputs || []).forEach(function (o) {
         const item = itemOf(o.item);
@@ -571,7 +572,7 @@
         const chance = o.chance == null ? 1 : Math.max(0, Math.min(1, Number(o.chance)));
         const expectedQty = o.qty * chance;
         const sub = p.v * expectedQty;
-        outputValue += sub;
+        outputValueGross += sub;
         if (p.missing) missingOutputs++;
         outputs.push({
           itemId: o.item, name: item ? item.name : o.item, qty: o.qty,
@@ -582,6 +583,9 @@
       });
 
       const energy = U.num(recipe.energy);
+      const taxRate = Math.max(0, Math.min(1, Number(Store.state.settings.taxRate)));
+      const tax = outputValueGross * (Number.isFinite(taxRate) ? taxRate : 0);
+      const outputValue = outputValueGross - tax;
       const profit = outputValue - totalCost;
       const perEnergy = energy > 0 ? profit / energy : null;
       return {
@@ -591,6 +595,9 @@
         fee: fee,
         totalCost: totalCost,
         outputs: outputs,
+        outputValueGross: outputValueGross,
+        taxRate: Number.isFinite(taxRate) ? taxRate : 0,
+        tax: tax,
         outputValue: outputValue,
         missingOutputs: missingOutputs,
         missing: missingMaterials + missingOutputs > 0,

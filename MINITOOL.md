@@ -27,7 +27,7 @@
 ```text
 Node audit:   PASS: 1 file(s), 0 warning(s)  # zip 体积检查
 Python audit: PASS: 10 file(s), 0 warning(s)
-zip:          约 93 KB（10 个文件）
+zip:          约 115 KB（11 个文件）
 index.html:   zip 根目录
 文件类型:     .html / .css / .js / .svg
 外部请求:     0

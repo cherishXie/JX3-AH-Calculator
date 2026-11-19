@@ -11,6 +11,7 @@
   const Store = C.Store;
   const Calc = C.Calc;
   const Route = C.Route;
+  const Stone = window.JX3Stone;
 
   const $ = function (sel) { return document.querySelector(sel); };
   const $$ = function (sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); };
@@ -41,6 +42,7 @@
     home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/><path d="M9 20v-4h6v4"/>',
     chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
     coin: '<circle cx="12" cy="12" r="8.5"/><path d="M9 9h6v6H9z"/><path d="M12 3v3M12 18v3"/>',
+    gem: '<path d="M6 3h12l3 5-9 13L3 8l3-5Z"/><path d="M3 8h18M9 3l3 18 3-18"/>',
     database: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/><path d="M4 11.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
     list: '<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/>',
     settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.14.6.7 1 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/>',
@@ -83,6 +85,7 @@
   /* ------------------------------------------------------------------ */
   function state() { return Store.state; }
   function settings() { return Store.state.settings; }
+
   function skill(id) { return C.skillOf(id); }
   function tier(id) { return C.tierOf(id); }
   function item(id) { return C.itemOf(id); }
@@ -173,7 +176,7 @@
       const t = bucket[k] && bucket[k].t;
       if (t && t > ts) ts = t;
     });
-    return ts ? U.fmtTime(ts) : U.fmtTime(C.SEED_TS);
+    return ts ? U.fmtTime(ts) : U.fmtTime(C.seedTimestamp ? C.seedTimestamp() : C.SEED_TS);
   }
 
   /* ------------------------------------------------------------------ */
@@ -294,7 +297,8 @@
     '/overview': '总览',
     '/skills': '生活技艺',
     '/prices': '价格库',
-    '/analysis': '精力收益分析'
+    '/analysis': '精力收益分析',
+    '/stones': '五行石'
   };
 
   function navItems() {
@@ -309,7 +313,8 @@
       {
         group: '行情与配方', items: [
           { href: Route.href('/skills/shennong'), label: '生活技艺', icon: 'hammer', path: '/skills', badge: DATA.skills.length },
-          { href: Route.href('/prices'), label: '价格库', icon: 'database', path: '/prices', badge: miss || '' }
+          { href: Route.href('/prices'), label: '价格库', icon: 'database', path: '/prices', badge: miss || '' },
+          { href: Route.href('/stones'), label: '五行石', icon: 'gem', path: '/stones', badge: (DATA.stones || []).length || '' }
         ]
       },
       {
@@ -417,6 +422,7 @@
       '<p class="page-sub">苍生铸世 50 级 · 生活技艺成本与精力收益一览。所有价格按「' + U.esc(server().name) + '」计算，示例价可直接使用，校准后更贴近本服。</p></div>' +
       '<div class="page-tools">' +
         '<span class="badge badge-outline" title="可在设置中修改默认成本口径">成本口径：' + (currentBasis(p) === 'min' ? '取最低' : '市场价') + '</span>' +
+        '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + '</span>' +
         '<span class="badge badge-outline">' + icon('clock') + ' 核验 ' + U.esc(DATA.meta.verifiedAt) + '</span>' +
         '<a class="btn" href="' + Route.href('/prices') + '">' + icon('refreshPrice') + '<span class="txt">校准行情</span></a>' +
       '</div></div>';
@@ -492,7 +498,7 @@
             '<div class="info-row"><span class="k">精力用尽</span><span class="v">' + U.fmtInt(sim.used) + ' / ' + U.fmtInt(sim.budget) + '</span></div>'
           : emptyState('暂无正向收益配方', '补齐材料与产物价格，或检查成本口径。', '<a class="btn btn-sm" href="' + Route.href('/prices') + '">去校准价格</a>', 'coin')) +
         '</div>' +
-        '<div class="card-foot"><span>仅按精力收益排序，不含交易税与暴击产出</span><span class="spacer"></span>' +
+        '<div class="card-foot"><span>已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税，不含暴击额外产出</span><span class="spacer"></span>' +
         '<button class="btn btn-sm btn-ghost" data-action="open-settings">调整预算</button></div>' +
       '</aside>' +
     '</div>';
@@ -548,6 +554,8 @@
       '</section>' +
     '</div>';
 
+    html += '<div class="grid section-gap">' + stoneSummaryCard() + '</div>';
+
     html += dataFoot();
     html += '</div>';
     return html;
@@ -557,6 +565,426 @@
     const vals = rows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; }).map(function (r) { return r.calc.perEnergy; });
     if (!vals.length) return 0;
     return vals.reduce(function (s, v) { return s + v; }, 0) / vals.length;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 五行石                                                             */
+  /* ------------------------------------------------------------------ */
+  function stoneChip(level, opts) {
+    const info = Stone.levelInfo(level);
+    return '<span class="stone-chip" style="--sc:' + info.color + '">' +
+      (opts && opts.short ? level + '级' : U.esc(info.name)) + '</span>';
+  }
+
+  function stonePriceState(p) {
+    if (p.missing) return '<span class="price-state missing">缺价</span>';
+    if (p.user) return '<span class="price-state user">已校准</span>';
+    if (p.quote) return '<span class="price-state seed" title="JX3BOX 该服拍卖样本">行情</span>';
+    return '<span class="price-state seed">示例</span>';
+  }
+
+  function stonePriceInput(level) {
+    const p = Stone.price(Store.state.serverId, level);
+    const val = p.missing ? '' : (Number.isInteger(p.v) ? String(p.v) : p.v.toFixed(2));
+    return '<input class="price-input stone-price-input' + (p.missing ? ' is-missing' : '') + '"' +
+      ' type="number" min="0" step="0.01" inputmode="decimal"' +
+      ' value="' + U.esc(val) + '" placeholder="未定价"' +
+      ' data-stone-price="' + level + '" data-fkey="stone-price:' + level + '"' +
+      ' aria-label="' + U.esc(Stone.levelInfo(level).name + ' 本服单价（金）') + '">';
+  }
+
+  function stoneInputsText(r) {
+    return (r.inputs || []).map(function (x) { return x.qty + '×' + x.level + '级'; }).join(' + ') || '—';
+  }
+
+  function stoneOutcomeText(r) {
+    const parts = (r.outcomes || []).map(function (o) {
+      return o.level + '级 ' + U.fmtPct(o.chance, o.chance < 0.01 ? 2 : 1);
+    });
+    const total = (r.outcomes || []).reduce(function (a, o) { return a + o.chance; }, 0);
+    if (total < 0.9995) parts.push('失败 ' + U.fmtPct(1 - total, 1));
+    return parts.join(' · ');
+  }
+
+  function stoneMethodBadge(method) {
+    const map = {
+      '快速合成': { cls: 'badge-warning', label: '快速合成' },
+      '最低金币': { cls: 'badge-info', label: '最优·省金' },
+      '最低精力': { cls: 'badge-positive', label: '最优·省精力' },
+      '最高精力收益': { cls: 'badge-peak', label: '最优·高收益' },
+      '赌跳级': { cls: 'badge-custom', label: '赌跳级' },
+      '备选': { cls: 'badge-neutral', label: '备选' }
+    };
+    const it = map[method] || { cls: 'badge-neutral', label: method };
+    return '<span class="badge ' + it.cls + '">' + U.esc(it.label) + '</span>';
+  }
+
+  function stoneProfitClass(v) {
+    return v == null || !Number.isFinite(v) ? 'dim' : v > 0 ? 'pos' : v < 0 ? 'neg' : '';
+  }
+
+  function stonePct(v, d) {
+    return v == null || !Number.isFinite(v) ? '—' : U.fmtPct(v, d == null ? 1 : d);
+  }
+
+  function stoneCostText(r) {
+    return Number.isFinite(r.costPerTarget) ? U.fmt(r.costPerTarget, 2) : '—';
+  }
+
+  function stoneEnergyText(r) {
+    return Number.isFinite(r.energyPerTarget) ? U.fmt(r.energyPerTarget, 1) : '—';
+  }
+
+  function stoneProfitText(r) {
+    return r.profitPerTarget == null ? '—' : U.fmtSigned(r.profitPerTarget, 2);
+  }
+
+  function stonePerEnergyText(r) {
+    return r.perEnergyTarget == null ? '—' : U.fmt(r.perEnergyTarget, 3);
+  }
+
+  function stoneMargin(r) {
+    return r.profitPerTarget != null && r.targetNet > 0 ? r.profitPerTarget / r.targetNet : null;
+  }
+
+  function stoneChartItems(sum) {
+    const items = [];
+    [3, 4, 5, 6].forEach(function (level) {
+      const fast = sum.all.find(function (r) { return r.target === level && r.recipe.mode === 'fast'; });
+      const best = sum.best[level];
+      if (fast) {
+        items.push({
+          label: level + '级·快速',
+          value: fast.perEnergyTarget,
+          color: Charts.color.warning,
+          meta: '快速',
+          tip: level + '级快速合成 · ' + U.fmt(fast.costPerTarget, 2) + ' 金/颗 · ' + U.fmt(fast.energyPerTarget, 1) + ' 精力/颗'
+        });
+      }
+      if (best && (!fast || best.recipe.id !== fast.recipe.id)) {
+        items.push({
+          label: level + '级·最优',
+          value: best.perEnergyTarget,
+          color: Charts.color.craft,
+          meta: best.method,
+          tip: level + '级' + best.method + ' · ' + U.fmt(best.costPerTarget, 2) + ' 金/颗 · ' + U.fmt(best.energyPerTarget, 1) + ' 精力/颗'
+        });
+      }
+    });
+    return items.filter(function (d) { return d.value != null && Number.isFinite(d.value); });
+  }
+
+  function renderStones(p) {
+    const serverId = Store.state.serverId;
+    const tax = Stone.taxRate();
+    const sum = Stone.summary({ serverId: serverId });
+    const showAll = p.all === '1';
+    const normalRows = sum.all.filter(function (r) {
+      return r.target >= 3 && r.target <= 6 && (showAll || r.method !== '备选' || r.recipe.custom);
+    });
+    const jackRows = sum.all.filter(function (r) { return r.target >= 7; });
+    const best5 = sum.best[5];
+    const best6 = sum.best[6];
+    const bestOverall = sum.bestOverall;
+    const fast6 = sum.fast6;
+    const fast5 = sum.fast5;
+    const be7 = sum.be7;
+    const be8 = sum.be8;
+    const be8from4 = sum.be8from4;
+    const fast6p8 = fast6 ? (fast6.cost - fast6.targetNet) / (Stone.netPrice(serverId, 8) - fast6.targetNet) : null;
+    const chartItems = stoneChartItems(sum);
+
+    let html = '<div class="page">';
+    html += '<div class="page-head"><div><h1 class="page-title">五行石合成</h1>' +
+      '<p class="page-sub">苍生铸世 · 1→8 级五行石合成路线、精力收益与爆率盈亏线。快速合成与最优合成分开计算；所有公式可编辑，售价统一扣 ' +
+      U.fmtPct(tax, 0) + ' 交易税。</p></div>' +
+      '<div class="page-tools">' +
+        '<span class="badge badge-outline" title="在设置中修改交易税率">交易税 ' + U.fmtPct(tax, 0) + '</span>' +
+        '<button class="btn btn-sm" data-action="stone-new">' + icon('plus') + '新增公式</button>' +
+        '<button class="btn btn-sm" data-action="export-csv" data-csv="stones">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
+        '<button class="btn btn-sm" data-action="stone-reset-all">' + icon('refresh') + '恢复默认</button>' +
+      '</div></div>';
+
+    html += '<div style="margin-top:14px">' + notice('当前赛季官方未逐条公布五行石合成公式；默认值来自 2026-07 精炼面板攻略，并用 2026-09 官方「精炼公式未调整」与测试服精六成本交叉核对。7/8 级无稳定保底公式，所有公式可在页面内编辑校准。', 'info') + '</div>';
+
+    html += '<div class="kpi-grid">' +
+      '<div class="kpi"><div class="kpi-label">6级最优单颗成本</div>' +
+        '<div class="kpi-value">' + (best6 ? U.fmt(best6.costPerTarget, 2) : '—') + '<span class="kpi-unit">金/颗</span></div>' +
+        '<div class="kpi-meta">' + (best6 ? icon('spark') + '<span class="strong">' + U.esc(best6.method) + '</span><span class="sep"></span><span>净售 ' + U.fmt(best6.targetNet, 2) + '</span>' : '<span>暂无完整公式</span>') + '</div>' +
+        '<div class="kpi-meta">' + (best6 ? '<span class="' + stoneProfitClass(best6.profitPerTarget) + '">利润 ' + U.fmtSigned(best6.profitPerTarget, 2) + ' 金/颗</span><span class="sep"></span><span>' + stoneEnergyText(best6) + ' 精力/颗</span>' : '<span>补齐五行石价格后自动计算</span>') + '</div></div>' +
+      '<div class="kpi"><div class="kpi-label">最赚合成 <span class="info" data-tip="按当前价格、自产中间石并计入前序精力，比较 3-6 级全部公式">' + icon('info') + '</span></div>' +
+        '<div class="kpi-value">' + (bestOverall ? U.fmt(bestOverall.perEnergyTarget, 3) : '—') + '<span class="kpi-unit">金/精力</span></div>' +
+        '<div class="kpi-meta">' + (bestOverall ? '<span class="strong">' + U.esc(bestOverall.target + '级 · ' + bestOverall.method) + '</span><span class="sep"></span><span>' + U.esc(bestOverall.recipe.name) + '</span>' : '<span>暂无正向收益</span>') + '</div>' +
+        '<div class="kpi-meta">' + (bestOverall ? '<span>单颗利润 ' + U.fmtSigned(bestOverall.profitPerTarget, 2) + ' 金</span><span class="sep"></span><span>' + stoneEnergyText(bestOverall) + ' 精力/颗</span>' : '') + '</div></div>' +
+      '<div class="kpi"><div class="kpi-label">7级盈亏线</div>' +
+        '<div class="kpi-value">' + (be7 && be7.breakEven.p != null ? stonePct(be7.breakEven.p, 2) : '—') + '<span class="kpi-unit">爆率</span></div>' +
+        '<div class="kpi-meta">' + (be7 ? '<span>单次 ' + U.fmt(be7.cost, 2) + ' 金 / ' + U.fmt(be7.totalEnergy, 0) + ' 精力</span>' : '<span>暂无公式</span>') + '</div>' +
+        '<div class="kpi-meta">' + (be7 ? '<span class="dim">净售 ' + U.fmt(be7.targetNet, 2) + ' 金 · 当前填写 ' + stonePct(be7.targetChance, 2) + '</span>' : '') + '</div></div>' +
+      '<div class="kpi"><div class="kpi-label">8级盈亏线</div>' +
+        '<div class="kpi-value">' + (be8 && be8.breakEven.p != null ? stonePct(be8.breakEven.p, 2) : '—') + '<span class="kpi-unit">爆率</span></div>' +
+        '<div class="kpi-meta">' + (be8 ? '<span>单次 ' + U.fmt(be8.cost, 2) + ' 金 / ' + U.fmt(be8.totalEnergy, 0) + ' 精力</span>' : '<span>暂无公式</span>') + '</div>' +
+        '<div class="kpi-meta">' + (be8 ? '<span class="dim">净售 ' + U.fmt(be8.targetNet, 2) + ' 金 · 当前填写 ' + stonePct(be8.targetChance, 2) + '</span>' : '') + '</div></div>' +
+    '</div>';
+
+    html += '<div class="grid section-gap">';
+    html += '<section class="card col-8"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">3-6级：快速合成 vs 最优合成</h2>' +
+      '<p class="card-sub">快速合成 = 直接耗 1 级；最优合成 = 自产中间石，分「省金 / 省精力 / 高收益」三条路线。单颗成本含前序金币与累计精力，净售价已扣 ' + U.fmtPct(tax, 0) + ' 交易税。' +
+      (showAll ? '当前显示全部备选公式。' : '默认隐藏备选公式。') + '</p></div>' +
+      '<div class="card-tools">' +
+        '<label class="switch"><input type="checkbox" data-toggle="stone-all" data-value="1"' + (showAll ? ' checked' : '') + '><span class="track"></span>显示全部公式</label>' +
+      '</div></div>' +
+      '<div class="table-wrap medium"><table class="data stone-table"><thead><tr>' +
+        '<th>目标</th><th>方式</th><th>最终配方</th><th class="num">单次金币</th><th class="num">精力/颗</th>' +
+        '<th class="num">单颗成本</th><th class="num">净售价</th><th class="num">利润/颗</th><th class="num">精力收益</th><th></th>' +
+      '</tr></thead><tbody>' +
+      (normalRows.length ? normalRows.map(function (r) {
+        const margin = stoneMargin(r);
+        const isBest = best6 && r.key === best6.key;
+        return '<tr class="' + (isBest ? 'selected' : '') + '">' +
+          '<td>' + stoneChip(r.target, { short: true }) + '</td>' +
+          '<td>' + stoneMethodBadge(r.method) + '</td>' +
+          '<td><div class="stone-formula">' + U.esc(stoneInputsText(r.recipe)) + '</div>' +
+            '<div class="stone-formula-sub">' + U.esc(r.recipe.name) + ' · 出' + r.target + '级 ' + stonePct(r.targetChance, 1) + '</div></td>' +
+          '<td class="num">' + U.fmt(r.cost, 2) + '</td>' +
+          '<td class="num">' + stoneEnergyText(r) + '</td>' +
+          '<td class="num"><b>' + stoneCostText(r) + '</b></td>' +
+          '<td class="num">' + U.fmt(r.targetNet, 2) + '</td>' +
+          '<td class="num ' + stoneProfitClass(r.profitPerTarget) + '">' + stoneProfitText(r) + '</td>' +
+          '<td class="num"><b class="' + stoneProfitClass(r.perEnergyTarget) + '">' + stonePerEnergyText(r) + '</b></td>' +
+          '<td class="actions"><button class="icon-btn" data-action="edit-stone" data-id="' + U.esc(r.recipe.id) + '" aria-label="编辑公式">' + icon('edit') + '</button></td>' +
+        '</tr>';
+      }).join('') : '<tr><td colspan="11">' + emptyState('暂无五行石公式', '点击右上角新增公式。', '', 'gem') + '</td></tr>') +
+      '</tbody></table></div>' +
+      '<div class="card-foot"><span>单颗成本 =（投入金币 + 加工费 − 副产物净收入）÷ 出目标级概率；精力/颗含前序合成精力</span>' +
+      '<span class="spacer"></span><a href="' + Route.href('/prices') + '">校准价格 ' + icon('arrowRight') + '</a></div></section>';
+
+    html += '<aside class="col-4 flex-col">';
+    html += '<section class="card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">本服五行石行情</h2>' +
+      '<p class="card-sub">直接改价，本页收益即时重算 · 出售按 ' + U.fmtPct(tax, 0) + ' 扣税</p></div></div>' +
+      '<div class="table-wrap medium"><table class="data compact stone-price-table"><thead><tr><th>等级</th><th class="num">买入价（金）</th><th class="num">税后净价</th><th>状态</th></tr></thead><tbody>' +
+      Stone.levels.map(function (l) {
+        const p = Stone.price(serverId, l.level);
+        const np = Stone.netPrice(serverId, l.level);
+        return '<tr><td>' + stoneChip(l.level, { short: true }) + '</td>' +
+          '<td class="num">' + stonePriceInput(l.level) + '</td>' +
+          '<td class="num">' + U.fmt(np, 2) + '</td>' +
+          '<td>' + stonePriceState(p) + '</td></tr>';
+      }).join('') +
+      '</tbody></table></div>' +
+      '<div class="card-foot"><span>1级为商店/交易行买入价；7/8级样本少，请以本服交易行为准</span></div></section>';
+
+    html += '<section class="card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">怎么选？</h2>' +
+      '<p class="card-sub">按当前服务器价格自动生成</p></div></div><div class="card-body">' +
+      '<div class="stone-conclusions">' +
+        (fast5 && best5 ? '<div class="stone-conclusion"><b>5级</b><span>快速 ' + U.fmt(fast5.costPerTarget, 2) + ' 金 / ' + U.fmt(fast5.energyPerTarget, 0) + ' 精力 / ' + U.fmt(fast5.perEnergyTarget, 3) + ' 金每精力；最优 ' + U.fmt(best5.costPerTarget, 2) + ' 金 / ' + U.fmt(best5.energyPerTarget, 0) + ' 精力 / ' + U.fmt(best5.perEnergyTarget, 3) + ' 金每精力。</span></div>' : '') +
+        (fast6 && best6 ? '<div class="stone-conclusion"><b>6级</b><span>快速 ' + U.fmt(fast6.costPerTarget, 2) + ' 金 / ' + U.fmt(fast6.energyPerTarget, 0) + ' 精力 / ' + U.fmt(fast6.perEnergyTarget, 3) + ' 金每精力；最优 ' + U.fmt(best6.costPerTarget, 2) + ' 金 / ' + U.fmt(best6.energyPerTarget, 0) + ' 精力 / ' + U.fmt(best6.perEnergyTarget, 3) + ' 金每精力。</span></div>' : '') +
+        (be7 && be7.breakEven.p != null ? '<div class="stone-conclusion"><b>7级</b><span>单次 ' + U.fmt(be7.cost, 2) + ' 金；市场净价 ' + U.fmt(be7.targetNet, 2) + ' 金。爆率高于 ' + stonePct(be7.breakEven.p, 1) + ' 才值得赌。</span></div>' : '') +
+        (be8 && be8.breakEven.p != null ? '<div class="stone-conclusion"><b>8级</b><span>单次 ' + U.fmt(be8.cost, 2) + ' 金；市场净价 ' + U.fmt(be8.targetNet, 2) + ' 金。爆率高于 ' + stonePct(be8.breakEven.p, 1) + ' 才值得赌。</span></div>' : '') +
+        '<div class="stone-conclusion"><b>爆率</b><span>' +
+          (fast6 && Number.isFinite(fast6p8) ? '快速六级若也能跳八，八级爆率 ≥ ' + stonePct(Math.max(0, fast6p8), 2) + ' 就能把快速六级的亏损打平。' : '') +
+          (be8from4 && be8from4.breakEven.p != null ? ' 4精6 冲八（市场四级）需八级爆率 ≥ ' + stonePct(be8from4.breakEven.p, 2) + '；若四级自产，六级基础通常已盈利，八级是额外收益。' : '') +
+        '</span></div>' +
+      '</div>' +
+      '<div class="hairline"></div>' +
+      '<div class="tiny dim" style="line-height:17px">公式基于 2026-07 精炼攻略与 2026-09 官方“精炼公式未调整”说明；7/8 级当前赛季无稳定保底公式，默认爆率 0，只算盈亏线。</div>' +
+      '</div><div class="card-foot"><button class="btn btn-sm" data-action="open-data">数据来源</button>' +
+      '<span class="spacer"></span><button class="btn btn-sm" data-action="stone-new">新增公式</button></div></section>';
+    html += '</aside></div>';
+
+    html += '<div class="grid section-gap">' +
+      '<section class="card col-7"><div class="card-head"><div class="card-head-main"><h2 class="card-title">快速 vs 最优：每点精力赚多少？</h2>' +
+        '<p class="card-sub">柱子为精力收益（金/精力），越高越好；负值表示越做越亏</p></div>' +
+        '<div class="card-tools"><button class="icon-btn" data-action="export-chart" data-target="chart-stone-compare" aria-label="导出对比图">' + icon('download') + '</button></div></div>' +
+        '<div class="card-body tight" id="chart-stone-compare">' + Charts.columns(chartItems, {
+          palette: Charts.palette(ui.theme), unit: '金/精力', labelWidth: 10,
+          ariaLabel: '五行石快速合成与最优合成精力收益对比'
+        }) + '</div>' +
+        '<div class="card-foot"><div class="chart-legend">' +
+          '<span class="item"><span class="swatch" style="--sw:' + Charts.color.warning + '"></span>快速合成</span>' +
+          '<span class="item"><span class="swatch" style="--sw:' + Charts.color.craft + '"></span>最优合成</span>' +
+        '</div><span class="spacer"></span><span>成本与精力均含前序合成</span></div></section>' +
+
+      '<section class="card col-5"><div class="card-head"><div class="card-head-main"><h2 class="card-title">7/8级：爆率盈亏线</h2>' +
+        '<p class="card-sub">默认爆率 0，只算“要多少爆率才不亏”；可直接改当前爆率</p></div></div>' +
+        '<div class="table-wrap medium"><table class="data compact stone-breakeven-table"><thead><tr>' +
+          '<th>目标</th><th class="num">单次成本</th><th>保底</th><th class="num">盈亏线</th><th class="num">当前</th><th class="num">期望/次</th>' +
+        '</tr></thead><tbody>' +
+        (jackRows.length ? jackRows.map(function (r) {
+          const pstar = r.breakEven && r.breakEven.p;
+          const w = pstar != null ? Math.max(0, Math.min(100, pstar * 100)) : 0;
+          return '<tr>' +
+            '<td>' + stoneChip(r.target, { short: true }) + '</td>' +
+            '<td class="num">' + U.fmt(r.cost, 2) + '</td>' +
+            '<td>' + stoneChip(r.primary, { short: true }) + ' ' + stonePct(r.primaryChance, 0) + '</td>' +
+            '<td class="num"><b>' + (pstar == null ? '—' : stonePct(pstar, 2)) + '</b>' +
+              '<div class="stone-be-bar"><i style="width:' + w.toFixed(1) + '%"></i></div></td>' +
+            '<td class="num">' + stonePct(r.targetChance, 2) + '</td>' +
+            '<td class="num ' + stoneProfitClass(r.profitPerAttempt) + '">' + U.fmtSigned(r.profitPerAttempt, 2) + '</td>' +
+          '</tr>';
+        }).join('') : '<tr><td colspan="6">' + emptyState('暂无 7/8 级公式', '', '', 'gem') + '</td></tr>') +
+        '</tbody></table></div>' +
+        '<div class="card-foot"><span>盈亏线 =（单次成本 − 保底产出净价）÷（目标净价 − 保底净价）</span></div></section>' +
+    '</div>';
+
+    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">7/8级：可编辑爆率与期望利润</h2>' +
+      '<p class="card-sub">把游戏内面板或实测爆率填进“当前爆率”，期望利润按每次合成计算；所有公式都能改产物、数量、加工费与精力</p></div>' +
+      '<div class="card-tools"><span class="badge badge-outline">7/8级无稳定保底公式</span>' +
+      '<button class="btn btn-sm" data-action="stone-new">' + icon('plus') + '新增公式</button></div></div>' +
+      '<div class="table-wrap medium"><table class="data stone-jackpot-table"><thead><tr>' +
+        '<th>目标</th><th>公式</th><th class="num">单次成本</th><th class="num">精力/次</th><th>保底产出</th><th>跳级产出</th>' +
+        '<th class="num">市场净价</th><th class="num">盈亏平衡爆率</th><th class="num">当前爆率</th><th class="num">期望利润/次</th><th>状态</th><th></th>' +
+      '</tr></thead><tbody>' +
+      (jackRows.length ? jackRows.map(function (r) {
+        const pstar = r.breakEven && r.breakEven.p;
+        const current = r.targetChance;
+        let status = '<span class="badge badge-neutral">待填爆率</span>';
+        if (pstar != null && pstar <= 0) status = '<span class="badge badge-positive">基础已盈利</span>';
+        else if (pstar != null && current >= pstar) status = '<span class="badge badge-positive">高于盈亏线</span>';
+        else if (current > 0) status = '<span class="badge badge-danger">低于盈亏线</span>';
+        return '<tr>' +
+          '<td>' + stoneChip(r.target, { short: true }) + '</td>' +
+          '<td><div class="stone-formula">' + U.esc(stoneInputsText(r.recipe)) + '</div>' +
+            '<div class="stone-formula-sub">' + U.esc(r.recipe.name) + '</div></td>' +
+          '<td class="num">' + U.fmt(r.cost, 2) + '</td>' +
+          '<td class="num">' + U.fmt(r.totalEnergy, 0) + '</td>' +
+          '<td>' + stoneChip(r.primary, { short: true }) + ' ' + stonePct(r.primaryChance, 1) + '</td>' +
+          '<td>' + stoneChip(r.target, { short: true }) + ' ' + stonePct(current, 2) + '</td>' +
+          '<td class="num">' + U.fmt(r.targetNet, 2) + '</td>' +
+          '<td class="num"><b class="' + (pstar != null && pstar <= 1 ? 'warn' : 'dim') + '">' + (pstar == null ? '—' : stonePct(pstar, 2)) + '</b></td>' +
+          '<td class="num"><input class="input stone-prob-input" type="number" min="0" max="100" step="0.1"' +
+            ' value="' + U.fmt(current * 100, 2) + '" data-stone-prob="' + U.esc(r.recipe.id) + '" data-stone-prob-level="' + r.target + '"' +
+            ' aria-label="' + U.esc(r.recipe.name + ' 当前爆率（%）') + '"><span class="tiny dim">%</span></td>' +
+          '<td class="num ' + stoneProfitClass(r.profitPerAttempt) + '"><b>' + U.fmtSigned(r.profitPerAttempt, 2) + '</b></td>' +
+          '<td>' + status + '</td>' +
+          '<td class="actions"><button class="icon-btn" data-action="edit-stone" data-id="' + U.esc(r.recipe.id) + '" aria-label="编辑公式">' + icon('edit') + '</button></td>' +
+        '</tr>';
+      }).join('') : '<tr><td colspan="12">' + emptyState('暂无 7/8 级公式', '点击新增公式，填入你实测的配方与爆率。', '', 'gem') + '</td></tr>') +
+      '</tbody></table></div>' +
+      '<div class="card-foot"><span>“期望利润/次” = Σ(产出概率 × 税后净价) − 单次投入；“当前爆率”改动会保存到本机</span>' +
+      '<span class="spacer"></span><button class="btn btn-sm" data-action="stone-new">新增公式</button></div></section></div>';
+
+    html += renderStoneExtraction(serverId);
+    html += dataFoot();
+    html += '</div>';
+    return html;
+  }
+
+  function renderStoneExtraction(serverId) {
+    const p6 = Stone.price(serverId, 6).v;
+    const net6 = Stone.netPrice(serverId, 6);
+    const net7 = Stone.netPrice(serverId, 7);
+    const net8 = Stone.netPrice(serverId, 8);
+    const rows = [
+      { name: '7级 · 精5衣/裤', cost: 525 + 9 * p6, qty: 1, unit: net7, note: '剥七图示；产出 1七级 + 1五级，五级未抵扣' },
+      { name: '7级 · 精6武器', cost: 1172 + 32 * p6, qty: 3, unit: net7, note: '剥七图示；产出 3七级 + 1五级，按 3 颗均摊' },
+      { name: '8级 · 精8橙戒', cost: (1879 + 80.2 * p6 + 154) / 2, qty: 1, unit: net8, note: '剥八图示；产出 2八级 + 2六级 + 1五级，按 2 颗均摊' }
+    ];
+    return '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">剥七 / 剥八参考（当前赛季）</h2>' +
+      '<p class="card-sub">7/8级主要来自装备剥离；下表按当前 6级价 ' + U.fmt(p6, 2) + ' 金重算，仅作合成之外的对照</p></div>' +
+      '<div class="card-tools"><span class="badge badge-outline">受装备与次数限制，不可无限重复</span></div></div>' +
+      '<div class="table-wrap medium"><table class="data compact"><thead><tr>' +
+        '<th>方法</th><th class="num">总成本</th><th class="num">产出</th><th class="num">单颗成本</th><th class="num">市场净价</th><th class="num">单颗利润</th><th>说明</th>' +
+      '</tr></thead><tbody>' +
+      rows.map(function (r) {
+        const per = r.qty > 1 ? r.cost / r.qty : r.cost;
+        return '<tr><td>' + U.esc(r.name) + '</td>' +
+          '<td class="num">' + U.fmt(r.cost, 2) + '</td>' +
+          '<td class="num">' + r.qty + ' 颗</td>' +
+          '<td class="num">' + U.fmt(per, 2) + '</td>' +
+          '<td class="num">' + U.fmt(r.unit, 2) + '</td>' +
+          '<td class="num ' + stoneProfitClass(r.unit - per) + '">' + U.fmtSigned(r.unit - per, 2) + '</td>' +
+          '<td class="dim tiny">' + U.esc(r.note) + '</td></tr>';
+      }).join('') +
+      '</tbody></table></div>' +
+      '<div class="card-foot"><span>成本含剥离费与消耗的 6级五行石；低于目标等级的产出未抵扣；剥离精力未计入</span>' +
+      '<span class="spacer"></span><span>来源：剥七&剥八一图示（见数据说明）</span></div></section></div>';
+  }
+
+  function stoneOverviewMini(label, row) {
+    if (!row) {
+      return '<div class="stone-mini"><div class="k">' + label + '</div><div class="v dim">—</div><div class="s">暂无完整公式</div></div>';
+    }
+    return '<div class="stone-mini"><div class="k">' + label + '</div>' +
+      '<div class="v ' + stoneProfitClass(row.perEnergyTarget) + '">' + U.fmt(row.perEnergyTarget, 3) + '<small>金/精力</small></div>' +
+      '<div class="s">' + U.esc(row.method) + ' · ' + U.fmt(row.costPerTarget, 2) + ' 金/颗 · ' + U.fmt(row.energyPerTarget, 0) + ' 精力</div></div>';
+  }
+
+  function stoneOverviewBE(label, row) {
+    if (!row || row.breakEven.p == null) {
+      return '<div class="stone-mini"><div class="k">' + label + '</div><div class="v dim">—</div><div class="s">暂无公式</div></div>';
+    }
+    return '<div class="stone-mini"><div class="k">' + label + '</div>' +
+      '<div class="v warn">' + stonePct(row.breakEven.p, 1) + '<small>盈亏线</small></div>' +
+      '<div class="s">净售 ' + U.fmt(row.targetNet, 2) + ' 金 · 当前 ' + stonePct(row.targetChance, 1) + '</div></div>';
+  }
+
+  function stoneSummaryCard() {
+    const sum = Stone.summary({ serverId: Store.state.serverId });
+    return '<section class="card col-12 stone-overview-card"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">' + icon('gem') + '五行石：合到几级最赚精力？</h2>' +
+      '<p class="card-sub">快速 vs 最优 · 5/6级单颗收益 · 7/8级爆率盈亏线 · 售价已扣 ' + U.fmtPct(sum.taxRate, 0) + ' 交易税</p></div>' +
+      '<div class="card-tools"><a class="btn btn-sm" href="' + Route.href('/stones') + '">打开五行石合成 ' + icon('arrowRight') + '</a></div></div>' +
+      '<div class="card-body"><div class="stone-overview-grid">' +
+        stoneOverviewMini('5级最优', sum.best[5]) +
+        stoneOverviewMini('6级最优', sum.best[6]) +
+        stoneOverviewBE('7级盈亏线', sum.be7) +
+        stoneOverviewBE('8级盈亏线', sum.be8) +
+      '</div></div>' +
+      '<div class="card-foot"><span>成本含前序合成精力；7/8级无稳定保底公式，盈亏线按“4×六级 / 15×六级”可编辑模板计算</span></div></section>';
+  }
+
+  function stoneAnalysisCard() {
+    const sum = Stone.summary({ serverId: Store.state.serverId });
+    const rows = [];
+    [5, 6].forEach(function (level) {
+      const best = sum.best[level];
+      const fast = sum.all.find(function (r) { return r.target === level && r.recipe.mode === 'fast'; });
+      if (best) rows.push({ level: level, best: best, fast: fast, jackpot: null });
+    });
+    [7, 8].forEach(function (level) {
+      const jack = sum.all.find(function (r) { return r.target === level && r.recipe.id === (level === 7 ? 'jack_7' : 'jack_8'); });
+      if (jack) rows.push({ level: level, best: null, fast: null, jackpot: jack });
+    });
+    const chartItems = stoneChartItems(sum).filter(function (d) { return d.label.indexOf('5级') === 0 || d.label.indexOf('6级') === 0; });
+    return '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">' + icon('gem') + '五行石合成收益</h2>' +
+      '<p class="card-sub">把低级五行石合成高级石头的金币、精力与爆率盈亏线单列，不与生活技艺配方混排</p></div>' +
+      '<div class="card-tools"><a class="btn btn-sm" href="' + Route.href('/stones') + '">进入五行石模块 ' + icon('arrowRight') + '</a></div></div>' +
+      '<div class="card-body"><div class="stone-analysis-grid">' +
+        '<div class="stone-analysis-table"><div class="table-wrap" style="border-top:0"><table class="data compact"><thead><tr>' +
+          '<th>目标</th><th>最佳方式</th><th class="num">单颗成本</th><th class="num">净售价</th><th class="num">利润/颗</th><th class="num">精力/颗</th><th class="num">精力收益</th><th class="num">爆率盈亏线</th>' +
+        '</tr></thead><tbody>' +
+        rows.map(function (x) {
+          if (x.best) {
+            return '<tr><td>' + stoneChip(x.level, { short: true }) + '</td><td>' + stoneMethodBadge(x.best.method) +
+              ' <span class="tiny dim">' + U.esc(x.best.recipe.name) + '</span></td>' +
+              '<td class="num">' + U.fmt(x.best.costPerTarget, 2) + '</td>' +
+              '<td class="num">' + U.fmt(x.best.targetNet, 2) + '</td>' +
+              '<td class="num ' + stoneProfitClass(x.best.profitPerTarget) + '">' + U.fmtSigned(x.best.profitPerTarget, 2) + '</td>' +
+              '<td class="num">' + stoneEnergyText(x.best) + '</td>' +
+              '<td class="num"><b class="' + stoneProfitClass(x.best.perEnergyTarget) + '">' + U.fmt(x.best.perEnergyTarget, 3) + '</b></td>' +
+              '<td class="num dim">—</td></tr>';
+          }
+          const j = x.jackpot;
+          return '<tr><td>' + stoneChip(x.level, { short: true }) + '</td><td>' + stoneMethodBadge('赌跳级') +
+            ' <span class="tiny dim">' + U.esc(j.recipe.name) + '</span></td>' +
+            '<td class="num">' + U.fmt(j.cost, 2) + '<span class="tiny dim">/次</span></td>' +
+            '<td class="num">' + U.fmt(j.targetNet, 2) + '</td>' +
+            '<td class="num dim">—</td>' +
+            '<td class="num">' + U.fmt(j.totalEnergy, 0) + '<span class="tiny dim">/次</span></td>' +
+            '<td class="num dim">—</td>' +
+            '<td class="num"><b class="warn">' + stonePct(j.breakEven.p, 2) + '</b></td></tr>';
+        }).join('') +
+        '</tbody></table></div></div>' +
+        '<div class="stone-analysis-chart"><div class="tiny dim" style="margin-bottom:2px">5/6级快速 vs 最优 · 精力收益（金/精力）</div>' +
+        Charts.columns(chartItems, { palette: Charts.palette(ui.theme), unit: '金/精力', width: 420, height: 220, labelWidth: 9 }) +
+        '</div>' +
+      '</div></div>' +
+      '<div class="card-foot"><span>精力收益 = 单颗税后利润 ÷ 累计精力；7/8级只有爆率高于盈亏线才值得赌</span>' +
+      '<span class="spacer"></span><a href="' + Route.href('/stones') + '">查看完整公式与爆率 ' + icon('arrowRight') + '</a></div></section></div>';
   }
 
   /* ------------------------------------------------------------------ */
@@ -648,7 +1076,7 @@
         '<th class="sticky">' + (sk.type === 'gather' ? '采集点' : '配方 / 产物') + '</th>' +
         '<th>品阶</th>' +
         '<th class="num">' + (sk.type === 'gather' ? '单次产出' : '成本') + '</th>' +
-        '<th class="num">产值</th>' +
+        '<th class="num">税后产值</th>' +
         '<th class="num">利润</th>' +
         '<th class="num">精力</th>' +
         sortHeader('收益/精力', 'perEnergy', p, 'num') +
@@ -673,7 +1101,7 @@
         }).join('') +
         '</tbody></table></div>';
     }
-    html += '<div class="card-foot"><span>成本 = 材料 + 手续费；精力收益 = 利润 / 精力</span>' +
+    html += '<div class="card-foot"><span>成本 = 材料 + 手续费；利润 = 税后产值 − 成本；精力收益 = 利润 / 精力</span>' +
       '<span class="sep">·</span><span>' + (basis === 'min' ? '取最低：仅优化材料成本，不计自制中间产物的精力' : '市场价：材料按本服单价计') + '</span>' +
       '<span class="spacer"></span>' +
       (sk.type === 'gather' ? '<span>采集期望产值 = Σ（数量 × 掉率 × 单价）；精力按单次采集折算</span>' : '<span>点击行查看配方详情</span>') + '</div>';
@@ -712,12 +1140,12 @@
   }
 
   function dataFoot() {
-    const sources = DATA.meta.sources.map(function (s) {
-      return '<span class="source-ref">' + U.esc(s.label) + '</span>';
-    }).join(' · ');
+    const listed = DATA.meta.sources.slice(0, 6);
+    const sources = listed.map(function (s) { return U.esc(s.label); }).join(' · ') +
+      (DATA.meta.sources.length > listed.length ? ' · 等 ' + DATA.meta.sources.length + ' 项' : '');
     return '<div class="data-foot">' + icon('shield') +
       '<div><b style="color:var(--muted)">苍生铸世 · 50 级数据口径</b> · 核验于 ' + U.esc(DATA.meta.verifiedAt) +
-      ' · 制造配方/等级/精力/材料来自 JX3BOX 当前版本 API（2026-11-18），收录 154 条代表配方；价格采用 JX3BOX 17 个服务器拍卖样本（梦江南 ' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.updated : '—') + '/' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.total : '—') + ' 项有效），无报价回退梦江南示例价；采集产出名称已核验，数量为示例。请以本服交易行为准。' +
+      ' · 制造配方/等级/精力/材料来自 JX3BOX 当前版本 API（2026-11-18），收录 154 条代表配方；价格采用 JX3BOX 17 个服务器拍卖样本（梦江南 ' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.updated : '—') + '/' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.total : '—') + ' 项有效），无报价回退梦江南示例价；采集产出名称已核验，数量为示例。售价按 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税折算；五行石公式可在五行石页编辑。请以本服交易行为准。' +
       '<div style="margin-top:4px">来源：' + sources + '</div></div>' +
       '<div class="links"><button class="btn btn-sm" data-action="open-data">数据说明</button>' +
       '<button class="btn btn-sm" data-action="open-settings">设置</button></div></div>';
@@ -756,7 +1184,7 @@
     html += '<div class="page-head"><div><h1 class="page-title">价格库</h1>' +
       '<p class="page-sub">为「' + U.esc(server().name) + '」填写每种材料与成品的交易行价格。示例价基于当前版本样本行情，可直接参与计算；校准后收益更贴近本服。</p></div>' +
       '<div class="page-tools">' +
-        '<button class="btn" data-action="export-csv" data-csv="prices">' + icon('download') + '<span class="txt">查看 CSV</span></button>' +
+        '<button class="btn" data-action="export-csv" data-csv="prices">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
         '<a class="btn btn-primary" href="' + Route.href('/analysis') + '">' + icon('chart') + '<span class="txt">看收益分析</span></a>' +
       '</div></div>';
 
@@ -901,7 +1329,8 @@
           '<button class="' + (basis === 'market' ? 'active' : '') + '" data-filter="basis" data-value="" title="材料按本服市场价计算">市场价</button>' +
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
-        '<button class="btn" data-action="export-csv" data-csv="analysis">' + icon('download') + '<span class="txt">查看 CSV</span></button>' +
+        '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + '</span>' +
+        '<button class="btn" data-action="export-csv" data-csv="analysis">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
       '</div></div>';
 
     html += '<div class="kpi-grid">' +
@@ -1013,17 +1442,19 @@
             (sim.allocations.length > 5 ? '<div class="tiny dim" style="margin-top:8px">其余 ' + (sim.allocations.length - 5) + ' 项已计入总收益</div>' : '')
             : emptyState('当前预算下没有正收益配方', '提高预算、校准价格，或切换成本口径。', '', 'coin')) +
         '</div>' +
-        '<div class="card-foot"><span>模拟不计交易税、暴击额外产出与市场深度</span></div></section>' +
+        '<div class="card-foot"><span>模拟已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税，不含暴击额外产出与市场深度</span></div></section>' +
     '</div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">完整配方收益表</h2><p class="card-sub">' + sorted.length + ' 条 · 点击行查看成本拆解与配方编辑</p></div>' +
       '<div class="card-tools"><button class="btn btn-sm" data-action="export-csv" data-csv="analysis">' + icon('download') + ' 导出</button></div></div>' +
-      '<div class="table-wrap tall"><table class="data"><thead><tr>' +
+      '<div class="table-wrap tall"><table class="data analysis-table"><thead><tr>' +
         '<th class="sticky"># / 配方</th><th>技艺</th><th>类型</th>' +
-        sortHeader('总成本', 'cost', p, 'num') + sortHeader('产值', 'output', p, 'num') +
+        sortHeader('总成本', 'cost', p, 'num') +
+        '<th class="num">税前产值</th><th class="num">交易税</th>' +
+        sortHeader('税后产值', 'output', p, 'num') +
         sortHeader('利润', 'profit', p, 'num') + sortHeader('精力', 'energy', p, 'num') +
-        sortHeader('收益/精力', 'perEnergy', p, 'num') + sortHeader('毛利率', 'margin', p, 'num') +
+        sortHeader('收益/精力', 'perEnergy', p, 'num') +
         '<th>状态</th>' +
       '</tr></thead><tbody>' +
       (sorted.length ? sorted.map(function (r, i) {
@@ -1034,17 +1465,20 @@
           '<td class="dim">' + U.esc(r.skill.name) + '</td>' +
           '<td>' + typeBadge(r.type) + '</td>' +
           '<td class="num">' + U.fmt(c.totalCost, 2) + '</td>' +
+          '<td class="num">' + U.fmt(c.outputValueGross, 2) + '</td>' +
+          '<td class="num dim">' + U.fmt(c.tax, 2) + '</td>' +
           '<td class="num">' + U.fmt(c.outputValue, 2) + '</td>' +
           '<td class="num ' + (c.missing ? 'dim' : c.profit >= 0 ? 'pos' : 'neg') + '">' + (c.missing ? '—' : U.fmtSigned(c.profit, 2)) + '</td>' +
           '<td class="num">' + U.fmtInt(c.energy) + '</td>' +
           '<td class="num"><b class="' + (c.missing ? 'dim' : c.perEnergy >= 0 ? 'pos' : 'neg') + '">' + perEnergyText(c.perEnergy) + '</b></td>' +
-          '<td class="num dim">' + (c.margin == null ? '—' : U.fmtPct(c.margin, 0)) + '</td>' +
           '<td>' + statusBadge(r) + '</td>' +
         '</tr>';
       }).join('') : '<tr><td colspan="10">' + emptyState('没有匹配的配方', '清空搜索或筛选条件再试。', '', 'search') + '</td></tr>') +
       '</tbody></table></div>' +
-      '<div class="card-foot"><span>精力收益 =（产值 − 材料成本 − 手续费）÷ 精力；毛利率 = 利润 ÷ 产值</span><span class="spacer"></span><span>已排除/标记缺价项</span></div>' +
+      '<div class="card-foot"><span>精力收益 =（税后产值 − 材料成本 − 手续费）÷ 精力；售价已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税</span><span class="spacer"></span><span>已排除/标记缺价项</span></div>' +
       '</section></div>';
+
+    html += stoneAnalysisCard();
 
     html += dataFoot();
     html += '</div>';
@@ -1054,7 +1488,8 @@
   function compareTable(a, b) {
     const dims = [
       { label: '总成本', av: a.calc.totalCost, bv: b.calc.totalCost, better: 'low', fmt: 2, unit: '金' },
-      { label: '产值', av: a.calc.outputValue, bv: b.calc.outputValue, better: 'high', fmt: 2, unit: '金' },
+      { label: '税后产值', av: a.calc.outputValue, bv: b.calc.outputValue, better: 'high', fmt: 2, unit: '金' },
+      { label: '交易税', av: a.calc.tax, bv: b.calc.tax, better: 'low', fmt: 2, unit: '金' },
       { label: '单次利润', av: a.calc.profit, bv: b.calc.profit, better: 'high', fmt: 2, unit: '金' },
       { label: '精力', av: a.calc.energy, bv: b.calc.energy, better: null, fmt: 0, unit: '点' },
       { label: '精力收益', av: a.calc.perEnergy, bv: b.calc.perEnergy, better: 'high', fmt: 2, unit: '金/精力' },
@@ -1078,6 +1513,223 @@
           '<td class="num ' + (winner === 'B' ? 'pos strong' : '') + '">' + fmt(d.bv) + ' <span class="tiny dim">' + d.unit + '</span></td>' +
           '<td class="num">' + (winner === '—' ? '<span class="dim">—</span>' : '<span class="badge ' + (winner === 'A' ? 'badge-info' : 'badge-custom') + '">' + winner + '</span>') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 五行石公式抽屉                                                     */
+  /* ------------------------------------------------------------------ */
+  function blankStoneDraft() {
+    return {
+      id: null, name: '自定义五行石公式', mode: 'optimal', target: 6, primary: 6,
+      inputs: [{ level: 4, qty: 12 }], fee: 18.24, energy: 10,
+      outcomes: [{ level: 6, chance: 0.9276 }, { level: 5, chance: 0.0724 }],
+      note: '', source: '自定义公式', custom: true
+    };
+  }
+
+  function openStoneRecipe(id, mode) {
+    const r = id ? Stone.recipe(id) : null;
+    if (id && !r) return;
+    ui.lastFocus = document.activeElement;
+    document.body.classList.add('has-drawer');
+    ui.drawer = {
+      type: 'stone',
+      id: id,
+      mode: mode === 'edit' ? 'edit' : 'view',
+      draft: mode === 'edit' ? Stone.sanitizeRecipe(r || blankStoneDraft()) : null,
+      errors: []
+    };
+    if (!id && mode === 'edit') ui.drawer.draft.id = null;
+    renderDrawer();
+  }
+
+  function stoneLevelOptions(selected) {
+    return Stone.levels.map(function (l) {
+      return '<option value="' + l.level + '"' + (Number(selected) === l.level ? ' selected' : '') + '>' + l.level + '级</option>';
+    }).join('');
+  }
+
+  function stoneDrawerView(id) {
+    const r = Stone.recipe(id);
+    if (!r) { closeDrawer(); return ''; }
+    const serverId = Store.state.serverId;
+    const plan = r.target >= 7 ? Stone.marketPlan(serverId) : Stone.buildPlan('craft-gold', { serverId: serverId });
+    const ev = Stone.evalRecipe(r, plan, { serverId: serverId });
+    const pstar = ev.breakEven && ev.breakEven.p;
+    const isJack = r.target >= 7;
+    const profit = isJack ? ev.profitPerAttempt : ev.profitPerTarget;
+    const profitLabel = isJack ? '期望利润/次' : '利润/颗';
+    let html = '<div class="drawer-head"><div class="t">' +
+      '<h2 id="drawer-title">' + U.esc(r.name) + ' ' +
+      (r.custom ? '<span class="badge badge-custom">自定义</span>' : r.edited ? '<span class="badge badge-info">已修改</span>' : '') +
+      '</h2><p>' + stoneChip(r.target, { short: true }) + ' · ' + stoneMethodBadge('赌跳级') + ' · ' +
+      (isJack ? '赌跳级公式' : (r.mode === 'fast' ? '快速合成' : '常规合成')) + '</p></div>' +
+      '<button class="icon-btn" data-action="close-drawer" aria-label="关闭">' + icon('x') + '</button></div>';
+
+    html += '<div class="drawer-body">';
+    html += '<div class="drawer-kpis">' +
+      '<div class="drawer-kpi"><span>单次投入</span><b>' + U.fmt(ev.cost, 2) + '<small>金</small></b></div>' +
+      '<div class="drawer-kpi"><span>税后净价</span><b>' + U.fmt(ev.targetNet, 2) + '<small>金</small></b></div>' +
+      '<div class="drawer-kpi"><span>' + profitLabel + '</span><b class="' + stoneProfitClass(profit) + '">' +
+        (profit == null ? '—' : U.fmtSigned(profit, 2)) + '<small>金</small></b></div>' +
+    '</div>';
+
+    html += '<div class="flex" style="margin-bottom:14px">' +
+      '<span class="badge ' + (ev.missing ? 'badge-warning' : profit > 0 ? 'badge-positive' : 'badge-danger') + '">' +
+      (ev.missing ? '存在缺价' : profit > 0 ? '正收益' : profit < 0 ? '负收益' : '持平') + '</span>' +
+      (isJack && pstar != null ? '<span class="badge badge-outline">盈亏线 ' + U.fmtPct(pstar, 2) + '</span>' : '') +
+      '<span class="spacer"></span><span class="tiny dim">' + (isJack ? '售价已扣 ' + U.fmtPct(Stone.taxRate(), 0) + ' 交易税' : '单颗成本含前序合成') + '</span></div>';
+
+    html += '<div class="section-title">配方<span class="line"></span></div>';
+    html += '<div class="table-wrap" style="border-top:0"><table class="data compact"><thead><tr><th>投入</th><th class="num">数量</th><th class="num">单价（金）</th><th class="num">小计</th></tr></thead><tbody>' +
+      r.inputs.map(function (x) {
+        const p = Stone.price(serverId, x.level);
+        return '<tr><td>' + stoneChip(x.level) + '</td><td class="num">' + x.qty + '</td>' +
+          '<td class="num">' + U.fmt(p.v, 2) + '</td><td class="num">' + U.fmt(p.v * x.qty, 2) + '</td></tr>';
+      }).join('') +
+      '<tr><td class="dim">加工费</td><td class="num">1</td><td class="num">' + U.fmt(r.fee, 2) + '</td><td class="num">' + U.fmt(r.fee, 2) + '</td></tr>' +
+      '</tbody></table></div>';
+
+    html += '<div class="section-title">产出与概率<span class="line"></span></div>';
+    html += '<div class="table-wrap" style="border-top:0"><table class="data compact"><thead><tr><th>产出</th><th class="num">概率</th><th class="num">净价（金）</th><th class="num">期望（金）</th></tr></thead><tbody>' +
+      r.outcomes.map(function (o) {
+        const np = Stone.netPrice(serverId, o.level);
+        return '<tr><td>' + stoneChip(o.level) + (o.level === r.target ? ' <span class="badge badge-peak">目标</span>' : '') + '</td>' +
+          '<td class="num">' + U.fmtPct(o.chance, o.chance < 0.01 ? 2 : 1) + '</td>' +
+          '<td class="num">' + U.fmt(np, 2) + '</td><td class="num">' + U.fmt(np * o.chance, 2) + '</td></tr>';
+      }).join('') +
+      '</tbody></table></div>';
+
+    html += '<div class="section-title">精力与盈亏<span class="line"></span></div>';
+    html += '<div class="info-rows">' +
+      '<div class="info-row"><span class="k">单次精力（含前序）</span><span class="v">' + U.fmt(ev.totalEnergy, 1) + ' 点</span></div>' +
+      '<div class="info-row"><span class="k">出目标级概率</span><span class="v">' + U.fmtPct(ev.targetChance, 2) + '</span></div>' +
+      (isJack ? '<div class="info-row"><span class="k">盈亏平衡爆率</span><span class="v warn">' + (pstar == null ? '—' : U.fmtPct(pstar, 2)) + '</span></div>' : '') +
+      '<div class="info-row"><span class="k">' + profitLabel + '</span><span class="v ' + stoneProfitClass(profit) + '">' + (profit == null ? '—' : U.fmtSigned(profit, 2) + ' 金') + '</span></div>' +
+      '<div class="info-row"><span class="k">精力收益</span><span class="v ' + stoneProfitClass(isJack ? ev.perEnergyAttempt : ev.perEnergyTarget) + '">' +
+        (isJack ? (ev.perEnergyAttempt == null ? '—' : U.fmt(ev.perEnergyAttempt, 3)) : (ev.perEnergyTarget == null ? '—' : U.fmt(ev.perEnergyTarget, 3))) + ' 金/精力</span></div>' +
+      '</div>';
+    if (r.note) html += '<p class="tiny dim" style="line-height:17px;margin-top:10px">' + U.esc(r.note) + '</p>';
+    if (r.source) html += '<p class="tiny dim" style="line-height:17px;margin-top:6px">来源：' + U.esc(r.source) + '</p>';
+    html += '</div>';
+
+    html += '<div class="drawer-foot">' +
+      '<button class="btn" data-action="stone-edit-form" data-id="' + U.esc(r.id) + '">' + icon('edit') + '编辑公式</button>' +
+      (r.custom ? '<button class="btn btn-danger" data-action="stone-delete" data-id="' + U.esc(r.id) + '">' + icon('trash') + '删除</button>' :
+        '<button class="btn" data-action="stone-reset" data-id="' + U.esc(r.id) + '">' + icon('refresh') + '恢复默认</button>') +
+      '<span class="spacer"></span><button class="btn" data-action="close-drawer">关闭</button></div>';
+    return html;
+  }
+
+  function stoneDrawerEdit(d) {
+    const errs = (ui.drawer && ui.drawer.errors) || [];
+    let html = '<div class="drawer-head"><div class="t">' +
+      '<h2 id="drawer-title">' + (d.id ? '编辑' : '新增') + '五行石公式 ' +
+      '<span class="badge badge-custom">' + (d.id ? '编辑中' : '新建') + '</span></h2>' +
+      '<p>修改后立即参与五行石页与总览/分析卡片计算</p></div>' +
+      '<button class="icon-btn" data-action="close-drawer" aria-label="关闭">' + icon('x') + '</button></div>';
+    html += '<div class="drawer-body">';
+    if (errs.length) {
+      html += '<div class="notice" style="margin-bottom:14px">' + icon('alert') + '<div><b>请检查：</b><ul style="margin:4px 0 0;padding-left:16px">' +
+        errs.map(function (e) { return '<li>' + U.esc(e) + '</li>'; }).join('') + '</ul></div></div>';
+    }
+    html += '<div class="form-grid">' +
+      '<label class="form-field full"><span>公式名称</span><input class="input" data-draft-stone="name" value="' + U.esc(d.name) + '" placeholder="例如：4精6 冲八"></label>' +
+      '<label class="form-field"><span>类型</span><select class="select" data-draft-stone="mode">' +
+        '<option value="optimal"' + (d.mode === 'optimal' ? ' selected' : '') + '>常规合成</option>' +
+        '<option value="fast"' + (d.mode === 'fast' ? ' selected' : '') + '>快速合成</option>' +
+        '<option value="jackpot"' + (d.mode === 'jackpot' ? ' selected' : '') + '>赌跳级</option></select></label>' +
+      '<label class="form-field"><span>目标等级</span><select class="select" data-draft-stone="target">' + stoneLevelOptions(d.target) + '</select></label>' +
+      '<label class="form-field"><span>保底产出等级</span><select class="select" data-draft-stone="primary">' + stoneLevelOptions(d.primary) + '</select><span class="hint">失败/未跳级时的主要产物</span></label>' +
+      '<label class="form-field"><span>加工费（金）</span><input class="input" type="number" min="0" step="0.0001" data-draft-stone="fee" value="' + d.fee + '"></label>' +
+      '<label class="form-field"><span>精力/次</span><input class="input" type="number" min="0" step="1" data-draft-stone="energy" value="' + d.energy + '"></label>' +
+    '</div>';
+
+    html += '<div class="section-title">投入材料<span class="line"></span><span class="tiny dim">最多 16 格，可跨等级</span></div>';
+    html += '<div class="stone-edit-rows">' +
+      d.inputs.map(function (x, i) {
+        return '<div class="stone-edit-row" data-stone-input-row>' +
+          '<select class="select" data-si-level>' + stoneLevelOptions(x.level) + '</select>' +
+          '<input class="input" type="number" min="1" step="1" data-si-qty value="' + x.qty + '">' +
+          '<button class="icon-btn" data-action="stone-remove-input" data-index="' + i + '" aria-label="移除">' + icon('x') + '</button></div>';
+      }).join('') +
+      '</div><button class="btn btn-sm" data-action="stone-add-input">' + icon('plus') + '添加材料</button>';
+
+    html += '<div class="section-title">产出与概率<span class="line"></span><span class="tiny dim">概率合计 ≤ 100%，差额视为失败</span></div>';
+    html += '<div class="stone-edit-rows">' +
+      d.outcomes.map(function (o, i) {
+        return '<div class="stone-edit-row" data-stone-outcome-row>' +
+          '<select class="select" data-so-level>' + stoneLevelOptions(o.level) + '</select>' +
+          '<input class="input" type="number" min="0" max="100" step="0.01" data-so-chance value="' + U.fmt(o.chance * 100, 2) + '"><span class="tiny dim">%</span>' +
+          '<button class="icon-btn" data-action="stone-remove-outcome" data-index="' + i + '" aria-label="移除">' + icon('x') + '</button></div>';
+      }).join('') +
+      '</div><button class="btn btn-sm" data-action="stone-add-outcome">' + icon('plus') + '添加产出</button>';
+
+    html += '<div class="section-title">备注与来源<span class="line"></span></div>' +
+      '<textarea class="textarea" data-draft-stone="note" rows="3" placeholder="例如：游戏内面板实测 20 次，出 8 级 1 次">' + U.esc(d.note || '') + '</textarea>' +
+      '<input class="input" style="margin-top:8px" data-draft-stone="source" value="' + U.esc(d.source || '') + '" placeholder="来源 / 校准说明">';
+    html += '</div>';
+    html += '<div class="drawer-foot">' +
+      '<button class="btn btn-primary" data-action="stone-save">' + icon('check') + '保存公式</button>' +
+      '<button class="btn" data-action="stone-cancel">取消</button>' +
+      '<span class="spacer"></span><button class="btn" data-action="close-drawer">关闭</button></div>';
+    return html;
+  }
+
+  function collectStoneDraft() {
+    if (!ui.drawer || ui.drawer.type !== 'stone' || !ui.drawer.draft) return null;
+    const d = ui.drawer.draft;
+    document.querySelectorAll('[data-draft-stone]').forEach(function (el) {
+      const k = el.getAttribute('data-draft-stone');
+      if (el.type === 'number') d[k] = Number(el.value) || 0;
+      else d[k] = el.value;
+    });
+    const inputs = [];
+    document.querySelectorAll('[data-stone-input-row]').forEach(function (row) {
+      const lv = row.querySelector('[data-si-level]');
+      const qty = row.querySelector('[data-si-qty]');
+      if (lv && qty) inputs.push({ level: Number(lv.value) || 1, qty: Math.max(1, Math.round(Number(qty.value) || 1)) });
+    });
+    const outcomes = [];
+    document.querySelectorAll('[data-stone-outcome-row]').forEach(function (row) {
+      const lv = row.querySelector('[data-so-level]');
+      const ch = row.querySelector('[data-so-chance]');
+      if (lv && ch) outcomes.push({ level: Number(lv.value) || 1, chance: Math.max(0, Math.min(100, Number(ch.value) || 0)) / 100 });
+    });
+    d.inputs = inputs;
+    d.outcomes = outcomes;
+    return d;
+  }
+
+  function saveStoneRecipe() {
+    const d = collectStoneDraft();
+    if (!d) return;
+    const errors = [];
+    if (!String(d.name || '').trim()) errors.push('请填写公式名称');
+    if (d.target < 2) errors.push('目标等级至少为 2 级');
+    if (!d.inputs.length) errors.push('至少需要一种投入材料');
+    if (!d.outcomes.length) errors.push('至少需要一种产出');
+    const sum = d.outcomes.reduce(function (a, o) { return a + o.chance; }, 0);
+    if (sum > 1.0001) errors.push('产出概率合计不能超过 100%（当前 ' + U.fmtPct(sum, 1) + '）');
+    if (d.energy < 0 || d.fee < 0) errors.push('加工费与精力不能为负');
+    if (errors.length) {
+      ui.drawer.errors = errors;
+      ui.drawer.draft = Object.assign({}, d);
+      renderDrawer();
+      return;
+    }
+    const payload = Object.assign({}, d, { name: String(d.name).trim() });
+    let saved;
+    if (d.id) {
+      Stone.updateRecipe(payload);
+      saved = Stone.recipe(d.id);
+    } else {
+      saved = Stone.addRecipe(payload);
+    }
+    ui.drawer = { type: 'stone', id: saved.id, mode: 'view', draft: null, errors: [] };
+    renderDrawer();
+    render();
+    toast('已保存五行石公式「' + saved.name + '」');
   }
 
   /* ------------------------------------------------------------------ */
@@ -1151,7 +1803,9 @@
     if (!root) return;
     if (!ui.drawer) { root.innerHTML = ''; return; }
     let inner = '';
-    if (ui.drawer.mode === 'edit') {
+    if (ui.drawer.type === 'stone') {
+      inner = ui.drawer.mode === 'edit' ? stoneDrawerEdit(ui.drawer.draft) : stoneDrawerView(ui.drawer.id);
+    } else if (ui.drawer.mode === 'edit') {
       inner = drawerEditHTML(ui.drawer.draft);
     } else {
       const r = recipe(ui.drawer.id);
@@ -1184,7 +1838,7 @@
     html += '<div class="drawer-body">';
     html += '<div class="drawer-kpis">' +
       '<div class="drawer-kpi"><span>总成本</span><b>' + U.fmt(c.totalCost, 2) + '<small>金</small></b></div>' +
-      '<div class="drawer-kpi"><span>产值</span><b>' + U.fmt(c.outputValue, 2) + '<small>金</small></b></div>' +
+      '<div class="drawer-kpi"><span>税后产值</span><b>' + U.fmt(c.outputValue, 2) + '<small>金</small></b></div>' +
       '<div class="drawer-kpi"><span>单次利润</span><b class="' + profitCls + '">' + (c.missing ? '—' : U.fmtSigned(c.profit, 2)) + '<small>金</small></b></div>' +
     '</div>';
     html += '<div class="flex" style="margin-bottom:14px"><span class="badge ' + (c.missing ? 'badge-warning' : c.profit >= 0 ? 'badge-positive' : 'badge-danger') + '">' +
@@ -1198,7 +1852,7 @@
     }
 
     html += '<div class="section-title">产物与售价<span class="line"></span></div>';
-    html += '<div class="table-wrap" style="border-top:0"><table class="data compact"><thead><tr><th>产物</th><th class="num">数量 / 掉率</th><th class="num">单价（金）</th><th class="num">期望小计</th></tr></thead><tbody>' +
+    html += '<div class="table-wrap" style="border-top:0"><table class="data compact"><thead><tr><th>产物</th><th class="num">数量 / 掉率</th><th class="num">单价（金）</th><th class="num">税前小计</th></tr></thead><tbody>' +
       c.outputs.map(function (o) {
         return '<tr><td>' + U.esc(o.name) + (o.missing ? ' <span class="badge badge-warning">缺价</span>' : '') + '</td>' +
           '<td class="num">' + qtyText(o) + '</td><td class="num">' + priceInput(o.itemId, { sm: true }) + '</td>' +
@@ -1237,10 +1891,12 @@
       '<div class="info-row"><span class="k">单次精力</span><span class="v">' + U.fmtInt(c.energy) + ' 点</span></div>' +
       '<div class="info-row"><span class="k">手续费</span><span class="v">' + U.fmt(c.fee, 2) + ' 金</span></div>' +
       '<div class="info-row"><span class="k">材料成本</span><span class="v">' + U.fmt(c.materialCost, 2) + ' 金</span></div>' +
+      '<div class="info-row"><span class="k">税前产值</span><span class="v">' + U.fmt(c.outputValueGross, 2) + ' 金</span></div>' +
+      '<div class="info-row"><span class="k">交易税（' + U.fmtPct(c.taxRate, 0) + '）</span><span class="v down">−' + U.fmt(c.tax, 2) + ' 金</span></div>' +
       '<div class="info-row"><span class="k">满 ' + U.fmtInt(settings().energyBudget) + ' 精力可做</span><span class="v">' + (c.energy > 0 ? Math.floor(settings().energyBudget / c.energy) + ' 次' : '—') + '</span></div>' +
       '<div class="info-row"><span class="k">毛利率</span><span class="v">' + (c.margin == null ? '—' : U.fmtPct(c.margin, 1)) + '</span></div>' +
       '</div>';
-    html += '<p class="tiny dim" style="line-height:16px;margin-top:10px">成本 = Σ（材料数量 × 单价）+ 手续费；利润 = 产值 − 成本；精力收益 = 利润 ÷ 精力。交易税、暴击额外产出与署名溢价未自动计入。</p>';
+    html += '<p class="tiny dim" style="line-height:16px;margin-top:10px">成本 = Σ（材料数量 × 单价）+ 手续费；利润 = 税后产值 − 成本；精力收益 = 利润 ÷ 精力。售价已扣交易税；暴击额外产出与署名溢价未自动计入。</p>';
 
     if (r.note) {
       html += '<div class="section-title">备注<span class="line"></span></div><p style="font-size:12px;line-height:18px;color:var(--muted)">' + U.esc(r.note) + '</p>';
@@ -1549,6 +2205,7 @@
     const st = settings();
     return '<div class="form-grid">' +
       '<label class="form-field"><span>精力预算（模拟用）</span><input class="input" type="number" min="0" step="100" data-setting="energyBudget" value="' + st.energyBudget + '"><span class="hint">用于满精力预估与对比次数</span></label>' +
+      '<label class="form-field"><span>交易税率（%）</span><input class="input" type="number" min="0" max="100" step="0.5" data-setting="taxRate" value="' + U.fmt((Number(st.taxRate) || 0) * 100, 1) + '"><span class="hint">默认 5%，按产物售价扣除</span></label>' +
       '<label class="form-field"><span>默认主题</span><select class="select" data-setting="theme"><option value="dark"' + (st.theme !== 'light' ? ' selected' : '') + '>暗色</option><option value="light"' + (st.theme === 'light' ? ' selected' : '') + '>亮色</option></select></label>' +
       '<label class="form-field"><span>新建采集默认精力</span><input class="input" type="number" min="1" step="1" data-setting="gatherEnergy" value="' + st.gatherEnergy + '"></label>' +
       '<label class="form-field"><span>新建制造默认精力</span><input class="input" type="number" min="1" step="1" data-setting="craftEnergy" value="' + st.craftEnergy + '"></label>' +
@@ -1571,8 +2228,17 @@
       '<button class="btn btn-sm" data-action="open-import-json">' + icon('upload') + '导入备份</button>' +
       '<button class="btn btn-sm" data-action="clear-prices">' + icon('refresh') + '清空本服价格</button>' +
       '<button class="btn btn-sm" data-action="reset-catalog">' + icon('refresh') + '恢复示例配方</button>' +
+      '<button class="btn btn-sm" data-action="stone-reset-all">' + icon('refresh') + '恢复默认五行石公式</button>' +
       '<button class="btn btn-sm btn-danger" data-action="reset-all">' + icon('trash') + '重置全部数据</button>' +
     '</div>' +
+    '<div class="section-title">安装到桌面<span class="line"></span></div>' +
+    '<div class="info-rows">' +
+      '<div class="info-row"><span class="k">iPhone / iPad</span><span class="v">Safari 底部分享 → 添加到主屏幕</span></div>' +
+      '<div class="info-row"><span class="k">Android</span><span class="v">Chrome 菜单 → 安装应用 / 添加到主屏幕</span></div>' +
+      '<div class="info-row"><span class="k">访问方式</span><span class="v">需 HTTPS；局域网 http 或 App 内置浏览器无法安装</span></div>' +
+      '<div class="info-row"><span class="k">找不到选项</span><span class="v">退出私密浏览；检查屏幕使用时间限制；用 Safari 打开</span></div>' +
+    '</div>' +
+    '<div class="flex" style="margin-top:8px"><button class="btn btn-sm" data-action="show-install">' + icon('external') + '查看安装说明</button></div>' +
     '<div class="verification" style="margin-top:12px"><span class="ok">' + U.esc(DATA.meta.version) + '</span><span>数据版本 ' + U.esc(DATA.meta.catalogVersion) +
       ' · 核验于 ' + U.esc(DATA.meta.verifiedAt) + ' · 自定义配方 ' + Store.state.recipes.filter(function (r) { return r.custom; }).length + ' 个</span></div>';
   }
@@ -1581,8 +2247,7 @@
     const src = DATA.meta.sources.map(function (s) {
       return '<div style="padding:8px 0;border-bottom:1px solid var(--border-soft)">' +
         '<div style="font-weight:600;color:var(--text)">' + U.esc(s.label) + '</div>' +
-        '<div class="tiny dim" style="margin-top:3px;line-height:16px">' + U.esc(s.note) + '</div>' +
-        '</div>';
+        '<div class="tiny dim" style="margin-top:3px;line-height:16px">' + U.esc(s.note) + '</div></div>';
     }).join('');
     return '<div class="verification" style="margin-bottom:14px"><span class="ok">已核验</span><span>版本：' + U.esc(DATA.meta.version) +
       ' · 核验日期：' + U.esc(DATA.meta.verifiedAt) + ' · 数据版本：' + U.esc(DATA.meta.catalogVersion) + '</span></div>' +
@@ -1598,16 +2263,25 @@
       '<div class="info-rows">' +
         '<div class="info-row"><span class="k">材料成本</span><span class="v">Σ（数量 × 本服单价）</span></div>' +
         '<div class="info-row"><span class="k">总成本</span><span class="v">材料成本 + 手续费</span></div>' +
-        '<div class="info-row"><span class="k">产值</span><span class="v">Σ（产物数量 × 本服单价）</span></div>' +
-        '<div class="info-row"><span class="k">精力收益</span><span class="v">（产值 − 总成本）÷ 精力</span></div>' +
+        '<div class="info-row"><span class="k">税前产值</span><span class="v">Σ（产物数量 × 本服单价）</span></div>' +
+        '<div class="info-row"><span class="k">交易税</span><span class="v">税前产值 × ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + '（可改）</span></div>' +
+        '<div class="info-row"><span class="k">税后产值</span><span class="v">税前产值 − 交易税</span></div>' +
+        '<div class="info-row"><span class="k">精力收益</span><span class="v">（税后产值 − 总成本）÷ 精力</span></div>' +
         '<div class="info-row"><span class="k">取最低口径</span><span class="v">逐层取低，仅优化成本、不计中间精力</span></div>' +
         '<div class="info-row"><span class="k">当前收录</span><span class="v">' + U.esc(DATA.meta.scope || '') + '</span></div>' +
+      '</div>' +
+      '<div class="section-title">五行石口径<span class="line"></span></div>' +
+      '<div class="info-rows">' +
+        '<div class="info-row"><span class="k">快速合成</span><span class="v">直接消耗 1 级石头，按游戏内快速精炼面板的加工费与精力</span></div>' +
+        '<div class="info-row"><span class="k">最优合成</span><span class="v">低级自产、逐级合成；单颗成本含前序金币与累计精力</span></div>' +
+        '<div class="info-row"><span class="k">7/8 级</span><span class="v">当前赛季无稳定保底公式；默认爆率 0，按盈亏线分析</span></div>' +
+        '<div class="info-row"><span class="k">公式可编辑</span><span class="v">五行石页 → 任意公式的编辑按钮；可改材料、数量、加工费、精力、产物概率</span></div>' +
       '</div>' +
       '<div class="section-title">重要边界<span class="line"></span></div>' +
       '<div class="notice">' + icon('alert') + '<div>' +
         '<b>制造配方/等级/精力/材料/产出范围来自 JX3BOX 技艺助手 API（2026-11-18）；产出价优先用样本价，缺失/异常时按成本估算示例。</b>' +
         '旧版本（90/100/130 级）数值不适用；采集为待实测示例。采集在游戏内消耗体力，本工具按精力口径统一折算，可在设置中调整默认值。' +
-        '交易税、暴击额外产出、署名溢价与市场深度未自动计入，可通过手续费或材料成本手动修正。' +
+        '交易税已按设置中的税率从售价扣除；暴击额外产出、署名溢价与市场深度未自动计入。五行石 7/8 级无稳定保底公式，默认爆率仅用于盈亏线，可在五行石页编辑。' +
       '</div></div>' +
       '<div class="section-title">来源<span class="line"></span></div>' + src +
       '<p class="tiny dim" style="margin-top:10px">' + U.esc(DATA.meta.disclaimer) + '</p>';
@@ -1626,12 +2300,12 @@
     let rows = filterRows(Calc.rows({ serverId: Store.state.serverId, basis: basis }), p);
     if (p.complete !== '0') rows = rows.filter(function (r) { return !r.calc.missing; });
     rows = sortRows(rows, p.sort || 'perEnergy', p.dir || 'desc');
-    const out = [['排名', '配方', '技艺', '类型', '品阶', '等级', '产物', '材料成本', '手续费', '总成本', '产值', '利润', '精力', '精力收益(金/精力)', '毛利率', '数据状态', '核验状态']];
+    const out = [['排名', '配方', '技艺', '类型', '品阶', '等级', '产物', '材料成本', '手续费', '总成本', '税前产值', '交易税', '税后产值', '利润', '精力', '精力收益(金/精力)', '毛利率', '数据状态', '核验状态']];
     rows.forEach(function (r, i) {
       out.push([
         i + 1, r.recipe.name, r.skill.name, r.type === 'gather' ? '采集' : '制造', r.tier.name, r.recipe.level,
         r.outputNames, U.round(r.calc.materialCost, 2), U.round(r.calc.fee, 2), U.round(r.calc.totalCost, 2),
-        U.round(r.calc.outputValue, 2), U.round(r.calc.profit, 2), r.calc.energy,
+        U.round(r.calc.outputValueGross, 2), U.round(r.calc.tax, 2), U.round(r.calc.outputValue, 2), U.round(r.calc.profit, 2), r.calc.energy,
         r.calc.perEnergy == null ? '' : U.round(r.calc.perEnergy, 2),
         r.calc.margin == null ? '' : U.fmtPct(r.calc.margin, 1),
         r.calc.missing ? '缺价' : r.calc.profit < 0 ? '亏损' : '正常',
@@ -1640,6 +2314,25 @@
     });
     U.emitExport('剑网三物价助手_精力收益_' + server().name + '_' + new Date().toISOString().slice(0, 10) + '.csv', U.csv(out), 'text/csv;charset=utf-8');
     toast(window.__MINITOOL__ ? '导出内容已打开，可长按复制' : '已导出 ' + rows.length + ' 条收益数据');
+  }
+
+  function csvStones() {
+    const serverId = Store.state.serverId;
+    const rows = Stone.rows({ serverId: serverId });
+    const out = [['目标', '方式', '公式', '投入', '加工费', '精力/次', '出目标级概率', '单次金币', '单颗成本', '税后净价', '利润/颗或次', '精力收益', '盈亏平衡爆率', '来源']];
+    rows.forEach(function (r) {
+      out.push([
+        r.target + '级', r.method, r.recipe.name, stoneInputsText(r.recipe), U.round(r.fee, 4), U.round(r.totalEnergy, 1),
+        U.fmtPct(r.targetChance, 2), U.round(r.cost, 2), Number.isFinite(r.costPerTarget) ? U.round(r.costPerTarget, 2) : '',
+        U.round(r.targetNet, 2),
+        r.target >= 7 ? U.round(r.profitPerAttempt, 2) : (r.profitPerTarget == null ? '' : U.round(r.profitPerTarget, 2)),
+        r.target >= 7 ? (r.perEnergyAttempt == null ? '' : U.round(r.perEnergyAttempt, 3)) : (r.perEnergyTarget == null ? '' : U.round(r.perEnergyTarget, 3)),
+        r.breakEven && r.breakEven.p != null ? U.fmtPct(r.breakEven.p, 2) : '',
+        r.recipe.source || ''
+      ]);
+    });
+    U.emitExport('剑网三物价助手_五行石_' + server().name + '_' + new Date().toISOString().slice(0, 10) + '.csv', U.csv(out), 'text/csv;charset=utf-8');
+    toast(window.__MINITOOL__ ? '导出内容已打开，可长按复制' : '已导出 ' + rows.length + ' 条五行石公式');
   }
 
   function csvPrices() {
@@ -1729,6 +2422,7 @@
         break;
       }
       case 'open-settings': closeMenu(); openModal('settings'); break;
+      case 'show-install': closeModal(); if (window.__showInstallGuide) window.__showInstallGuide(true); else toast('请用 Safari 打开后，点分享 → 添加到主屏幕', 'warn'); break;
       case 'open-data': closeMenu(); openModal('data'); break;
       case 'open-import-json': closeModal(); openModal('import-json'); break;
       case 'open-add-server': closeMenu(); openModal('add-server'); break;
@@ -1738,6 +2432,97 @@
         applyTheme(next);
         render();
         toast('已切换到' + (next === 'light' ? '亮色' : '暗色') + '主题');
+        break;
+      }
+      case 'stone-new': openStoneRecipe(null, 'edit'); break;
+      case 'edit-stone': openStoneRecipe(id, 'view'); break;
+      case 'stone-edit-form': openStoneRecipe(id, 'edit'); break;
+      case 'stone-save': saveStoneRecipe(); break;
+      case 'stone-cancel': {
+        if (ui.drawer && ui.drawer.draft && ui.drawer.draft.id) {
+          ui.drawer = { type: 'stone', id: ui.drawer.draft.id, mode: 'view', draft: null, errors: [] };
+          renderDrawer();
+        } else {
+          closeDrawer();
+        }
+        break;
+      }
+      case 'stone-add-input': {
+        collectStoneDraft();
+        ui.drawer.draft.inputs.push({ level: 1, qty: 1 });
+        renderDrawer();
+        break;
+      }
+      case 'stone-remove-input': {
+        collectStoneDraft();
+        const idx = Number(el.getAttribute('data-index'));
+        if (ui.drawer.draft.inputs.length > 1) ui.drawer.draft.inputs.splice(idx, 1);
+        else toast('至少保留一种投入材料', 'warn');
+        renderDrawer();
+        break;
+      }
+      case 'stone-add-outcome': {
+        collectStoneDraft();
+        ui.drawer.draft.outcomes.push({ level: ui.drawer.draft.target || 6, chance: 0 });
+        renderDrawer();
+        break;
+      }
+      case 'stone-remove-outcome': {
+        collectStoneDraft();
+        const idx = Number(el.getAttribute('data-index'));
+        if (ui.drawer.draft.outcomes.length > 1) ui.drawer.draft.outcomes.splice(idx, 1);
+        else toast('至少保留一种产出', 'warn');
+        renderDrawer();
+        break;
+      }
+      case 'stone-delete': {
+        const r = id ? Stone.recipe(id) : null;
+        if (!r || !r.custom) break;
+        confirmDialog({
+          title: '删除自定义五行石公式？',
+          message: '「' + r.name + '」将从本机公式库移除，无法撤销。内置公式不受影响。',
+          confirmText: '删除',
+          danger: true,
+          onConfirm: function () {
+            Stone.deleteRecipe(id);
+            closeDrawer();
+            render();
+            toast('已删除「' + r.name + '」');
+          }
+        });
+        break;
+      }
+      case 'stone-reset': {
+        const r = id ? Stone.recipe(id) : null;
+        if (!r) break;
+        confirmDialog({
+          title: '恢复默认五行石公式？',
+          message: '将丢弃对「' + r.name + '」的本地修改，恢复为当前版本默认公式。',
+          confirmText: '恢复',
+          onConfirm: function () {
+            Stone.resetRecipe(id);
+            ui.drawer = { type: 'stone', id: id, mode: 'view', draft: null, errors: [] };
+            renderDrawer();
+            render();
+            toast('已恢复默认公式');
+          }
+        });
+        break;
+      }
+      case 'stone-reset-all': {
+        confirmDialog({
+          title: '恢复全部五行石默认公式？',
+          message: '将移除所有自定义五行石公式，并把内置公式恢复默认。五行石价格与生活技艺配方不受影响。',
+          confirmText: '恢复',
+          danger: true,
+          onConfirm: function () {
+            Stone.resetAll();
+            if (ui.drawer && ui.drawer.type === 'stone') closeDrawer();
+            closeModal();
+            render();
+            toast('已恢复全部五行石默认公式');
+          }
+        });
         break;
       }
       case 'go-skill': go('/skills/' + el.getAttribute('data-skill')); break;
@@ -1819,13 +2604,15 @@
         break;
       }
       case 'export-csv': {
-        if (el.getAttribute('data-csv') === 'prices') csvPrices();
+        const kind = el.getAttribute('data-csv');
+        if (kind === 'prices') csvPrices();
+        else if (kind === 'stones') csvStones();
         else csvAnalysis();
         break;
       }
       case 'export-json': {
         U.emitExport('剑网三物价助手_备份_' + new Date().toISOString().slice(0, 10) + '.json', Store.exportJSON(), 'application/json;charset=utf-8');
-        toast(window.__MINITOOL__ ? '备份内容已打开，可长按复制' : '备份已导出');
+        toast(window.__MINITOOL__ ? '备份已打开，可长按复制' : '备份已导出');
         break;
       }
       case 'open-import-prices': {
@@ -1909,6 +2696,7 @@
             }
           });
         }
+        if (patch.taxRate != null) patch.taxRate = Math.max(0, Math.min(100, Number(patch.taxRate) || 0)) / 100;
         if (patch.energyBudget != null) patch.energyBudget = Math.max(0, Math.round(patch.energyBudget));
         if (patch.gatherEnergy != null) patch.gatherEnergy = Math.max(1, Math.round(patch.gatherEnergy));
         if (patch.craftEnergy != null) patch.craftEnergy = Math.max(1, Math.round(patch.craftEnergy));
@@ -2054,6 +2842,28 @@
 
   function onChange(e) {
     const t = e.target;
+    if (t.matches('[data-stone-price]')) {
+      const level = Number(t.getAttribute('data-stone-price'));
+      const val = t.value.trim();
+      const ok = val === '' ? Stone.clearPrice(Store.state.serverId, level) : Stone.setPrice(Store.state.serverId, level, val);
+      if (!ok) toast('价格必须是非负数字', 'error');
+      else toast('已更新「' + Stone.levelInfo(level).name + '」价格');
+      setTimeout(refreshAll, 0);
+      return;
+    }
+    if (t.matches('[data-stone-prob]')) {
+      const rid = t.getAttribute('data-stone-prob');
+      const level = Number(t.getAttribute('data-stone-prob-level'));
+      const pct = Number(t.value);
+      if (!Number.isFinite(pct) || pct < 0 || pct > 100) {
+        toast('爆率必须在 0-100% 之间', 'error');
+      } else {
+        Stone.setChance(rid, level, pct / 100);
+        toast('已更新爆率');
+      }
+      setTimeout(refreshAll, 0);
+      return;
+    }
     if (t.matches('[data-price-item]')) {
       const itemId = t.getAttribute('data-price-item');
       const val = t.value.trim();
@@ -2070,7 +2880,7 @@
         const it = item(itemId);
         toast('已更新「' + (it ? it.name : itemId) + '」价格');
       }
-      refreshAll();
+      setTimeout(refreshAll, 0);
       return;
     }
     if (t.matches('[data-filter]')) {
@@ -2083,6 +2893,7 @@
       if (key === 'only') updateParams({ only: t.checked ? 'profit' : '' });
       if (key === 'complete') updateParams({ complete: t.checked ? '1' : '0' });
       if (key === 'missing') updateParams({ missing: t.checked ? '1' : '' });
+      if (key === 'stone-all') updateParams({ all: t.checked ? '1' : '' });
       return;
     }
     if (t.matches('[data-compare]')) {
@@ -2093,6 +2904,7 @@
       const key = t.getAttribute('data-setting');
       let v = t.type === 'number' ? Number(t.value) : t.value;
       if (t.type === 'number' && !Number.isFinite(v)) v = 0;
+      if (key === 'taxRate') v = Math.max(0, Math.min(100, v)) / 100;
       if (key === 'energyBudget') v = Math.max(0, Math.round(v));
       Store.updateSettings({ [key]: v });
       render();
@@ -2265,6 +3077,25 @@
     if (ui.modal) renderModal();
   }
 
+  function setBootStatus(text) {
+    if (typeof window.setBootStatus === 'function') window.setBootStatus(text);
+  }
+
+  function hideBootLoader() {
+    const el = document.getElementById('boot-loader');
+    if (!el || el.classList.contains('is-done')) return;
+    el.setAttribute('aria-busy', 'false');
+    const elapsed = (window.performance && performance.now) ? performance.now() : 0;
+    const wait = Math.max(0, 520 - elapsed);
+    setTimeout(function () {
+      el.classList.add('is-done');
+      document.body.classList.remove('booting');
+      setTimeout(function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      }, 320);
+    }, wait);
+  }
+
   function renderSkeleton() {
     const page = document.getElementById('page');
     if (!page) return;
@@ -2320,6 +3151,8 @@
       html = renderPrices(p); title = '价格库';
     } else if (route.path === '/analysis') {
       html = renderAnalysis(p); title = '精力收益分析';
+    } else if (route.path === '/stones') {
+      html = renderStones(p); title = '五行石合成';
     } else {
       html = '<div class="page"><div class="empty"><span class="ic">' + icon('info') + '</span><h3>页面不存在</h3><p>链接可能已失效。</p>' +
         '<a class="btn btn-primary" href="' + Route.href('/overview') + '">返回总览</a></div></div>';
@@ -2364,32 +3197,44 @@
   function boot() {
     function startApp() {
       Store.init();
-    ui.theme = settings().theme === 'light' ? 'light' : 'dark';
-    applyTheme(ui.theme);
-    syncServerFromParams(Route.parse().params);
-    if (!location.hash) {
-      history.replaceState(null, '', Route.href('/overview'));
-    }
-    window.App = {
-      handleRoute: function () {
-        if (ui.booted) render();
+      if (Stone && Stone.ensure) Stone.ensure();
+      ui.theme = settings().theme === 'light' ? 'light' : 'dark';
+      applyTheme(ui.theme);
+      syncServerFromParams(Route.parse().params);
+      if (!location.hash) {
+        history.replaceState(null, '', Route.href('/overview'));
       }
-    };
-    bindEvents();
-    renderSkeleton();
-    setTimeout(function () {
-      ui.booted = true;
-      render();
-      if (Store.state.migratedFrom) {
-        toast('已切换到苍生铸世 50 级内置配方目录，自定义配方已保留', 'warn');
-      }
-    }, 180);
-  
+      window.App = {
+        handleRoute: function () {
+          if (ui.booted) render();
+        }
+      };
+      bindEvents();
+      renderSkeleton();
+
+      setTimeout(function () {
+        ui.booted = true;
+        setBootStatus('正在计算精力收益…');
+        try {
+          render();
+          hideBootLoader();
+        } catch (err) {
+          if (window.console) console.error(err);
+          if (typeof window.bootLoaderFail === 'function') {
+            window.bootLoaderFail('加载失败，请刷新重试');
+          }
+          return;
+        }
+        if (Store.state.migratedFrom) {
+          toast('已切换到苍生铸世 50 级内置配方目录，自定义配方已保留', 'warn');
+        }
+      }, 180);
     }
     var ready = window.__JX3StorageReady;
     if (ready && typeof ready.then === 'function') ready.then(startApp, startApp);
     else startApp();
   }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {

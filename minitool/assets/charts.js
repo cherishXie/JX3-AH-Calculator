@@ -311,6 +311,69 @@
     return svg;
   }
 
+  /* ------------------------------------------------------------------ */
+  /* 分组柱状：支持正负值（五行石快速 vs 最优）                          */
+  /* ------------------------------------------------------------------ */
+  function columns(items, opts) {
+    opts = opts || {};
+    const P = opts.palette || DARK;
+    const width = opts.width || 760;
+    const height = opts.height || 300;
+    const ml = 54, mr = 18, mt = 24, mb = 58;
+    const data = (items || []).filter(function (d) { return d && Number.isFinite(Number(d.value)); });
+    if (!data.length) return emptyChart(width, height, opts.emptyText || '当前没有可对比的数据', P);
+    const values = data.map(function (d) { return Number(d.value); });
+    const maxV = Math.max.apply(null, values.concat([0]));
+    const minV = Math.min.apply(null, values.concat([0]));
+    const span = (maxV - minV) || 1;
+    const plotW = width - ml - mr;
+    const plotH = height - mt - mb;
+    const y = function (v) { return mt + plotH - ((v - minV) / span) * plotH; };
+    const zeroY = y(0);
+    const slot = plotW / data.length;
+    const barW = Math.max(14, Math.min(42, slot * 0.52));
+    let svg = '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="' +
+      attr(opts.ariaLabel || '五行石合成方式对比') + '">';
+    svg += '<rect width="' + width + '" height="' + height + '" fill="' + P.bg + '"/>';
+    const tickCount = 4;
+    for (let i = 0; i <= tickCount; i++) {
+      const v = minV + span * i / tickCount;
+      const yy = y(v);
+      svg += '<line x1="' + ml + '" y1="' + yy.toFixed(1) + '" x2="' + (width - mr) + '" y2="' + yy.toFixed(1) +
+        '" stroke="' + (Math.abs(v) < 1e-9 ? P.axis : P.grid) + '" stroke-width="1"/>';
+      svg += '<text x="' + (ml - 8) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
+        U.fmt(v, Math.abs(v) < 10 ? 2 : 0) + '</text>';
+    }
+    if (opts.unit) {
+      svg += '<text x="' + ml + '" y="' + (mt - 8) + '" font-size="10" fill="' + P.muted + '">' + U.esc(opts.unit) + '</text>';
+    }
+    data.forEach(function (d, i) {
+      const v = Number(d.value);
+      const cx = ml + slot * (i + 0.5);
+      const top = y(Math.max(0, v));
+      const bottom = y(Math.min(0, v));
+      const h = Math.max(2, Math.abs(bottom - top));
+      const color = d.color || COLOR.craft;
+      const tip = (d.tip || d.label) + '：' + U.fmt(v, 2) + (opts.unit ? ' ' + opts.unit : '');
+      svg += '<g class="chart-column" tabindex="0" data-tip="' + attr(tip) + '" aria-label="' + attr(tip) + '">';
+      svg += '<rect x="' + (cx - barW / 2).toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + barW.toFixed(1) +
+        '" height="' + h.toFixed(1) + '" rx="3" fill="' + color + '" fill-opacity=".86"/>';
+      svg += '<text x="' + cx.toFixed(1) + '" y="' + (v >= 0 ? top - 6 : bottom + 13).toFixed(1) +
+        '" text-anchor="middle" font-size="10" font-weight="600" fill="' + (v >= 0 ? P.text : COLOR.danger) + '">' +
+        U.fmt(v, 2) + '</text>';
+      const label = d.label || '';
+      svg += '<text x="' + cx.toFixed(1) + '" y="' + (height - mb + 18) + '" text-anchor="middle" font-size="10" fill="' + P.muted + '">' +
+        U.esc(truncate(label, opts.labelWidth || 12)) + '</text>';
+      if (d.meta) {
+        svg += '<text x="' + cx.toFixed(1) + '" y="' + (height - mb + 33) + '" text-anchor="middle" font-size="9" fill="' + P.muted + '">' +
+          U.esc(truncate(d.meta, 14)) + '</text>';
+      }
+      svg += '</g>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
   window.JX3Charts = {
     palette: palette,
     color: COLOR,
@@ -318,6 +381,7 @@
     scatter: scatter,
     boxPlot: boxPlot,
     diffBar: diffBar,
+    columns: columns,
     emptyChart: emptyChart
   };
 })();
