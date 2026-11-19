@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "950073947aed4391ee1d874d09df13fd24934d06",
+  "sourceCommit": "22e02e6b8edf150f0455cb1eed6d25c93773d07e",
   "date": "2026-11-19",
   "title": "技艺升级：统一收益正负号与盈亏颜色",
   "notes": [
@@ -9,6 +9,11 @@
     "依据 docs/design 统一卡片间距、数字与单位层级、键盘焦点和移动端单列样式；中性色选中态与盈亏色分离"
   ],
   "history": [
+    {
+      "version": "22e02e6",
+      "date": "2026-11-19",
+      "title": "show signed breakthrough profit and align design styles"
+    },
     {
       "version": "9500739",
       "date": "2026-11-19",
@@ -31,11 +36,6 @@
     },
     {
       "version": "0b1cc50",
-      "date": "2026-11-19",
-      "title": "re-register price schedule under repository owner"
-    },
-    {
-      "version": "1c5a2df",
       "date": "2026-11-19",
       "title": "re-register price schedule under repository owner"
     }
