@@ -8,13 +8,14 @@ Requires pyOpenVBA (pip install pyOpenVBA); it is not needed to use the workbook
 """
 from __future__ import annotations
 
+import json
 import re
 import sys
 import zipfile
 from pathlib import Path
 
 import openpyxl
-from pyopenvba import PowerQueryWorkbook
+from pyopenvba import ExcelFile, PowerQueryWorkbook
 from pyopenvba.apps.excel import ExcelApplication
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -24,19 +25,16 @@ TMP = ROOT / "build" / "xlsm_steps"
 TMP.mkdir(parents=True, exist_ok=True)
 
 PRICES_URL = "https://cherishxie.github.io/JX3-AH-Calculator/prices.json"
-HEADERS = [
-    "物品键", "物品名称", "类别",
-    "梦江南", "破阵子", "蝶恋花", "剑胆琴心", "幽月轮", "龙争虎斗", "长安城", "斗转星移",
-    "乾坤一掷", "唯我独尊", "绝代天骄", "山雨欲来", "青梅煮酒", "剑指苍穹", "山海相逢", "傲血戰意",
-    "突破·梦江南", "突破·破阵子", "突破·蝶恋花", "突破·剑胆琴心", "突破·幽月轮", "突破·龙争虎斗",
-    "突破·长安城", "突破·斗转星移", "突破·乾坤一掷", "突破·唯我独尊", "突破·绝代天骄", "突破·山雨欲来",
-    "突破·青梅煮酒", "突破·剑指苍穹", "突破·山海相逢", "突破·傲血戰意",
-    "基准价", "数据时间",
-]
+HEADERS = list(json.loads((ROOT / "_site" / "prices.json").read_text(encoding="utf-8"))[0].keys())
+assert len(HEADERS) == 39, f"unexpected price feed columns: {len(HEADERS)}"
 
 VBA = r'''Option Explicit
 
 Public Sub CheckPriceUpdate()
+    RefreshPrices False
+End Sub
+
+Public Sub RefreshPrices(silent As Boolean)
     Dim src As Worksheet, dst As Worksheet
     Dim started As Double
 
@@ -55,15 +53,19 @@ Public Sub CheckPriceUpdate()
 
     Application.ScreenUpdating = True
     Application.StatusBar = False
-    MsgBox "Prices updated." & vbCrLf & "Data time: " & CStr(dst.Range("AM2").Value) & vbCrLf & _
-           "Elapsed: " & Format(Timer - started, "0.0") & " s", vbInformation, "JX3 Price Ledger"
+    If Not silent Then
+        MsgBox "Prices updated." & vbCrLf & "Data time: " & CStr(dst.Range("AM2").Value) & vbCrLf & _
+               "Elapsed: " & Format(Timer - started, "0.0") & " s", vbInformation, "JX3 Price Ledger"
+    End If
     Exit Sub
 EH:
     Application.ScreenUpdating = True
     Application.StatusBar = False
     Application.CutCopyMode = False
-    MsgBox "Refresh failed: " & Err.Description & vbCrLf & _
-           "Check network access to GitHub Pages, or use the IQY web query.", vbExclamation, "JX3 Price Ledger"
+    If Not silent Then
+        MsgBox "Refresh failed: " & Err.Description & vbCrLf & _
+               "Check network access to GitHub Pages, or use the IQY web query.", vbExclamation, "JX3 Price Ledger"
+    End If
 End Sub
 '''
 
@@ -111,6 +113,15 @@ def add_vba(src: Path) -> Path:
     return out
 
 
+def add_open_event(src: Path) -> Path:
+    out = TMP / "03b_open.xlsm"
+    source = "Option Explicit\r\n\r\nPrivate Sub Workbook_Open()\r\n    On Error Resume Next\r\n    RefreshPrices True\r\nEnd Sub\r\n"
+    with ExcelFile(src) as wb:
+        wb.set_module("ThisWorkbook", source)
+        wb.save(out)
+    return out
+
+
 def _vml(text: str, macro: str) -> str:
     return f'''<xml xmlns:v="urn:schemas-microsoft-com:vml"
  xmlns:o="urn:schemas-microsoft-com:office:office"
@@ -122,7 +133,7 @@ def _vml(text: str, macro: str) -> str:
   <v:stroke joinstyle="miter"/>
   <v:path shadowok="f" o:extrusionok="f" strokeok="f" fillok="f" o:connecttype="rect"/>
   <o:lock v:ext="edit" shapetype="t"/>
- </v:shapetype><v:shape id="_x0000_s1025" o:spid="_x0000_s1025" type="#_x0000_t201" style='position:absolute;margin-left:760pt;margin-top:6pt;width:150pt;height:32pt;z-index:1;mso-wrap-style:tight' o:button="t" fillcolor="buttonFace [67]" o:insetmode="auto"><v:fill color2="buttonFace [67]" o:detectmouseclick="t"/><o:lock v:ext="edit" rotation="t"/><v:textbox style='mso-direction-alt:auto' o:singleclick='f'><div style='text-align:center'>{text}</div></v:textbox><x:ClientData ObjectType="Button"><x:Anchor>8, 80, 0, 8, 10, 260, 1, 40</x:Anchor><x:PrintObject>False</x:PrintObject><x:AutoFill>False</x:AutoFill><x:FmlaMacro>[0]!{macro}</x:FmlaMacro><x:TextHAlign>Center</x:TextHAlign><x:TextVAlign>Center</x:TextVAlign></x:ClientData></v:shape></xml>'''
+ </v:shapetype><v:shape id="_x0000_s1025" o:spid="_x0000_s1025" type="#_x0000_t201" style='position:absolute;margin-left:8pt;margin-top:2pt;width:230pt;height:34pt;z-index:1;mso-wrap-style:tight' o:button="t" fillcolor="buttonFace [67]" o:insetmode="auto"><v:fill color2="buttonFace [67]" o:detectmouseclick="t"/><o:lock v:ext="edit" rotation="t"/><v:textbox style='mso-direction-alt:auto' o:singleclick='f'><div style='text-align:center'>{text}</div></v:textbox><x:ClientData ObjectType="Button"><x:Anchor>0, 8, 2, 4, 2, 230, 2, 38</x:Anchor><x:PrintObject>False</x:PrintObject><x:AutoFill>False</x:AutoFill><x:FmlaMacro>[0]!{macro}</x:FmlaMacro><x:TextHAlign>Center</x:TextHAlign><x:TextVAlign>Center</x:TextVAlign></x:ClientData></v:shape></xml>'''
 
 
 def inject_button(src: Path, sheet_name: str = "总览", macro: str = "CheckPriceUpdate", text: str = "检查物价更新") -> Path:
@@ -199,6 +210,8 @@ def verify(path: Path) -> None:
     assert len(wb["技艺收益"]._charts) == 1 and len(wb["突破路线"]._charts) == 1
     with PowerQueryWorkbook(path) as book:
         assert "物价远程" in book.query_names(), "Power Query lost"
+    with ExcelFile(path) as book:
+        assert "Workbook_Open" in book.get_module("ThisWorkbook"), "Workbook_Open lost"
     print(f"OK {path} · {len(wb.sheetnames)} sheets · vba + query + button")
 
 
@@ -206,6 +219,7 @@ def main() -> None:
     base = add_remote_sheet(SRC)
     q = add_query(base)
     v = add_vba(q)
+    v = add_open_event(v)
     b = inject_button(v)
     b.replace(DST)
     verify(DST)

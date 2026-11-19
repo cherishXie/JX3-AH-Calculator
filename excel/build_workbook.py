@@ -330,7 +330,7 @@ for num, head, body in steps:
 section(ws, 15, "刷新物价（GitHub Action 定时更新 Pages 上的 prices.json）", 3)
 refresh_lines = [
     ("数据链路", "GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖 → 写入 assets/data.js → Pages 构建时生成 prices.json / prices.csv / prices.html。"),
-    ("推荐：宏版 / Excel 365", "下载 .xlsm 宏版，点「总览」右上角『检查物价更新』：Power Query 拉取 prices.json 并写回「物价」。也可用 数据 → 获取数据 → 自网站 手动建查询，加载到「物价」A1；之后全部刷新 / 打开时刷新。"),
+    ("推荐：宏版 / Excel 365", "下载 .xlsm 宏版：每次打开自动拉取一次，也可点「总览」左上角『检查物价更新』手动刷新；Power Query 拉取 prices.json 并写回「物价」。也可用 数据 → 获取数据 → 自网站 手动建查询，加载到「物价」A1；之后全部刷新 / 打开时刷新。"),
     ("Mac / 传统 Web 查询", "下载「物价刷新.iqy」；Excel 菜单「数据 → 获取外部数据 → 运行 Web 查询」，选择该文件，输出到「物价」A1。之后同样可全部刷新 / 打开时刷新。"),
     ("WPS / 其他", "下载 prices.csv（UTF-8 BOM），全选复制，粘贴到「物价」A1，保留表头即可。"),
     ("离线", "工作簿已内置生成时的物价快照；不刷新也能完整计算，只是价格停在快照时间。"),
@@ -415,7 +415,7 @@ note(
     fill=WARN_FILL,
     height=40,
 )
-note(ws, 54, "宏版 .xlsm：点「总览」右上角『检查物价更新』，通过 Power Query 请求 GitHub Pages 的 prices.json 并写回「物价」；需启用宏并允许数据连接。无宏 .xlsx 版仍可用「全部刷新 / Web 查询 / CSV 粘贴」。", 3, fill=NOTE_FILL, height=44)
+note(ws, 54, "宏版 .xlsm：打开工作簿时由 Workbook_Open 自动拉取一次，也可点「总览」左上角『检查物价更新』手动刷新；通过 Power Query 请求 prices.json 并写回「物价」。需启用宏并允许数据连接。无宏 .xlsx 版仍可用「全部刷新 / Web 查询 / CSV 粘贴」。", 3, fill=NOTE_FILL, height=44)
 
 # ---------------------------------------------------------------------------
 # 总览
@@ -424,7 +424,24 @@ ws = wb.create_sheet("总览")
 ws.sheet_properties.tabColor = NAVY
 ws.sheet_view.showGridLines = False
 widths(ws, {"A": 7, "B": 26, "C": 9, "D": 8, "E": 13, "F": 13, "G": 10, "H": 12, "I": 6, "J": 6, "K": 3, "L": 9, "M": 7, "N": 13, "O": 13, "P": 28, "Q": 11, "R": 12, "S": 7})
-title_band(ws, "总览", "今天做什么最赚精力 · 本服行情 · 八技艺与突破净收益一屏看完", 10)
+# 自定义标题区：A3:C3 留给「检查物价更新」按钮，D3:J3 放说明文字。
+ws.merge_cells("A1:J2")
+for r in (1, 2):
+    for c in range(1, 11):
+        ws.cell(r, c).fill = TITLE_FILL
+title_cell = ws.cell(1, 1, "总览")
+title_cell.font = TITLE_FONT
+title_cell.alignment = Alignment(horizontal="left", vertical="center", indent=1)
+ws.row_dimensions[1].height = 30
+ws.row_dimensions[2].height = 22
+ws.merge_cells("D3:J3")
+ws["D3"] = "左侧按钮：检查物价更新（Power Query 拉取 prices.json） · 也可用 数据 → 全部刷新"
+ws["D3"].font = Font(name=FONT_CN, size=9, color=MUTED)
+ws["D3"].alignment = Alignment(horizontal="left", vertical="center", indent=1)
+for c in range(1, 4):
+    ws.cell(3, c).fill = CARD_FILL
+    ws.cell(3, c).border = BORDER
+ws.row_dimensions[3].height = 38
 
 kpi_card(ws, 4, 1, "最佳精力收益（金/点）", "=IFERROR(MAXIFS('配方收益'!$M:$M,'配方收益'!$P:$P,\"有效\"),\"\")", NUM_2, 2)
 kpi_card(ws, 4, 3, "最佳制品", "=IFERROR(INDEX('配方收益'!$D:$D,MATCH(MAXIFS('配方收益'!$Q:$Q,'配方收益'!$P:$P,\"有效\"),'配方收益'!$Q:$Q,0)),\"—\")", None, 4)

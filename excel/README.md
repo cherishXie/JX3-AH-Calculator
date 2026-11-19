@@ -2,7 +2,8 @@
 
 把网页版的「总览」「技艺收益」「五行石」「技艺突破路线」重做成一个可离线计算、可远程刷新物价的 Excel 工作簿。
 
-- 无宏版：`剑网3技艺收益与突破.xlsx` · <https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsx>
+- 无宏静态版：`剑网3技艺收益与突破.xlsx` · <https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsx>
+- 无宏自动版：`剑网3技艺收益与突破-auto.xlsx` · <https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel-auto.xlsx>
 - 宏版（带「检查物价更新」按钮）：`剑网3技艺收益与突破.xlsm` · <https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsm>
 - 物价 JSON：<https://cherishxie.github.io/JX3-AH-Calculator/prices.json>
 - 物价 CSV：<https://cherishxie.github.io/JX3-AH-Calculator/prices.csv>
@@ -56,12 +57,19 @@ GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖，�
 ### 3.1 宏版一键检查（`.xlsm`）
 
 1. 打开 `jx3-excel.xlsm`，启用宏并允许数据连接；
-2. 点「总览」右上角 **检查物价更新**；
-3. 宏会通过 Power Query 拉取 `prices.json`，写回「物价」并提示数据时间。
+2. 每次打开会自动静默拉取一次（`Workbook_Open` → `RefreshPrices True`）；
+3. 也可点「总览」左上角 **检查物价更新** 手动刷新；
+4. 宏会通过 Power Query 拉取 `prices.json`，写回「物价」并提示数据时间。
 
 「物价远程」是隐藏的查询落点；「物价」仍是所有公式读取的价格表。Mac 版 Excel 的 Power Query Web 连接器可能不可用，此时退回下面的 Web 查询 / CSV。
 
-### 3.2 Excel 365 手动建查询（无宏 `.xlsx`）
+### 3.2 无宏自动版（`-auto.xlsx`，打开时刷新）
+
+`jx3-excel-auto.xlsx` 把 Power Query「物价自动」**直接加载到「物价」A1**，并开启「打开文件时刷新」。打开 Excel 时会自动请求 `prices.json`，不需要宏。
+
+代价：这份文件**没有内置快照**，首次打开必须联网；如果网络失败或使用不支持 Web 连接器的 WPS/LibreOffice，公式会暂时没有价格。需要离线兜底时用静态 `.xlsx` 或宏版 `.xlsm`。
+
+### 3.3 Excel 365 手动建查询（无宏 `.xlsx`）
 
 1. 数据 → 获取数据 → 其他源 → 空白查询；
 2. 开始 → 高级编辑器，粘贴 `物价查询.pq` 的内容并完成；
@@ -70,7 +78,7 @@ GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖，�
 
 之后每次打开工作簿会自动拉取最新 JSON；也可以随时手动「全部刷新」。
 
-### 3.3 Excel for Mac / 旧版（HTML Web 查询）
+### 3.4 Excel for Mac / 旧版（HTML Web 查询）
 
 Excel for Mac 的 Power Query 不支持 HTML 连接器，但传统 Web 查询仍可用：
 
@@ -79,11 +87,11 @@ Excel for Mac 的 Power Query 不支持 HTML 连接器，但传统 Web 查询仍
 3. 输出到「物价」A1；
 4. 之后使用「全部刷新」或连接属性中的「打开文件时刷新」。
 
-### 3.4 WPS / 手动
+### 3.5 WPS / 手动
 
 下载 `prices.csv`，全选复制，粘贴到「物价」A1（保留表头）。
 
-### 3.5 关于「定时」
+### 3.6 关于「定时」
 
 Excel 桌面端没有原生的定时 HTTP 刷新。这里的定时由 GitHub Action 完成：数据源每两小时更新一次；Excel 端在打开文件或手动刷新时取最新快照。若需要桌面端无人值守刷新，可在 Windows 任务计划程序 / macOS launchd 中定时打开工作簿并执行「全部刷新」后保存，但这属于外部调度，不在工作簿内。
 
@@ -122,6 +130,7 @@ node scripts/build-excel-prices.mjs _site
 - 「精力最优」不在 Excel 端提供；需要逐级 ceil，请在网页版查看。
 - 五行石「配方对比」按材料直接购买价计算；逐层自制的最优金币/精力/收益三套方案（含 3-6 级递归计划）请在网页版「五行石」页查看。
 - 宏版需要启用宏并允许外部数据连接；不信任宏时请用无宏 `.xlsx` + Web 查询/CSV。
+- `-auto.xlsx` 无宏但依赖 Excel 的 Power Query 打开刷新；首次打开必须联网，没有静态快照兜底。WPS/LibreOffice 不一定支持该查询。
 - 突破路线按市场价；「取最低」仅用于技艺收益。
 - 逐级经验门槛为本工作簿「经验门槛」表的用户观测+插值/外推；可直接改 B 列重算。采集经验与部分掉率仍为估算/示例。
 - 百脉根、紫花苜蓿、甜象草、皇竹草在 JX3BOX 暂无物品键，只用目录基准价。
