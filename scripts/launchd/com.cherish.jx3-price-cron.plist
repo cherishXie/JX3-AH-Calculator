@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.cherish.jx3-price-cron</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/cherishxie/Documents/ChatGPT/JX3-AH-Calculator/scripts/local-price-cron.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/cherishxie/Documents/ChatGPT/JX3-AH-Calculator</string>
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict><key>Hour</key><integer>8</integer><key>Minute</key><integer>9</integer></dict>
+    <dict><key>Hour</key><integer>10</integer><key>Minute</key><integer>9</integer></dict>
+    <dict><key>Hour</key><integer>12</integer><key>Minute</key><integer>9</integer></dict>
+    <dict><key>Hour</key><integer>14</integer><key>Minute</key><integer>9</integer></dict>
+    <dict><key>Hour</key><integer>16</integer><key>Minute</key><integer>9</integer></dict>
+    <dict><key>Hour</key><integer>18</integer><key>Minute</key><integer>9</integer></dict>
+    <dict><key>Hour</key><integer>20</integer><key>Minute</key><integer>9</integer></dict>
+    <dict><key>Hour</key><integer>22</integer><key>Minute</key><integer>9</integer></dict>
+  </array>
+  <key>StandardOutPath</key>
+  <string>/tmp/jx3-price-cron.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/jx3-price-cron.err</string>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>
