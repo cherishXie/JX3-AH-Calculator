@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "1186c72e2999ecfc9ef43e7ddad024ff9ca47923",
+  "sourceCommit": "950073947aed4391ee1d874d09df13fd24934d06",
   "date": "2026-11-19",
   "title": "技艺升级：观测经验校准与精力/金币路线重算",
   "notes": [
@@ -9,6 +9,11 @@
     "三档统一使用产量中点；空档和缺价明确提示，净花费越低越省、负数表示净赚"
   ],
   "history": [
+    {
+      "version": "9500739",
+      "date": "2026-11-19",
+      "title": "calibrate skill experience and separate energy and gold routes"
+    },
     {
       "version": "1186c72",
       "date": "2026-11-19",
@@ -33,11 +38,6 @@
       "version": "1c5a2df",
       "date": "2026-11-19",
       "title": "re-register price schedule under repository owner"
-    },
-    {
-      "version": "b190e05",
-      "date": "2026-11-19",
-      "title": "label the final ranked quest as the level-50 breakthrough and show the 50 endpoint"
     }
   ]
 }
