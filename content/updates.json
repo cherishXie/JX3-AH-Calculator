@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "fb3c6fb5fc319391035830f449f6cb5810f40328",
+  "sourceCommit": "e7e891080edfd78d02408489f2c52b6d013e2fcc",
   "date": "2026-11-19",
-  "title": "seed snapshot into no-macro auto workbook",
+  "title": "use native Excel Web Query for price refresh",
   "notes": [
-    "seed snapshot into no-macro auto workbook"
+    "use native Excel Web Query for price refresh"
   ],
   "history": [
+    {
+      "version": "e7e8910",
+      "date": "2026-11-19",
+      "title": "use native Excel Web Query for price refresh"
+    },
     {
       "version": "fb3c6fb",
       "date": "2026-11-19",
@@ -30,11 +35,6 @@
       "version": "373ea55",
       "date": "2026-11-19",
       "title": "make local price fallback work under launchd"
-    },
-    {
-      "version": "0ea8b9a",
-      "date": "2026-11-19",
-      "title": "add Excel craft-profit workbook and Pages price feed"
     }
   ]
 }
