@@ -66,6 +66,18 @@ if [ -f "excel/剑网3技艺收益与突破.xlsm" ]; then
   cp "excel/剑网3技艺收益与突破.xlsm" "_site/downloads/剑网3技艺收益与突破.xlsm"
   cp "excel/剑网3技艺收益与突破.xlsm" "_site/downloads/jx3-excel.xlsm"
 fi
+# 让下载到的工作簿自带本次发布的最新物价快照：
+# WPS / LibreOffice 不能刷新 Power Query，打开内置快照即为最新价。
+if command -v python3 >/dev/null 2>&1 && [ -f "_site/prices.csv" ]; then
+  for wb in "_site/downloads/剑网3技艺收益与突破.xlsx" "_site/downloads/jx3-excel.xlsx" \
+            "_site/downloads/剑网3技艺收益与突破-auto.xlsx" "_site/downloads/jx3-excel-auto.xlsx" \
+            "_site/downloads/剑网3技艺收益与突破.xlsm" "_site/downloads/jx3-excel.xlsm"; do
+    if [ -f "$wb" ]; then
+      python3 scripts/excel-patch-prices.py --workbook "$wb" --csv "_site/prices.csv" --in-place >/dev/null \
+        || echo "warning: 更新内置物价快照失败：$wb" >&2
+    fi
+  done
+fi
 if [ -f CHANGELOG.md ]; then cp CHANGELOG.md _site/CHANGELOG.md; fi
 cp site/sw.js _site/sw.js
 cp site/manifest.webmanifest _site/manifest.webmanifest

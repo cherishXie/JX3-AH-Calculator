@@ -88,9 +88,25 @@ Excel for Mac 的 Power Query 不支持 HTML 连接器，但传统 Web 查询仍
 3. 输出到「物价」A1；
 4. 之后使用「全部刷新」或连接属性中的「打开文件时刷新」。
 
-### 3.5 WPS / 手动
+### 3.5 WPS / LibreOffice（本地刷新脚本）
 
-下载 `prices.csv`，全选复制，粘贴到「物价」A1（保留表头）。
+WPS 和 LibreOffice 都不支持 Power Query，WPS 也没有 Excel 的 Web Query / 宏刷新，打开工作簿只会显示内置快照。用脚本把最新价写进去：
+
+1. 把工作簿放在本机（例如 `~/Downloads`）；
+2. 双击 [`刷新物价.command`](./刷新物价.command)（或把工作簿拖到它上面）；
+3. 脚本从 Pages 下载最新 `prices.csv`，只改「物价」表的数值（D:AL 与「数据时间」），图表、格式、宏都保留，然后自动用 WPS 打开；原文件会备份为 `.bak`；
+4. 脚本会写入「打开时强制重算」，WPS 打开后按新价格重算所有公式；若数字没变化，按 `F9`（或「公式 → 重算」）。
+
+命令行等价（不需要 WPS）：
+
+```bash
+python3 scripts/excel-patch-prices.py \
+  --workbook "剑网3技艺收益与突破.xlsx" \
+  --csv https://cherishxie.github.io/JX3-AH-Calculator/prices.csv \
+  --in-place
+```
+
+另外，Pages 上的下载链接（`jx3-excel*.xlsx` / `.xlsm`）现在每次发布都会把当次最新物价写进内置快照，所以「重新下载最新文件」在 WPS 里打开也是当前价，只是不会像 Excel 那样自动再刷新。
 
 ### 3.6 关于「定时」
 
@@ -131,7 +147,7 @@ node scripts/build-excel-prices.mjs _site
 - 「精力最优」不在 Excel 端提供；需要逐级 ceil，请在网页版查看。
 - 五行石「配方对比」按材料直接购买价计算；逐层自制的最优金币/精力/收益三套方案（含 3-6 级递归计划）请在网页版「五行石」页查看。
 - 宏版需要启用宏并允许外部数据连接；不信任宏时请用无宏 `.xlsx` + Web 查询/CSV。
-- `-auto.xlsx` 无宏，预填快照 + Excel Power Query 打开刷新；WPS/LibreOffice 不支持查询，但能看到快照。
+- `-auto.xlsx` 无宏，预填快照 + Excel Power Query 打开刷新；WPS/LibreOffice 不支持查询，但能看到快照；WPS 用户双击 `刷新物价.command` 把快照换成最新价。
 - 突破路线按市场价；「取最低」仅用于技艺收益。
 - 逐级经验门槛为本工作簿「经验门槛」表的用户观测+插值/外推；可直接改 B 列重算。采集经验与部分掉率仍为估算/示例。
 - 百脉根、紫花苜蓿、甜象草、皇竹草在 JX3BOX 暂无物品键，只用目录基准价。
