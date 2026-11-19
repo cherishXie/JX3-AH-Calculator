@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "b6c3d2a00b6ea0a096feec769a93f5a71404a49e",
+  "sourceCommit": "f19901c42ca15aea058ed094914ecfbeed5a2bf4",
   "date": "2026-11-19",
   "title": "WPS 也能用最新物价：新增本地刷新脚本",
   "notes": [
@@ -8,6 +8,11 @@
     "Pages 下载的 jx3-excel / -auto / .xlsm 每次发布都自带当次最新快照，重新下载即可看到新价"
   ],
   "history": [
+    {
+      "version": "f19901c",
+      "date": "2026-11-19",
+      "title": "repair release notes json"
+    },
     {
       "version": "b6c3d2a",
       "date": "2026-11-19",
@@ -32,11 +37,6 @@
       "version": "dab1af9",
       "date": "2026-11-19",
       "title": "make price refresh button visible and add form control props"
-    },
-    {
-      "version": "a6c6bdd",
-      "date": "2026-11-19",
-      "title": "auto-refresh on open and no-macro auto workbook"
     }
   ]
 }
