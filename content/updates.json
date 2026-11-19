@@ -1,13 +1,16 @@
 {
-  "sourceCommit": "373ea555f69d0c6e68a72c413d824881997126e1",
+  "sourceCommit": "8d8fd73972718d46580fa71acdb97fc6e4f671a9",
   "date": "2026-11-19",
-  "title": "物价刷新更稳定：每 2 小时自动更新",
+  "title": "add overview, gem module and one-click price refresh",
   "notes": [
-    "GitHub 定时任务未按期触发，新增本机定时兜底：每天 08:09–22:09 每 2 小时检查一次各服物价",
-    "价格有变化才提交并部署到 Web 与小工具包；价格未变时不产生提交，也不会弹出页面更新提示",
-    "价格库页脚可直接查看当前快照时间，判断数据是否新鲜"
+    "add overview, gem module and one-click price refresh"
   ],
   "history": [
+    {
+      "version": "8d8fd73",
+      "date": "2026-11-19",
+      "title": "add overview, gem module and one-click price refresh"
+    },
     {
       "version": "373ea55",
       "date": "2026-11-19",
@@ -32,11 +35,6 @@
       "version": "1186c72",
       "date": "2026-11-19",
       "title": "include root offline assets in automatic releases"
-    },
-    {
-      "version": "5d142be",
-      "date": "2026-11-19",
-      "title": "align breakthrough calculations and automate Pages releases"
     }
   ]
 }
