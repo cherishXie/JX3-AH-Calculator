@@ -147,6 +147,7 @@
         basis: 'market',
         includeIncomplete: false,
         taxRate: 0.05,
+        taxRateVersion: 1,
         theme: 'dark'
       },
       seq: { item: 1, recipe: 1 },
@@ -180,6 +181,12 @@
       const base = seedState();
       const state = Object.assign(base, saved);
       state.settings = Object.assign({}, base.settings, saved.settings || {});
+      // 旧版本没有税额概念，或曾把默认税率存成 0：迁移到默认 5%。
+      // 迁移后写入 taxRateVersion=1，用户之后可主动改为 0%。
+      if (!saved.settings || saved.settings.taxRateVersion !== 1) {
+        state.settings.taxRate = 0.05;
+        state.settings.taxRateVersion = 1;
+      }
       state.seq = Object.assign({}, base.seq, saved.seq || {});
       state.prices = saved.prices && typeof saved.prices === 'object' ? saved.prices : {};
       state.activity = Array.isArray(saved.activity) ? saved.activity.slice(0, 20) : [];
@@ -578,8 +585,9 @@
       });
 
       const energy = U.num(recipe.energy);
-      const taxRate = Math.max(0, Math.min(1, Number(Store.state.settings.taxRate)));
-      const tax = outputValueGross * (Number.isFinite(taxRate) ? taxRate : 0);
+      const rawTaxRate = Number(Store.state.settings.taxRate);
+      const taxRate = Number.isFinite(rawTaxRate) ? Math.max(0, Math.min(1, rawTaxRate)) : 0.05;
+      const tax = outputValueGross * taxRate;
       const outputValue = outputValueGross - tax;
       const profit = outputValue - totalCost;
       const perEnergy = energy > 0 ? profit / energy : null;
@@ -591,7 +599,7 @@
         totalCost: totalCost,
         outputs: outputs,
         outputValueGross: outputValueGross,
-        taxRate: Number.isFinite(taxRate) ? taxRate : 0,
+        taxRate: taxRate,
         tax: tax,
         outputValue: outputValue,
         missingOutputs: missingOutputs,

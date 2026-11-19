@@ -35,18 +35,22 @@ try {
 const subject = git('git log -1 --pretty=%s', '');
 const isPriceUpdate = /update\s+JX3BOX\s+prices/i.test(subject);
 
-const title = isPriceUpdate
-  ? '价格数据已更新'
-  : (manual.title || subject || '体验与数据更新');
+// 更新提示只应在“应用壳”变化时出现；价格数据单独更新不会改变壳版本，
+// 因此这里优先使用 content/updates.json 中为本次应用发布手写的文案。
+// 只有手写文案缺失时，才退回提交标题/价格机器人文案。
+const hasManualNotes = manual && manual.title && Array.isArray(manual.notes) && manual.notes.length > 0;
+const title = hasManualNotes
+  ? manual.title
+  : (isPriceUpdate ? '价格数据已更新' : (subject || '体验与数据更新'));
 
-const notes = isPriceUpdate
-  ? [
-      '同步 JX3BOX 全服拍卖价',
-      '重算制造配方成本与精力收益',
-      '无报价物品回退梦江南示例价'
-    ]
-  : (Array.isArray(manual.notes) && manual.notes.length
-      ? manual.notes
+const notes = hasManualNotes
+  ? manual.notes
+  : (isPriceUpdate
+      ? [
+          '同步 JX3BOX 全服拍卖价',
+          '重算制造配方成本与精力收益',
+          '无报价物品回退梦江南示例价'
+        ]
       : ['修复已知问题', '优化加载与交互']);
 
 const payload = {

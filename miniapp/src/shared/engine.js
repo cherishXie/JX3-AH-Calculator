@@ -1,5 +1,5 @@
 /* =========================================================================
-   剑网三物价助手 · 跨端计算内核（无 DOM / 无平台 API）
+   精力做什么 · 跨端计算内核（无 DOM / 无平台 API）
    微信小程序、小红书小程序、H5 共用
    ========================================================================= */
 import catalog from './catalog.json';
@@ -44,7 +44,9 @@ export function seedState() {
       energyBudget: 3000,
       gatherEnergy: 20,
       craftEnergy: 100,
-      basis: 'market'
+      basis: 'market',
+      taxRate: 0.05,
+      taxRateVersion: 1
     },
     seq: { item: 1, recipe: 1 }
   };
@@ -54,6 +56,10 @@ export function normalize(saved) {
   const base = seedState();
   const state = Object.assign(base, saved || {});
   state.settings = Object.assign({}, base.settings, state.settings || {});
+  if (!saved || !saved.settings || saved.settings.taxRateVersion !== 1) {
+    state.settings.taxRate = 0.05;
+    state.settings.taxRateVersion = 1;
+  }
   state.seq = Object.assign({}, base.seq, state.seq || {});
   state.prices = state.prices && typeof state.prices === 'object' ? state.prices : {};
   if (!Array.isArray(state.servers) || !state.servers.length) state.servers = clone(DATA.servers);
@@ -172,7 +178,7 @@ export function calcRecipe(state, recipe, opts, stack) {
   const fee = num(recipe.fee);
   const totalCost = materialCost + fee;
   const outputs = [];
-  let outputValue = 0;
+  let outputValueGross = 0;
   let missingOutputs = 0;
   (recipe.outputs || []).forEach(function (o) {
     const item = findItem(state, o.item);
@@ -180,16 +186,21 @@ export function calcRecipe(state, recipe, opts, stack) {
     const chance = o.chance == null ? 1 : Math.max(0, Math.min(1, Number(o.chance)));
     const expectedQty = o.qty * chance;
     const sub = p.v * expectedQty;
-    outputValue += sub;
+    outputValueGross += sub;
     if (p.missing) missingOutputs++;
     outputs.push({ itemId: o.item, name: item ? item.name : o.item, qty: o.qty, chance: chance, expectedQty: expectedQty, qtyMin: o.qtyMin, qtyMax: o.qtyMax, unit: p.v, sub: sub, missing: p.missing, seed: p.seed });
   });
   const energy = num(recipe.energy);
+  const rawTaxRate = Number(state.settings && state.settings.taxRate);
+  const taxRate = Number.isFinite(rawTaxRate) ? Math.max(0, Math.min(1, rawTaxRate)) : 0.05;
+  const tax = outputValueGross * taxRate;
+  const outputValue = outputValueGross - tax;
   const profit = outputValue - totalCost;
   const perEnergy = energy > 0 ? profit / energy : null;
   return {
     materials: materials, materialCost: materialCost, missingMaterials: missingMaterials,
-    fee: fee, totalCost: totalCost, outputs: outputs, outputValue: outputValue,
+    fee: fee, totalCost: totalCost, outputs: outputs, outputValueGross: outputValueGross,
+    taxRate: taxRate, tax: tax, outputValue: outputValue,
     missingOutputs: missingOutputs, missing: missingMaterials + missingOutputs > 0,
     profit: profit, energy: energy, perEnergy: perEnergy,
     margin: totalCost > 0 && outputValue > 0 ? profit / outputValue : null,

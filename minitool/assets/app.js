@@ -85,6 +85,10 @@
   /* ------------------------------------------------------------------ */
   function state() { return Store.state; }
   function settings() { return Store.state.settings; }
+  function currentTaxRate() {
+    const t = Number(settings().taxRate);
+    return Number.isFinite(t) ? Math.max(0, Math.min(1, t)) : 0.05;
+  }
 
   function skill(id) { return C.skillOf(id); }
   function tier(id) { return C.tierOf(id); }
@@ -427,7 +431,7 @@
       '<p class="page-sub">苍生铸世 50 级 · 生活技艺成本与精力收益一览。所有价格按「' + U.esc(server().name) + '」计算，示例价可直接使用，校准后更贴近本服。</p></div>' +
       '<div class="page-tools">' +
         '<span class="badge badge-outline" title="可在设置中修改默认成本口径">成本口径：' + (currentBasis(p) === 'min' ? '取最低' : '市场价') + '</span>' +
-        '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + '</span>' +
+        '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
         '<span class="badge badge-outline">' + icon('clock') + ' 核验 ' + U.esc(DATA.meta.verifiedAt) + '</span>' +
         '<a class="btn" href="' + Route.href('/prices') + '">' + icon('refreshPrice') + '<span class="txt">校准行情</span></a>' +
       '</div></div>';
@@ -503,7 +507,7 @@
             '<div class="info-row"><span class="k">精力用尽</span><span class="v">' + U.fmtInt(sim.used) + ' / ' + U.fmtInt(sim.budget) + '</span></div>'
           : emptyState('暂无正向收益配方', '补齐材料与产物价格，或检查成本口径。', '<a class="btn btn-sm" href="' + Route.href('/prices') + '">去校准价格</a>', 'coin')) +
         '</div>' +
-        '<div class="card-foot"><span>已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税，不含暴击额外产出</span><span class="spacer"></span>' +
+        '<div class="card-foot"><span>已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税，不含暴击额外产出</span><span class="spacer"></span>' +
         '<button class="btn btn-sm btn-ghost" data-action="open-settings">调整预算</button></div>' +
       '</aside>' +
     '</div>';
@@ -1046,6 +1050,7 @@
           '<button class="' + (basis === 'market' ? 'active' : '') + '" data-filter="basis" data-value="" title="材料按本服市场价计算">市场价</button>' +
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
+        '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
         '<a class="btn" href="' + Route.href('/prices') + '">' + icon('database') + '<span class="txt">价格库</span></a>' +
       '</div></div>';
 
@@ -1109,7 +1114,7 @@
         }).join('') +
         '</tbody></table></div>';
     }
-    html += '<div class="card-foot"><span>成本 = 材料 + 手续费；利润 = 税后产值 − 成本；精力收益 = 利润 / 精力；售价已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税</span>' +
+    html += '<div class="card-foot"><span>成本 = 材料 + 手续费；利润 = 税后产值 − 成本；精力收益 = 利润 / 精力；售价已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税</span>' +
       '<span class="sep">·</span><span>' + (basis === 'min' ? '取最低：仅优化材料成本，不计自制中间产物的精力' : '市场价：材料按本服单价计') + '</span>' +
       '<span class="spacer"></span>' +
       (sk.type === 'gather' ? '<span>采集期望产值（税后）= Σ（数量 × 掉率 × 税后单价）；精力按单次采集折算</span>' : '<span>点击行查看配方详情</span>') + '</div>';
@@ -1153,7 +1158,7 @@
       (DATA.meta.sources.length > listed.length ? ' · 等 ' + DATA.meta.sources.length + ' 项' : '');
     return '<div class="data-foot">' + icon('shield') +
       '<div><b style="color:var(--muted)">苍生铸世 · 50 级数据口径</b> · 核验于 ' + U.esc(DATA.meta.verifiedAt) +
-      ' · 制造配方/等级/精力/材料来自 JX3BOX 当前版本 API（2026-11-18），收录 154 条代表配方；价格采用 JX3BOX 17 个服务器拍卖样本（梦江南 ' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.updated : '—') + '/' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.total : '—') + ' 项有效），无报价回退梦江南示例价；采集产出名称已核验，数量为示例。售价按 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税折算；五行石公式可在五行石页编辑。请以本服交易行为准。' +
+      ' · 制造配方/等级/精力/材料来自 JX3BOX 当前版本 API（2026-11-18），收录 154 条代表配方；价格采用 JX3BOX 17 个服务器拍卖样本（梦江南 ' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.updated : '—') + '/' + (DATA.meta.priceCoverage ? DATA.meta.priceCoverage.total : '—') + ' 项有效），无报价回退梦江南示例价；采集产出名称已核验，数量为示例。售价按 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税折算；五行石公式可在五行石页编辑。请以本服交易行为准。' +
       '<div style="margin-top:4px">来源：' + sources + '</div></div>' +
       '<div class="links"><button class="btn btn-sm" data-action="open-data">数据说明</button>' +
       '<button class="btn btn-sm" data-action="open-settings">设置</button></div></div>';
@@ -1378,7 +1383,7 @@
           '<button class="' + (basis === 'market' ? 'active' : '') + '" data-filter="basis" data-value="" title="材料按本服市场价计算">市场价</button>' +
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
-        '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + '</span>' +
+        '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
         '<button class="btn" data-action="export-csv" data-csv="analysis">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
       '</div></div>';
 
@@ -1491,7 +1496,7 @@
             (sim.allocations.length > 5 ? '<div class="tiny dim" style="margin-top:8px">其余 ' + (sim.allocations.length - 5) + ' 项已计入总收益</div>' : '')
             : emptyState('当前预算下没有正收益配方', '提高预算、校准价格，或切换成本口径。', '', 'coin')) +
         '</div>' +
-        '<div class="card-foot"><span>模拟已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税，不含暴击额外产出与市场深度</span></div></section>' +
+        '<div class="card-foot"><span>模拟已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税，不含暴击额外产出与市场深度</span></div></section>' +
     '</div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
@@ -1524,7 +1529,7 @@
         '</tr>';
       }).join('') : '<tr><td colspan="10">' + emptyState('没有匹配的配方', '清空搜索或筛选条件再试。', '', 'search') + '</td></tr>') +
       '</tbody></table></div>' +
-      '<div class="card-foot"><span>精力收益 =（税后产值 − 材料成本 − 手续费）÷ 精力；售价已扣 ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + ' 交易税</span><span class="spacer"></span><span>已排除/标记缺价项</span></div>' +
+      '<div class="card-foot"><span>精力收益 =（税后产值 − 材料成本 − 手续费）÷ 精力；售价已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税</span><span class="spacer"></span><span>已排除/标记缺价项</span></div>' +
       '</section></div>';
 
     html += stoneAnalysisCard();
@@ -2256,7 +2261,7 @@
     const st = settings();
     return '<div class="form-grid">' +
       '<label class="form-field"><span>精力预算（模拟用）</span><input class="input" type="number" min="0" step="100" data-setting="energyBudget" value="' + st.energyBudget + '"><span class="hint">用于满精力预估与对比次数</span></label>' +
-      '<label class="form-field"><span>交易税率（%）</span><input class="input" type="number" min="0" max="100" step="0.5" data-setting="taxRate" value="' + U.fmt((Number(st.taxRate) || 0) * 100, 1) + '"><span class="hint">默认 5%，按产物售价扣除</span></label>' +
+      '<label class="form-field"><span>交易税率（%）</span><input class="input" type="number" min="0" max="100" step="0.5" data-setting="taxRate" value="' + U.fmt(currentTaxRate() * 100, 1) + '"><span class="hint">默认 5%，按产物售价扣除</span></label>' +
       '<label class="form-field"><span>默认主题</span><select class="select" data-setting="theme"><option value="dark"' + (st.theme !== 'light' ? ' selected' : '') + '>暗色</option><option value="light"' + (st.theme === 'light' ? ' selected' : '') + '>亮色</option></select></label>' +
       '<label class="form-field"><span>新建采集默认精力</span><input class="input" type="number" min="1" step="1" data-setting="gatherEnergy" value="' + st.gatherEnergy + '"></label>' +
       '<label class="form-field"><span>新建制造默认精力</span><input class="input" type="number" min="1" step="1" data-setting="craftEnergy" value="' + st.craftEnergy + '"></label>' +
@@ -2315,7 +2320,7 @@
         '<div class="info-row"><span class="k">材料成本</span><span class="v">Σ（数量 × 本服单价）</span></div>' +
         '<div class="info-row"><span class="k">总成本</span><span class="v">材料成本 + 手续费</span></div>' +
         '<div class="info-row"><span class="k">税前产值</span><span class="v">Σ（产物数量 × 本服单价）</span></div>' +
-        '<div class="info-row"><span class="k">交易税</span><span class="v">税前产值 × ' + U.fmtPct((Number(settings().taxRate) || 0), 0) + '（可改）</span></div>' +
+        '<div class="info-row"><span class="k">交易税</span><span class="v">税前产值 × ' + U.fmtPct(currentTaxRate(), 0) + '（可改）</span></div>' +
         '<div class="info-row"><span class="k">税后产值</span><span class="v">税前产值 − 交易税</span></div>' +
         '<div class="info-row"><span class="k">精力收益</span><span class="v">（税后产值 − 总成本）÷ 精力</span></div>' +
         '<div class="info-row"><span class="k">取最低口径</span><span class="v">逐层取低，仅优化成本、不计中间精力</span></div>' +
