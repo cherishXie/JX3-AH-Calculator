@@ -29,14 +29,22 @@ fi
 
 WB="${1:-}"
 if [ -z "$WB" ]; then
-  WB="$(find "$HOME/Downloads" "$HOME/Desktop" "$HOME/Documents" -maxdepth 2 \
+  WB="$(find "$HOME/Downloads" "$HOME/Desktop" "$HOME/Documents" -maxdepth 3 \
         -type f -name '剑网3*.xls[xm]' ! -name '*-最新*' ! -name '*.bak' \
         -print0 2>/dev/null | xargs -0 stat -f '%m %N' 2>/dev/null \
         | sort -rn | head -n 1 | cut -d' ' -f2-)"
 fi
 
+if [ -z "$WB" ]; then
+  WB="$(osascript -e 'POSIX path of (choose file with prompt "选择要刷新物价的工作簿" of type {"xlsx", "xlsm"})' 2>/dev/null || true)"
+fi
+
 if [ -z "$WB" ] || [ ! -f "$WB" ]; then
-  echo "没有找到工作簿。请把 剑网3技艺收益与突破.xlsx 拖到这个文件上，或放到 ~/Downloads。"
+  echo "没有在 ~/Downloads、~/Desktop、~/Documents 找到工作簿。"
+  echo "请把工作簿拖到这个文件上（也可以直接双击，在弹出对话框里选）。"
+  if [ -f "$BASE/excel/剑网3技艺收益与突破.xlsx" ]; then
+    echo "项目里有一份：$BASE/excel/剑网3技艺收益与突破.xlsx"
+  fi
   read -r -n 1 -s -p "按任意键关闭…"; echo
   exit 1
 fi
