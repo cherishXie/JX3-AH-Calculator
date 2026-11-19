@@ -302,6 +302,8 @@ export function craftRoute(state, skillId, strategy, serverId) {
     });
   }
 
+  all.push({ kind: 'max', level: CAP, name: CAP + ' 级 · 满级' });
+
   const totals = {
     exp: levels.reduce(function (s, r) { return s + r.need; }, 0),
     energy: 0, matCost: 0, outValue: 0, profit: 0,
@@ -435,6 +437,8 @@ export function gatherRoute(state, skillId, strategy, serverId) {
   gates.forEach(function (g) {
     if (!all.some(function (x) { return x.kind === 'gate' && x.level === g.level; })) all.push(Object.assign({ kind: 'gate' }, g));
   });
+
+  all.push({ kind: 'max', level: CAP, name: CAP + ' 级 · 满级' });
 
   const totals = {
     exp: levels.reduce(function (s, r) { return s + r.need; }, 0),

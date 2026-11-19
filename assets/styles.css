@@ -74,7 +74,7 @@ body {
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
-svg { display: block; }
+svg { display: block; width: 1em; height: 1em; flex: none; }
 h1, h2, h3, p { margin: 0; }
 
 ::selection { background: rgba(29, 111, 224, 0.35); }
@@ -1504,3 +1504,7 @@ html.no-color-mix table.data tr.is-current td { background: rgba(59, 130, 246, 0
   .bt-mini-kpis { gap: 12px; }
   .bt-seg { width: 100%; }
 }
+
+/* 突破升级 · 满级行 */
+.bt-row.bt-max .nm { color: var(--positive); }
+.bt-row.bt-max .ds { color: var(--muted); }

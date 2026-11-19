@@ -76,7 +76,7 @@
 
   function icon(name, cls) {
     const p = PATHS[name] || PATHS.info;
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"' +
+    return '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"' +
       (cls ? ' class="' + cls + '"' : '') + ' aria-hidden="true">' + p + '</svg>';
   }
 
@@ -1442,11 +1442,18 @@
       '</summary>' + btRecipeDetail(row) + '</details>';
   }
 
+  function btMaxRow(row) {
+    return '<div class="bt-row bt-max"><div class="bt-row-head">' +
+      '<span class="bt-band">50 级</span>' +
+      '<span class="bt-main"><b class="nm">满级 · 晋秩·宗师（50 级突破）已完成</b>' +
+      '<em class="ds">1→50 路线结束；后续只有 50 级配方与专精内容</em></span></div></div>';
+  }
+
   function btGateRow(gate) {
     const B = bt();
     return '<details class="bt-gate">' +
-      '<summary class="bt-gate-head"><span class="bt-gate-ic">' + gate.level + '</span>' +
-        '<span class="bt-main"><b class="nm">' + U.esc(gate.name) + ' · ' + gate.level + ' 级突破</b>' +
+      '<summary class="bt-gate-head"><span class="bt-gate-ic">' + (gate.level === 45 ? 50 : gate.level) + '</span>' +
+        '<span class="bt-main"><b class="nm">' + (gate.level === 45 ? '50 级突破 · 晋秩·宗师（45 级接取）' : U.esc(gate.name) + ' · ' + gate.level + ' 级突破') + '</b>' +
           '<em class="ds">' + gate.items.length + ' 种材料 · 合计 ' + U.fmt(gate.cost, 0) + ' 金' + (gate.missing ? ' · 部分缺价' : '') + '</em></span>' +
         '<span class="chev">' + icon('chevronDown') + '</span></summary>' +
       '<div class="bt-detail"><div class="bt-cols"><div class="bt-col bt-col-wide">' +
@@ -1502,7 +1509,7 @@
     '</div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">两阶段收益</h2><p class="card-sub">1→30 级（含晋秩·学徒）/ 30→50 级（含巧匠·名师·宗师）</p></div></div>' +
+      '<h2 class="card-title">两阶段收益</h2><p class="card-sub">1→30 级（含晋秩·学徒）/ 30→50 级（含巧匠·名师·宗师→50）</p></div></div>' +
       '<div class="table-wrap"><table class="data compact"><thead><tr><th>阶段</th><th class="num">经验</th><th class="num">精力</th><th class="num">产出</th><th class="num">升级收益</th><th class="num">突破材料</th><th class="num">合计收益</th></tr></thead><tbody>' +
       r.phases.map(function (ph) {
         return '<tr><td><b>' + (ph.from === 1 ? '1–30 级' : '30–50 级') + '</b></td>' +
@@ -1513,19 +1520,20 @@
           '<td class="num">' + U.fmt(ph.gateCost, 0) + '</td>' +
           '<td class="num"><b class="' + (ph.total > 0 ? 'pos' : ph.total < 0 ? 'neg' : '') + '">' + U.fmtSigned(ph.total, 0) + '</b></td></tr>';
       }).join('') + '</tbody></table></div>' +
-      '<div class="card-foot"><span>第一阶段只需过「晋秩·学徒」一次突破；第二阶段要过 35/40/45 三道晋秩，突破材料费明显更高。</span></div></section></div>';
+      '<div class="card-foot"><span>第一阶段只需过「晋秩·学徒」一次突破；第二阶段要过 35/40/45 三道晋秩，其中 45 级「晋秩·宗师」就是 50 级突破，完成后满级。</span></div></section></div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">' + U.esc(r.meta.name) + ' · 最优升级路线</h2><p class="card-sub">' + BT_STRAT_LABEL[strategy] + ' · 点击任一段展开材料与产出明细</p></div>' +
       '<div class="card-tools"><span class="badge badge-outline">' + r.routes.length + ' 段</span></div></div>' +
       '<div class="card-body tight">' +
       (r.routes.length ? r.routes.map(function (row) {
+        if (row.kind === 'max') return btMaxRow(row);
         return row.kind === 'gate' ? btGateRow(row) : btLevelRow(row, isGather);
       }).join('') : emptyState('暂无可用路线', '补齐材料价格后再试。', '', 'search')) +
       '</div><div class="card-foot"><span>收益 = 产出税后价值 − 材料成本（税 ' + U.fmtPct(taxRate, 0) + '）；正数为赚、负数为亏。合计收益 = 升级收益 − 突破材料。</span></div></section></div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">晋秩突破任务</h2><p class="card-sub">30 / 35 / 40 / 45 级 · 材料需自制或交易行购买，任务奖励材料不可提交</p></div></div>' +
+      '<h2 class="card-title">晋秩突破任务</h2><p class="card-sub">30 / 35 / 40 / 45 级 · 最后一道「晋秩·宗师」就是 50 级突破，完成后满级 50</p></div></div>' +
       '<div class="card-body tight">' +
       ((r.gates || []).length ? r.gates.map(function (g) { return btGateRow(g); }).join('') : emptyState('该技艺无突破数据', '请检查数据版本。', '', 'info')) +
       '</div><div class="card-foot"><span>晋秩·学徒 30 级 / 晋秩·巧匠 35 级 / 晋秩·名师 40 级 / 晋秩·宗师 45 级；完成后才能继续升级至 50。</span></div></section></div>';

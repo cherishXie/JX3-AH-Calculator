@@ -108,7 +108,7 @@ export default function Breakthrough() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>两阶段收益</Text>
-            <Text className='card-sub'>1→30 级（含晋秩·学徒） / 30→50 级（含巧匠·名师·宗师）</Text>
+            <Text className='card-sub'>1→30 级（含晋秩·学徒）/ 30→50 级（含巧匠·名师·宗师→50）</Text>
           </View>
         </View>
         <View className='card-body'>
@@ -128,7 +128,7 @@ export default function Breakthrough() {
               </View>
             );
           })}
-          <Text className='tiny dim mt'>第一阶段只做「晋秩·学徒」一次突破；第二阶段要过 35/40/45 三道晋秩，材料费明显更高。</Text>
+          <Text className='tiny dim mt'>第一阶段只做「晋秩·学徒」一次突破；第二阶段要过 35/40/45 三道晋秩，其中 45 级「晋秩·宗师」就是 50 级突破，完成后满级。</Text>
         </View>
         <View className='card-foot'>阶段按等级切分：1–30 级的配方与 30 级突破计入第一阶段，30 级之后的配方与 35/40/45 突破计入第二阶段。</View>
       </View>
@@ -145,6 +145,19 @@ export default function Breakthrough() {
           {result.routes.length ? result.routes.map(function (row, i) {
             if (row.kind === 'gate') {
               return <GateBlock key={'g' + row.level} k={'g' + row.level} gate={row} open={open} toggle={toggle} />;
+            }
+            if (row.kind === 'max') {
+              return (
+                <View className='bt-row bt-max' key='max'>
+                  <View className='bt-row-head'>
+                    <View className='bt-band'><Text>50 级</Text></View>
+                    <View className='bt-main'>
+                      <Text className='nm'>满级 · 晋秩·宗师（50 级突破）已完成</Text>
+                      <Text className='ds'>1→50 路线结束；后续只有 50 级配方与专精内容</Text>
+                    </View>
+                  </View>
+                </View>
+              );
             }
             const key = 'r' + i;
             const expanded = open === key;
@@ -184,7 +197,7 @@ export default function Breakthrough() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>晋秩突破任务</Text>
-            <Text className='card-sub'>30/35/40/45 级 · 材料需自制或交易行购买，任务奖励材料不可提交</Text>
+            <Text className='card-sub'>30/35/40/45 级 · 最后一道「晋秩·宗师」就是 50 级突破，完成后满级 50</Text>
           </View>
         </View>
         <View className='card-body'>
@@ -305,9 +318,9 @@ function GateBlock(props) {
   return (
     <View className={'bt-gate' + (props.full ? ' full' : '')}>
       <View className='bt-gate-head' onClick={function () { props.toggle(key); }}>
-        <View className='bt-gate-ic'><Text>{gate.level}</Text></View>
+        <View className='bt-gate-ic'><Text>{gate.level === 45 ? 50 : gate.level}</Text></View>
         <View className='bt-main'>
-          <Text className='nm'>{gate.name} · {gate.level} 级突破</Text>
+          <Text className='nm'>{gate.level === 45 ? '50 级突破 · 晋秩·宗师（45 级接取）' : gate.name + ' · ' + gate.level + ' 级突破'}</Text>
           <Text className='ds'>{gate.items.length} 种材料 · 合计 {fmt(total, 0)} 金 {gate.missing ? '· 部分缺价' : ''}</Text>
         </View>
         <Text className='chev'>{expanded ? '⌃' : '⌄'}</Text>

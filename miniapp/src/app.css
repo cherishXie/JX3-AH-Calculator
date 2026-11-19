@@ -406,3 +406,8 @@ button::after { border: none; }
 .bt-phase-head .c2, .bt-phase-row .c2 { flex: 1; text-align: right; }
 .bt-phase-head .c3, .bt-phase-row .c3 { flex: 1.15; text-align: right; }
 .bt-phase-row .nm { font-size: 22rpx; font-weight: 600; }
+
+/* 突破升级 · 满级行 */
+.bt-row.bt-max { padding: 12rpx 0; }
+.bt-row.bt-max .nm { color: #45d483; }
+.bt-row.bt-max .ds { color: #94a3b8; }

@@ -235,7 +235,9 @@
       if (!all.some(function (x) { return x.kind === 'gate' && x.level === g.level; })) all.push(Object.assign({ kind: 'gate' }, g));
     });
 
-    const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, profit: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
+    all.push({ kind: 'max', level: CAP, name: CAP + ' 级 · 满级' });
+
+  const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, profit: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
     levels.forEach(function (r) { totals.exp += r.need; if (!r.recipe) totals.missingLevels++; });
     routes.forEach(function (r) {
       totals.energy += r.totalEnergy; totals.matCost += r.matCost; totals.outValue += r.outValue;
@@ -325,7 +327,9 @@
       if (!all.some(function (x) { return x.kind === 'gate' && x.level === g.level; })) all.push(Object.assign({ kind: 'gate' }, g));
     });
 
-    const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, profit: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
+    all.push({ kind: 'max', level: CAP, name: CAP + ' 级 · 满级' });
+
+  const totals = { exp: 0, energy: 0, matCost: 0, outValue: 0, profit: 0, crafts: 0, gateCost: 0, gateMarket: 0, missingLevels: 0 };
     levels.forEach(function (r) { totals.exp += r.need; if (!r.node) totals.missingLevels++; });
     routes.forEach(function (r) {
       totals.energy += r.totalEnergy; totals.outValue += r.outValue; totals.profit += r.profit; totals.crafts += r.count;
