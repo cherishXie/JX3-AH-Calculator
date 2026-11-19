@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "a6c6bdd8d1d941793e3436f3630602c0a6db8b34",
+  "sourceCommit": "dab1af99d44eef1c2a671703f0952838872e4aae",
   "date": "2026-11-19",
-  "title": "auto-refresh on open and no-macro auto workbook",
+  "title": "make price refresh button visible and add form control props",
   "notes": [
-    "auto-refresh on open and no-macro auto workbook"
+    "make price refresh button visible and add form control props"
   ],
   "history": [
+    {
+      "version": "dab1af9",
+      "date": "2026-11-19",
+      "title": "make price refresh button visible and add form control props"
+    },
     {
       "version": "a6c6bdd",
       "date": "2026-11-19",
@@ -30,11 +35,6 @@
       "version": "22e02e6",
       "date": "2026-11-19",
       "title": "show signed breakthrough profit and align design styles"
-    },
-    {
-      "version": "9500739",
-      "date": "2026-11-19",
-      "title": "calibrate skill experience and separate energy and gold routes"
     }
   ]
 }
