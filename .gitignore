@@ -29,3 +29,6 @@ jianghu-ledger-delivery.zip
 project.private.config.json
 # 仓库根目录不是小程序源码目录；微信工程入口固定为 miniapp/
 /project.config.json
+
+# local Excel build intermediates
+/build/

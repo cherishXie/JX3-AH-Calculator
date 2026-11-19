@@ -47,6 +47,17 @@ rm -rf _site
 mkdir -p _site/icons _site/downloads
 cp index.html _site/index.html
 cp -R assets _site/assets
+# Excel 物价订阅：prices.json / prices.csv / prices.html
+node scripts/build-excel-prices.mjs _site
+if [ -f "excel/物价刷新.iqy" ]; then
+  cp "excel/物价刷新.iqy" "_site/downloads/物价刷新.iqy"
+  cp "excel/物价刷新.iqy" "_site/downloads/jx3-price-refresh.iqy"
+fi
+if [ -f "excel/物价查询.pq" ]; then cp "excel/物价查询.pq" "_site/downloads/物价查询.pq"; fi
+if [ -f "excel/剑网3技艺收益与突破.xlsx" ]; then
+  cp "excel/剑网3技艺收益与突破.xlsx" "_site/downloads/剑网3技艺收益与突破.xlsx"
+  cp "excel/剑网3技艺收益与突破.xlsx" "_site/downloads/jx3-excel.xlsx"
+fi
 if [ -f CHANGELOG.md ]; then cp CHANGELOG.md _site/CHANGELOG.md; fi
 cp site/sw.js _site/sw.js
 cp site/manifest.webmanifest _site/manifest.webmanifest
@@ -105,6 +116,9 @@ required = [
     'assets/app.js', 'assets/core.js', 'assets/stones.js', 'assets/data.js', 'assets/charts.js',
     'assets/styles.css', 'assets/pwa.css', 'assets/pwa.js', 'assets/install.css', 'assets/install.js',
     'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png',
+    'prices.json', 'prices.csv', 'prices.html',
+    'downloads/物价刷新.iqy', 'downloads/jx3-price-refresh.iqy',
+    'downloads/剑网3技艺收益与突破.xlsx', 'downloads/jx3-excel.xlsx',
 ]
 for rel in required:
     if not (root / rel).exists():
