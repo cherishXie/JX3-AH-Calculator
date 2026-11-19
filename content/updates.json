@@ -1,14 +1,16 @@
 {
-  "sourceCommit": "22e02e6b8edf150f0455cb1eed6d25c93773d07e",
+  "sourceCommit": "0ea8b9ad29cd9a1fd9ce2182bdd795330b0caca9",
   "date": "2026-11-19",
-  "title": "技艺升级：统一收益正负号与盈亏颜色",
+  "title": "add Excel craft-profit workbook and Pages price feed",
   "notes": [
-    "升级、突破合计、三档路线和技艺横评统一展示收益，不再以净花费作为页面金额口径",
-    "赚钱显示绿色 +，亏损显示红色 −；收益=税后产出价值−材料成本−突破材料费用",
-    "路线计算规则不变；缺价与空档仍明确提示，不按 0 计算",
-    "依据 docs/design 统一卡片间距、数字与单位层级、键盘焦点和移动端单列样式；中性色选中态与盈亏色分离"
+    "add Excel craft-profit workbook and Pages price feed"
   ],
   "history": [
+    {
+      "version": "0ea8b9a",
+      "date": "2026-11-19",
+      "title": "add Excel craft-profit workbook and Pages price feed"
+    },
     {
       "version": "22e02e6",
       "date": "2026-11-19",
@@ -33,11 +35,6 @@
       "version": "084cdf9",
       "date": "2026-11-19",
       "title": "update price schedule times and recovery audit"
-    },
-    {
-      "version": "0b1cc50",
-      "date": "2026-11-19",
-      "title": "re-register price schedule under repository owner"
     }
   ]
 }
