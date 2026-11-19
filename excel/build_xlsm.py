@@ -177,11 +177,19 @@ def inject_button(src: Path, sheet_name: str = "总览", macro: str = "CheckPric
         vml_index += 1
         vml_name = f"vmlDrawing{vml_index}.vml"
 
+    ctrl_rid = "rIdCtrlProp"
+    while ctrl_rid in used or ctrl_rid == vml_rid:
+        ctrl_rid += "X"
     rels = rels.replace(
         "</Relationships>",
-        f'<Relationship Id="{vml_rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing" Target="../drawings/{vml_name}"/></Relationships>',
+        f'<Relationship Id="{vml_rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing" Target="../drawings/{vml_name}"/>'
+        f'<Relationship Id="{ctrl_rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/ctrlProp" Target="../ctrlProps/ctrlProp1.xml"/></Relationships>',
     )
     items[rel_path] = rels.encode("utf-8")
+    items["xl/ctrlProps/ctrlProp1.xml"] = b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><formControlPr xmlns="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" objectType="Button" lockText="1" fmlaLink="" fmlaRange=""/>'
+    ctrl_ct = '<Override PartName="/xl/ctrlProps/ctrlProp1.xml" ContentType="application/vnd.ms-excel.controlproperties+xml"/>'
+    if "ctrlProps/ctrlProp1.xml" not in items["[Content_Types].xml"].decode("utf-8"):
+        items["[Content_Types].xml"] = items["[Content_Types].xml"].decode("utf-8").replace("</Types>", ctrl_ct + "</Types>").encode("utf-8")
     if "<legacyDrawing" not in sheet:
         sheet = sheet.replace("</worksheet>", f'<legacyDrawing r:id="{vml_rid}"/></worksheet>')
     items[sheet_path] = sheet.encode("utf-8")
@@ -204,6 +212,7 @@ def verify(path: Path) -> None:
         assert "xl/vbaProject.bin" in names, "vbaProject missing"
         assert any("queryTable" in n for n in names), "queryTable missing"
         assert any(n.endswith(".vml") for n in names), "VML button missing"
+        assert any("ctrlProp" in n for n in names), "ctrlProp missing"
     wb = openpyxl.load_workbook(path, data_only=False, keep_vba=True)
     assert "总览" in wb.sheetnames and "五行石" in wb.sheetnames
     assert len(wb["总览"]._charts) == 2, "overview charts lost"
