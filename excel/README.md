@@ -1,9 +1,9 @@
 # 剑网3 生活技艺 Excel 工作台
 
-把网页版的「技艺收益」与「技艺突破路线」重做成一个可离线计算、可远程刷新物价的 Excel 工作簿。
+把网页版的「总览」「技艺收益」「五行石」「技艺突破路线」重做成一个可离线计算、可远程刷新物价的 Excel 工作簿。
 
-- 工作簿：`剑网3技艺收益与突破.xlsx`
-- 在线下载：<https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsx>
+- 无宏版：`剑网3技艺收益与突破.xlsx` · <https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsx>
+- 宏版（带「检查物价更新」按钮）：`剑网3技艺收益与突破.xlsm` · <https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsm>
 - 物价 JSON：<https://cherishxie.github.io/JX3-AH-Calculator/prices.json>
 - 物价 CSV：<https://cherishxie.github.io/JX3-AH-Calculator/prices.csv>
 - Web 查询文件：<https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-price-refresh.iqy>
@@ -13,8 +13,10 @@
 | Sheet | 说明 |
 | --- | --- |
 | 说明 | 快速开始、刷新方式、口径与边界、数据来源 |
+| 总览 | KPI、TOP 10、按技艺汇总、八技艺突破净收益、采集 vs 制造、双图 |
 | 设置 | 服务器、税率、成本口径、产量口径、突破策略、精力预算、经验模型 |
 | 技艺收益 | KPI、TOP 20、按技艺汇总、采集 vs 制造、满精力贪心分配、柱状图 |
+| 五行石 | 1-8 行情、快速合成、配方对比、3-6 推荐、7/8 爆率盈亏线 |
 | 突破路线 | 所选技艺 1→50 逐级路线、30/35/40/45 晋秩材料、八技艺横评与净收益图 |
 | 物价 | 1367 物品 × 17 服务器 × 行情/突破双价（39 列）；远程刷新的落点 |
 | 物品 / 配方收益 | 267 个目录物品、175 条配方；成本、税后产值、利润、精力收益 |
@@ -51,7 +53,15 @@ GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖，�
 - `prices.csv`：UTF-8 BOM，WPS/其他表格可直接打开
 - `prices.html`：单张 HTML 表，供 Excel 传统 Web 查询
 
-### 3.1 Excel 365（推荐，JSON）
+### 3.1 宏版一键检查（`.xlsm`）
+
+1. 打开 `jx3-excel.xlsm`，启用宏并允许数据连接；
+2. 点「总览」右上角 **检查物价更新**；
+3. 宏会通过 Power Query 拉取 `prices.json`，写回「物价」并提示数据时间。
+
+「物价远程」是隐藏的查询落点；「物价」仍是所有公式读取的价格表。Mac 版 Excel 的 Power Query Web 连接器可能不可用，此时退回下面的 Web 查询 / CSV。
+
+### 3.2 Excel 365 手动建查询（无宏 `.xlsx`）
 
 1. 数据 → 获取数据 → 其他源 → 空白查询；
 2. 开始 → 高级编辑器，粘贴 `物价查询.pq` 的内容并完成；
@@ -60,7 +70,7 @@ GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖，�
 
 之后每次打开工作簿会自动拉取最新 JSON；也可以随时手动「全部刷新」。
 
-### 3.2 Excel for Mac / 旧版（HTML Web 查询）
+### 3.3 Excel for Mac / 旧版（HTML Web 查询）
 
 Excel for Mac 的 Power Query 不支持 HTML 连接器，但传统 Web 查询仍可用：
 
@@ -69,11 +79,11 @@ Excel for Mac 的 Power Query 不支持 HTML 连接器，但传统 Web 查询仍
 3. 输出到「物价」A1；
 4. 之后使用「全部刷新」或连接属性中的「打开文件时刷新」。
 
-### 3.3 WPS / 手动
+### 3.4 WPS / 手动
 
 下载 `prices.csv`，全选复制，粘贴到「物价」A1（保留表头）。
 
-### 3.4 关于「定时」
+### 3.5 关于「定时」
 
 Excel 桌面端没有原生的定时 HTTP 刷新。这里的定时由 GitHub Action 完成：数据源每两小时更新一次；Excel 端在打开文件或手动刷新时取最新快照。若需要桌面端无人值守刷新，可在 Windows 任务计划程序 / macOS launchd 中定时打开工作簿并执行「全部刷新」后保存，但这属于外部调度，不在工作簿内。
 
@@ -86,7 +96,14 @@ python3 excel/prepare_data.py
 # 2. 生成工作簿
 python3 excel/build_workbook.py
 
-# 3. 生成 Pages 物价订阅
+# 3. 用 LibreOffice 重算并写回缓存
+#    （用 office-recalculate / soffice 均可）
+
+# 4. 生成宏版：Power Query + VBA 按钮 + VML 控件
+pip install pyOpenVBA
+python3 excel/build_xlsm.py
+
+# 5. 生成 Pages 物价订阅
 node scripts/build-excel-prices.mjs _site
 ```
 
@@ -98,13 +115,14 @@ node scripts/build-excel-prices.mjs _site
 - 金最优/省心的筛选口径与网页版一致；次数、精力、利润按本工作簿的用户经验表重算。
 - 满精力分配给与网页版 `Calc.simulate` 一致的贪心结果。
 
-生成脚本：`excel/prepare_data.py`、`excel/build_workbook.py`；物价订阅：`scripts/build-excel-prices.mjs`。
+生成脚本：`excel/prepare_data.py`、`excel/build_workbook.py`、`excel/build_xlsm.py`；物价订阅：`scripts/build-excel-prices.mjs`。
 
 ## 6. 已知边界
 
-- 不包含五行石、总览等其它模块；本工作簿聚焦「技艺收益 + 突破路线 + 物价」。
 - 「精力最优」不在 Excel 端提供；需要逐级 ceil，请在网页版查看。
+- 五行石「配方对比」按材料直接购买价计算；逐层自制的最优金币/精力/收益三套方案（含 3-6 级递归计划）请在网页版「五行石」页查看。
+- 宏版需要启用宏并允许外部数据连接；不信任宏时请用无宏 `.xlsx` + Web 查询/CSV。
 - 突破路线按市场价；「取最低」仅用于技艺收益。
 - 逐级经验门槛为本工作簿「经验门槛」表的用户观测+插值/外推；可直接改 B 列重算。采集经验与部分掉率仍为估算/示例。
 - 百脉根、紫花苜蓿、甜象草、皇竹草在 JX3BOX 暂无物品键，只用目录基准价。
-- 工作簿不含宏；打开时不会执行任何脚本。
+- 无宏 `.xlsx` 不含任何脚本；宏版 `.xlsm` 仅包含一个 `CheckPriceUpdate` 宏和「物价远程」查询。

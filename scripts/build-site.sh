@@ -58,6 +58,10 @@ if [ -f "excel/剑网3技艺收益与突破.xlsx" ]; then
   cp "excel/剑网3技艺收益与突破.xlsx" "_site/downloads/剑网3技艺收益与突破.xlsx"
   cp "excel/剑网3技艺收益与突破.xlsx" "_site/downloads/jx3-excel.xlsx"
 fi
+if [ -f "excel/剑网3技艺收益与突破.xlsm" ]; then
+  cp "excel/剑网3技艺收益与突破.xlsm" "_site/downloads/剑网3技艺收益与突破.xlsm"
+  cp "excel/剑网3技艺收益与突破.xlsm" "_site/downloads/jx3-excel.xlsm"
+fi
 if [ -f CHANGELOG.md ]; then cp CHANGELOG.md _site/CHANGELOG.md; fi
 cp site/sw.js _site/sw.js
 cp site/manifest.webmanifest _site/manifest.webmanifest
@@ -119,6 +123,7 @@ required = [
     'prices.json', 'prices.csv', 'prices.html',
     'downloads/物价刷新.iqy', 'downloads/jx3-price-refresh.iqy',
     'downloads/剑网3技艺收益与突破.xlsx', 'downloads/jx3-excel.xlsx',
+    'downloads/剑网3技艺收益与突破.xlsm', 'downloads/jx3-excel.xlsm',
 ]
 for rel in required:
     if not (root / rel).exists():

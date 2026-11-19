@@ -417,6 +417,8 @@ def main() -> None:
         "gates": gates,
         "stoneRecipes": data.get("stoneRecipes") or [],
         "stones": data.get("stones") or [],
+        "stonePrices": data.get("stonePrices") or {},
+        "stoneMeta": data.get("stoneMeta") or {},
         "stats": {
             "catalogItems": len(items),
             "masterItems": len(master_rows),

@@ -84,6 +84,10 @@ bt_recipes = sorted(
 gates = sorted(MODEL["gates"], key=lambda g: (skill_order.get(g["skillId"], 99), g["level"]))
 
 META = MODEL["meta"]
+STONES = sorted(MODEL.get("stones") or [], key=lambda x: x["level"])
+STONE_RECIPES = MODEL.get("stoneRecipes") or []
+STONE_PRICES = MODEL.get("stonePrices") or {}
+STONE_BY_LEVEL = {s["level"]: s for s in STONES}
 EXP_TABLE = META["expTable"]
 EXP_TOTAL = int(META["expTotal"])
 EXP_OBS = META["expObservations"]
@@ -298,7 +302,7 @@ ws.sheet_view.showGridLines = False
 title_band(
     ws,
     "剑网3 · 生活技艺 Excel 工作台",
-    "苍生铸世 50 级 · 技艺收益排行 / 满精力分配 / 八技艺突破路线 · 物价与配方同源，经验表按用户观测点重算",
+    "苍生铸世 50 级 · 总览 / 技艺收益 / 五行石 / 八技艺突破路线 · 物价与配方同源，经验表按用户观测点重算",
     3,
 )
 ws.row_dimensions[5].height = 8
@@ -326,7 +330,7 @@ for num, head, body in steps:
 section(ws, 15, "刷新物价（GitHub Action 定时更新 Pages 上的 prices.json）", 3)
 refresh_lines = [
     ("数据链路", "GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖 → 写入 assets/data.js → Pages 构建时生成 prices.json / prices.csv / prices.html。"),
-    ("推荐：Excel 365", "数据 → 获取数据 → 自网站，粘贴 prices.json 地址；Power Query 会自动把 JSON 记录转成表。把查询加载到「物价」A1，之后「数据 → 全部刷新」，或在连接属性中勾选「打开文件时刷新」。"),
+    ("推荐：宏版 / Excel 365", "下载 .xlsm 宏版，点「总览」右上角『检查物价更新』：Power Query 拉取 prices.json 并写回「物价」。也可用 数据 → 获取数据 → 自网站 手动建查询，加载到「物价」A1；之后全部刷新 / 打开时刷新。"),
     ("Mac / 传统 Web 查询", "下载「物价刷新.iqy」；Excel 菜单「数据 → 获取外部数据 → 运行 Web 查询」，选择该文件，输出到「物价」A1。之后同样可全部刷新 / 打开时刷新。"),
     ("WPS / 其他", "下载 prices.csv（UTF-8 BOM），全选复制，粘贴到「物价」A1，保留表头即可。"),
     ("离线", "工作簿已内置生成时的物价快照；不刷新也能完整计算，只是价格停在快照时间。"),
@@ -345,8 +349,10 @@ for label, text in refresh_lines:
 section(ws, 22, "Sheet 地图", 3)
 header_row(ws, 23, ["", "Sheet", "用途"])
 sheets_map = [
+    ("总览", "KPI、TOP 10、按技艺汇总、八技艺突破净收益、采集 vs 制造。"),
     ("设置", "服务器、税率、成本/产量口径、突破策略、精力预算、经验模型。"),
     ("技艺收益", "KPI、TOP 20、按技艺汇总、采集 vs 制造、满精力分配。"),
+    ("五行石", "1-8 行情、快速合成、配方对比、3-6 推荐、7/8 爆率盈亏线。"),
     ("突破路线", "所选技艺 1→50 路线、晋秩材料、八技艺横评与净收益图。"),
     ("物价", "1367 个物品 × 17 个服务器 × 行情/突破双价（39 列）的价格快照；Web 查询的落点。"),
     ("物品 / 配方收益", "267 个目录物品与 175 条配方；成本、税后产值、利润、精力收益。"),
@@ -362,7 +368,7 @@ for name, use in sheets_map:
     ws.row_dimensions[r].height = 30 if len(use) > 35 else 20
     r += 1
 
-section(ws, 34, "口径与边界", 3)
+section(ws, 36, "口径与边界", 3)
 notes = [
     "成本 = Σ 材料数量 × 材料采用成本 + 手续费；税后产值 = Σ 产物数量 × 概率 × 市场价 × (1 − 税率)；利润 = 税后产值 − 成本；精力收益 = 利润 ÷ 单次精力。",
     "「取最低」逐层比较市场价与自制成本；本工作簿的 175 条配方依赖图无环，已按 DAG 展开为公式，改价后会自动重算。突破路线按市场价计算，与网页版默认口径一致。",
@@ -370,7 +376,7 @@ notes = [
     "缺价不会按 0 计算：产物或晋秩材料缺价时标记「缺价」，该等级/任务不计入完整合计。价格优先取本服 JX3BOX 行情，其次基准价。",
     "金最优 = 利润/经验最高；省心 = 制作次数最少；精力最优需逐级 ceil，Excel 端不提供，请在网页版查看。",
 ]
-r = 35
+r = 37
 for text in notes:
     ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
     cell = ws.cell(r, 2, "· " + text)
@@ -379,7 +385,7 @@ for text in notes:
     ws.row_dimensions[r].height = 56 if len(text) > 60 else 32
     r += 1
 
-section(ws, 42, "数据来源与链接", 3)
+section(ws, 44, "数据来源与链接", 3)
 links = [
     ("在线版", "https://cherishxie.github.io/JX3-AH-Calculator/", "https://cherishxie.github.io/JX3-AH-Calculator/"),
     ("物价 JSON（Excel 直读）", "https://cherishxie.github.io/JX3-AH-Calculator/prices.json", "https://cherishxie.github.io/JX3-AH-Calculator/prices.json"),
@@ -388,7 +394,7 @@ links = [
     ("GitHub 仓库", "https://github.com/cherishXie/JX3-AH-Calculator", "https://github.com/cherishXie/JX3-AH-Calculator"),
     ("JX3BOX 技艺助手", "https://www.jx3box.com/pvg/manufacture", "https://www.jx3box.com/pvg/manufacture"),
 ]
-r = 43
+r = 45
 for label, text, url in links:
     set_cell(ws, r, 2, label, font=BOLD_FONT)
     cell = ws.cell(r, 3, text)
@@ -399,7 +405,7 @@ for label, text, url in links:
 
 note(
     ws,
-    50,
+    52,
     "数据版本 "
     + str(META.get("version"))
     + " · 快照 "
@@ -409,6 +415,259 @@ note(
     fill=WARN_FILL,
     height=40,
 )
+note(ws, 54, "宏版 .xlsm：点「总览」右上角『检查物价更新』，通过 Power Query 请求 GitHub Pages 的 prices.json 并写回「物价」；需启用宏并允许数据连接。无宏 .xlsx 版仍可用「全部刷新 / Web 查询 / CSV 粘贴」。", 3, fill=NOTE_FILL, height=44)
+
+# ---------------------------------------------------------------------------
+# 总览
+# ---------------------------------------------------------------------------
+ws = wb.create_sheet("总览")
+ws.sheet_properties.tabColor = NAVY
+ws.sheet_view.showGridLines = False
+widths(ws, {"A": 7, "B": 26, "C": 9, "D": 8, "E": 13, "F": 13, "G": 10, "H": 12, "I": 6, "J": 6, "K": 3, "L": 9, "M": 7, "N": 13, "O": 13, "P": 28, "Q": 11, "R": 12, "S": 7})
+title_band(ws, "总览", "今天做什么最赚精力 · 本服行情 · 八技艺与突破净收益一屏看完", 10)
+
+kpi_card(ws, 4, 1, "最佳精力收益（金/点）", "=IFERROR(MAXIFS('配方收益'!$M:$M,'配方收益'!$P:$P,\"有效\"),\"\")", NUM_2, 2)
+kpi_card(ws, 4, 3, "最佳制品", "=IFERROR(INDEX('配方收益'!$D:$D,MATCH(MAXIFS('配方收益'!$Q:$Q,'配方收益'!$P:$P,\"有效\"),'配方收益'!$Q:$Q,0)),\"—\")", None, 4)
+kpi_card(ws, 4, 7, "有效 / 盈利配方", "=COUNTIF('配方收益'!$P:$P,\"有效\")&\" / \"&COUNTIFS('配方收益'!$P:$P,\"有效\",'配方收益'!$L:$L,\">0\")", None, 4)
+kpi_card(ws, 7, 1, "服务器", "=SrvName", None, 2)
+kpi_card(ws, 7, 3, "数据快照", "=IFERROR(LEFT(SUBSTITUTE('物价'!$AM$2,\"T\",\" \"),16),\"—\")", None, 3)
+kpi_card(ws, 7, 6, "物价物品数", "=COUNTA('物价'!$A$2:$A$1368)", "0", 2)
+kpi_card(ws, 7, 8, "突破净收益冠军", "=IFERROR(INDEX('突破路线'!$A$74:$A$81,MATCH(MAX('突破路线'!$F$74:$F$81),'突破路线'!$F$74:$F$81,0))&\" · \"&TEXT(MAX('突破路线'!$F$74:$F$81),\"#,##0\"),\"—\")", None, 3)
+
+section(ws, 10, "TOP 10 · 精力收益", 8, fill=HEADER_FILL)
+header_row(ws, 11, ["#", "配方", "技艺", "精力", "利润", "精力收益", "分配次数", "分配精力"], height=26)
+for k in range(1, 11):
+    row = 11 + k
+    set_cell(ws, row, 1, k, fmt="0", font=Font(name=FONT_NUM, size=9, bold=True))
+    set_formula(ws, row, 2, f"=IFERROR(INDEX(分配!$C$2:$C$176,MATCH($A{row},分配!$A$2:$A$176,0)),\"—\")", font=BOLD_FONT)
+    set_formula(ws, row, 3, f"=IFERROR(INDEX(分配!$D$2:$D$176,MATCH($A{row},分配!$A$2:$A$176,0)),\"\")", font=SMALL_FONT)
+    set_formula(ws, row, 4, f"=IFERROR(INDEX(分配!$E$2:$E$176,MATCH($A{row},分配!$A$2:$A$176,0)),\"\")", fmt="0", font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, row, 5, f"=IFERROR(INDEX(分配!$F$2:$F$176,MATCH($A{row},分配!$A$2:$A$176,0)),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, row, 6, f"=IFERROR(INDEX(分配!$G$2:$G$176,MATCH($A{row},分配!$A$2:$A$176,0)),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9, bold=True))
+    set_formula(ws, row, 7, f"=IFERROR(INDEX(分配!$I$2:$I$176,MATCH($A{row},分配!$A$2:$A$176,0)),0)", fmt="0", font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, row, 8, f"=IFERROR(INDEX(分配!$J$2:$J$176,MATCH($A{row},分配!$A$2:$A$176,0)),0)", fmt="0", font=Font(name=FONT_NUM, size=9))
+band(ws, 12, 21, 8)
+ws.conditional_formatting.add("F12:F21", ColorScaleRule(start_type="min", start_color="FEE2E2", mid_type="percentile", mid_value=50, mid_color="FEF3C7", end_type="max", end_color="BBF7D0"))
+
+for c in range(12, 20):
+    ws.cell(10, c).fill = HEADER_FILL
+ws.merge_cells("L10:S10")
+ws["L10"] = "按技艺汇总"
+ws["L10"].font = SECTION_FONT
+ws["L10"].alignment = Alignment(horizontal="left", vertical="center", indent=1)
+for j, h in enumerate(["技艺", "有效", "最佳精力收益", "最佳制品", "平均", "总利润", "亏损"], 12):
+    cell = ws.cell(11, j, h)
+    cell.fill = HEADER_FILL
+    cell.font = HEADER_FONT
+    cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    cell.border = BORDER
+for i, skill in enumerate(skills, 12):
+    set_cell(ws, i, 12, skill["name"], font=BOLD_FONT)
+    set_formula(ws, i, 13, f"=COUNTIFS('配方收益'!$B:$B,$L{i},'配方收益'!$P:$P,\"有效\")", fmt="0", font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 14, f"=IFERROR(MAXIFS('配方收益'!$M:$M,'配方收益'!$B:$B,$L{i},'配方收益'!$P:$P,\"有效\"),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9, bold=True))
+    set_formula(ws, i, 15, f"=IFERROR(INDEX('配方收益'!$D:$D,MATCH(MAXIFS('配方收益'!$Q:$Q,'配方收益'!$B:$B,$L{i}),'配方收益'!$Q:$Q,0)),\"—\")", font=SMALL_FONT)
+    set_formula(ws, i, 16, f"=IFERROR(AVERAGEIFS('配方收益'!$M:$M,'配方收益'!$B:$B,$L{i},'配方收益'!$P:$P,\"有效\"),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 17, f"=SUMIFS('配方收益'!$L:$L,'配方收益'!$B:$B,$L{i})", fmt=NUM_0, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 18, f"=COUNTIFS('配方收益'!$B:$B,$L{i},'配方收益'!$L:$L,\"<0\")", fmt="0", font=Font(name=FONT_NUM, size=9))
+
+for c in range(12, 20):
+    ws.cell(21, c).fill = HEADER_FILL
+ws.merge_cells("L21:O21")
+ws["L21"] = "突破净收益"
+ws["L21"].font = SECTION_FONT
+ws["L21"].alignment = Alignment(horizontal="left", vertical="center", indent=1)
+for j, h in enumerate(["技艺", "净收益", "晋秩成本", "状态"], 12):
+    cell = ws.cell(22, j, h)
+    cell.fill = HEADER_FILL
+    cell.font = HEADER_FONT
+    cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    cell.border = BORDER
+for i, skill in enumerate(skills, 23):
+    set_cell(ws, i, 12, skill["name"], font=BOLD_FONT)
+    set_formula(ws, i, 13, f"=IFERROR(INDEX('突破路线'!$F$74:$F$81,MATCH($L{i},'突破路线'!$A$74:$A$81,0)),\"\")", fmt=NUM_0, font=Font(name=FONT_NUM, size=9, bold=True))
+    set_formula(ws, i, 14, f"=IFERROR(INDEX('突破路线'!$E$74:$E$81,MATCH($L{i},'突破路线'!$A$74:$A$81,0)),\"\")", fmt=NUM_0, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 15, f"=IFERROR(INDEX('突破路线'!$G$74:$G$81,MATCH($L{i},'突破路线'!$A$74:$A$81,0)),\"\")", font=SMALL_FONT, align=Alignment(horizontal="center"))
+
+section(ws, 23, "采集 vs 制造", 3, fill=HEADER_FILL)
+for j, h in enumerate(["类型", "平均精力收益", "总利润"], 1):
+    cell = ws.cell(24, j, h)
+    cell.fill = HEADER_FILL
+    cell.font = HEADER_FONT
+    cell.alignment = Alignment(horizontal="center", vertical="center")
+    cell.border = BORDER
+for i, kind in enumerate(["制造", "采集"], 25):
+    set_cell(ws, i, 1, kind, font=BOLD_FONT)
+    set_formula(ws, i, 2, f"=IFERROR(AVERAGEIFS('配方收益'!$M:$M,'配方收益'!$C:$C,$A{i},'配方收益'!$P:$P,\"有效\"),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 3, f"=SUMIFS('配方收益'!$L:$L,'配方收益'!$C:$C,$A{i})", fmt=NUM_0, font=Font(name=FONT_NUM, size=9))
+
+note(ws, 28, "总览只读取「配方收益」「分配」「突破路线」的结果；要改服务器/税率/策略，请到「设置」。点上方『检查物价更新』可直接从 GitHub Pages 拉取 prices.json（需启用宏）。", 10, height=40)
+
+chart = BarChart()
+chart.type = "bar"
+chart.style = 10
+chart.title = "TOP 10 精力收益（金/点）"
+chart.y_axis.title = "金/点"
+data = Reference(ws, min_col=6, min_row=11, max_row=21)
+cats = Reference(ws, min_col=2, min_row=12, max_row=21)
+chart.add_data(data, titles_from_data=True)
+chart.set_categories(cats)
+chart.height = 8
+chart.width = 16
+chart.legend = None
+ws.add_chart(chart, "A31")
+
+chart2 = BarChart()
+chart2.type = "bar"
+chart2.style = 10
+chart2.title = "八技艺突破净收益（金）"
+chart2.y_axis.title = "金"
+data2 = Reference(ws, min_col=13, min_row=22, max_row=30)
+cats2 = Reference(ws, min_col=12, min_row=23, max_row=30)
+chart2.add_data(data2, titles_from_data=True)
+chart2.set_categories(cats2)
+chart2.height = 8
+chart2.width = 16
+chart2.legend = None
+ws.add_chart(chart2, "L31")
+
+# ---------------------------------------------------------------------------
+# 五行石价格（隐藏，8 × 17 服）
+# ---------------------------------------------------------------------------
+ws = wb.create_sheet("五行石价格")
+ws.sheet_properties.tabColor = "94A3B8"
+widths(ws, {"A": 7, "B": 16})
+for i in range(len(server_names)):
+    ws.column_dimensions[get_column_letter(3 + i)].width = 11
+ws.column_dimensions[get_column_letter(3 + len(server_names))].width = 11
+header_row(ws, 1, ["等级", "名称"] + server_names + ["基准价"], height=30)
+for i, stone in enumerate(STONES, 2):
+    set_cell(ws, i, 1, stone["level"], fmt="0", font=Font(name=FONT_NUM, size=9))
+    set_cell(ws, i, 2, stone["name"], font=SMALL_FONT)
+    for j, sid in enumerate(server_ids):
+        price = (STONE_PRICES.get(sid) or {}).get(str(stone["level"]))
+        if not price:
+            price = stone.get("base")
+        set_cell(ws, i, 3 + j, price, fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_cell(ws, i, 3 + len(server_ids), stone.get("base"), fmt=NUM_2, font=Font(name=FONT_NUM, size=9, color=MUTED))
+ws.sheet_state = "hidden"
+
+# ---------------------------------------------------------------------------
+# 五行石
+# ---------------------------------------------------------------------------
+ws = wb.create_sheet("五行石")
+ws.sheet_properties.tabColor = "0E7490"
+ws.sheet_view.showGridLines = False
+widths(ws, {"A": 32, "B": 38, "C": 28, "D": 13, "E": 10, "F": 10, "G": 13, "H": 13, "I": 11, "J": 11, "K": 11, "L": 8, "M": 20})
+title_band(ws, "五行石", "1-8 级行情 · 快速合成 · 配方对比 · 7/8 爆率盈亏线；所有公式按当前服务器与税率", 10)
+
+section(ws, 4, "1-8 级行情", 4)
+header_row(ws, 5, ["等级", "名称", "本服行情（金）", "税后净售价"], height=26)
+for i, stone in enumerate(STONES, 6):
+    set_cell(ws, i, 1, stone["level"], fmt="0", font=Font(name=FONT_NUM, size=10, bold=True))
+    set_cell(ws, i, 2, stone["name"], font=BODY_FONT)
+    set_formula(ws, i, 3, f"=INDEX('五行石价格'!$C$2:$S$9,MATCH($A{i},'五行石价格'!$A$2:$A$9,0),SrvCol)", fmt=NUM_2, font=Font(name=FONT_NUM, size=10, bold=True))
+    set_formula(ws, i, 4, f"=$C{i}*(1-TaxRate)", fmt=NUM_2, font=Font(name=FONT_NUM, size=10))
+band(ws, 6, 13, 4)
+note(ws, 14, "价格优先取本服 JX3BOX 五行石拍卖，其次基准价；7/8 级样本少，务必按本服交易行校准。", 4, height=28)
+
+section(ws, 16, "快速合成（直接消耗 1 级）", 10)
+header_row(ws, 17, ["目标", "方案", "输入", "材料成本", "加工费", "精力", "总成本", "税后产值", "利润", "精力收益"], height=30)
+fast = [r for r in STONE_RECIPES if r["id"] in ("fast_2", "fast_3", "fast_4", "fast_5", "fast_6")]
+fast_row = 18
+for r in fast:
+    qty = r["inputs"][0]["qty"] if r["inputs"] else 0
+    set_cell(ws, fast_row, 1, r["target"], fmt="0", font=Font(name=FONT_NUM, size=9, bold=True))
+    set_cell(ws, fast_row, 2, r["name"], font=SMALL_FONT)
+    set_cell(ws, fast_row, 3, f"1级 × {qty}", font=SMALL_FONT)
+    set_formula(ws, fast_row, 4, f"=$C$6*{qty}", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_cell(ws, fast_row, 5, r["fee"], fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_cell(ws, fast_row, 6, r["energy"], fmt="0", font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, fast_row, 7, f"=$D{fast_row}+$E{fast_row}", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, fast_row, 8, f"=INDEX($D$6:$D$13,$A{fast_row})", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, fast_row, 9, f"=$H{fast_row}-$G{fast_row}", fmt=NUM_2, font=Font(name=FONT_NUM, size=9, bold=True))
+    set_formula(ws, fast_row, 10, f"=IF($F{fast_row}>0,$I{fast_row}/$F{fast_row},\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    fast_row += 1
+band(ws, 18, fast_row - 1, 10)
+
+# 配方对比（按直接购买材料）
+section(ws, 24, "配方对比（材料按直接购买价）", 13)
+header_row(ws, 25, ["目标", "方案", "输入", "材料成本", "目标概率", "副产品净值", "单目标成本", "单目标精力", "税后产值", "单目标利润", "精力收益", "状态", "评分键"], height=34)
+opt = [r for r in STONE_RECIPES if r["target"] in (3, 4, 5, 6)]
+opt_row = 26
+for r in opt:
+    set_cell(ws, opt_row, 1, r["target"], fmt="0", font=Font(name=FONT_NUM, size=9, bold=True))
+    set_cell(ws, opt_row, 2, r["name"], font=SMALL_FONT)
+    parts = [f"{x['level']}级×{x['qty']}" for x in r["inputs"]]
+    set_cell(ws, opt_row, 3, " + ".join(parts), font=SMALL_FONT)
+    terms = [f"INDEX($C$6:$C$13,{x['level']})*{x['qty']}" for x in r["inputs"]]
+    set_formula(ws, opt_row, 4, "=" + "+".join(terms) + f"+{r['fee']}", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    target_chance = sum(o["chance"] for o in r["outcomes"] if o["level"] == r["target"])
+    set_cell(ws, opt_row, 5, target_chance, fmt="0.00%", font=Font(name=FONT_NUM, size=9))
+    by_terms = [f"{o['chance']}*INDEX($D$6:$D$13,{o['level']})" for o in r["outcomes"] if o["level"] != r["target"]]
+    set_formula(ws, opt_row, 6, "=" + ("+".join(by_terms) if by_terms else "0"), fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, opt_row, 7, f"=IF($E{opt_row}>0,($D{opt_row}-$F{opt_row})/$E{opt_row},\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, opt_row, 8, f"=IF($E{opt_row}>0,{r['energy']}/$E{opt_row},\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, opt_row, 9, f"=INDEX($D$6:$D$13,$A{opt_row})", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, opt_row, 10, f"=IF($G{opt_row}=\"\",\"\",$I{opt_row}-$G{opt_row})", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, opt_row, 11, f"=IF(AND($J{opt_row}<>\"\",$H{opt_row}>0),$J{opt_row}/$H{opt_row},\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9, bold=True))
+    set_formula(ws, opt_row, 12, f"=IF(AND($E{opt_row}>0,$G{opt_row}<>\"\"),\"有效\",\"—\")", font=SMALL_FONT, align=Alignment(horizontal="center"))
+    set_formula(ws, opt_row, 13, f"=$A{opt_row}&\"|\"&TEXT($K{opt_row},\"0.000000\")", font=SMALL_FONT)
+    opt_row += 1
+band(ws, 26, opt_row - 1, 13)
+
+# 3-6 推荐
+section(ws, 46, "3-6 级推荐（按精力收益）", 6)
+header_row(ws, 47, ["等级", "最佳方案", "单目标成本", "单目标精力", "单目标利润", "精力收益"], height=26)
+for i, level in enumerate([3, 4, 5, 6], 48):
+    set_cell(ws, i, 1, level, fmt="0", font=Font(name=FONT_NUM, size=10, bold=True))
+    match = f"MATCH($A{i}&\"|\"&TEXT(MAXIFS($K$26:$K${opt_row-1},$A$26:$A${opt_row-1},$A{i},$L$26:$L${opt_row-1},\"有效\"),\"0.000000\"),$M$26:$M${opt_row-1},0)"
+    set_formula(ws, i, 2, f"=IFERROR(INDEX($B$26:$B${opt_row-1},{match}),\"—\")", font=SMALL_FONT)
+    set_formula(ws, i, 3, f"=IFERROR(INDEX($G$26:$G${opt_row-1},{match}),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 4, f"=IFERROR(INDEX($H$26:$H${opt_row-1},{match}),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 5, f"=IFERROR(INDEX($J$26:$J${opt_row-1},{match}),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 6, f"=IFERROR(INDEX($K$26:$K${opt_row-1},{match}),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9, bold=True))
+
+# 7/8 盈亏线
+section(ws, 52, "7/8 级爆率盈亏线（按本服行情）", 8)
+header_row(ws, 53, ["方案", "成本", "目标净售价", "主产物净售价", "其他概率", "其他净值", "盈亏线", "当前爆率"], height=34)
+jack = [r for r in STONE_RECIPES if r["id"] in ("jack_7", "jack_8", "jack_8_alt", "jack_8_from4")]
+for i, r in enumerate(jack, 54):
+    set_cell(ws, i, 1, r["name"], font=SMALL_FONT)
+    terms = [f"INDEX($C$6:$C$13,{x['level']})*{x['qty']}" for x in r["inputs"]]
+    set_formula(ws, i, 2, "=" + "+".join(terms) + f"+{r['fee']}", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 3, f"=INDEX($D$6:$D$13,{r['target']})", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 4, f"=INDEX($D$6:$D$13,{r['primary']})", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    other = [o for o in r["outcomes"] if o["level"] not in (r["target"], r["primary"])]
+    other_chance = sum(o["chance"] for o in other)
+    other_terms = [f"{o['chance']}*INDEX($D$6:$D$13,{o['level']})" for o in other]
+    set_cell(ws, i, 5, other_chance, fmt="0.00%", font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 6, "=" + ("+".join(other_terms) if other_terms else "0"), fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
+    set_formula(ws, i, 7, f"=IF($C{i}>$D{i},($B{i}-(1-$E{i})*$D{i}-$F{i})/($C{i}-$D{i}),\"—\")", fmt="0.00%", font=Font(name=FONT_NUM, size=9, bold=True))
+    target_chance = sum(o["chance"] for o in r["outcomes"] if o["level"] == r["target"])
+    set_cell(ws, i, 8, target_chance, fmt="0.00%", font=Font(name=FONT_NUM, size=9))
+
+# KPI
+section(ws, 60, "五行石速览", 6)
+kpis = [
+    ("5 级最佳精力收益", "=IFERROR(MAXIFS($F$48:$F$51,$A$48:$A$51,5),\"\")", NUM_2),
+    ("6 级最佳精力收益", "=IFERROR(MAXIFS($F$48:$F$51,$A$48:$A$51,6),\"\")", NUM_2),
+    ("快速 5 级利润", "=INDEX($I$18:$I$22,MATCH(5,$A$18:$A$22,0))", NUM_2),
+    ("快速 6 级利润", "=INDEX($I$18:$I$22,MATCH(6,$A$18:$A$22,0))", NUM_2),
+]
+for i, (label, formula, fmt) in enumerate(kpis):
+    col = 1 + (i % 2) * 3
+    row = 61 + (i // 2) * 2
+    ws.merge_cells(start_row=row, start_column=col, end_row=row, end_column=col + 2)
+    c = ws.cell(row, col, label)
+    c.font = Font(name=FONT_CN, size=9, color=MUTED)
+    ws.merge_cells(start_row=row + 1, start_column=col, end_row=row + 1, end_column=col + 2)
+    set_formula(ws, row + 1, col, formula, fmt=fmt, font=Font(name=FONT_CN, size=14, bold=True, color=NAVY))
+    for rr in (row, row + 1):
+        for cc in range(col, col + 3):
+            ws.cell(rr, cc).fill = CARD_FILL
+            ws.cell(rr, cc).border = BORDER
+
+note(ws, 65, "配方对比按「材料直接购买价」计算，用于快速比较；逐层自制的最优金币/精力/收益三套方案（含 3-6 级递归计划）请在网页版「五行石」页查看。7/8 级爆率为示例，盈亏线才是本表结论。", 10, fill=NOTE_FILL, height=48)
 
 # ---------------------------------------------------------------------------
 # 设置
