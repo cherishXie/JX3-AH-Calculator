@@ -11,6 +11,8 @@
 
 Pages 发布的是仓库根目录的 Web 版（`index.html` + `assets/`）；小红书小工具仍是离线 zip，两者共用同一份业务代码和价格数据。
 
+> 微信小程序「精力做什么」单独发布：源码在 `miniapp/`，构建产物在 `miniapp/dist/weapp/`，AppID、备案、上传与提审流程见 [miniapp/WECHAT-DEPLOY.md](miniapp/WECHAT-DEPLOY.md)，头像见 [wechat/](wechat/README.md)。
+
 ## 一次配置（只做一次）
 
 ### 1. 开启 Pages
@@ -52,6 +54,7 @@ git push --force-with-lease -u origin main
 
 脚本会：
 
+0. **应用壳更新前先改 `content/updates.json`**：更新 `title` / `notes`，PWA 更新提示会显示这段文案；只更新价格数据时不会触发提示，也不会覆盖这段文案。
 1. `scripts/check-minitool.mjs` 审计小工具（无内联脚本、无外网请求、无 module、≤10 MiB）；
 2. `scripts/build-minitool.sh` 重打 `剑网三物价助手-minitool.zip`；
 3. `scripts/build-site.sh` 生成 `_site/`（含 `downloads/jx3-minitool.zip`）；
@@ -67,6 +70,10 @@ git push --force-with-lease -u origin main
 - 网页不能通过 JS 直接触发该菜单；应用只在 iOS Safari 下显示步骤提示。
 - 若菜单没有该项：退出私密浏览、检查“屏幕使用时间 → 内容和隐私访问限制”、确认 HTTPS、确认未重复添加。
 - `icons/icon-180.png` 为 iOS 主屏幕图标；`manifest.webmanifest` 和 `sw.js` 提供独立窗口与离线应用壳。
+
+## 行情更新提示
+
+价格机器人只更新数据文件，不改变应用壳版本；页面内行情刷新不会弹出“发现新版本”卡片。PWA 更新卡只在 `manifest`/HTML/CSS/JS 等应用壳变化时出现。
 
 ## PWA 自动更新
 

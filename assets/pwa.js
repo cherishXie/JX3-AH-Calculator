@@ -187,8 +187,8 @@
           return { status: 'available' };
         }
         if (waiting && !data) {
-          announce();
-          return { status: 'available' };
+          // 拉不到更新说明时宁可静默等待，不能把不确定的等待 SW 当成代码更新弹窗。
+          return { status: 'pending' };
         }
         if (appVersion && appVersion !== APP_VERSION) {
           return { status: 'pending' };
@@ -202,22 +202,13 @@
 
   function announce() {
     fetchUpdates().then(function (data) {
-      if (data && data.latest) {
-        var appVersion = data.appVersion || data.version || data.latest;
-        if (appVersion === APP_VERSION) return;
-        try {
-          if (sessionStorage.getItem('pwa-later:' + data.latest)) return;
-        } catch (e) { /* ignore */ }
-        render(data);
-        return;
-      }
-      // 拉不到更新说明时给一个兜底提示，仍然让用户能更新。
-      render({
-        latest: 'new',
-        date: '',
-        title: '发现新版本',
-        notes: ['修复已知问题，优化加载与交互']
-      });
+      if (!data) return;
+      var appVersion = data.appVersion || data.version;
+      if (!appVersion || appVersion === APP_VERSION) return;
+      try {
+        if (sessionStorage.getItem('pwa-later:' + (data.latest || appVersion))) return;
+      } catch (e) { /* ignore */ }
+      render(data);
     });
   }
 

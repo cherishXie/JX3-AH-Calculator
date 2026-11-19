@@ -190,11 +190,14 @@
 
   function mergePriceData(next) {
     if (!next || !next.meta || !next.meta.priceUpdatedAt || !next.serverPrices) return false;
-    if (DATA.meta.seedVersion && next.meta.seedVersion && next.meta.seedVersion !== DATA.meta.seedVersion) {
+    // 行情更新会改 seedVersion 以触发下次整页加载迁移，但目录结构没变；
+    // 页面内静默刷新只比较 catalogVersion，不能把价格修订误判成代码/结构更新。
+    if (DATA.meta.catalogVersion && next.meta.catalogVersion && next.meta.catalogVersion !== DATA.meta.catalogVersion) {
       return false;
     }
     DATA.serverPrices = next.serverPrices || {};
     DATA.meta.priceUpdatedAt = next.meta.priceUpdatedAt;
+    if (next.meta.seedVersion) DATA.meta.seedVersion = next.meta.seedVersion;
     if (next.meta.priceCoverage) DATA.meta.priceCoverage = next.meta.priceCoverage;
     if (next.meta.serverCoverage) DATA.meta.serverCoverage = next.meta.serverCoverage;
     if (next.stonePrices) DATA.stonePrices = next.stonePrices;
@@ -202,13 +205,21 @@
 
     var byId = {};
     (next.items || []).forEach(function (it) { byId[it.id] = it; });
-    DATA.items.forEach(function (it) {
-      var fresh = byId[it.id];
-      if (fresh) {
-        it.base = fresh.base;
-        it.priceSource = fresh.priceSource;
-      }
-    });
+    var apply = function (list) {
+      (list || []).forEach(function (it) {
+        var fresh = byId[it.id];
+        if (fresh) {
+          it.base = fresh.base;
+          it.priceSource = fresh.priceSource;
+        }
+      });
+    };
+    apply(DATA.items);
+    // 页面当前读取的是 Store.state.items，必须一起更新，否则行情刷新后数值不变。
+    if (C.Store && C.Store.state) {
+      apply(C.Store.state.items);
+      C.Store.save();
+    }
     return true;
   }
 
@@ -3510,7 +3521,8 @@
     window.App = {
       handleRoute: function () {
         if (ui.booted) render();
-      }
+      },
+      checkDataUpdate: function (force) { checkForDataUpdate(force !== false); }
     };
     bindEvents();
     renderSkeleton();
