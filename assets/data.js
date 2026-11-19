@@ -1,10 +1,9 @@
 /* =========================================================================
    剑网三物价助手 · 苍生铸世 50 级生活技艺数据
-   数据版本：v3.4（2026-11-18）
+   数据版本：v3.4（2026-11-19）
    价格修订：2026-11-19T10:15:30+08:00 · JX3BOX 全服拍卖
    制造：JX3BOX 技艺助手 API · 154 条代表配方
-   采集：17 条按材料拆分；产值按掉率折算
-   五行石：1-8 级拍卖价 + 快速/最优合成 + 7/8 爆率盈亏线
+   采集：17 条按材料拆分；当前赛季默认 40 精力/次（紫苏45，黄花菜/鱼腥草50）
    ========================================================================= */
 window.JX3Data = {
   "meta": {
@@ -13,10 +12,10 @@ window.JX3Data = {
     "levelCap": 50,
     "version": "苍生铸世 · 50 级",
     "catalogVersion": "v3.4",
-    "seedVersion": "cs50-v3.3-p20261118233600",
-    "updatedAt": "2026-11-18",
+    "seedVersion": "cs50-v3.4",
+    "updatedAt": "2026-11-19",
     "verifiedAt": "2026-11-19",
-    "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
+    "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。当前赛季采集默认 40 精力/次；紫苏 45、黄花菜/鱼腥草 50，其余采集点按 40 计。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
     "sources": [
       {
         "label": "JX3BOX 技艺助手",
@@ -10417,7 +10416,7 @@ window.JX3Data = {
       "name": "神农·虫草",
       "level": 50,
       "tier": 4,
-      "energy": 50,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10449,7 +10448,7 @@ window.JX3Data = {
       "name": "神农·甘草",
       "level": 10,
       "tier": 3,
-      "energy": 10,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10476,7 +10475,7 @@ window.JX3Data = {
       "name": "神农·芍药",
       "level": 15,
       "tier": 3,
-      "energy": 15,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10535,7 +10534,7 @@ window.JX3Data = {
       "name": "采金·辉石",
       "level": 50,
       "tier": 4,
-      "energy": 50,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10562,7 +10561,7 @@ window.JX3Data = {
       "name": "采金·铁矿",
       "level": 20,
       "tier": 4,
-      "energy": 20,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10594,7 +10593,7 @@ window.JX3Data = {
       "name": "采金·铜矿",
       "level": 20,
       "tier": 4,
-      "energy": 20,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10626,7 +10625,7 @@ window.JX3Data = {
       "name": "采金·锡矿",
       "level": 30,
       "tier": 4,
-      "energy": 30,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10658,7 +10657,7 @@ window.JX3Data = {
       "name": "采金·铅锌矿",
       "level": 35,
       "tier": 4,
-      "energy": 35,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10722,7 +10721,7 @@ window.JX3Data = {
       "name": "采金·青石",
       "level": 25,
       "tier": 3,
-      "energy": 25,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10749,7 +10748,7 @@ window.JX3Data = {
       "name": "庖丁·黑山羊",
       "level": 50,
       "tier": 2,
-      "energy": 50,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10781,7 +10780,7 @@ window.JX3Data = {
       "name": "庖丁·山野野兽",
       "level": 30,
       "tier": 2,
-      "energy": 30,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {
@@ -10818,7 +10817,7 @@ window.JX3Data = {
       "name": "庖丁·河鲜",
       "level": 20,
       "tier": 2,
-      "energy": 20,
+      "energy": 40,
       "fee": 0,
       "outputs": [
         {

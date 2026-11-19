@@ -147,7 +147,7 @@
       prices: {},
       settings: {
         energyBudget: 3000,
-        gatherEnergy: 20,
+        gatherEnergy: 40,
         craftEnergy: 100,
         basis: 'market',
         includeIncomplete: false,
@@ -208,6 +208,8 @@
         state.schema = 4;
         state.seedVersion = DATA.meta.seedVersion;
         state.migratedFrom = saved.seedVersion || 'unknown';
+        // v3.4 起采集默认精力由旧的 20 调整为当前赛季的 40（用户自定义值不强制改）。
+        if (state.settings && state.settings.gatherEnergy === 20 && saved.seedVersion !== DATA.meta.seedVersion) state.settings.gatherEnergy = 40;
       }
       // 清理/规范化配方，避免导入的备份或旧版本数据导致渲染崩溃
       state.items = (state.items || []).filter(function (i) { return i && i.id && i.name; });

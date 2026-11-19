@@ -40,9 +40,11 @@ export function seedState() {
     items: clone(DATA.items),
     recipes: clone(DATA.recipes),
     prices: {},
+    stonePrices: {},
+    stoneChances: {},
     settings: {
       energyBudget: 3000,
-      gatherEnergy: 20,
+      gatherEnergy: 40,
       craftEnergy: 100,
       basis: 'market',
       taxRate: 0.05,
@@ -62,6 +64,8 @@ export function normalize(saved) {
   }
   state.seq = Object.assign({}, base.seq, state.seq || {});
   state.prices = state.prices && typeof state.prices === 'object' ? state.prices : {};
+  state.stonePrices = state.stonePrices && typeof state.stonePrices === 'object' ? state.stonePrices : {};
+  state.stoneChances = state.stoneChances && typeof state.stoneChances === 'object' ? state.stoneChances : {};
   if (!Array.isArray(state.servers) || !state.servers.length) state.servers = clone(DATA.servers);
   if (!findServer(state, state.serverId)) state.serverId = state.servers[0].id;
 
@@ -72,6 +76,7 @@ export function normalize(saved) {
     state.recipes = clone(DATA.recipes).concat(clone(customRecipes));
     state.schema = SCHEMA;
     state.seedVersion = DATA.meta.seedVersion;
+    if (state.settings && state.settings.gatherEnergy === 20) state.settings.gatherEnergy = 40;
   }
 
   state.items = (state.items || []).filter(function (i) { return i && i.id && i.name; });
