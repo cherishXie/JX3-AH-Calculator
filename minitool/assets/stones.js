@@ -64,6 +64,13 @@
     return Number.isFinite(t) ? Math.max(0, Math.min(1, t)) : 0.05;
   }
 
+  function priceUpdatedAt() {
+    const stamp = DATA.meta && DATA.meta.stonePriceUpdatedAt;
+    const parsed = Date.parse(stamp || '');
+    if (Number.isFinite(parsed)) return parsed;
+    return C.seedTimestamp ? C.seedTimestamp() : (DATA.meta && Date.parse(DATA.meta.priceUpdatedAt)) || 0;
+  }
+
   /* ------------------------------------------------------------------ */
   /* 价格                                                               */
   /* ------------------------------------------------------------------ */
@@ -457,6 +464,7 @@
     levelInfo: levelInfo,
     levelName: levelName,
     taxRate: taxRate,
+    priceUpdatedAt: priceUpdatedAt,
     price: price,
     netPrice: netPrice,
     setPrice: setPrice,

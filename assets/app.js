@@ -392,6 +392,11 @@
       const t = bucket[k] && bucket[k].t;
       if (t && t > ts) ts = t;
     });
+    const stoneBucket = (Store.state.stonePrices && Store.state.stonePrices[Store.state.serverId]) || {};
+    Object.keys(stoneBucket).forEach(function (k) {
+      const t = stoneBucket[k] && stoneBucket[k].t;
+      if (t && t > ts) ts = t;
+    });
     return ts ? U.fmtTime(ts) : U.fmtTime(C.seedTimestamp ? C.seedTimestamp() : C.SEED_TS);
   }
 
@@ -1395,6 +1400,45 @@
     });
   }
 
+  function renderStonePriceCard() {
+    const serverId = Store.state.serverId;
+    const levels = Stone.levels || [];
+    const userCount = levels.filter(function (l) { return Stone.price(serverId, l.level).user; }).length;
+    const missingCount = levels.filter(function (l) { return Stone.price(serverId, l.level).missing; }).length;
+    const updated = Stone.priceUpdatedAt ? Stone.priceUpdatedAt() : 0;
+    let rows = '';
+    if (!levels.length) {
+      rows = '<tr><td colspan="6">' + emptyState('暂无五行石数据', '请检查 data.js 是否包含 stone 数据。', '', 'gem') + '</td></tr>';
+    } else {
+      rows = levels.map(function (l) {
+        const p = Stone.price(serverId, l.level);
+        const np = Stone.netPrice(serverId, l.level);
+        return '<tr>' +
+          '<td>' + stoneChip(l.level) + '</td>' +
+          '<td class="num">' + stonePriceInput(l.level) + '</td>' +
+          '<td class="num">' + U.fmt(np, 2) + '</td>' +
+          '<td>' + stonePriceState(p) + '</td>' +
+          '<td class="num dim tiny">' + (p.user ? U.fmtTime(p.t) : U.fmtTime(updated)) + '</td>' +
+          '<td class="actions">' + (p.user ? '<button class="icon-btn" data-action="clear-stone-price" data-level="' + l.level + '" title="恢复行情价" aria-label="恢复 ' + U.esc(l.name) + ' 的行情价">' + icon('refresh') + '</button>' : '') + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+    return '<section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">' + icon('gem') + '五行石行情</h2>' +
+      '<p class="card-sub">1-8 级五行石独立价格空间 · 与五行石合成页共用 · 售价按 ' + U.fmtPct(Stone.taxRate(), 0) + ' 交易税折算净价</p></div>' +
+      '<div class="card-tools">' +
+        '<span class="badge badge-outline">' + userCount + ' / ' + levels.length + ' 已校准</span>' +
+        (missingCount ? '<span class="badge badge-warning">' + missingCount + ' 项缺价</span>' : '') +
+        '<button class="btn btn-sm" data-action="export-csv" data-csv="stone-prices">' + icon('download') + '导出</button>' +
+        '<a class="btn btn-sm" href="' + Route.href('/stones') + '">五行石合成 ' + icon('arrowRight') + '</a>' +
+      '</div></div>' +
+      '<div class="table-wrap medium"><table class="data compact stone-price-library"><thead><tr>' +
+        '<th>等级</th><th class="num">买入价（金）</th><th class="num">税后净价</th><th>价格状态</th><th class="num">更新时间</th><th></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<div class="card-foot"><span>行情价随 JX3BOX 拍卖在物价更新时同步；7/8 级样本少，建议按本服交易行校准</span>' +
+      '<span class="spacer"></span><span>行情时间 ' + (updated ? U.fmtTime(updated) : '—') + '</span></div></section>';
+  }
+
   function renderPrices(p) {
     const stats = Calc.stats(Store.state.serverId);
     const items = filteredItems(p);
@@ -1484,6 +1528,8 @@
       '<div class="flex" style="margin-top:10px"><button class="btn btn-sm" data-action="open-data">查看完整来源</button></div>' +
       '</div></section>';
     html += '</aside></div>';
+
+    html += '<div class="grid section-gap">' + renderStonePriceCard() + '</div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">跨服比价</h2><p class="card-sub">同一物品各服最高/最低价 · 用于换服采购与上架参考</p></div>' +
@@ -2548,6 +2594,23 @@
     toast('已导出 ' + rows.length + ' 条五行石公式');
   }
 
+  function csvStonePrices() {
+    const serverId = Store.state.serverId;
+    const updated = Stone.priceUpdatedAt ? Stone.priceUpdatedAt() : 0;
+    const out = [['等级', '物品', '本服单价(金)', '税后净价(金)', '价格状态', '更新时间', '核验状态']];
+    Stone.levels.forEach(function (l) {
+      const p = Stone.price(serverId, l.level);
+      out.push([
+        l.level + '级', l.name, p.missing ? '' : U.round(p.v, 2), U.round(Stone.netPrice(serverId, l.level), 2),
+        p.missing ? '缺价' : p.user ? '已校准' : '行情/示例',
+        p.user ? U.fmtTime(p.t) : U.fmtTime(updated),
+        '1-8级五行石'
+      ]);
+    });
+    U.download('剑网三物价助手_五行石价格_' + server().name + '_' + new Date().toISOString().slice(0, 10) + '.csv', U.csv(out), 'text/csv;charset=utf-8');
+    toast('已导出 ' + Stone.levels.length + ' 条五行石价格');
+  }
+
   function csvPrices() {
     const items = filteredItems(params());
     const out = [['物品', '技艺', '类型', '品阶', '来源', '本服单价(金)', '价格状态', '更新时间', '核验状态', '来源说明']];
@@ -2559,8 +2622,20 @@
         p.user ? U.fmtTime(p.t) : '示例', it.custom ? '自定义' : it.verified ? '名目已核验' : '未核验', it.origin || ''
       ]);
     });
+    const stoneUpdated = Stone.priceUpdatedAt ? Stone.priceUpdatedAt() : 0;
+    (Stone.levels || []).forEach(function (l) {
+      const sp = Stone.price(Store.state.serverId, l.level);
+      const t = DATA.tiers.find(function (x) { return x.id === l.quality; });
+      out.push([
+        l.name, '五行石', '材料', t ? t.name : '—', '交易行',
+        sp.missing ? '' : U.round(sp.v, 2),
+        sp.missing ? '缺价' : sp.user ? '已校准' : '行情价',
+        sp.user ? U.fmtTime(sp.t) : U.fmtTime(stoneUpdated),
+        '1-8级五行石', '与五行石合成页共用'
+      ]);
+    });
     U.download('剑网三物价助手_价格库_' + server().name + '_' + new Date().toISOString().slice(0, 10) + '.csv', U.csv(out), 'text/csv;charset=utf-8');
-    toast('已导出 ' + items.length + ' 条价格');
+    toast('已导出 ' + (items.length + (Stone.levels || []).length) + ' 条价格（含五行石）');
   }
 
   function exportChartPNG(targetId, filename) {
@@ -2820,6 +2895,7 @@
         const kind = el.getAttribute('data-csv');
         if (kind === 'prices') csvPrices();
         else if (kind === 'stones') csvStones();
+        else if (kind === 'stone-prices') csvStonePrices();
         else csvAnalysis();
         break;
       }
@@ -2852,6 +2928,13 @@
         break;
       }
       case 'download-price-template': downloadPriceTemplate(); break;
+      case 'clear-stone-price': {
+        const level = Number(el.getAttribute('data-level'));
+        Stone.clearPrice(Store.state.serverId, level);
+        refreshAll();
+        toast('已恢复「' + Stone.levelInfo(level).name + '」的行情价');
+        break;
+      }
       case 'clear-price': {
         const it = item(id);
         Store.clearPrice(Store.state.serverId, id);
