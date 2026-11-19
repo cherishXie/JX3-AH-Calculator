@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "dab1af99d44eef1c2a671703f0952838872e4aae",
+  "sourceCommit": "fb3c6fb5fc319391035830f449f6cb5810f40328",
   "date": "2026-11-19",
-  "title": "make price refresh button visible and add form control props",
+  "title": "seed snapshot into no-macro auto workbook",
   "notes": [
-    "make price refresh button visible and add form control props"
+    "seed snapshot into no-macro auto workbook"
   ],
   "history": [
+    {
+      "version": "fb3c6fb",
+      "date": "2026-11-19",
+      "title": "seed snapshot into no-macro auto workbook"
+    },
     {
       "version": "dab1af9",
       "date": "2026-11-19",
@@ -30,11 +35,6 @@
       "version": "0ea8b9a",
       "date": "2026-11-19",
       "title": "add Excel craft-profit workbook and Pages price feed"
-    },
-    {
-      "version": "22e02e6",
-      "date": "2026-11-19",
-      "title": "show signed breakthrough profit and align design styles"
     }
   ]
 }

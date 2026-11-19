@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-19 · fb3c6fb
+
+seed snapshot into no-macro auto workbook
+
 ## 2026-11-19 · dab1af9
 
 make price refresh button visible and add form control props
