@@ -50,10 +50,10 @@ node scripts/update-jx3-prices.mjs --dry-run
 
 ## 定时任务
 
-本机 cron 示例（Asia/Shanghai，每天 08:00–22:00 整点、每 2 小时）：
+本机 cron 示例（Asia/Shanghai，每天 08:07–22:07、每 2 小时）：
 
 ```cron
-0 8,10,12,14,16,18,20,22 * * * cd /Users/cherishxie/Documents/ChatGPT/JX3-AH-Calculator && ./scripts/update-prices.sh >> /tmp/jx3-price-update.log 2>&1
+7 8,10,12,14,16,18,20,22 * * * cd /Users/cherishxie/Documents/ChatGPT/JX3-AH-Calculator && ./scripts/update-prices.sh >> /tmp/jx3-price-update.log 2>&1
 ```
 
 GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交变更/上传 artifact。
@@ -67,4 +67,4 @@ GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交
 
 ## GitHub Actions
 
-仓库已提供 `.github/workflows/update-jx3-prices.yml`：每天北京时间 **08:00–22:00 整点、每 2 小时**运行（00:00–08:00 不更新），更新 17 个服务器数据并提交；同时上传 `剑网三物价助手-minitool.zip` artifact。cron 使用 UTC：`0 0,2,4,6,8,10,12,14 * * *`。若仓库受保护分支限制，可把 push 改为创建 PR。
+仓库已提供 `.github/workflows/update-jx3-prices.yml`：每天北京时间 **08:07–22:07、每 2 小时**运行（00:00–08:00 不更新），更新 17 个服务器数据并提交；同时上传 `剑网三物价助手-minitool.zip` artifact。cron 使用 UTC：`7 0,2,4,6,8,10,12,14 * * *`。若仓库受保护分支限制，可把 push 改为创建 PR。
