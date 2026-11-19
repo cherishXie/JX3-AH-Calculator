@@ -19,6 +19,8 @@
 | --- | --- | --- | --- |
 | ![总览](../screenshots/mini-overview.png) | ![技艺](../screenshots/mini-skills.png) | ![价格](../screenshots/mini-prices.png) | ![分析](../screenshots/mini-analysis.png) |
 
+> 微信端新增五行石第 5 Tab，真实模拟器截图见 [wechat-real-stones.png](../wechat/screenshots/wechat-real-stones.png)。
+
 ---
 
 ## 快速开始
@@ -92,7 +94,7 @@ HOME=/tmp/tarohome npm run build:weapp
 与 Web 版共用当前「苍生铸世 50 级」数据：
 
 - 制造：锻造、缝纫、制药、烹饪、梓匠；采集：神农、采金、庖丁。
-- 已按 JX3BOX 技艺助手 API（2026-11-18）重构：154 条当前版本制造配方 + 21 个当前版本采集点（数据版本 v3.5）；玄元星平衫 50 级 / 200 精力 / 地脉玄元×1、蜂王浆×10、兽皮胶×20、七彩线×20、百染线×20。
+- 已按 JX3BOX 技艺助手 API（2026-11-18）重构：154 条当前版本制造配方 + 21 个当前版本采集点（数据版本 v3.6）；玄元星平衫 50 级 / 200 精力 / 地脉玄元×1、蜂王浆×10、兽皮胶×20、七彩线×20、百染线×20。
 - 除标注「配方已核验/名目已核验」外，配比、采集产出、精力均为可编辑示例，不是官方逐条数据。
 - 旧版本（90/100/130 级）数值不适用。
 - 详细来源见 Web 版 `README.md` 与小程序「设置 → 数据说明」。

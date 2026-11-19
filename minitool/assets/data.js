@@ -5,11 +5,11 @@ window.JX3Data = {
     "expansion": "苍生铸世",
     "levelCap": 50,
     "version": "苍生铸世 · 50 级",
-    "catalogVersion": "v3.5",
-    "seedVersion": "cs50-v3.5",
+    "catalogVersion": "v3.6",
+    "seedVersion": "cs50-v3.6",
     "updatedAt": "2026-11-19",
     "verifiedAt": "2026-11-19",
-    "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
+    "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。当前赛季采集默认 40 精力/次；紫苏 45、黄花菜/鱼腥草 50，其余采集点按 40 计。马草（百脉根/紫花苜蓿/甜象草/皇竹草）已加入神农采集，价格为示例，可在价格库校准。按 11-19 更新：家园原料/马草采集、拼布/木板/器物令、路菜/挂件包·背部/腰部等级降至 1 级；并非全部生活技艺取消等级限制。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
     "sources": [
       {
         "label": "JX3BOX 技艺助手",
@@ -25,6 +25,11 @@ window.JX3Data = {
         "label": "咸鱼有话说 305 期（11-14）",
         "url": "",
         "note": "家园采集/梓匠配方等级下调；芦苇、珊瑚、竹子、木料、马草、拼布、木板、器物令、路菜、挂件包"
+      },
+      {
+        "label": "咸鱼有话说306期（11-14）",
+        "url": "",
+        "note": "11-19 更新：家园原料/马草采集、拼布/木板/器物令、路菜/挂件包·背部/腰部制造等级降至1级；并非所有生活技艺取消等级限制。"
       },
       {
         "label": "剑网3 苍生铸世公测公告（10-29）",
@@ -4197,7 +4202,7 @@ window.JX3Data = {
       "kind": "craft",
       "skillId": "fengren",
       "name": "挂件包·背部",
-      "level": 13,
+      "level": 1,
       "tier": 3,
       "energy": 40,
       "fee": 0,
@@ -4233,7 +4238,7 @@ window.JX3Data = {
       "kind": "craft",
       "skillId": "fengren",
       "name": "挂件包·腰部",
-      "level": 13,
+      "level": 1,
       "tier": 3,
       "energy": 40,
       "fee": 0,
@@ -5661,7 +5666,7 @@ window.JX3Data = {
       "kind": "craft",
       "skillId": "pengren",
       "name": "路菜",
-      "level": 30,
+      "level": 1,
       "tier": 3,
       "energy": 100,
       "fee": 0,
@@ -9533,7 +9538,7 @@ window.JX3Data = {
       "kind": "craft",
       "skillId": "zijiang",
       "name": "木板",
-      "level": 5,
+      "level": 1,
       "tier": 3,
       "energy": 20,
       "fee": 0,
@@ -9569,7 +9574,7 @@ window.JX3Data = {
       "kind": "craft",
       "skillId": "zijiang",
       "name": "器物令",
-      "level": 7,
+      "level": 1,
       "tier": 3,
       "energy": 40,
       "fee": 0,
@@ -10285,7 +10290,7 @@ window.JX3Data = {
       "kind": "craft",
       "skillId": "zijiang",
       "name": "拼布自选包",
-      "level": 30,
+      "level": 1,
       "tier": 4,
       "energy": 100,
       "fee": 0,
@@ -10325,7 +10330,7 @@ window.JX3Data = {
       "kind": "craft",
       "skillId": "zijiang",
       "name": "拼布72色全包",
-      "level": 30,
+      "level": 1,
       "tier": 4,
       "energy": 100,
       "fee": 0,
@@ -10551,7 +10556,7 @@ window.JX3Data = {
       "kind": "gather",
       "skillId": "shennong",
       "name": "神农·珊瑚",
-      "level": 40,
+      "level": 1,
       "tier": 3,
       "energy": 40,
       "fee": 0,
@@ -10893,7 +10898,7 @@ window.JX3Data = {
       "name": "神农·百脉根",
       "skillId": "shennong",
       "kind": "gather",
-      "level": 20,
+      "level": 1,
       "tier": 1,
       "energy": 40,
       "fee": 0,
@@ -10913,7 +10918,7 @@ window.JX3Data = {
       "name": "神农·紫花苜蓿",
       "skillId": "shennong",
       "kind": "gather",
-      "level": 35,
+      "level": 1,
       "tier": 2,
       "energy": 40,
       "fee": 0,
@@ -10933,7 +10938,7 @@ window.JX3Data = {
       "name": "神农·甜象草",
       "skillId": "shennong",
       "kind": "gather",
-      "level": 50,
+      "level": 1,
       "tier": 3,
       "energy": 40,
       "fee": 0,
@@ -10953,7 +10958,7 @@ window.JX3Data = {
       "name": "神农·皇竹草",
       "skillId": "shennong",
       "kind": "gather",
-      "level": 50,
+      "level": 1,
       "tier": 4,
       "energy": 40,
       "fee": 0,
@@ -13663,32 +13668,32 @@ window.JX3Data = {
     "sources": [
       {
         "label": "面向萌新的五行石精炼方法与成本（2026-07-29 更新）",
-        "url": "",
+        "url": "https://www.jx3box.com/community/6363",
         "note": "三级 12×一级；四级 3×三级+7×一级；五级 3×四级+2×三级；六级 3×五级+2×四级；含成功率、加工费与精力。"
       },
       {
         "label": "【苍生铸世】版本测试服全身精六汇算（2026-10-08 更新）",
-        "url": "",
+        "url": "https://www.jx3box.com/community/6496",
         "note": "当前赛季测试服精六成本；6 级五行石约 518 金/块（2026-09-10 样本）。"
       },
       {
         "label": "《剑网3》新赛季门派动作与精炼规则持续优化中（2026-09-15）",
-        "url": "",
+        "url": "https://news.17173.com/content/09152026/160051947.shtml",
         "note": "官方说明：这次精炼公式本身没有调整；衣服/下装精六为 16 颗 6 级五行石 100% 成功。"
       },
       {
         "label": "【苍生铸世】开荒必看！新赛季剥七&剥八一图示（2026-11-08 更新）",
-        "url": "",
+        "url": "https://www.jx3box.com/community/6597",
         "note": "当前赛季 7/8 级剥离成本；6 级五行石按 520 金/块样本计算。"
       },
       {
         "label": "五行石精炼方式的成本及毛利计算（2025-03-16 更新）",
-        "url": "",
+        "url": "https://www.jx3box.com/community/2815",
         "note": "快速合成 1-6 级成本/精力表；4 精 6 出 8 的 252 次实验与累积概率表。"
       },
       {
         "label": "JX3BOX 拍卖 · 五行石 1-8 级（2026-11-19）",
-        "url": "",
+        "url": "https://next2.jx3box.com/api/auction/",
         "note": "17 个服务器 1-8 级五行石拍卖样本，用于本模块默认价。"
       }
     ]
