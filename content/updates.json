@@ -1,4 +1,5 @@
 {
+  "sourceCommit": "5d142be87ad93e9da9b46cc19ad303515e4cfe3a",
   "date": "2026-11-19",
   "title": "技艺突破：三档产量独立核算与缺价提示",
   "notes": [
@@ -8,6 +9,11 @@
     "Web、小工具、小程序共用计算模型；后续推送自动维护 CHANGELOG、更新说明并发布 GitHub Pages"
   ],
   "history": [
+    {
+      "version": "5d142be",
+      "date": "2026-11-19",
+      "title": "align breakthrough calculations and automate Pages releases"
+    },
     {
       "version": "084cdf9",
       "date": "2026-11-19",
@@ -32,11 +38,6 @@
       "version": "7bc9462",
       "date": "2026-11-19",
       "title": "restore direct price schedule and add recovery checks"
-    },
-    {
-      "version": "9200682",
-      "date": "2026-11-19",
-      "title": "profit-based breakthrough results and 1-30/30-50 stage summary"
     }
   ]
 }
