@@ -56,12 +56,13 @@ GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖，�
 
 ### 3.1 宏版一键检查（`.xlsm`）
 
-1. 打开 `jx3-excel.xlsm`，启用宏并允许数据连接；
-2. 每次打开会自动静默拉取一次（`Workbook_Open` → `RefreshPrices True`）；
+1. 打开 `jx3-excel.xlsm`，启用宏；
+2. 每次打开会自动静默刷新一次（`Workbook_Open` → `RefreshPrices True`）；
 3. 也可点「总览」左上角 **检查物价更新** 手动刷新；
-4. 宏会通过 Power Query 拉取 `prices.json`，写回「物价」并提示数据时间。
+4. 宏用 Excel 原生 **Web Query** 导入 `prices.html`（39 列 HTML 表），不依赖 Power Query，也不需要解析 JSON；
+5. 网络失败/表格导入失败时保留工作簿内置快照，不会清空。
 
-「物价远程」是隐藏的查询落点；「物价」仍是所有公式读取的价格表。Mac 版 Excel 的 Power Query Web 连接器可能不可用，此时退回下面的 Web 查询 / CSV。
+这条 Web Query 路径在 Windows/Mac Excel 上都比 Power Query 的 Web 连接器更稳；WPS 是否支持 QueryTables 取决于版本。
 
 ### 3.2 无宏自动版（`-auto.xlsx`，打开时刷新）
 
@@ -107,7 +108,7 @@ python3 excel/build_workbook.py
 # 3. 用 LibreOffice 重算并写回缓存
 #    （用 office-recalculate / soffice 均可）
 
-# 4. 生成宏版：Power Query + VBA 按钮 + VML 控件
+# 4. 生成宏版：VBA Web Query + 按钮 + VML 控件
 pip install pyOpenVBA
 python3 excel/build_xlsm.py
 
@@ -134,4 +135,4 @@ node scripts/build-excel-prices.mjs _site
 - 突破路线按市场价；「取最低」仅用于技艺收益。
 - 逐级经验门槛为本工作簿「经验门槛」表的用户观测+插值/外推；可直接改 B 列重算。采集经验与部分掉率仍为估算/示例。
 - 百脉根、紫花苜蓿、甜象草、皇竹草在 JX3BOX 暂无物品键，只用目录基准价。
-- 无宏 `.xlsx` 不含任何脚本；宏版 `.xlsm` 仅包含一个 `CheckPriceUpdate` 宏和「物价远程」查询。
+- 无宏 `.xlsx` 不含任何脚本；宏版 `.xlsm` 包含 `CheckPriceUpdate` / `RefreshPrices` 宏，用 Web Query 导入 `prices.html`。

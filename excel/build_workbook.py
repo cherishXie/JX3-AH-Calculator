@@ -330,7 +330,7 @@ for num, head, body in steps:
 section(ws, 15, "刷新物价（GitHub Action 定时更新 Pages 上的 prices.json）", 3)
 refresh_lines = [
     ("数据链路", "GitHub Action 每天 08:53–22:53 每两小时从 JX3BOX 拉取全服拍卖 → 写入 assets/data.js → Pages 构建时生成 prices.json / prices.csv / prices.html。"),
-    ("推荐：宏版 / Excel 365", "下载 .xlsm 宏版：每次打开自动拉取一次，也可点「总览」左上角『检查物价更新』手动刷新；Power Query 拉取 prices.json 并写回「物价」。也可用 数据 → 获取数据 → 自网站 手动建查询，加载到「物价」A1；之后全部刷新 / 打开时刷新。"),
+    ("推荐：宏版 .xlsm", "打开时自动用 Excel Web Query 导入 prices.html（39 列 HTML 表），也可点「总览」左上角『检查物价更新』手动刷新。Web Query 不依赖 Power Query，失败时保留内置快照。无宏自动版 .xlsx 则用 Power Query 打开刷新。"),
     ("Mac / 传统 Web 查询", "下载「物价刷新.iqy」；Excel 菜单「数据 → 获取外部数据 → 运行 Web 查询」，选择该文件，输出到「物价」A1。之后同样可全部刷新 / 打开时刷新。"),
     ("WPS / 其他", "下载 prices.csv（UTF-8 BOM），全选复制，粘贴到「物价」A1，保留表头即可。"),
     ("离线", "工作簿已内置生成时的物价快照；不刷新也能完整计算，只是价格停在快照时间。"),
@@ -415,7 +415,7 @@ note(
     fill=WARN_FILL,
     height=40,
 )
-note(ws, 54, "宏版 .xlsm：打开工作簿时由 Workbook_Open 自动拉取一次，也可点「总览」左上角『检查物价更新』手动刷新；通过 Power Query 请求 prices.json 并写回「物价」。需启用宏并允许数据连接。无宏 .xlsx 版仍可用「全部刷新 / Web 查询 / CSV 粘贴」。", 3, fill=NOTE_FILL, height=44)
+note(ws, 54, "宏版 .xlsm：Workbook_Open / 按钮调用 QueryTables 导入 prices.html（39 列），不依赖 Power Query；失败保留内置快照。无宏自动版 .xlsx 用 Power Query；无宏静态版用快照 / IQY / CSV。", 3, fill=NOTE_FILL, height=44)
 
 # ---------------------------------------------------------------------------
 # 总览
@@ -435,7 +435,7 @@ title_cell.alignment = Alignment(horizontal="left", vertical="center", indent=1)
 ws.row_dimensions[1].height = 30
 ws.row_dimensions[2].height = 22
 ws.merge_cells("D3:J3")
-ws["D3"] = "左侧按钮：检查物价更新（Power Query 拉取 prices.json） · 也可用 数据 → 全部刷新"
+ws["D3"] = "左侧按钮：检查物价更新（Web Query 拉取 prices.html） · 失败时保留当前快照"
 ws["D3"].font = Font(name=FONT_CN, size=9, color=MUTED)
 ws["D3"].alignment = Alignment(horizontal="left", vertical="center", indent=1)
 for c in range(1, 4):
@@ -517,7 +517,7 @@ for i, kind in enumerate(["制造", "采集"], 25):
     set_formula(ws, i, 2, f"=IFERROR(AVERAGEIFS('配方收益'!$M:$M,'配方收益'!$C:$C,$A{i},'配方收益'!$P:$P,\"有效\"),\"\")", fmt=NUM_2, font=Font(name=FONT_NUM, size=9))
     set_formula(ws, i, 3, f"=SUMIFS('配方收益'!$L:$L,'配方收益'!$C:$C,$A{i})", fmt=NUM_0, font=Font(name=FONT_NUM, size=9))
 
-note(ws, 28, "总览只读取「配方收益」「分配」「突破路线」的结果；要改服务器/税率/策略，请到「设置」。点上方『检查物价更新』可直接从 GitHub Pages 拉取 prices.json（需启用宏）。", 10, height=40)
+note(ws, 28, "总览只读取「配方收益」「分配」「突破路线」的结果；要改服务器/税率/策略，请到「设置」。点上方『检查物价更新』用 Excel Web Query 导入 prices.html（需启用宏）。", 10, height=40)
 
 chart = BarChart()
 chart.type = "bar"
