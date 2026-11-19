@@ -68,3 +68,43 @@ GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交
 ## GitHub Actions
 
 仓库已提供 `.github/workflows/update-jx3-prices.yml`：每天北京时间 **08:07–22:07、每 2 小时**运行（00:00–08:00 不更新），更新 17 个服务器数据并提交；同时上传 `剑网三物价助手-minitool.zip` artifact。cron 使用 UTC：`7 0,2,4,6,8,10,12,14 * * *`。若仓库受保护分支限制，可把 push 改为创建 PR。
+
+---
+
+# 突破升级数据构建
+
+> 生成 `miniapp/src/shared/breakthrough.json` 的同时，会写出 Web `assets/breakthrough-data.js`、小工具 `minitool/assets/breakthrough-data.js`（去外链）并复制共用内核 `assets/breakthrough.js`。Web 端需再执行 `./scripts/build-site.sh`，小工具需再执行 `./scripts/build-minitool.sh`。
+
+`scripts/build-breakthrough-data.mjs` 生成小程序「分析 → 突破升级」所需的数据（`miniapp/src/shared/breakthrough.json`）：
+
+```bash
+# 全量重建（配方 + 物品名 + 17 服价格，约 3–5 分钟）
+node scripts/build-breakthrough-data.mjs
+
+# 只刷新价格（沿用现有配方与物品）
+node scripts/build-breakthrough-data.mjs --prices-only
+
+# 只用现有价格重建配方
+node scripts/build-breakthrough-data.mjs --skip-prices
+```
+
+## 数据来源
+
+- 配方/经验/精力：`https://node.jx3box.com/manufactures?type=...&ids=...&client=std`，只保留 `RequireLevel` 1–50 的当前赛季配方；经验恒为精力的 2 倍，脚本按 `CostVigor` 写入。
+- 物品名：`https://node.jx3box.com/api/node/item/{type}_{id}`。
+- 各服价格：`https://next2.jx3box.com/api/auction/`，`铜 / 10000 = 金`。
+- 30/35/40/45「晋秩」突破材料：JX3BOX 攻略《【苍生铸世】鱼历小药宴席改动 & 生活技艺升级攻略》<https://www.jx3box.com/bps/109793>；等级门槛与成就库「完成40级突破」交叉核验。
+
+## 价格清洗
+
+- 样本数 `< 5` 的挂单不采用；
+- 拍卖接口对无成交物品返回的 `10000 金` 哨兵值剔除；
+- 只有 1–2 个服务器有报价的物品视为流动性不足，剔除（有目录基准价的除外）；
+- 单服价格偏离全服中位数 4 倍以上、或超过目录基准价 4 倍的剔除；
+- 全部清洗后仍缺价的配方/材料会在页面上标记「缺价」，不参与最优路线计算。
+
+## 估算口径
+
+- 每级所需经验未公开：按 `500 + 25 × (等级−1)` 线性模型估算，1→50 合计约 5.39 万经验；只影响总量，不改变单级最优配方。
+- 采集单次经验未公开：按 `80` 估算（制造经验 = 精力 ×2 的对称假设）。
+- 页面底部与 `breakthrough.json.meta.disclaimer` 常驻说明这两项估算。

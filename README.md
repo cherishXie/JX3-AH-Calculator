@@ -35,6 +35,7 @@ python3 -m http.server 8931
 | **价格库** | 本服材料多少钱？哪里缺价？ | 267 物品逐项定价、批量粘贴导入、跨服比价、CSV 导出、示例价/已校准/缺价三态 |
 | **五行石** | 合到几级最赚精力？7/8 级要多少爆率才不亏？ | 1-8 级行情、快速/最优合成对比、5/6 级单颗收益、7/8 级爆率盈亏线、剥七/剥八参考、公式全可编辑 |
 | **精力收益分析** | 哪个制品最值得做？差距多少？ | 收益排行、成本×收益散点、各技艺箱线图、双制品对比、满精力贪心分配、完整收益表、五行石收益卡 |
+| **突破升级** | 技艺怎么从 1 升到 50 最省？突破要交什么？ | 8 技艺 30/35/40/45 晋秩突破材料、逐段最优配方与产出价值、总精力/净金/制作次数、金最优 / 精力最优 / 省心、八技艺横评 |
 
 ### 核心操作
 
@@ -46,6 +47,7 @@ python3 -m http.server 8931
 - **修改精力**：每条配方/采集点的「单次精力」均可编辑；设置中可改新建配方默认精力与精力预算。
 - **五行石公式**：五行石页可直接改 1-8 级价格、编辑任意合成公式（材料、数量、加工费、精力、产出概率），并单独校准 7/8 级爆率。
 - **计算与对比**：成本 = Σ材料 + 手续费；利润 = 产值 − 成本；精力收益 = 利润 ÷ 精力；支持「市场价 / 取最低（市场价与自制成本逐层取低）」两种口径。
+- **突破升级**：分析页底部入口卡 → 独立页 `/breakthrough`；按当前服物价为 8 项技艺排「1→50」路线，30/35/40/45 级晋秩材料可展开查看自制配方与拍卖价，三种维度一键切换。
 - **导出**：每个图表可导出 PNG；分析/价格表可导出 CSV；设置中可导出/导入完整 JSON 备份。
 
 ---
@@ -149,9 +151,11 @@ npm run build:xhs     # 小红书小程序 → miniapp/dist/xhs
 - **兼容策略**：计算内核纯 JS 无 DOM；存储走 `Taro.getStorageSync/setStorageSync`；图表改用 **View + 百分比条形图**，不依赖 Canvas（小红书 Canvas 适配风险高）；不打开外链，来源链接提供复制。
 - **数据同步**：`miniapp/scripts/sync-catalog.js` 从 `assets/data.js` 生成 `src/shared/catalog.json`；Web 数据更新后执行 `npm run sync:catalog`。
 - **发布配置**：填写 `miniapp/project.config.json` 的微信 AppID 与 `project.xhs.json` 的小红书 AppID；两端 IDE 的导入方式、隐私/类目/审核清单见 [小程序 README](miniapp/README.md#发布前检查)。
-- **体积**：微信约 692 KB、小红书约 624 KB，低于 2 MB 主包限制。
+- **体积**：微信主包约 1.08 MB、小红书约 1.1 MB，低于 2 MB 主包限制。
 
-小程序端包含：总览、生活技艺、价格库、精力收益分析、配方详情/编辑、设置与备份；与 Web 端口径一致，差异是手机竖屏布局、View 图表、无 CSV/PNG 导出、仅暗色主题。
+三端均包含：总览、生活技艺、价格库、精力收益分析、**突破升级（1→50 晋秩路线）**、配方详情/编辑、设置与备份；小程序端与其口径一致，差异是手机竖屏布局、View 图表、无 CSV/PNG 导出、仅暗色主题。
+
+突破升级模块（Web 侧栏「突破升级」/ 小程序「分析 → 突破升级」）用当前服物价计算 8 项技艺从 1 到 50 级的最优冲级路线：30/35/40/45 级「晋秩」突破材料、每段等级的最优配方与产出价值、总精力/净金/制作次数，并支持「金最优 / 精力最优 / 省心」三种维度。数据由 `scripts/build-breakthrough-data.mjs` 从 JX3BOX 技艺接口、拍卖行情与攻略生成，并同步产出 `miniapp/src/shared/breakthrough.json`、Web/小工具的 `breakthrough-data.js` 与共用内核 `breakthrough.js`。
 
 ### 小红书小工具品牌素材
 
@@ -203,6 +207,8 @@ node scripts/update-jx3-prices.mjs --dry-run   # 预览
 
 另提供符合小红书小工具容器规范的离线 H5 zip：`剑网三物价助手-minitool.zip`。它把 Web 版适配为纯离线经典脚本、容器 Storage、无下载/无外链/无剪贴板的形态；构建源与校验结果见 [MINITOOL.md](MINITOOL.md)。
 
+![Web 端 · 突破升级](screenshots/web-breakthrough.png)
+
 ![小程序端 · 总览（Taro H5 同构预览）](screenshots/mini-overview.png)
 
 ---
@@ -214,6 +220,7 @@ index.html                 入口
 assets/styles.css          设计令牌 + 布局 + 组件 + 响应式
 assets/data.js             苍生铸世 50 级种子数据（技能/物品/配方/服务器/来源）
 scripts/update-jx3-prices.mjs  JX3BOX 自动更新价格并重打 minitool zip
+scripts/build-breakthrough-data.mjs  生成突破升级数据（配方/经验/精力/突破材料/各服价），并同步 Web / 小程序 / 小工具
 .github/workflows/          每日自动更新工作流（可选）
 assets/core.js             状态、localStorage、价格种子、成本递归、路由
 assets/charts.js           纯 SVG 图表（条形/散点/箱线/对比）
@@ -221,6 +228,9 @@ assets/app.js              页面渲染、抽屉/弹窗、事件、导入导出�
 miniapp/                   Taro 3.6.35 微信 / 小红书小程序（共享计算内核）
   src/shared/engine.js     纯 JS 计算内核（无 DOM）
   src/shared/catalog.json  由 assets/data.js 同步的数据
+  src/shared/breakthrough.json  突破升级数据（1→50 配方、晋秩材料、各服价格）
+assets/breakthrough.js     突破升级内核（Web / 小工具共用，无框架）
+assets/breakthrough-data.js 突破升级数据（Web / 小工具，构建生成）
   src/pages/               总览 / 技艺 / 价格 / 分析 / 配方 / 设置
   dist/weapp, dist/xhs     已构建的两端产物
 README.md

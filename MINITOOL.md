@@ -27,7 +27,7 @@
 ```text
 Node audit:   PASS: 1 file(s), 0 warning(s)  # zip 体积检查
 Python audit: PASS: 10 file(s), 0 warning(s)
-zip:          约 118 KB（11 个文件）
+zip:          约 190 KB（14 个文件）
 index.html:   zip 根目录
 文件类型:     .html / .css / .js / .svg
 外部请求:     0
@@ -39,7 +39,7 @@ type=module:  0
 
 同时完成：
 
-- Web/浏览器预览：总览、技艺、价格、分析、五行石、配方/公式详情、设置、价格编辑、导出文本均无控制台报错。
+- Web/浏览器预览：总览、技艺、价格、分析、**突破升级**、五行石、配方/公式详情、设置、价格编辑、导出文本均无控制台报错。
 - 同页筛选滚动位置实测保持（`scrollY=300`，页面顶边不变）。
 - 强制 `no-flex-gap` / `no-color-mix` / `no-inset` 兼容类后，390px 宽度无横向溢出。
 - 注入模拟 `window.xhs.miniTool` Storage 后，改价 → 重载 → 价格仍保留。
@@ -63,3 +63,5 @@ type=module:  0
 ## 物价自动更新
 
 离线包不能在运行时联网。更新价格请运行 `node scripts/update-jx3-prices.mjs`（或 `./scripts/update-prices.sh`），脚本会更新数据并重打本 zip；详细规则见 `scripts/README.md`。
+
+突破升级数据（配方、晋秩材料、17 服价格）由 `node scripts/build-breakthrough-data.mjs` 生成，会同时写出 `assets/breakthrough-data.js` 与 `minitool/assets/breakthrough-data.js`（小工具版去掉外链 URL），并复制共用内核 `assets/breakthrough.js`；改完执行 `./scripts/build-minitool.sh` 重打 zip。

@@ -534,6 +534,7 @@
     '/skills': '生活技艺',
     '/prices': '价格库',
     '/analysis': '精力收益分析',
+    '/breakthrough': '突破升级',
     '/stones': '五行石'
   };
 
@@ -555,7 +556,8 @@
       },
       {
         group: '分析', items: [
-          { href: Route.href('/analysis'), label: '精力收益', icon: 'chart', path: '/analysis', badge: rows.filter(function (r) { return !r.calc.missing; }).length }
+          { href: Route.href('/analysis'), label: '精力收益', icon: 'chart', path: '/analysis', badge: rows.filter(function (r) { return !r.calc.missing; }).length },
+          { href: Route.href('/breakthrough'), label: '突破升级', icon: 'arrowUp', path: '/breakthrough' }
         ]
       }
     ];
@@ -1590,6 +1592,214 @@
   /* ------------------------------------------------------------------ */
   /* 精力收益分析                                                       */
   /* ------------------------------------------------------------------ */
+  /* ------------------------------------------------------------------ */
+  /* 突破升级                                                           */
+  /* ------------------------------------------------------------------ */
+  const BT_STRATS = [
+    { key: 'gold', label: '金最优' },
+    { key: 'energy', label: '精力最优' },
+    { key: 'effort', label: '省心' }
+  ];
+  const BT_STRAT_LABEL = { gold: '金最优', energy: '精力最优', effort: '省心' };
+
+  function bt() { return window.JX3BT; }
+
+  function btMoney(v) {
+    return (v > 0 ? '+' : v < 0 ? '−' : '') + U.fmt(Math.abs(v), 0);
+  }
+
+  function btSkillLinks(skillId, strategy) {
+    return '<div class="bt-tabs">' + DATA.skills.map(function (s) {
+      return '<a class="bt-tab' + (s.id === skillId ? ' active' : '') + '" href="' +
+        Route.href('/breakthrough', { skill: s.id, strategy: strategy }) + '">' + U.esc(s.name) + '</a>';
+    }).join('') + '</div>';
+  }
+
+  function btStratLinks(skillId, strategy) {
+    return '<div class="seg seg-sm bt-seg">' + BT_STRATS.map(function (s) {
+      return '<a class="' + (s.key === strategy ? 'active' : '') + '" href="' +
+        Route.href('/breakthrough', { skill: skillId, strategy: s.key }) + '">' + s.label + '</a>';
+    }).join('') + '</div>';
+  }
+
+  function btLine(name, sub, value, tone) {
+    return '<div class="bt-line"><span class="bt-line-main"><span class="n">' + U.esc(name) + '</span>' +
+      (sub ? '<span class="s">' + U.esc(sub) + '</span>' : '') + '</span>' +
+      '<span class="v ' + (tone || '') + '">' + value + '</span></div>';
+  }
+
+  function btRecipeDetail(row) {
+    const B = bt();
+    const econ = row.econ;
+    if (!econ) return '';
+    let body;
+    if (row.recipe && row.recipe.kind === 'gather') {
+      const outs = B.gatherOutputs(row.recipe);
+      body = '<div class="bt-cols"><div class="bt-col"><h4>采集产出（按掉率折算）</h4>' +
+        outs.map(function (o) {
+          return btLine(o.name + ' ×' + o.qty + (o.chance < 0.999 ? '（' + Math.round(o.chance * 100) + '%）' : ''),
+            o.missing ? '缺价' : '单价 ' + U.fmt(o.unit, 2) + ' 金', U.fmt(o.sub, 0) + ' 金', o.missing ? 'warn' : '');
+        }).join('') + '</div></div>';
+    } else {
+      body = '<div class="bt-cols">' +
+        '<div class="bt-col"><h4>材料</h4>' +
+        (econ.mats.length ? econ.mats.map(function (m) {
+          return btLine(B.itemOf(m.idx).n + ' ×' + U.fmtInt(m.qty),
+            m.missing ? '缺价' : '单价 ' + U.fmt(m.unit, 2) + ' 金', U.fmt(m.sub, 0) + ' 金', m.missing ? 'warn' : '');
+        }).join('') : '<p class="tiny dim">无（采集）</p>') + '</div>' +
+        '<div class="bt-col"><h4>产出</h4>' +
+        econ.outs.map(function (o) {
+          return btLine(B.itemOf(o.idx).n + ' ×' + (o.min === o.max ? o.min : o.min + '~' + o.max),
+            o.missing ? '缺价' : '单价 ' + U.fmt(o.unit, 2) + ' 金', U.fmt(o.sub, 0) + ' 金', o.missing ? 'warn' : '');
+        }).join('') + '</div></div>';
+    }
+    return '<div class="bt-detail">' + body + '<div class="bt-foot">本段 ' + U.fmtInt(row.count) + ' 次 · 精力 ' +
+      U.fmtInt(row.totalEnergy) + ' · 材料 ' + U.fmt(row.matCost, 0) + ' 金 · 产出 ' + U.fmt(row.outValue, 0) + ' 金</div></div>';
+  }
+
+  function btLevelRow(row, isGather) {
+    const B = bt();
+    const pos = isGather ? row.net > 0 : row.net <= 0;
+    return '<details class="bt-row">' +
+      '<summary class="bt-row-head">' +
+        '<span class="bt-band">' + B.formatRange(row.from, row.to) + '</span>' +
+        '<span class="bt-main"><b class="nm">' + U.esc(row.name) + '</b>' +
+          '<em class="ds">' + (row.level ? 'Lv.' + row.level + (isGather ? ' 采集点 · ' : ' 配方 · ') : '') +
+            '经验 ' + U.fmtInt(row.exp) + ' / 精力 ' + U.fmtInt(row.energy) + ' · ×' + U.fmtInt(row.count) + '</em>' +
+          '<small class="ds">产出：' + U.esc(B.itemsText(row.recipe, 2) || '—') + ' · 材料：' + U.esc(B.matsText(row.recipe, 3) || '无（采集）') + '</small>' +
+        '</span>' +
+        '<span class="bt-val' + (pos ? ' pos' : '') + '">' + btMoney(row.net) + '<small>金</small></span>' +
+      '</summary>' + btRecipeDetail(row) + '</details>';
+  }
+
+  function btGateRow(gate) {
+    const B = bt();
+    return '<details class="bt-gate">' +
+      '<summary class="bt-gate-head"><span class="bt-gate-ic">' + gate.level + '</span>' +
+        '<span class="bt-main"><b class="nm">' + U.esc(gate.name) + ' · ' + gate.level + ' 级突破</b>' +
+          '<em class="ds">' + gate.items.length + ' 种材料 · 合计 ' + U.fmt(gate.cost, 0) + ' 金' + (gate.missing ? ' · 部分缺价' : '') + '</em></span>' +
+        '<span class="chev">' + icon('chevronDown') + '</span></summary>' +
+      '<div class="bt-detail"><div class="bt-cols"><div class="bt-col bt-col-wide">' +
+        gate.items.map(function (it) {
+          const sub = it.recipe ? '自制：' + it.recipe.name + '（需 ' + it.recipe.level + ' 级' + (B.matsText(it.recipe, 3) ? '，' + B.matsText(it.recipe, 3) : '') + '）' : '交易行 / 采集';
+          return btLine(it.name + ' ×' + U.fmtInt(it.qty), sub + ' · 单价 ' + U.fmt(it.unit, 2) + ' 金', U.fmt(it.sub, 0) + ' 金', it.missing ? 'warn' : '');
+        }).join('') +
+      '</div></div><div class="bt-foot">合计 ' + U.fmt(gate.cost, 0) + ' 金；全按交易行约 ' + U.fmt(gate.marketCost, 0) + ' 金。任务奖励材料不可提交，需自制或交易行购买。</div></div></details>';
+  }
+
+  function renderBreakthrough(p) {
+    const B = bt();
+    if (!B) {
+      return '<div class="page">' + emptyState('突破数据未加载', '请刷新页面，或检查 assets/breakthrough-data.js 是否存在。', '', 'alert') + '</div>';
+    }
+    const meta = B.META;
+    const skillId = p.skill && C.skillOf(p.skill) ? p.skill : 'duanzao';
+    const strategy = p.strategy === 'energy' || p.strategy === 'effort' ? p.strategy : 'gold';
+    const r = B.analyze(skillId, strategy);
+    const sum = B.summary(strategy);
+    const t = r.totals;
+    const isGather = r.meta.type === 'gather';
+    const budget = U.num(settings().energyBudget) || 3000;
+    const rounds = Math.ceil(t.energy / budget);
+    const taxRate = currentTaxRate();
+
+    let html = '<div class="page">';
+    html += '<div class="page-head"><div><h1 class="page-title">突破升级 · 1→50</h1>' +
+      '<p class="page-sub">' + U.esc(meta.expansion) + ' · 30/35/40/45 级「晋秩」突破与最优冲级路线；价格取「' + U.esc(server().name) + '」当前服。</p></div>' +
+      '<div class="page-tools"><a class="btn" href="' + Route.href('/analysis') + '">' + icon('chart') + '<span class="txt">返回分析</span></a>' +
+      '<a class="btn btn-primary" href="' + Route.href('/prices') + '">' + icon('database') + '<span class="txt">校准价格</span></a></div></div>';
+
+    html += '<div class="grid"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">选择技艺</h2><p class="card-sub">8 项生活技艺 · 30/35/40/45 级需完成「晋秩」突破</p></div></div>' +
+      '<div class="card-body">' + btSkillLinks(skillId, strategy) +
+      '<div class="bt-stratrow">' + btStratLinks(skillId, strategy) +
+      '<span class="tiny dim">' + (isGather
+        ? '采集按「单次经验 ÷ 精力」与产出价值取优；采集经验为估算值。'
+        : '制造配方经验恒为精力 ×2；「精力最优」优先选单次经验小的配方，减少升级取整浪费，代价是制作次数更多。') + '</span></div>' +
+      '</div></section></div>';
+
+    if (meta.hints && meta.hints[skillId]) {
+      html += '<div style="margin-top:12px">' + notice('刷经验提示：' + U.esc(meta.hints[skillId]), 'info') + '</div>';
+    }
+
+    html += '<div class="kpi-grid section-gap">' +
+      '<div class="kpi"><div class="kpi-label">1→50 总经验</div><div class="kpi-value">' + U.fmtInt(t.exp) + '<span class="kpi-unit">经验</span></div><div class="kpi-meta"><span>按每级经验模型估算</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">总精力</div><div class="kpi-value">' + U.fmtInt(t.energy) + '<span class="kpi-unit">精力</span></div><div class="kpi-meta"><span>约 ' + U.fmtInt(rounds) + ' 次满精力（' + U.fmtInt(budget) + '）</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">升级净金</div><div class="kpi-value ' + (isGather ? (t.net > 0 ? 'pos' : '') : (t.net <= 0 ? 'pos' : '')) + '">' + U.fmtSigned(t.net, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>' + (isGather ? '升级途中的产出价值' : '材料成本 − 产出税后价值') + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">突破材料</div><div class="kpi-value">' + U.fmt(t.gateCost, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>' + r.gates.filter(function (g) { return !g.missing; }).length + '/' + r.gates.length + ' 个门槛可算价</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">合计净投入</div><div class="kpi-value ' + (t.total <= 0 ? 'pos' : 'neg') + '">' + U.fmtSigned(t.total, 0) + '<span class="kpi-unit">金</span></div><div class="kpi-meta"><span>含突破材料 · 产出 ' + U.fmt(t.outValue, 0) + ' 金</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">制作 / 采集次数</div><div class="kpi-value">' + U.fmtInt(t.crafts) + '<span class="kpi-unit">次</span></div><div class="kpi-meta"><span>' + (isGather ? '采集点按最高价值取优' : '按每次经验取整累计') + '</span></div></div>' +
+    '</div>';
+
+    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">' + U.esc(r.meta.name) + ' · 最优升级路线</h2><p class="card-sub">' + BT_STRAT_LABEL[strategy] + ' · 点击任一段展开材料与产出明细</p></div>' +
+      '<div class="card-tools"><span class="badge badge-outline">' + r.routes.length + ' 段</span></div></div>' +
+      '<div class="card-body tight">' +
+      (r.routes.length ? r.routes.map(function (row) {
+        return row.kind === 'gate' ? btGateRow(row) : btLevelRow(row, isGather);
+      }).join('') : emptyState('暂无可用路线', '补齐材料价格后再试。', '', 'search')) +
+      '</div><div class="card-foot"><span>' + (isGather
+        ? '净金 = 产出税后价值（税 ' + U.fmtPct(taxRate, 0) + '）；采集不占材料成本，数值越高越划算。'
+        : '净金 = 材料成本 − 产出税后价值（税 ' + U.fmtPct(taxRate, 0) + '）；负数代表升级途中还能回本。') +
+      '</span></div></section></div>';
+
+    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">晋秩突破任务</h2><p class="card-sub">30 / 35 / 40 / 45 级 · 材料需自制或交易行购买，任务奖励材料不可提交</p></div></div>' +
+      '<div class="card-body tight">' +
+      ((r.gates || []).length ? r.gates.map(function (g) { return btGateRow(g); }).join('') : emptyState('该技艺无突破数据', '请检查数据版本。', '', 'info')) +
+      '</div><div class="card-foot"><span>晋秩·学徒 30 级 / 晋秩·巧匠 35 级 / 晋秩·名师 40 级 / 晋秩·宗师 45 级；完成后才能继续升级至 50。</span></div></section></div>';
+
+    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">八技艺横评</h2><p class="card-sub">同样 1→50，按合计净投入排序（不含时间成本）</p></div></div>' +
+      '<div class="table-wrap medium"><table class="data compact"><thead><tr><th>#</th><th>技艺</th><th>类型</th><th class="num">总精力</th><th class="num">升级净金</th><th class="num">突破材料</th><th class="num">合计净投入</th><th class="num">产出价值</th></tr></thead><tbody>' +
+      sum.map(function (s, i) {
+        return '<tr class="clickable' + (s.skillId === skillId ? ' is-current' : '') + '" data-bt-skill="' + U.esc(s.skillId) + '" tabindex="0">' +
+          '<td class="num dim">' + (i + 1) + '</td>' +
+          '<td><b>' + U.esc(s.name) + '</b></td>' +
+          '<td class="dim">' + (s.type === 'gather' ? '采集' : '制造') + '</td>' +
+          '<td class="num">' + U.fmtInt(s.energy) + '</td>' +
+          '<td class="num ' + (s.net <= 0 ? 'pos' : '') + '">' + U.fmtSigned(s.net, 0) + '</td>' +
+          '<td class="num">' + U.fmt(s.gateCost, 0) + '</td>' +
+          '<td class="num"><b class="' + (s.total <= 0 ? 'pos' : '') + '">' + U.fmtSigned(s.total, 0) + '</b></td>' +
+          '<td class="num dim">' + U.fmt(s.outValue, 0) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<div class="card-foot"><span>横评使用当前服务器价格与「' + BT_STRAT_LABEL[strategy] + '」策略；点击行可切换到该技艺。</span></div></section></div>';
+
+    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
+      notice('经验门槛为估算（每级 ' + U.fmtInt(meta.expModel.base) + '+' + U.fmtInt(meta.expModel.step) + '×(等级−1)），仅影响总量，不改变单级最优配方；采集经验按 ' + U.fmtInt(meta.gatherExp) + ' 估算。突破材料与门槛来自 JX3BOX 攻略与成就库，配方数据来自技艺接口，价格为拍卖快照；产出按拍卖价成交估算，未计市场深度与暴击，量产会压低实际成交价。', 'info') +
+      '<p class="tiny dim">数据版本 ' + U.esc(meta.version) + ' · 价格 ' + U.esc(String(meta.priceUpdatedAt || '').slice(0, 10)) + ' · 参考：' +
+      '<a href="https://www.jx3box.com/bps/109793" target="_blank" rel="noopener">JX3BOX 生活技艺升级攻略 ' + icon('external') + '</a></p>' +
+      '</div></section></div>';
+
+    html += '</div>';
+    return html;
+  }
+
+  function btMiniCard() {
+    const B = bt();
+    if (!B) return '';
+    const list = B.summary('gold');
+    if (!list.length) return '';
+    const energyMin = Math.min.apply(null, list.map(function (s) { return s.energy; }));
+    const energyMax = Math.max.apply(null, list.map(function (s) { return s.energy; }));
+    const top = list.slice(0, 4);
+    let html = '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">突破升级 · 1→50</h2><p class="card-sub">晋秩突破 · 按本服物价算 1→50 最优路线</p></div>' +
+      '<div class="card-tools"><a class="btn btn-sm btn-primary" href="' + Route.href('/breakthrough') + '">' + icon('chart') + ' 查看路线</a></div></div>' +
+      '<div class="card-body tight"><div class="bt-mini-kpis">' +
+      '<div class="bt-mini"><span class="k">1→50 经验</span><span class="v">' + U.fmtInt(list[0].exp) + '</span><span class="s">按级别估算，八技艺一致</span></div>' +
+      '<div class="bt-mini"><span class="k">精力区间</span><span class="v">' + U.fmtInt(energyMin) + '–' + U.fmtInt(energyMax) + '</span><span class="s">制造经验 = 精力 ×2</span></div>' +
+      '</div>' +
+      top.map(function (s) {
+        return '<a class="bt-sum-row" href="' + Route.href('/breakthrough', { skill: s.skillId }) + '">' +
+          '<span class="bt-sum-main"><b class="nm">' + U.esc(s.name) + ' <span class="tiny dim">· ' + (s.type === 'gather' ? '采集' : '制造') + '</span></b>' +
+          '<span class="ds">精力 ' + U.fmtInt(s.energy) + ' · 突破材料 ' + U.fmt(s.gateCost, 0) + ' 金 · 产出 ' + U.fmt(s.outValue, 0) + ' 金</span></span>' +
+          '<span class="bt-val' + (s.total <= 0 ? ' pos' : '') + '">' + U.fmtSigned(s.total, 0) + '<small>金</small></span></a>';
+      }).join('') +
+      '</div><div class="card-foot"><span>合计 = 升级净金 + 突破材料；负数代表升级途中能回本。展示性价比前 4 项，共 8 项技艺。</span></div></section></div>';
+    return html;
+  }
+
   function renderAnalysis(p) {
     const basis = currentBasis(p);
     const complete = p.complete !== '0';
@@ -1627,6 +1837,8 @@
       '<div class="kpi"><div class="kpi-label">满精力预估</div><div class="kpi-value">' + U.fmt(sim.profit, 2) + '<span class="kpi-unit">金</span></div>' +
         '<div class="kpi-meta"><span>预算 ' + U.fmtInt(settings().energyBudget) + ' 精力 · 用尽 ' + U.fmtInt(sim.used) + '</span></div></div>' +
     '</div>';
+
+    html += btMiniCard();
 
     const chartRows = sorted.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; }).slice(0, 15).map(function (r) {
       return {
@@ -3147,6 +3359,11 @@
       openRecipe(chartEl.getAttribute('data-recipe'));
       return;
     }
+    const btRow = e.target.closest('tr[data-bt-skill]');
+    if (btRow) {
+      go('/breakthrough', { skill: btRow.getAttribute('data-bt-skill') });
+      return;
+    }
     const row = e.target.closest('tr[data-recipe-id]');
     if (row && !e.target.closest('input, select, button, a, label')) {
       openRecipe(row.getAttribute('data-recipe-id'));
@@ -3466,6 +3683,8 @@
       html = renderPrices(p); title = '价格库';
     } else if (route.path === '/analysis') {
       html = renderAnalysis(p); title = '精力收益分析';
+    } else if (route.path === '/breakthrough') {
+      html = renderBreakthrough(p); title = '突破升级';
     } else if (route.path === '/stones') {
       html = renderStones(p); title = '五行石合成';
     } else {
