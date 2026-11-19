@@ -27,7 +27,7 @@ if [ "$#" -gt 0 ]; then
   COMMIT_PATHS=("$@")
 else
   COMMIT_PATHS=(
-    index.html assets minitool site content miniapp brand docs screenshots scripts
+    index.html sw.js manifest.webmanifest icons assets minitool site content miniapp brand docs screenshots scripts
     .github README.md MINITOOL.md DEPLOY.md LICENSE .gitignore .gitattributes
     AGENTS.md "剑网三物价助手-minitool.zip"
   )
