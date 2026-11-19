@@ -1,13 +1,16 @@
 {
-  "sourceCommit": "f19901c42ca15aea058ed094914ecfbeed5a2bf4",
-  "date": "2026-11-19",
-  "title": "WPS 也能用最新物价：新增本地刷新脚本",
+  "sourceCommit": "b1f7eb0c72d59876b3846c48cb36b930f1b088ca",
+  "date": "2026-11-20",
+  "title": "add file picker to WPS price refresh command",
   "notes": [
-    "WPS / LibreOffice 不支持 Power Query，双击 excel/刷新物价.command 即可把最新物价写进工作簿",
-    "脚本只改「物价」表的数值，图表、格式、宏都保留，并设置打开时自动重算收益",
-    "Pages 下载的 jx3-excel / -auto / .xlsm 每次发布都自带当次最新快照，重新下载即可看到新价"
+    "add file picker to WPS price refresh command"
   ],
   "history": [
+    {
+      "version": "b1f7eb0",
+      "date": "2026-11-20",
+      "title": "add file picker to WPS price refresh command"
+    },
     {
       "version": "f19901c",
       "date": "2026-11-19",
@@ -32,11 +35,6 @@
       "version": "fb3c6fb",
       "date": "2026-11-19",
       "title": "seed snapshot into no-macro auto workbook"
-    },
-    {
-      "version": "dab1af9",
-      "date": "2026-11-19",
-      "title": "make price refresh button visible and add form control props"
     }
   ]
 }
