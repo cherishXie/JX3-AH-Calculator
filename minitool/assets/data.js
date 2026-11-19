@@ -5,11 +5,11 @@ window.JX3Data = {
     "expansion": "苍生铸世",
     "levelCap": 50,
     "version": "苍生铸世 · 50 级",
-    "catalogVersion": "v3.4",
-    "seedVersion": "cs50-v3.4",
+    "catalogVersion": "v3.5",
+    "seedVersion": "cs50-v3.5",
     "updatedAt": "2026-11-19",
     "verifiedAt": "2026-11-19",
-    "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。当前赛季采集默认 40 精力/次；紫苏 45、黄花菜/鱼腥草 50，其余采集点按 40 计。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
+    "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。当前赛季采集默认 40 精力/次；紫苏 45、黄花菜/鱼腥草 50，其余采集点按 40 计。马草（百脉根/紫花苜蓿/甜象草/皇竹草）已加入神农采集，价格为示例，可在价格库校准。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
     "sources": [
       {
         "label": "JX3BOX 技艺助手",
@@ -95,119 +95,124 @@ window.JX3Data = {
         "label": "JX3BOX 拍卖 · 五行石 1-8 级（2026-11-19）",
         "url": "",
         "note": "17 个服务器 1-8 级五行石拍卖样本，用于本模块默认价。"
+      },
+      {
+        "label": "JX3BOX 物品百科 · 马草/百脉根等",
+        "url": "",
+        "note": "百脉根/紫花苜蓿/甜象草/皇竹草为神农采集马草；当前缺少可对应的拍卖样本，价格按示例价处理。"
       }
     ],
-    "scope": "收录 154 条当前版本制造配方 + 17 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
+    "scope": "收录 154 条当前版本制造配方 + 21 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
     "priceUpdatedAt": "2026-11-19T10:15:30+08:00",
     "priceCoverage": {
       "updated": 200,
-      "total": 263,
+      "total": 267,
       "source": "JX3BOX 拍卖 · 17 个服务器",
       "filtered": 17,
-      "noQuote": 63
+      "noQuote": 67
     },
     "serverCoverage": {
       "s_mengjiangnan": {
         "updated": 200,
-        "total": 263,
+        "total": 267,
         "filtered": 17,
-        "noQuote": 63
+        "noQuote": 50
       },
       "s_pozhenzi": {
         "updated": 142,
-        "total": 263,
+        "total": 267,
         "filtered": 34,
-        "noQuote": 121
+        "noQuote": 91
       },
       "s_dielianhua": {
         "updated": 150,
-        "total": 263,
+        "total": 267,
         "filtered": 21,
-        "noQuote": 113
+        "noQuote": 96
       },
       "s_jiandan": {
         "updated": 147,
-        "total": 263,
+        "total": 267,
         "filtered": 28,
-        "noQuote": 116
+        "noQuote": 92
       },
       "s_youyuelun": {
         "updated": 165,
-        "total": 263,
+        "total": 267,
         "filtered": 26,
-        "noQuote": 98
+        "noQuote": 76
       },
       "s_longzheng": {
         "updated": 179,
-        "total": 263,
+        "total": 267,
         "filtered": 18,
-        "noQuote": 84
+        "noQuote": 70
       },
       "s_changancheng": {
         "updated": 148,
-        "total": 263,
+        "total": 267,
         "filtered": 22,
-        "noQuote": 115
+        "noQuote": 97
       },
       "s_douzhuang": {
         "updated": 152,
-        "total": 263,
+        "total": 267,
         "filtered": 36,
-        "noQuote": 111
+        "noQuote": 79
       },
       "s_qiankun": {
         "updated": 167,
-        "total": 263,
+        "total": 267,
         "filtered": 30,
-        "noQuote": 96
+        "noQuote": 70
       },
       "s_weiwo": {
         "updated": 197,
-        "total": 263,
+        "total": 267,
         "filtered": 17,
-        "noQuote": 66
+        "noQuote": 53
       },
       "s_juedai": {
         "updated": 177,
-        "total": 263,
+        "total": 267,
         "filtered": 25,
-        "noQuote": 86
+        "noQuote": 65
       },
       "s_tianeping": {
         "updated": 174,
-        "total": 263,
+        "total": 267,
         "filtered": 27,
-        "noQuote": 89
+        "noQuote": 66
       },
       "s_feilong": {
         "updated": 136,
-        "total": 263,
+        "total": 267,
         "filtered": 31,
-        "noQuote": 127
+        "noQuote": 100
       },
       "s_jiutian": {
         "updated": 114,
-        "total": 263,
+        "total": 267,
         "filtered": 37,
-        "noQuote": 149
+        "noQuote": 116
       },
       "s_meijianxue": {
         "updated": 128,
-        "total": 263,
+        "total": 267,
         "filtered": 25,
-        "noQuote": 135
+        "noQuote": 114
       },
       "s_shanhai": {
         "updated": 115,
-        "total": 263,
+        "total": 267,
         "filtered": 22,
-        "noQuote": 148
+        "noQuote": 130
       },
       "s_aoxue": {
         "updated": 76,
-        "total": 263,
+        "total": 267,
         "filtered": 14,
-        "noQuote": 187
+        "noQuote": 177
       }
     },
     "stonePriceUpdatedAt": "2026-11-19T10:15:30+08:00",
@@ -253,7 +258,7 @@ window.JX3Data = {
       "verb": "采集",
       "icon": "leaf",
       "color": "#2E9E78",
-      "desc": "采集紫苏、黄花菜、鱼腥草、虫草、甘草、芍药与珊瑚等草药，并有几率获得云芝、鸡血石；掉率与专精影响期望产值。"
+      "desc": "采集紫苏、黄花菜、鱼腥草、虫草、甘草、芍药、珊瑚与马草（百脉根、紫花苜蓿、甜象草、皇竹草）等草药，并有几率获得云芝、鸡血石；掉率与专精影响期望产值。"
     },
     {
       "id": "caijin",
@@ -3956,6 +3961,58 @@ window.JX3Data = {
       "custom": false,
       "priceSource": "auction",
       "priceAt": 1795010362
+    },
+    {
+      "id": "g_ma_baimaigen",
+      "name": "百脉根",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 1,
+      "source": "神农采集 · 马草",
+      "base": 1.5,
+      "verified": true,
+      "origin": "神农采集 · 马草",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "g_ma_zihuamuxu",
+      "name": "紫花苜蓿",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 2,
+      "source": "神农采集 · 马草",
+      "base": 3,
+      "verified": true,
+      "origin": "神农采集 · 马草",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "g_ma_tianxiangcao",
+      "name": "甜象草",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 3,
+      "source": "神农采集 · 马草",
+      "base": 6,
+      "verified": true,
+      "origin": "神农采集 · 马草",
+      "custom": false,
+      "priceSource": "seed"
+    },
+    {
+      "id": "g_ma_huangzhucao",
+      "name": "皇竹草",
+      "skillId": "shennong",
+      "kind": "material",
+      "tier": 4,
+      "source": "神农采集 · 马草",
+      "base": 12,
+      "verified": true,
+      "origin": "神农采集 · 马草",
+      "custom": false,
+      "priceSource": "seed"
     }
   ],
   "recipes": [
@@ -10830,6 +10887,86 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 物品百科 · 采集产物 / 掉率为示例",
       "custom": false
+    },
+    {
+      "id": "r_shennong_baimaigen",
+      "name": "神农·百脉根",
+      "skillId": "shennong",
+      "kind": "gather",
+      "level": 20,
+      "tier": 1,
+      "energy": 40,
+      "fee": 0,
+      "materials": [],
+      "outputs": [
+        {
+          "item": "g_ma_baimaigen",
+          "qty": 1,
+          "chance": 1
+        }
+      ],
+      "verified": true,
+      "note": "马草"
+    },
+    {
+      "id": "r_shennong_zihuamuxu",
+      "name": "神农·紫花苜蓿",
+      "skillId": "shennong",
+      "kind": "gather",
+      "level": 35,
+      "tier": 2,
+      "energy": 40,
+      "fee": 0,
+      "materials": [],
+      "outputs": [
+        {
+          "item": "g_ma_zihuamuxu",
+          "qty": 1,
+          "chance": 1
+        }
+      ],
+      "verified": true,
+      "note": "马草"
+    },
+    {
+      "id": "r_shennong_tianxiangcao",
+      "name": "神农·甜象草",
+      "skillId": "shennong",
+      "kind": "gather",
+      "level": 50,
+      "tier": 3,
+      "energy": 40,
+      "fee": 0,
+      "materials": [],
+      "outputs": [
+        {
+          "item": "g_ma_tianxiangcao",
+          "qty": 1,
+          "chance": 1
+        }
+      ],
+      "verified": true,
+      "note": "马草"
+    },
+    {
+      "id": "r_shennong_huangzhucao",
+      "name": "神农·皇竹草",
+      "skillId": "shennong",
+      "kind": "gather",
+      "level": 50,
+      "tier": 4,
+      "energy": 40,
+      "fee": 0,
+      "materials": [],
+      "outputs": [
+        {
+          "item": "g_ma_huangzhucao",
+          "qty": 1,
+          "chance": 1
+        }
+      ],
+      "verified": true,
+      "note": "马草"
     }
   ],
   "servers": [

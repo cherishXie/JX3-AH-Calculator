@@ -135,7 +135,7 @@ async function main() {
   const map = loadMap();
   let mapChanges = 0;
   for (const item of data.items) {
-    if (map[item.name]) continue;
+    if (Object.prototype.hasOwnProperty.call(map, item.name)) continue;
     try {
       const key = await resolveKey(item.name, map);
       if (key) mapChanges++;
