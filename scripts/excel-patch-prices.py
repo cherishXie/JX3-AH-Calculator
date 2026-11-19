@@ -109,6 +109,21 @@ def cell_ref_col(cell_xml: str) -> int:
     return col_to_index(m.group(1)) if m else 0
 
 
+def cell_text(cell_xml: str, sst: list[str]) -> str | None:
+    """取单元格文本：兼容共享字符串（openpyxl）与内联字符串（LibreOffice / WPS）。"""
+    if 't="inlineStr"' in cell_xml:
+        m = re.search(r"<is>(.*?)</is>", cell_xml, re.S)
+        return html.unescape(re.sub(r"<[^>]+>", "", m.group(1))) if m else None
+    if 't="s"' in cell_xml:
+        m = re.search(r"<v>(\d+)</v>", cell_xml)
+        try:
+            return sst[int(m.group(1))] if m else None
+        except (IndexError, ValueError):
+            return None
+    m = re.search(r"<v>(.*?)</v>", cell_xml, re.S)
+    return html.unescape(m.group(1)) if m else None
+
+
 def cell_style(cell_xml: str) -> str | None:
     m = re.search(r'<c\b[^>]*\bs="([^"]*)"', cell_xml)
     return m.group(1) if m else None
@@ -176,15 +191,8 @@ def main() -> int:
             col = cell_ref_col(cell_xml)
             if col:
                 cells[col] = cell_xml
-        a_cell = cells.get(1)
-        if not a_cell:
-            return match.group(0)
-        vm = re.search(r"<v>(\d+)</v>", a_cell)
-        if not vm:
-            return match.group(0)
-        try:
-            key = sst[int(vm.group(1))]
-        except (IndexError, ValueError):
+        key = cell_text(cells[1], sst) if 1 in cells else None
+        if not key:
             return match.group(0)
         record = records.get(key)
         if record is None:
@@ -278,6 +286,9 @@ def main() -> int:
     if args.in_place:
         print(f"  原文件备份：{out_path.with_suffix(out_path.suffix + '.bak')}")
     print("  已设置「打开时强制重算」：用 WPS / Excel 打开后会自动按新价格重算公式")
+    if stats["rows"] == 0:
+        print("warning: 没有匹配到任何数据行，工作簿结构可能不符合预期", file=sys.stderr)
+        return 1
     return 0
 
 
