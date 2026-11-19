@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "5d142be87ad93e9da9b46cc19ad303515e4cfe3a",
+  "sourceCommit": "1186c72e2999ecfc9ef43e7ddad024ff9ca47923",
   "date": "2026-11-19",
   "title": "技艺突破：三档产量独立核算与缺价提示",
   "notes": [
@@ -9,6 +9,11 @@
     "Web、小工具、小程序共用计算模型；完成修改后自动提交推送，持续更新 CHANGELOG、发布说明与 GitHub Pages"
   ],
   "history": [
+    {
+      "version": "1186c72",
+      "date": "2026-11-19",
+      "title": "include root offline assets in automatic releases"
+    },
     {
       "version": "5d142be",
       "date": "2026-11-19",
@@ -33,11 +38,6 @@
       "version": "b190e05",
       "date": "2026-11-19",
       "title": "label the final ranked quest as the level-50 breakthrough and show the 50 endpoint"
-    },
-    {
-      "version": "7bc9462",
-      "date": "2026-11-19",
-      "title": "restore direct price schedule and add recovery checks"
     }
   ]
 }
