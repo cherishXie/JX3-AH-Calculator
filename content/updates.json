@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "e7e891080edfd78d02408489f2c52b6d013e2fcc",
+  "sourceCommit": "228d13e20da888820a32a5a27d88b5b5543a1165",
   "date": "2026-11-19",
-  "title": "use native Excel Web Query for price refresh",
+  "title": "refresh Excel prices in WPS without Power Query",
   "notes": [
-    "use native Excel Web Query for price refresh"
+    "refresh Excel prices in WPS without Power Query"
   ],
   "history": [
+    {
+      "version": "228d13e",
+      "date": "2026-11-19",
+      "title": "refresh Excel prices in WPS without Power Query"
+    },
     {
       "version": "e7e8910",
       "date": "2026-11-19",
@@ -30,11 +35,6 @@
       "version": "8d8fd73",
       "date": "2026-11-19",
       "title": "add overview, gem module and one-click price refresh"
-    },
-    {
-      "version": "373ea55",
-      "date": "2026-11-19",
-      "title": "make local price fallback work under launchd"
     }
   ]
 }
