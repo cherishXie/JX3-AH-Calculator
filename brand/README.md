@@ -9,7 +9,7 @@
 | `jingli-chibi-v1/icon-girl-1254.png` | Q 版角色方形母版，导出 `wechat/avatar-144/512/1024/96.png` |
 | `jingli-chibi-v1/launch-girl-941x1672.png` | 竖版启动图母版，导出 `wechat/launch-9x16.jpg` 与 `miniapp/src/assets/launch-default.jpg` |
 
-- 小程序内启动引导页（`pages/guide/index`）按 `aspectFit` 完整展示，不裁标题/角色；底部浮层放「进入小程序 + 倒计时」。
+- 小程序内启动引导页（`pages/guide/index`）按 `aspectFit` 完整展示，不裁标题/角色；底部浮层放「进入小程序 + 倒计时」。打包版为 600×1066 / 约 94 KB，用于压到主包 1.5MB 质量线以内。
 - 微信原生启动屏不可自定义；该图用于小程序内引导页、资料页/分享卡片与外部宣传。
 - 版权口径：角色插画由用户提供并授权在本项目使用；不含官方 Logo、官方角色、游戏截图或官方字体。声明统一写「非官方玩家工具 · 示例价可校准 · 数据仅存本机」。
 
