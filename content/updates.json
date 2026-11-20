@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "59ab312f3359380e0a7d0558786af31066ff25f0",
+  "sourceCommit": "67b261985ee20f5317639aa2d72a239528ea46fb",
   "date": "2026-11-20",
   "title": "物价走势发布 · 行情同步修复",
   "notes": [
@@ -9,6 +9,11 @@
     "移动端无 Service Worker 时也能用 updates.json 检查更新，不再直接提示“浏览器不支持更新检查”"
   ],
   "history": [
+    {
+      "version": "67b2619",
+      "date": "2026-11-20",
+      "title": "行情同步与移动端更新检查"
+    },
     {
       "version": "59ab312",
       "date": "2026-11-20",
@@ -33,11 +38,6 @@
       "version": "e5690f5",
       "date": "2026-11-20",
       "title": "align trend counts, sticky filters and node lists"
-    },
-    {
-      "version": "4d318aa",
-      "date": "2026-11-20",
-      "title": "link trend charts, rank board and image export"
     }
   ]
 }
