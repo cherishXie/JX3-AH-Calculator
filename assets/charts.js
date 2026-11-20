@@ -590,6 +590,260 @@
     return svg;
   }
 
+
+  /* ------------------------------------------------------------------ */
+  /* 价格分布：最低/最高/平均值 + 10/25/50/75/90 分位                     */
+  /* ------------------------------------------------------------------ */
+  function priceDistribution(items, opts) {
+    opts = opts || {};
+    const P = opts.palette || DARK;
+    const data = (items || []).filter(function (item) { return item && item.stats; });
+    if (!data.length) return emptyChart(opts.width || 1000, opts.height || 360, opts.emptyText || '当前筛选没有可统计的价格', P);
+    const width = opts.width || Math.max(1000, data.length * 64);
+    const height = opts.height || 360;
+    const ml = 64, mr = 22, mt = 22, mb = 100;
+    const plotW = width - ml - mr;
+    const plotH = height - mt - mb;
+    const values = [];
+    data.forEach(function (item) { values.push(item.stats.min, item.stats.max); });
+    const positive = values.filter(function (v) { return v > 0; });
+    if (!positive.length) return emptyChart(width, height, opts.emptyText || '当前筛选没有可统计的价格', P);
+    const useLog = opts.log !== false;
+    let y, ticks = [];
+    if (useLog) {
+      const lo = Math.log10(Math.min.apply(null, positive));
+      const hi = Math.log10(Math.max.apply(null, positive));
+      const pad = Math.max(0.08, (hi - lo) * 0.08);
+      const bottom = lo - pad;
+      const top = hi + pad;
+      y = function (v) { return mt + plotH - ((Math.log10(Math.max(v, 1e-9)) - bottom) / (top - bottom)) * plotH; };
+      for (let i = 0; i <= 4; i++) ticks.push(Math.pow(10, bottom + (top - bottom) * i / 4));
+    } else {
+      let minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
+      if (!(maxV > minV)) maxV = minV + Math.max(1, Math.abs(minV) * 0.04);
+      const pad = (maxV - minV) * 0.1;
+      minV = Math.max(0, minV - pad); maxV += pad;
+      y = function (v) { return mt + plotH - ((v - minV) / (maxV - minV)) * plotH; };
+      for (let i = 0; i <= 4; i++) ticks.push(minV + (maxV - minV) * i / 4);
+    }
+    const slot = plotW / data.length;
+    const cx = function (i) { return ml + slot * (i + 0.5); };
+
+    let svg = '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" style="width:' + width + 'px;max-width:none" role="img" aria-label="' +
+      attr(opts.ariaLabel || '价格分布') + '">';
+    svg += '<rect width="' + width + '" height="' + height + '" fill="' + P.bg + '"/>';
+
+    if (opts.focusKey) {
+      data.forEach(function (item, i) {
+        if (!item.focus) return;
+        svg += '<rect x="' + (ml + slot * i).toFixed(1) + '" y="' + mt + '" width="' + slot.toFixed(1) + '" height="' + plotH +
+          '" fill="' + P.text + '" fill-opacity=".045"/>';
+      });
+    }
+    ticks.forEach(function (v) {
+      const yy = y(v);
+      svg += '<line x1="' + ml + '" y1="' + yy.toFixed(1) + '" x2="' + (width - mr) + '" y2="' + yy.toFixed(1) +
+        '" stroke="' + P.grid + '" stroke-width="1"/>';
+      const label = v < 1 ? U.fmt(v, 2) : v < 100 ? U.fmt(v, 1) : U.fmt(v, 0);
+      svg += '<text x="' + (ml - 8) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
+        U.esc(label) + '</text>';
+    });
+    svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">' +
+      (useLog ? '单价（金 · 对数）' : '单价（金）') + '</text>';
+
+    data.forEach(function (item, i) {
+      const s = item.stats;
+      const color = item.color || opts.color || COLOR.craft;
+      const x = cx(i);
+      const tip = item.name + ' · ' + s.count + ' 个节点\n' +
+        '最低  ' + U.fmt(s.min, 2) + '\n' +
+        '最高  ' + U.fmt(s.max, 2) + '\n' +
+        '平均  ' + U.fmt(s.avg, 2) + '\n' +
+        '10%  ' + U.fmt(s.p10, 2) + '\n' +
+        '25%  ' + U.fmt(s.p25, 2) + '\n' +
+        '50%  ' + U.fmt(s.p50, 2) + '\n' +
+        '75%  ' + U.fmt(s.p75, 2) + '\n' +
+        '90%  ' + U.fmt(s.p90, 2);
+      svg += '<g class="chart-dist" tabindex="0" data-trend-focus="' + attr(item.key) + '" data-tip="' + attr(tip) +
+        '" aria-label="' + attr(tip) + '">';
+      const yMin = y(s.min), yMax = y(s.max);
+      const y25 = y(s.p25), y75 = y(s.p75), y50 = y(s.p50);
+      svg += '<line x1="' + x.toFixed(1) + '" y1="' + yMin.toFixed(1) + '" x2="' + x.toFixed(1) + '" y2="' + yMax.toFixed(1) +
+        '" stroke="' + color + '" stroke-width="1.4" opacity=".8"/>';
+      svg += '<line x1="' + (x - 4).toFixed(1) + '" y1="' + yMin.toFixed(1) + '" x2="' + (x + 4).toFixed(1) + '" y2="' + yMin.toFixed(1) +
+        '" stroke="' + color + '" stroke-width="1.4"/>';
+      svg += '<line x1="' + (x - 4).toFixed(1) + '" y1="' + yMax.toFixed(1) + '" x2="' + (x + 4).toFixed(1) + '" y2="' + yMax.toFixed(1) +
+        '" stroke="' + color + '" stroke-width="1.4"/>';
+      const boxW = Math.max(4, slot * 0.26);
+      const rawTop = Math.min(y25, y75);
+      const rawH = Math.abs(y75 - y25);
+      const boxH = Math.max(4, rawH);
+      const boxTop = rawTop - (boxH - rawH) / 2;
+      svg += '<rect x="' + (x - boxW).toFixed(1) + '" y="' + boxTop.toFixed(1) + '" width="' + (boxW * 2).toFixed(1) +
+        '" height="' + boxH.toFixed(1) + '" fill="' + color + '" stroke="' + color + '" stroke-width="1"/>';
+      svg += '<line x1="' + (x - boxW).toFixed(1) + '" y1="' + y50.toFixed(1) + '" x2="' + (x + boxW).toFixed(1) + '" y2="' + y50.toFixed(1) +
+        '" stroke="' + P.text + '" stroke-width="1.8"/>';
+      svg += '</g>';
+    });
+
+    data.forEach(function (item, i) {
+      const x = cx(i);
+      const label = truncate(item.name, 12);
+      const focus = opts.focusKey === item.key;
+      const color = item.color || COLOR.craft;
+      svg += '<circle cx="' + x.toFixed(1) + '" cy="' + (height - mb - 5) + '" r="2.6" fill="' + color + '" data-trend-focus="' + attr(item.key) + '" style="cursor:pointer"/>';
+      svg += '<text x="' + x.toFixed(1) + '" y="' + (height - mb + 14) + '" transform="rotate(-45 ' + x.toFixed(1) + ' ' + (height - mb + 14) + ')" text-anchor="end" font-size="10" font-weight="' + (focus ? '600' : '400') + '" fill="' + (focus ? P.text : P.muted) + '" data-trend-focus="' + attr(item.key) + '" style="cursor:pointer">' +
+        U.esc(label) + '</text>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 类别散点：x=物品，y=价格，按节点做水平抖动                            */
+  /* ------------------------------------------------------------------ */
+  function categoryScatter(rows, opts) {
+    opts = opts || {};
+    const P = opts.palette || DARK;
+    const items = opts.items || [];
+    const data = (rows || []).filter(function (r) { return r && Number(r.price) > 0; });
+    if (!data.length || !items.length) return emptyChart(opts.width || 1000, opts.height || 300, opts.emptyText || '当前筛选没有价格节点', P);
+    const width = opts.width || Math.max(1000, items.length * 64);
+    const height = opts.height || 300;
+    const ml = 64, mr = 22, mt = 22, mb = 90;
+    const plotW = width - ml - mr;
+    const plotH = height - mt - mb;
+    const values = data.map(function (r) { return r.price; });
+    const useLog = opts.log !== false;
+    let y, ticks = [];
+    if (useLog) {
+      const lo = Math.log10(Math.min.apply(null, values));
+      const hi = Math.log10(Math.max.apply(null, values));
+      const pad = Math.max(0.08, (hi - lo) * 0.08);
+      const bottom = lo - pad, top = hi + pad;
+      y = function (v) { return mt + plotH - ((Math.log10(v) - bottom) / (top - bottom)) * plotH; };
+      for (let i = 0; i <= 4; i++) ticks.push(Math.pow(10, bottom + (top - bottom) * i / 4));
+    } else {
+      let minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
+      if (!(maxV > minV)) maxV = minV + Math.max(1, Math.abs(minV) * 0.04);
+      const pad = (maxV - minV) * 0.1;
+      minV = Math.max(0, minV - pad); maxV += pad;
+      y = function (v) { return mt + plotH - ((v - minV) / (maxV - minV)) * plotH; };
+      for (let i = 0; i <= 4; i++) ticks.push(minV + (maxV - minV) * i / 4);
+    }
+    const slot = plotW / items.length;
+    const cx = function (i) { return ml + slot * (i + 0.5); };
+    let svg = '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" style="width:' + width + 'px;max-width:none" role="img" aria-label="' +
+      attr(opts.ariaLabel || '价格散点') + '">';
+    svg += '<rect width="' + width + '" height="' + height + '" fill="' + P.bg + '"/>';
+    if (opts.focusKey) {
+      items.forEach(function (item, i) {
+        if (!item.focus) return;
+        svg += '<rect x="' + (ml + slot * i).toFixed(1) + '" y="' + mt + '" width="' + slot.toFixed(1) + '" height="' + plotH +
+          '" fill="' + P.text + '" fill-opacity=".045"/>';
+      });
+    }
+    ticks.forEach(function (v) {
+      const yy = y(v);
+      svg += '<line x1="' + ml + '" y1="' + yy.toFixed(1) + '" x2="' + (width - mr) + '" y2="' + yy.toFixed(1) +
+        '" stroke="' + P.grid + '" stroke-width="1"/>';
+      const label = v < 1 ? U.fmt(v, 2) : v < 100 ? U.fmt(v, 1) : U.fmt(v, 0);
+      svg += '<text x="' + (ml - 8) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
+        U.esc(label) + '</text>';
+    });
+    svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">' +
+      (useLog ? '单价（金 · 对数）' : '单价（金）') + '</text>';
+    data.forEach(function (r) {
+      const item = items[r.itemIndex];
+      if (!item) return;
+      const x = cx(r.itemIndex) + (r.jitter || 0) * slot * 0.44;
+      const yy = y(r.price);
+      const tip = r.name + ' · ' + String(r.at || '').replace('T', ' ') + ' · ' + U.fmt(r.price, 2) + ' 金' +
+        (Number.isFinite(Number(r.change)) ? ' · ' + (r.change >= 0 ? '+' : '') + U.fmt(r.change, 2) + '%' : '');
+      svg += '<circle class="chart-point" tabindex="0" cx="' + x.toFixed(1) + '" cy="' + yy.toFixed(1) + '" r="' +
+        (r.focus ? 4.6 : 3.2) + '" fill="' + (r.color || item.tierColor || COLOR.craft) + '" fill-opacity=".9"' +
+        (r.focus ? ' stroke="' + P.text + '" stroke-width="1.5"' : ' stroke="transparent" stroke-width="0"') +
+        ' data-trend-focus="' + attr(r.itemKey) + '" data-tip="' + attr(tip) + '" aria-label="' + attr(tip) + '"/>';
+    });
+    items.forEach(function (item, i) {
+      const x = cx(i);
+      const label = truncate(item.name, 12);
+      const focus = opts.focusKey === item.key;
+      const color = item.color || COLOR.craft;
+      svg += '<circle cx="' + x.toFixed(1) + '" cy="' + (height - mb - 5) + '" r="2.6" fill="' + color + '" data-trend-focus="' + attr(item.key) + '" style="cursor:pointer"/>';
+      svg += '<text x="' + x.toFixed(1) + '" y="' + (height - mb + 14) + '" transform="rotate(-45 ' + x.toFixed(1) + ' ' + (height - mb + 14) + ')" text-anchor="end" font-size="10" font-weight="' + (focus ? '600' : '400') + '" fill="' + (focus ? P.text : P.muted) + '" data-trend-focus="' + attr(item.key) + '" style="cursor:pointer">' +
+        U.esc(label) + '</text>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 单物品折线：时间 × 价格                                             */
+  /* ------------------------------------------------------------------ */
+  function priceLine(series, opts) {
+    opts = opts || {};
+    const P = opts.palette || DARK;
+    const data = (series || []).filter(function (point) { return Number(point.price) > 0; });
+    if (!data.length) return emptyChart(opts.width || 1000, opts.height || 260, opts.emptyText || '当前物品没有价格节点', P);
+    const width = opts.width || 1000;
+    const height = opts.height || 260;
+    const ml = 64, mr = 22, mt = 22, mb = 44;
+    const plotW = width - ml - mr;
+    const plotH = height - mt - mb;
+    const values = data.map(function (point) { return point.price; });
+    let minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
+    if (!(maxV > minV)) maxV = minV + Math.max(1, Math.abs(minV) * 0.04);
+    const pad = (maxV - minV) * 0.1;
+    minV = Math.max(0, minV - pad); maxV += pad;
+    const y = function (v) { return mt + plotH - ((v - minV) / (maxV - minV)) * plotH; };
+    const times = data.map(function (point) { return Date.parse(point.at); });
+    let t0 = Math.min.apply(null, times), t1 = Math.max.apply(null, times);
+    if (t1 <= t0) t1 = t0 + 3600000;
+    const x = function (at) { return ml + (Date.parse(at) - t0) / (t1 - t0) * plotW; };
+    let svg = '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" style="width:' + width + 'px;max-width:none" role="img" aria-label="' +
+      attr(opts.ariaLabel || '单品物价变化') + '">';
+    svg += '<rect width="' + width + '" height="' + height + '" fill="' + P.bg + '"/>';
+    for (let i = 0; i <= 4; i++) {
+      const v = minV + (maxV - minV) * i / 4;
+      const yy = y(v);
+      svg += '<line x1="' + ml + '" y1="' + yy.toFixed(1) + '" x2="' + (width - mr) + '" y2="' + yy.toFixed(1) +
+        '" stroke="' + P.grid + '" stroke-width="1"/>';
+      svg += '<text x="' + (ml - 8) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
+        U.esc(U.fmt(v, v < 1 ? 2 : v < 100 ? 1 : 0)) + '</text>';
+    }
+    svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">单价（金）</text>';
+    data.forEach(function (point, i) {
+      if (i === 0) return;
+      const prev = data[i - 1];
+      const x1 = x(prev.at), y1 = y(prev.price), x2 = x(point.at), y2 = y(point.price);
+      svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) +
+        '" stroke="' + (opts.color || COLOR.craft) + '" stroke-width="1.8"/>';
+    });
+    data.forEach(function (point, i) {
+      const cx = x(point.at), cy = y(point.price);
+      const tip = String(point.at || '').replace('T', ' ') + ' · ' + U.fmt(point.price, 2) + ' 金';
+      svg += '<circle class="chart-point" tabindex="0" cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + (i === data.length - 1 ? 4.2 : 3.2) +
+        '" fill="' + (opts.color || COLOR.craft) + '" fill-opacity=".9"' +
+        (i === data.length - 1 ? ' stroke="' + P.text + '" stroke-width="1.5"' : '') +
+        ' data-tip="' + attr(tip) + '" aria-label="' + attr(tip) + '"/>';
+    });
+    const labelCount = data.length <= 8 ? data.length : 5;
+    for (let i = 0; i < labelCount; i++) {
+      const point = data[data.length <= 8 ? i : Math.round(i * (data.length - 1) / 4)];
+      const cx = x(point.at);
+      const d = new Date(Date.parse(point.at));
+      const text = (d.getMonth() + 1) + '-' + String(d.getDate()).padStart(2, '0') + ' ' +
+        String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      svg += '<line x1="' + cx.toFixed(1) + '" y1="' + mt + '" x2="' + cx.toFixed(1) + '" y2="' + (height - mb) +
+        '" stroke="' + P.grid + '" stroke-width="1"/>';
+      svg += '<text x="' + cx.toFixed(1) + '" y="' + (height - mb + 16) + '" text-anchor="middle" font-size="10" fill="' + P.muted + '">' +
+        U.esc(text) + '</text>';
+    }
+    svg += '</svg>';
+    return svg;
+  }
+
   window.JX3Charts = {
     palette: palette,
     color: COLOR,
@@ -600,6 +854,9 @@
     columns: columns,
     candle: candle,
     trendScatter: trendScatter,
+    priceDistribution: priceDistribution,
+    categoryScatter: categoryScatter,
+    priceLine: priceLine,
     emptyChart: emptyChart
   };
 })();

@@ -866,6 +866,7 @@ table.data.compact { font-size: 12px; }
   padding: 8px 10px;
   font-size: 11.5px;
   line-height: 17px;
+  white-space: pre-line;
   opacity: 0;
   transform: translateY(3px);
   transition: opacity 120ms ease, transform 120ms ease;
@@ -1625,6 +1626,8 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .trend-time-sep { font-size: 11px; color: var(--muted); }
 .trend-date { width: 122px; height: 26px; font-size: 11.5px; border: 0; background: transparent; padding: 0 2px; }
 .trend-hour { width: 76px; height: 26px; font-size: 11.5px; border: 0; background-color: transparent; padding-left: 6px; padding-right: 22px; }
+.trend-price { width: 78px; height: 28px; font-size: 11.5px; padding: 0 7px; }
+.trend-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
 
 .trend-picker { position: relative; }
 .trend-picker-summary {
@@ -1634,6 +1637,8 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 }
 .trend-picker-summary::-webkit-details-marker { display: none; }
 .trend-picker-summary b { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.trend-picker-summary em { font-style: normal; font-size: 9.5px; color: var(--muted-2); }
+.trend-check-all { min-height: 24px; font-weight: 600; }
 .trend-picker-summary svg { width: 12px; height: 12px; color: var(--muted); transition: transform 150ms ease; }
 .trend-picker[open] .trend-picker-summary svg { transform: rotate(180deg); }
 .trend-picker-panel {
@@ -1671,27 +1676,22 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 }
 .trend-heatmap tbody tr:hover th, .trend-heatmap tbody tr:hover td { filter: brightness(1.06); }
 .trend-heatmap td.is-missing { color: var(--muted-2); }
-.trend-heatmap .trend-heat-name { display: block; max-width: 170px; overflow: hidden; text-overflow: ellipsis; }
+.trend-heat-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.trend-heatmap .trend-heat-name { display: inline-block; max-width: 170px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
 .trend-heatmap .trend-heat-tier { display: block; margin-top: 1px; font-size: 9.5px; color: var(--muted-2); }
 .trend-heat-legend { display: flex; align-items: center; gap: 9px; font-size: 10.5px; color: var(--muted); }
 .trend-heat-legend .item { display: inline-flex; align-items: center; gap: 4px; }
 .trend-heat-legend .swatch { width: 9px; height: 9px; border-radius: 2px; background: var(--sw); }
 
-.trend-items-card .trend-item-list { border-top: 1px solid var(--border-soft); }
-.trend-item { padding: 14px 18px 16px; border-bottom: 1px solid var(--border-soft); }
-.trend-item:last-child { border-bottom: 0; }
-.trend-item-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-.trend-item-title { display: flex; align-items: center; gap: 7px; min-width: 0; flex-wrap: wrap; }
-.trend-item-title b { font-size: 14px; font-weight: 600; }
-.trend-item-title .dim { font-size: 11px; }
-.trend-item-stats { display: flex; align-items: baseline; gap: 10px; font-size: 11px; color: var(--muted); }
-.trend-item-stats b { color: var(--text); font-variant-numeric: tabular-nums; }
-.trend-item-stats .pos { color: var(--positive); font-weight: 600; }
-.trend-item-stats .neg { color: var(--danger); font-weight: 600; }
-.trend-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
-.trend-mini { min-width: 0; }
-.trend-mini-title { font-size: 9.5px; color: var(--muted-2); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
-.trend-mini .chart-svg { width: 100%; height: auto; }
+.trend-chart-wrap { overflow-x: auto; overflow-y: hidden; padding: 4px 14px 8px; }
+.trend-chart-wrap .chart-svg { display: block; }
+.trend-chart-card .card-head { padding-bottom: 0; }
+.trend-whisker { display: inline-block; width: 2px; height: 12px; background: var(--muted); position: relative; }
+.trend-whisker::before, .trend-whisker::after { content: ""; position: absolute; left: -3px; width: 8px; height: 1px; background: var(--muted); }
+.trend-whisker::before { top: 0; }
+.trend-whisker::after { bottom: 0; }
+.trend-avg { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--text); border: 1px solid var(--bg); }
+.trend-ring-label { display: inline-flex; align-items: center; gap: 6px; }
 .trend-raw-details { padding: 0; }
 .trend-raw-summary {
   display: flex; align-items: center; gap: 10px; padding: 15px 18px; cursor: pointer;
@@ -1706,8 +1706,6 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .trend-raw-body .table-wrap { border-top: 1px solid var(--border-soft); }
 
 @media (max-width: 900px) {
-  .trend-pair { grid-template-columns: 1fr; }
-  .trend-item { padding: 14px; }
 }
 @media (max-width: 768px) {
   .trend-filter { align-items: flex-start; }
@@ -1720,7 +1718,6 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
   .trend-picker-summary { width: 100%; justify-content: space-between; }
   .trend-picker-panel { position: static; width: auto; max-width: none; margin-top: 6px; box-shadow: none; }
   .trend-heatmap .trend-heat-name { max-width: 110px; }
-  .trend-item-stats { width: 100%; }
 }
 
 /* 开发预览环境标识 */
