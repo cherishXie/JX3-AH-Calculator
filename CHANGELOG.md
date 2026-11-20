@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 07fff9f
+
+update JX3BOX prices
+
 ## 2026-11-21 · 60fa90e
 
 update JX3BOX prices
@@ -538,11 +542,3 @@ silent price updates and PWA progress bar
 ## 2026-11-19 · ff1d16a
 
 update prices every 2 hours on the hour (08:00-24:00)
-
-## 2026-11-18 · 618e73e
-
-show actual price update time in price library
-
-## 2026-11-18 · 5136fe2
-
-correct daily update timezone and skip no-op runs

@@ -6,7 +6,7 @@
 
 > 在线版：<https://cherishxie.github.io/JX3-AH-Calculator/> · 开发预览：<https://cherishxie.github.io/JX3-AH-Calculator/dev/>（带 DEV 标识） · 小工具包：<https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip>
 >
-> **当前发布（2026-11-21）**：新增「报价可信度」与「可做判断」：价格库区分实价/商店/示例/缺价，精力收益分析提供 可做 / 谨慎 / 不可做判断、卡点与可做组合；同步补录 11-18～11-21 共 31 个物价快照。
+> **当前发布（2026-11-21）**：新增「报价可信度」与「可做判断」：价格库区分实价/商店/示例/缺价，精力收益分析提供 可做 / 谨慎 / 不可做判断、卡点与可做组合；同步补录 11-18～11-21 共 33 个物价快照。
 >
 > 部署与「Web + 小红书小工具」双端同步流程见 [DEPLOY.md](DEPLOY.md)。
 
