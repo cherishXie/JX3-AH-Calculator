@@ -16,11 +16,13 @@ export GIT_SSH_COMMAND="ssh -i $SSH_KEY -o IdentitiesOnly=yes -o StrictHostKeyCh
 
 log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S %Z')" "$*" >> "$LOG"; }
 
-hour=$(TZ=Asia/Shanghai date +%H)
-hour=$((10#$hour))
-if [ "$hour" -lt 8 ] || [ "$hour" -ge 23 ]; then
-  log "outside 08:00-23:00 window, skip"
-  exit 0
+if [ "${JX3_FORCE:-0}" != "1" ]; then
+  hour=$(TZ=Asia/Shanghai date +%H)
+  hour=$((10#$hour))
+  if [ "$hour" -lt 8 ] || [ "$hour" -ge 23 ]; then
+    log "outside 08:00-23:00 window, skip (set JX3_FORCE=1 to override)"
+    exit 0
+  fi
 fi
 
 if [ ! -f "$SSH_KEY" ]; then
