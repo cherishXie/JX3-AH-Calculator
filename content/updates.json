@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "32620742a300c7bd60a01fc81ebba5ce04cd01ad",
+  "sourceCommit": "543f58c82b701ecfa6cf52ecb063381a7b780e88",
   "date": "2026-11-20",
-  "title": "add Excel download menu to web",
+  "title": "cache-bust Excel workbook downloads",
   "notes": [
-    "add Excel download menu to web"
+    "cache-bust Excel workbook downloads"
   ],
   "history": [
+    {
+      "version": "543f58c",
+      "date": "2026-11-20",
+      "title": "cache-bust Excel workbook downloads"
+    },
     {
       "version": "3262074",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "04bb258",
       "date": "2026-11-20",
       "title": "clarify price history delta semantics"
-    },
-    {
-      "version": "9ff25b8",
-      "date": "2026-11-20",
-      "title": "add price history JSON store and query tool"
     }
   ]
 }
