@@ -3541,14 +3541,14 @@
   function serverItemRanking(ctx, p) {
     const all = ctx.itemRanking;
     const selected = ctx.item;
-    let html = '<section class="card col-5 server-item-rank-card"><div class="card-head"><div><h2 class="card-title">物品跨服统计</h2><p class="card-sub">按上涨区服数排序 · 当前范围全部物品</p></div><div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格">' + icon('download') + '</button></div></div>';
+    let html = '<section class="card col-5 server-item-rank-card"><div class="card-head"><div><h2 class="card-title">物品跨服统计</h2><p class="card-sub">按上涨区服数排序 · ' + ctx.selection.all.length + ' 项中 ' + all.length + ' 项有可比样本</p></div><div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格">' + icon('download') + '</button></div></div>';
     html += '<div class="server-rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品" value="' + U.esc(ui.serverItemRankQuery || '') + '" data-server-item-rank-search data-fkey="server-item-rank-search"><span class="tiny dim">按上涨面</span></div>';
     html += '<div class="server-item-rank-wrap"><table class="server-item-rank-table"><thead><tr><th>物品</th><th>涨/跌/平</th><th>中位</th><th>覆盖</th></tr></thead><tbody>';
     all.forEach(function (row) {
       const item = row.item;
       html += '<tr class="' + (selected && selected.key === item.key ? 'sel' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc(item.name) + '"><td><span class="server-dot" style="--c:' + U.esc(serverItemColor(item)) + '"></span><span class="server-item-name">' + U.esc(item.name) + '</span></td><td class="updown"><span class="pos">' + row.up + '</span>/<span class="neg">' + row.down + '</span>/<span class="dim">' + row.flat + '</span></td><td class="' + serverToneClass(row.median) + '">' + serverPct(row.median) + '</td><td>' + row.comparable + '/' + ctx.selectedServers.length + '</td></tr>';
     });
-    html += '</tbody></table></div><div class="server-rank-foot">当前范围 ' + all.length + ' 项 · 中位数为跨服中位涨跌</div></section>';
+    html += '</tbody></table></div><div class="server-rank-foot">物品选择含全部 ' + ctx.selection.all.length + ' 项 · 本榜仅列有可比样本的 ' + all.length + ' 项</div></section>';
     return html;
   }
   function serverItemTable(ctx) {

@@ -1977,9 +1977,10 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
   .server-kpis.five .kpi:last-child { grid-column: span 2; }
   .server-item-filter .server-item-picker { min-width: 0; }
   .server-dist-chart { min-width: 620px; }
+  .server-item-rank-wrap { max-height: 300px; }
   .server-item-rank-table { min-width: 500px; }
   .server-item-table { min-width: 620px; }
   .server-item-insight { grid-template-columns: 1fr; gap: 8px; }
 }
-.server-item-rank-wrap{max-height:238px;overflow:auto}
+.server-item-rank-wrap{max-height:448px;overflow:auto}
 .server-item-rank-wrap thead th{position:sticky;top:0;z-index:2;background:var(--card)}
