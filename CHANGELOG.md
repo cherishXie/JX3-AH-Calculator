@@ -510,7 +510,3 @@ add Cloudflare Worker cloud price scheduler
 ## 2026-11-19 · 90ad1a4
 
 update JX3BOX prices (local cron)
-
-## 2026-11-19 · 0555464
-
-add local launchd price updater fallback
