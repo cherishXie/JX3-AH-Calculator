@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "64d3244",
+  "sourceCommit": "d7d5eac0004f981e42abbbf8b6d65375222f92d1",
   "date": "2026-11-20",
   "title": "物价走势发布 · 小程序云端历史",
   "notes": [
@@ -10,34 +10,34 @@
   ],
   "history": [
     {
-      "version": "miniapp-trends-cloud",
+      "version": "d7d5eac",
       "date": "2026-11-20",
-      "title": "小程序走势接入云端历史"
+      "title": "restore release notes for mini program trends"
+    },
+    {
+      "version": "64d3244",
+      "date": "2026-11-20",
+      "title": "update mini program page count"
+    },
+    {
+      "version": "221103f",
+      "date": "2026-11-20",
+      "title": "rebuild mini program bundles for cloud trends"
+    },
+    {
+      "version": "ad802b1",
+      "date": "2026-11-20",
+      "title": "include mini program trends build"
+    },
+    {
+      "version": "6ccc443",
+      "date": "2026-11-20",
+      "title": "走势历史接入微信云"
     },
     {
       "version": "67b2619",
       "date": "2026-11-20",
       "title": "行情同步与移动端更新检查"
-    },
-    {
-      "version": "59ab312",
-      "date": "2026-11-20",
-      "title": "物价走势正式发布"
-    },
-    {
-      "version": "ba92301",
-      "date": "2026-11-20",
-      "title": "rebuild minitool for release"
-    },
-    {
-      "version": "c81d27c",
-      "date": "2026-11-20",
-      "title": "物价走势正式发布"
-    },
-    {
-      "version": "6853028",
-      "date": "2026-11-20",
-      "title": "default all trend filters, mobile collapse and price check"
     }
   ]
 }
