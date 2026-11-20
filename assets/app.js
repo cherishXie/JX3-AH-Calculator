@@ -34,6 +34,10 @@
     serverProductPickerOpen: false,
     serverProductQuery: '',
     serverFilterOpen: false,
+    serverItemPickerOpen: false,
+    serverItemQuery: '',
+    serverItemRankQuery: '',
+    serverRecentItems: null,
     trendScroll: Object.create(null),
     trendCenterKey: null
   };
@@ -2264,9 +2268,7 @@
       type = 'all';
     }
     const priceRange = trendPriceRange(p);
-    const allScope = T.items(type, skillId).filter(function (item) {
-      return !(type === 'all' && item.kind === 'stone');
-    }).map(function (item, index) {
+    const allScope = T.items(type, skillId).map(function (item, index) {
       return Object.assign({}, item, { color: trendItemColor(index) });
     });
     const seriesMap = {};
@@ -3145,7 +3147,83 @@
     return ctx;
   }
 
-  function serverHead(ctx) {
+  function serverItemBuild(p) {
+    const base = serverBuild(Object.assign({}, p, { sitems: '', skeyword: '' }));
+    if (!base || base.status !== 'ready') return base;
+    const allItems = base.selection.all;
+    const selectedServers = serverSelectedServers(p);
+    const serverById = Object.create(null);
+    base.servers.forEach(function (s) { serverById[s.id] = s; });
+    function statsFor(item, includeRows) {
+      const rows = [];
+      let up = 0, down = 0, flat = 0, missing = 0;
+      const returns = [];
+      selectedServers.forEach(function (server) {
+        const data = serverById[server.id];
+        const hit = data && data.byKey[item.key];
+        if (!hit) {
+          missing++;
+          if (includeRows) rows.push({ server: server, data: data, row: null, status: 'missing' });
+          return;
+        }
+        const status = hit.ret > 0.005 ? 'up' : hit.ret < -0.005 ? 'down' : 'flat';
+        if (status === 'up') up++; else if (status === 'down') down++; else flat++;
+        returns.push(hit.ret);
+        if (includeRows) rows.push({ server: server, data: data, row: hit, status: status });
+      });
+      const comparable = returns.length;
+      const sorted = returns.slice().sort(function (a, b) { return a - b; });
+      const median = serverMedian(returns);
+      const upReturns = rows.filter(function (r) { return r.status === 'up'; }).map(function (r) { return r.row.ret; });
+      const downReturns = rows.filter(function (r) { return r.status === 'down'; }).map(function (r) { return r.row.ret; });
+      let max = null, min = null;
+      if (includeRows) {
+        rows.forEach(function (r) {
+          if (!r.row) return;
+          if (!max || r.row.ret > max.row.ret) max = r;
+          if (!min || r.row.ret < min.row.ret) min = r;
+        });
+      }
+      return {
+        item: item, rows: includeRows ? rows : null, comparable: comparable,
+        up: up, down: down, flat: flat, missing: missing,
+        median: median,
+        upAvg: upReturns.length ? upReturns.reduce(function (a, b) { return a + b; }, 0) / upReturns.length : null,
+        downAvg: downReturns.length ? downReturns.reduce(function (a, b) { return a + b; }, 0) / downReturns.length : null,
+        min: min, max: max,
+        coverage: selectedServers.length ? comparable / selectedServers.length : 0,
+        low: comparable < 3 || (selectedServers.length && comparable / selectedServers.length < 0.3),
+        net: comparable ? (up - down) / comparable : null
+      };
+    }
+    const ranking = allItems.map(function (item) { return statsFor(item, false); })
+      .filter(function (row) { return row.comparable > 0; })
+      .sort(function (a, b) {
+        if (b.up !== a.up) return b.up - a.up;
+        if (b.net !== a.net) return b.net - a.net;
+        return b.coverage - a.coverage;
+      });
+    let item = allItems.filter(function (x) { return x.key === p.sitem; })[0] || null;
+    if (!item) {
+      const preferred = serverItemByName(allItems, '羊皮');
+      item = (preferred && ranking.some(function (x) { return x.item.key === preferred.key; })) ? preferred : (ranking.length ? ranking[0].item : allItems[0] || null);
+    }
+    const itemStats = item ? statsFor(item, true) : null;
+    if (itemStats && itemStats.rows) {
+      itemStats.rows.sort(function (a, b) {
+        if (!a.row && !b.row) return 0;
+        if (!a.row) return 1;
+        if (!b.row) return -1;
+        return b.row.ret - a.row.ret;
+      });
+    }
+    return Object.assign({}, base, {
+      item: item, itemStats: itemStats, itemRanking: ranking,
+      selectedServers: selectedServers
+    });
+  }
+
+  function serverHead(ctx, viewLabel) {
     let meta = '';
     if (ctx && ctx.range) {
       const first = ctx.columns && ctx.columns.length ? serverTimeLabel(ctx.columns[0]) : '';
@@ -3155,9 +3233,16 @@
       const total = ctx.selection && ctx.selection.all ? ctx.selection.all.length : serverCatalog().length;
       const scope = ready && !selected ? '未选物品' : (selected !== total ? '所选 ' + selected + ' 项物品' : '全部物品 ' + total + ' 项（含五行石）');
       const serverTotal = ctx.serverCount != null ? ctx.serverCount : (DATA.servers || []).length;
-      meta = '<p class="page-sub server-page-sub">' + scope + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + ' · 缺失报价留空</p>';
+      meta = '<p class="page-sub server-page-sub">' + (viewLabel ? viewLabel + ' · ' : '') + scope + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + ' · 缺失报价留空</p>';
     }
     return '<div class="page-head"><div><h1 class="page-title">区服趋势</h1>' + meta + '</div></div>';
+  }
+  function serverViewSwitch(p) {
+    const item = p.sview === 'item';
+    return '<div class="server-view-switch" role="tablist" aria-label="区服趋势视角">' +
+      '<button role="tab" class="' + (!item ? 'on' : '') + '" aria-selected="' + (!item ? 'true' : 'false') + '" data-server-view="server">区服视角</button>' +
+      '<button role="tab" class="' + (item ? 'on' : '') + '" aria-selected="' + (item ? 'true' : 'false') + '" data-server-view="item">物品视角</button>' +
+    '</div>';
   }
   function serverTimeLabel(at) {
     const text = String(at || '');
@@ -3341,15 +3426,251 @@
       }).join('') : '<div class="server-empty">—</div>') + '</div></div></div></section>';
     return html;
   }
-  function renderServerTrends(p) {
-    const ctx = serverBuild(p);
+  const SERVER_RECENT_KEY = 'jx3.serverItemRecent.v1';
+  const SERVER_RECENT_MAX = 15;
+  const SERVER_QUICK_ITEM_NAMES = ['羊皮', '骨头', '猫眼石', '鱼肉'];
+  function serverSearchMatch(text, query) {
+    const hay = String(text || '').toLowerCase().replace(/\s+/g, '');
+    const needle = String(query || '').toLowerCase().replace(/\s+/g, '');
+    if (!needle) return true;
+    if (hay.indexOf(needle) !== -1) return true;
+    // 轻量模糊匹配：按顺序出现即可，例如“青玉”可匹配“青魄玉”
+    let pos = 0;
+    for (let i = 0; i < hay.length && pos < needle.length; i++) {
+      if (hay.charAt(i) === needle.charAt(pos)) pos++;
+    }
+    return pos === needle.length;
+  }
+  function serverRecentLoad() {
+    try {
+      const raw = window.localStorage.getItem(SERVER_RECENT_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(function (key) { return typeof key === 'string' && key; }).slice(0, SERVER_RECENT_MAX);
+    } catch (err) {
+      return [];
+    }
+  }
+  function serverRecentSave(keys) {
+    try { window.localStorage.setItem(SERVER_RECENT_KEY, JSON.stringify(keys)); } catch (err) { /* ignore */ }
+  }
+  function serverDefaultQuickKeys(all) {
+    const keys = [];
+    SERVER_QUICK_ITEM_NAMES.forEach(function (name) {
+      const item = serverItemByName(all, name);
+      if (item) keys.push(item.key);
+    });
+    const stone = serverItemStone(all, 6);
+    if (stone) keys.push(stone.key);
+    return keys;
+  }
+  function serverRecentKeys(ctx) {
+    const all = ctx.selection.all;
+    if (ui.serverRecentItems === null || ui.serverRecentItems === undefined) {
+      let loaded = serverRecentLoad();
+      if (!loaded.length) loaded = serverDefaultQuickKeys(all);
+      ui.serverRecentItems = loaded;
+    }
+    let keys = ui.serverRecentItems.filter(function (key) {
+      return all.some(function (item) { return item.key === key; });
+    });
+    if (ctx.item && keys.indexOf(ctx.item.key) === -1) keys.unshift(ctx.item.key);
+    if (keys.length > SERVER_RECENT_MAX) keys = keys.slice(0, SERVER_RECENT_MAX);
+    return keys;
+  }
+  function serverRememberItem(key) {
+    if (!key) return;
+    const all = serverCatalog();
+    let keys = ui.serverRecentItems;
+    if (!keys || !keys.length) keys = serverDefaultQuickKeys(all);
+    keys = keys.filter(function (itemKey) { return itemKey !== key; });
+    keys.unshift(key);
+    if (keys.length > SERVER_RECENT_MAX) keys = keys.slice(0, SERVER_RECENT_MAX);
+    ui.serverRecentItems = keys;
+    serverRecentSave(keys);
+  }
+  function serverItemColor(item) {
+    const all = serverCatalog();
+    const index = all.findIndex(function (x) { return x.key === item.key; });
+    return trendItemColor(index < 0 ? 0 : index);
+  }
+  function serverItemMeta(item) {
+    if (!item) return '';
+    return [serverItemKind(item), item.skillName || '', item.tierName || ''].filter(Boolean).join(' · ');
+  }
+  function serverItemByName(all, name) {
+    return (all || []).filter(function (item) { return item.name === name; })[0] || null;
+  }
+  function serverItemStone(all, level) {
+    return (all || []).filter(function (item) { return item.kind === 'stone' && String(item.level) === String(level); })[0] || null;
+  }
+  function serverItemQuick(ctx, p) {
+    const all = ctx.selection.all;
+    const recent = serverRecentKeys(ctx).map(function (key) {
+      return all.filter(function (item) { return item.key === key; })[0];
+    }).filter(Boolean);
+    return '<div class="server-item-quick"><span class="lab">快速查看</span>' +
+      recent.map(function (item) {
+        return '<button class="server-quick-chip' + (ctx.item && ctx.item.key === item.key ? ' on' : '') + '" data-server-item-pick="' + U.esc(item.key) + '">' + U.esc(item.kind === 'stone' ? '五行石 · ' + item.level + ' 级' : item.name) + '</button>';
+      }).join('') +
+      '<span class="server-quick-note">最近 ' + SERVER_RECENT_MAX + ' 个 · 全部 ' + all.length + ' 项</span></div>';
+  }
+  function serverItemFilterCard(ctx, p) {
+    const all = ctx.selection.all;
+    const selectedServers = serverSelectedServers(p);
+    const selectedSet = new Set(selectedServers.map(function (s) { return s.id; }));
+    const totalServers = (DATA.servers || []).length;
+    const serverOpen = ui.serverPickerOpen ? ' open' : '';
+    const itemOpen = ui.serverItemPickerOpen ? ' open' : '';
+    const query = String(ui.serverItemQuery || '').trim();
+    const itemList = all.filter(function (item) {
+      if (!query) return true;
+      return serverSearchMatch([item.name, item.skillName, item.tierName, item.kind].join(' '), query);
+    });
+    const selectedItem = ctx.item;
+    const allProductSelected = selectedServers.length === totalServers;
+    const itemMeta = serverItemMeta(selectedItem);
+    let html = '<section class="card server-filter-card"><div class="card-body tight">';
+    html += '<button class="server-filter-toggle' + (ui.serverFilterOpen ? ' open' : '') + '" data-action="toggle-server-filter">' + icon('filter') + '<span>筛选</span><span class="sum">' + (selectedItem ? U.esc(selectedItem.name) : '未选物品') + ' · ' + selectedServers.length + '/' + totalServers + ' 服 · ' + ctx.range.label + '</span>' + icon('chevronDown') + '</button>';
+    html += '<div class="server-filter-body' + (ui.serverFilterOpen ? ' open' : '') + '"><div class="server-filter server-item-filter">';
+    html += '<div class="seg seg-sm server-range">' +
+      '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
+      '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
+      '<button class="' + (p.srange === '7d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
+      '<button class="' + (p.srange === '30d' ? 'active' : '') + '" data-server-range="30d">近 30 日</button>' +
+    '</div>';
+    html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + selectedServers.length + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
+      '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
+        '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (allProductSelected ? ' checked' : '') + '>全选</label>' +
+        '<button class="btn btn-sm" data-action="server-select-none">清空</button>' +
+        '<span class="tiny dim">已选 ' + selectedServers.length + ' / ' + totalServers + '</span>' +
+      '</div><div class="trend-picker-list">' +
+        (DATA.servers || []).map(function (s, index) {
+          return '<label class="trend-check"><input type="checkbox" data-server-toggle="' + U.esc(s.id) + '"' + (selectedSet.has(s.id) ? ' checked' : '') + '>' +
+            '<span class="server-dot" style="--c:' + U.esc(trendItemColor(index)) + '"></span><span class="nm">' + U.esc(s.name) + '</span><span class="tier">' + U.esc(s.region || '') + '</span></label>';
+        }).join('') +
+      '</div></div></details>';
+    html += '<details class="trend-picker server-item-picker"' + itemOpen + '><summary class="trend-picker-summary"><span>物品</span><b>' + (selectedItem ? U.esc(selectedItem.name) : '选择物品') + '</b>' + icon('chevronDown') + '</summary>' +
+      '<div class="trend-picker-panel server-item-panel"><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品 / 技艺 / 类型" title="支持模糊搜索，回车选择第一项" value="' + U.esc(ui.serverItemQuery || '') + '" data-server-item-search data-fkey="server-item-search" aria-label="搜索物品"></div><div class="server-search-hint">支持模糊搜索 · 回车选择第一项</div>' +
+      '<div class="trend-picker-list">' +
+        (itemList.map(function (item) {
+          return '<button type="button" class="server-item-option' + (selectedItem && selectedItem.key === item.key ? ' on' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc([item.name, item.skillName, item.tierName, item.kind].join(' ')) + '">' +
+            '<span class="nm">' + U.esc(item.name) + '</span><span class="meta">' + U.esc(serverItemMeta(item)) + '</span></button>';
+        }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
+      '</div></div></details>';
+    html += '<button class="btn btn-sm" data-action="server-item-reset">' + icon('refresh') + '重置</button>';
+    html += '<span class="filter-note"><span class="dot"></span>有报价才计入 · 缺失不算持平</span>';
+    html += '</div></div></div></section>';
+    return html;
+  }
+  function serverItemKpi(ctx) {
+    const s = ctx.itemStats;
+    if (!s) return '';
+    const selected = ctx.selectedServers.length;
+    const coverage = selected ? s.comparable / selected : 0;
+    return '<div class="kpi-grid server-kpis five">' +
+      '<div class="kpi"><div class="kpi-label">有报价区服</div><div class="kpi-value">' + s.comparable + '<small>/ ' + selected + '</small></div><div class="kpi-meta"><span>覆盖 ' + Math.round(coverage * 100) + '% · ' + (s.missing ? s.missing + ' 服无报价' : '无缺失') + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">上涨区服</div><div class="kpi-value pos">' + s.up + '<span class="kpi-unit">服</span></div><div class="kpi-meta">平均涨幅 <span class="pos">' + serverPct(s.upAvg) + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">下跌区服</div><div class="kpi-value neg">' + s.down + '<span class="kpi-unit">服</span></div><div class="kpi-meta">平均跌幅 <span class="neg">' + serverPct(s.downAvg) + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">跨服中位涨跌</div><div class="kpi-value ' + serverToneClass(s.median) + '">' + serverPct(s.median) + '</div><div class="kpi-meta">' + s.flat + ' 服持平 · ' + s.comparable + ' 服可比</div></div>' +
+      '<div class="kpi"><div class="kpi-label">区间极值</div><div class="kpi-value small-two"><span class="pos">' + (s.max ? serverPct(s.max.row.ret) : '—') + '</span> <span class="dim">/</span> <span class="neg">' + (s.min ? serverPct(s.min.row.ret) : '—') + '</span></div><div class="kpi-meta">' + (s.max ? U.esc(s.max.server.name) : '—') + ' / ' + (s.min ? U.esc(s.min.server.name) : '—') + '</div></div>' +
+      (s.low ? '<div class="server-low-note">样本不足：仅 ' + s.comparable + ' 服有报价，结论仅供参考</div>' : '') +
+    '</div>';
+  }
+  function serverDistLeft(value) {
+    if (value == null || !Number.isFinite(value)) return 50;
+    return 50 + (value >= 0 ? 1 : -1) * Math.sqrt(Math.abs(value)) * 26;
+  }
+  function serverItemChart(ctx) {
+    const item = ctx.item;
+    const stats = ctx.itemStats;
+    if (!item || !stats) return '';
+    const medianLeft = serverDistLeft(stats.median);
+    let html = '<section class="card col-7 server-item-chart-card"><div class="card-head"><div><h2 class="card-title">' + U.esc(item.name) + ' · 区服涨跌分布</h2><p class="card-sub">按涨跌幅排序 · 条形为压缩刻度，数字为真实涨跌 · 蓝线为中位数 ' + serverPct(stats.median) + '</p></div><div class="card-tools"><span class="legend"><span class="sw" style="background:var(--positive)"></span>涨<span class="sw" style="background:var(--danger)"></span>跌<span class="sw" style="background:var(--muted-2)"></span>平</span><button class="icon-btn" title="下载图片" aria-label="下载图片">' + icon('download') + '</button></div></div>';
+    html += '<div class="server-dist-wrap"><div class="server-dist-chart"><div class="server-dist-head"><span>区服</span><span class="sp"></span><span class="val">涨跌</span></div>';
+    stats.rows.forEach(function (entry) {
+      const ret = entry.row ? entry.row.ret : null;
+      const left = serverDistLeft(ret);
+      const width = Math.min(44, Math.abs(left - 50));
+      const cls = entry.status === 'up' ? 'pos' : entry.status === 'down' ? 'neg' : entry.status === 'flat' ? 'flat' : 'missing';
+      html += '<div class="server-dist-row"><div class="server-dist-name"><span class="server-dot" style="--c:' + U.esc(entry.data ? entry.data.color : '#64748B') + '"></span>' + U.esc(entry.server.name) + '<span class="reg">' + U.esc(entry.server.region || '') + '</span></div><div class="server-dist-track"><span class="server-dist-zero"></span><span class="server-dist-median" style="left:' + medianLeft.toFixed(2) + '%"></span>' +
+        (entry.row ? '<span class="server-dist-bar ' + cls + '" style="--w:' + width.toFixed(2) + '%"></span>' : '<span class="server-dist-missing">无报价</span>') +
+        '</div><div class="server-dist-val ' + (cls === 'pos' ? 'pos' : cls === 'neg' ? 'neg' : 'dim') + '">' + (entry.row ? serverPct(ret) : '—') + '</div></div>';
+    });
+    html += '<div class="server-dist-legend"><span><i style="background:var(--positive)"></i>上涨 ' + stats.up + '</span><span><i style="background:var(--danger)"></i>下跌 ' + stats.down + '</span><span><i style="background:var(--muted-2)"></i>持平 ' + stats.flat + '</span><span><span class="median-line"></span>中位 ' + serverPct(stats.median) + '</span></div><div class="server-dist-foot">条形长度使用平方根压缩，避免极端值压扁其余区服；实际数值以右侧数字为准。</div></div></div></section>';
+    return html;
+  }
+  function serverItemRanking(ctx, p) {
+    const all = ctx.itemRanking;
+    const selected = ctx.item;
+    let html = '<section class="card col-5 server-item-rank-card"><div class="card-head"><div><h2 class="card-title">物品跨服统计</h2><p class="card-sub">按上涨区服数排序 · ' + ctx.selection.all.length + ' 项中 ' + all.length + ' 项有可比样本</p></div><div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格">' + icon('download') + '</button></div></div>';
+    html += '<div class="server-rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品" value="' + U.esc(ui.serverItemRankQuery || '') + '" data-server-item-rank-search data-fkey="server-item-rank-search"><span class="tiny dim">按上涨面 · 回车选择</span></div>';
+    html += '<div class="server-item-rank-wrap"><table class="server-item-rank-table"><thead><tr><th>物品</th><th>涨/跌/平</th><th>中位</th><th>覆盖</th></tr></thead><tbody>';
+    all.forEach(function (row) {
+      const item = row.item;
+      html += '<tr class="' + (selected && selected.key === item.key ? 'sel' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc(item.name) + '"><td><span class="server-dot" style="--c:' + U.esc(serverItemColor(item)) + '"></span><span class="server-item-name">' + U.esc(item.name) + '</span></td><td class="updown"><span class="pos">' + row.up + '</span>/<span class="neg">' + row.down + '</span>/<span class="dim">' + row.flat + '</span></td><td class="' + serverToneClass(row.median) + '">' + serverPct(row.median) + '</td><td>' + row.comparable + '/' + ctx.selectedServers.length + '</td></tr>';
+    });
+    html += '</tbody></table></div><div class="server-rank-foot">物品选择含全部 ' + ctx.selection.all.length + ' 项 · 本榜仅列有可比样本的 ' + all.length + ' 项</div></section>';
+    return html;
+  }
+  function serverItemTable(ctx) {
+    const item = ctx.item;
+    const stats = ctx.itemStats;
+    if (!item || !stats) return '';
+    let html = '<section class="card col-12 server-item-table-card"><div class="card-head"><div><h2 class="card-title">' + U.esc(item.name) + ' · 区服明细</h2><p class="card-sub">按涨跌幅排序 · 起始价 / 当前价 / 涨跌幅 · 点击行进入该服物价走势</p></div><div class="card-tools"><span class="tag">' + U.esc(serverItemMeta(item)) + '</span><button class="icon-btn" title="下载表格" aria-label="下载表格">' + icon('download') + '</button></div></div>';
+    html += '<div class="server-item-table-wrap"><table class="server-item-table"><thead><tr><th>区服</th><th>起始价</th><th>当前价</th><th>涨跌幅</th><th>状态</th></tr></thead><tbody>';
+    stats.rows.forEach(function (entry) {
+      if (!entry.row) {
+        html += '<tr class="miss"><td><span class="server-dot" style="--c:#64748B"></span>' + U.esc(entry.server.name) + ' <span class="dim">' + U.esc(entry.server.region || '') + '</span></td><td>—</td><td>—</td><td class="dim">—</td><td><span class="dim">无报价</span></td></tr>';
+        return;
+      }
+      const cls = entry.status === 'up' ? 'pos' : entry.status === 'down' ? 'neg' : 'dim';
+      const label = entry.status === 'up' ? '上涨' : entry.status === 'down' ? '下跌' : '持平';
+      html += '<tr data-server-item-trends="' + U.esc(entry.server.id) + '" data-item-key="' + U.esc(item.key) + '"><td><span class="server-dot" style="--c:' + U.esc(entry.data.color) + '"></span>' + U.esc(entry.server.name) + ' <span class="dim">' + U.esc(entry.server.region || '') + '</span></td><td>' + U.fmt(entry.row.p0, 2) + ' 金</td><td>' + U.fmt(entry.row.p1, 2) + ' 金</td><td class="' + cls + '">' + serverPct(entry.row.ret) + '</td><td class="' + cls + '">' + label + '</td></tr>';
+    });
+    html += '</tbody></table></div></section>';
+    return html;
+  }
+  function serverItemInsight(ctx) {
+    const s = ctx.itemStats;
+    if (!s) return '';
+    return '<section class="col-12 server-item-insight">' +
+      '<div class="item"><b>中位数说明</b><br>' + s.comparable + ' 个可比区服中 ' + s.up + ' 涨、' + s.down + ' 跌、' + s.flat + ' 平，跨服中位 ' + serverPct(s.median) + '。中位数比均值更能代表“典型区服”。</div>' +
+      '<div class="item"><b>极端值</b><br>' + (s.max ? U.esc(s.max.server.name) + ' ' + serverPct(s.max.row.ret) : '—') + '，' + (s.min ? U.esc(s.min.server.name) + ' ' + serverPct(s.min.row.ret) : '—') + '；分布图用压缩刻度，但数字保留真实值。</div>' +
+      '<div class="item"><b>口径</b><br>等权统计区服，不按成交量加权；无首尾报价的区服计入“无报价”，不当作持平。</div></section>';
+  }
+  function renderServerItemTrends(p) {
+    const ctx = serverItemBuild(p);
     if (!ctx || ctx.status === 'loading') {
-      return '<div class="page">' + serverHead(ctx) + '<div class="card"><div class="card-body">' + notice('正在加载区服行情与历史节点…', 'info') + '</div></div>' + dataFoot() + '</div>';
+      return '<div class="page trend-page server-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('正在加载物品与区服行情…', 'info') + '</div></div>' + dataFoot() + '</div>';
     }
     if (ctx.status === 'error') {
-      return '<div class="page">' + serverHead(ctx) + '<div class="card"><div class="card-body">' + notice('无法加载区服行情：' + U.esc(ctx.error || '未知错误'), 'info') + '</div></div>' + dataFoot() + '</div>';
+      return '<div class="page trend-page server-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('无法加载物品行情：' + U.esc(ctx.error || '未知错误'), 'info') + '</div></div>' + dataFoot() + '</div>';
     }
-    let html = '<div class="page trend-page server-page">' + serverHead(ctx);
+    if (!ctx.item || !ctx.itemStats) {
+      return '<div class="page trend-page server-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p) + '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' + emptyState('当前筛选没有可统计的物品', '调整区服、时间或选择其他物品。', '', 'filter') + '</div></section></div>' + dataFoot() + '</div>';
+    }
+    let html = '<div class="page trend-page server-page server-item-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p);
+    html += serverItemFilterCard(ctx, p);
+    html += serverItemQuick(ctx, p);
+    html += serverItemKpi(ctx);
+    html += '<div class="grid section-gap">' + serverItemChart(ctx) + serverItemRanking(ctx, p) + '</div>';
+    html += '<div class="grid section-gap">' + serverItemTable(ctx) + '</div>';
+    html += '<div class="grid section-gap">' + serverItemInsight(ctx) + '</div>';
+    html += dataFoot();
+    return html + '</div>';
+  }
+
+  function renderServerTrends(p) {
+    if (p.sview === 'item') return renderServerItemTrends(p);
+    const ctx = serverBuild(p);
+    if (!ctx || ctx.status === 'loading') {
+      return '<div class="page">' + serverHead(ctx) + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('正在加载区服行情与历史节点…', 'info') + '</div></div>' + dataFoot() + '</div>';
+    }
+    if (ctx.status === 'error') {
+      return '<div class="page">' + serverHead(ctx) + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('无法加载区服行情：' + U.esc(ctx.error || '未知错误'), 'info') + '</div></div>' + dataFoot() + '</div>';
+    }
+    let html = '<div class="page trend-page server-page">' + serverHead(ctx) + serverViewSwitch(p);
     html += serverFilterCard(ctx, p);
     html += serverKeywordBar(ctx, p);
     if (!ctx.servers.length) {
@@ -4544,6 +4865,7 @@
       case 'server-select-none': updateParams({ sservers: '__none__' }); break;
       case 'server-product-none': updateParams({ sitems: '__none__', skeyword: '' }); break;
       case 'server-clear-skill': updateParams({ sskill: '' }); break;
+      case 'server-item-reset': updateParams({ srange: 'today', sservers: '', sitem: '', sview: 'item' }); break;
       case 'server-reset': updateParams({ srange: 'today', sservers: '', sitems: '', sserver: '', sskill: '', skeyword: '' }); break;
       case 'export-csv': {
         const kind = el.getAttribute('data-csv');
@@ -4778,6 +5100,30 @@
     const skillRow = e.target.closest('[data-skill-link]');
     if (skillRow) {
       go('/skills/' + skillRow.getAttribute('data-skill-link'));
+      return;
+    }
+    const serverView = e.target.closest('[data-server-view]');
+    if (serverView) {
+      const view = serverView.getAttribute('data-server-view');
+      updateParams(view === 'item' ? { sview: 'item' } : { sview: '', sitem: '' });
+      return;
+    }
+    const itemPick = e.target.closest('[data-server-item-pick]');
+    if (itemPick) {
+      const pickedKey = itemPick.getAttribute('data-server-item-pick');
+      serverRememberItem(pickedKey);
+      ui.serverItemPickerOpen = false;
+      ui.serverItemQuery = '';
+      ui.serverItemRankQuery = '';
+      updateParams({ sview: 'item', sitem: pickedKey });
+      return;
+    }
+    const itemTrend = e.target.closest('[data-server-item-trends]');
+    if (itemTrend) {
+      go('/trends', {
+        server: itemTrend.getAttribute('data-server-item-trends'),
+        tfocus: itemTrend.getAttribute('data-item-key')
+      });
       return;
     }
     const serverRange = e.target.closest('[data-server-range]');
@@ -5019,6 +5365,28 @@
   }
   function onInput(e) {
     const t = e.target;
+    if (t.matches('[data-server-item-search]')) {
+      const panel = t.closest('.server-item-picker');
+      const q = t.value.trim();
+      ui.serverItemQuery = t.value;
+      if (panel) {
+        panel.querySelectorAll('[data-server-item-text]').forEach(function (node) {
+          node.hidden = !!q && !serverSearchMatch(node.getAttribute('data-server-item-text') || '', q);
+        });
+      }
+      return;
+    }
+    if (t.matches('[data-server-item-rank-search]')) {
+      const card = t.closest('.server-item-rank-card');
+      const q = t.value.trim();
+      ui.serverItemRankQuery = t.value;
+      if (card) {
+        card.querySelectorAll('tbody tr[data-server-item-text]').forEach(function (row) {
+          row.hidden = !!q && !serverSearchMatch(row.getAttribute('data-server-item-text') || '', q);
+        });
+      }
+      return;
+    }
     if (t.matches('[data-server-product-search]')) {
       const panel = t.closest('.server-product-picker');
       const q = t.value.trim();
@@ -5085,6 +5453,22 @@
       if (excelOpen) { excelOpen.open = false; return; }
       const sb = document.getElementById('sidebar');
       if (sb && sb.classList.contains('open')) { sb.classList.remove('open'); return; }
+    }
+    if (e.key === 'Enter' && !e.isComposing && e.target.matches) {
+      if (e.target.matches('[data-server-item-search]')) {
+        e.preventDefault();
+        const panel = e.target.closest('.server-item-picker');
+        const first = panel ? panel.querySelector('.server-item-option:not([hidden])') : null;
+        if (first) first.click();
+        return;
+      }
+      if (e.target.matches('[data-server-item-rank-search]')) {
+        e.preventDefault();
+        const card = e.target.closest('.server-item-rank-card');
+        const first = card ? card.querySelector('tbody tr[data-server-item-pick]:not([hidden])') : null;
+        if (first) first.click();
+        return;
+      }
     }
     trapFocus(e);
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('th[data-sort]')) {
@@ -5153,6 +5537,15 @@
       }
       if (e.target && e.target.classList && e.target.classList.contains('server-picker')) {
         ui.serverPickerOpen = !!e.target.open;
+      }
+      if (e.target && e.target.classList && e.target.classList.contains('server-item-picker')) {
+        ui.serverItemPickerOpen = !!e.target.open;
+        if (!e.target.open) {
+          ui.serverItemQuery = '';
+          const input = e.target.querySelector('[data-server-item-search]');
+          if (input) input.value = '';
+          e.target.querySelectorAll('[data-server-item-text]').forEach(function (node) { node.hidden = false; });
+        }
       }
       if (e.target && e.target.classList && e.target.classList.contains('server-product-picker')) {
         ui.serverProductPickerOpen = !!e.target.open;
@@ -5305,6 +5698,9 @@
       ui.serverProductPickerOpen = false;
       ui.serverProductQuery = '';
       ui.serverFilterOpen = false;
+      ui.serverItemPickerOpen = false;
+      ui.serverItemQuery = '';
+      ui.serverItemRankQuery = '';
       ui.trendScroll = Object.create(null);
       ui.trendCenterKey = null;
       if (ui.drawer) {
