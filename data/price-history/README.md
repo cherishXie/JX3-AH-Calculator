@@ -58,7 +58,7 @@ data/price-history/
 - `stoneCatalogPrices[等级]`：五行石基准价；
 - `coverage[区服ID] = [有效报价数, 被过滤数, 无报价数]`；
 - `source`：`update` 为自动更新，`seed` 为首次建立的历史基线；
-- `samples[].prices` / `stones` 是**增量**：数字表示新价，`null` 表示该物品/等级已无有效报价；
+- `samples[].prices` / `stones` / `catalogPrices` / `stoneCatalogPrices` 都是**增量**：数字表示新价，`null` 表示该物品/等级已无有效报价；
 - 未出现在某次增量里的物品，价格沿用上一个快照点。
 
 查询某时间点的完整价格时，从当天 `base` 开始，按顺序应用 `samples` 中 `at <= 目标时间` 的增量即可；`scripts/price-history.mjs` 已封装好。

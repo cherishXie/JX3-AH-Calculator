@@ -596,7 +596,8 @@ export function compactPriceHistoryBefore(root, beforeDate, data = null) {
   let compacted = 0;
   for (const entry of days) {
     if (entry.date >= beforeDate) continue;
-    if (entry.points <= 1) continue;
+    const day = loadPriceHistoryDay(root, entry.date);
+    if (!day || !day.samples || !day.samples.length) continue;
     if (compactPriceHistoryDay(root, entry.date, data)) compacted += 1;
   }
   return compacted;
