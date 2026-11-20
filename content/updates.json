@@ -1,14 +1,16 @@
 {
-  "sourceCommit": "c81d27c5843c09a0d746a5f4970bdce6007475be",
+  "sourceCommit": "ba9230122d9f3a37bda8bc9dd2e67949ba212340",
   "date": "2026-11-20",
-  "title": "新增物价走势分析",
+  "title": "rebuild minitool for release",
   "notes": [
-    "分析模块新增「物价走势」：按历史节点回溯各区服原始物价，支持时间范围、全部技艺/全部类型、物品搜索/多选和价格区间",
-    "多物品价格分布默认使用价格指数，展示 25–75% 箱体与中位线；提供涨跌红黑榜（前 10/全量）、价格散点、单品折线和区间涨跌热力图",
-    "移动端筛选可收起并固定在顶部；原始数据按节点折叠，各图表支持 PNG 下载和 CSV 导出",
-    "行情条新增「检查物价」，dev 预览自动跟随生产行情；跨技艺材料按实际配方用途展示"
+    "rebuild minitool for release"
   ],
   "history": [
+    {
+      "version": "ba92301",
+      "date": "2026-11-20",
+      "title": "rebuild minitool for release"
+    },
     {
       "version": "c81d27c",
       "date": "2026-11-20",
@@ -33,11 +35,6 @@
       "version": "873617e",
       "date": "2026-11-20",
       "title": "preserve trend chart scroll and explain index axis"
-    },
-    {
-      "version": "c0aaad3",
-      "date": "2026-11-20",
-      "title": "unify item filters and index price axis"
     }
   ]
 }
