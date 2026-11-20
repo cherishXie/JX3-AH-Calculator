@@ -1674,7 +1674,6 @@
     const missingCount = ac ? ac.missing : stats.missing;
     const items = filteredItems(p);
     const spreads = serverSpreads();
-    const opportunity = spreads.filter(function (s) { return s.ratio >= 0.12; }).length;
     const q = p.q || '';
 
     let html = '<div class="page">';
@@ -1692,8 +1691,8 @@
         '<div class="kpi-meta"><span>商店 ' + vendorCount + ' · 示例 ' + baseCount + '；示例价不参与可落地</span></div></div>' +
       '<div class="kpi"><div class="kpi-label">缺少价格</div><div class="kpi-value">' + missingCount + '<span class="kpi-unit">项</span></div>' +
         '<div class="kpi-meta"><span class="warn">缺价项按 0 计，相关配方标记「缺价」</span></div></div>' +
-      '<div class="kpi"><div class="kpi-label">跨服价差机会</div><div class="kpi-value">' + opportunity + '<span class="kpi-unit">项</span></div>' +
-        '<div class="kpi-meta"><span>最高价 / 最低价差 ≥ 12% 的物品</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">示例价</div><div class="kpi-value">' + baseCount + '<span class="kpi-unit">项</span></div>' +
+        '<div class="kpi-meta"><span>仅兼容视图参与；可去校准或等本服报价</span></div></div>' +
     '</div>';
 
     html += '<div class="grid section-gap">';
@@ -1763,7 +1762,8 @@
 
     html += '<div class="grid section-gap">' + renderStonePriceCard() + '</div>';
 
-    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+    html += '<details class="section-gap"><summary class="card-sub" style="cursor:pointer">跨服比价（独立参考，不参与本服收益）</summary>' +
+      '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">跨服比价</h2><p class="card-sub">同一物品各服最高/最低价 · 独立视图，不参与本服收益计算</p></div>' +
       '<div class="card-tools"><span class="badge badge-outline">' + Store.state.servers.length + ' 个服务器</span>' +
       '<button class="btn btn-sm" data-action="open-settings">管理服务器</button></div></div>' +
@@ -1779,7 +1779,7 @@
           '<td class="num">' + U.fmtPct(s.ratio, 1) + '</td></tr>';
       }).join('') : '<tr><td colspan="8">' + emptyState('暂无可比价物品', '校准更多价格后会自动出现跨服价差。', '', 'compare') + '</td></tr>') +
       '</tbody></table></div><div class="card-foot"><span>价差率 =（最高价 − 最低价）/ 最低价；示例价差仅用于演示</span></div>' +
-      '</section></div>';
+      '</section></div></details>';
 
     html += dataFoot();
     html += '</div>';
