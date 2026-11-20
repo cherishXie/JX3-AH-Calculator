@@ -1,13 +1,16 @@
 {
-  "sourceCommit": "4431edd73384d1bb5248107a21757448b3c59661",
+  "sourceCommit": "e1d46fa08e035abec6ba478e41b9fd76068ee183",
   "date": "2026-11-20",
-  "title": "全天每 30 分钟自动更新",
+  "title": "allow forced local price update",
   "notes": [
-    "价格更新改为全天 24 小时、每 30 分钟 :06 / :36 自动触发",
-    "页面打开时全天自动检查行情，更新时顶部显示 loading",
-    "不整页刷新、不跳位置，代码更新仍显示进度条"
+    "allow forced local price update"
   ],
   "history": [
+    {
+      "version": "e1d46fa",
+      "date": "2026-11-20",
+      "title": "allow forced local price update"
+    },
     {
       "version": "4431edd",
       "date": "2026-11-20",
@@ -32,11 +35,6 @@
       "version": "b6c3d2a",
       "date": "2026-11-19",
       "title": "support inline-string price sheets in Excel patcher"
-    },
-    {
-      "version": "228d13e",
-      "date": "2026-11-19",
-      "title": "refresh Excel prices in WPS without Power Query"
     }
   ]
 }
