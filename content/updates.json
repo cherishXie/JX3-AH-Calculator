@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "b1c43bec03bc44ee9e718b49922a9fcaf6a33196",
+  "sourceCommit": "80ae140b8227e48f3ba904198f2f587c36817fbf",
   "date": "2026-11-20",
-  "title": "接入百度统计记录站外访问量",
+  "title": "手机端服务器下拉溢出屏幕导致名称被裁切",
   "notes": [
-    "接入百度统计记录站外访问量"
+    "手机端服务器下拉溢出屏幕导致名称被裁切"
   ],
   "history": [
+    {
+      "version": "80ae140",
+      "date": "2026-11-20",
+      "title": "手机端服务器下拉溢出屏幕导致名称被裁切"
+    },
     {
       "version": "b1c43be",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "3c4d05c",
       "date": "2026-11-20",
       "title": "hint effective export for unquoted items"
-    },
-    {
-      "version": "32c383e",
-      "date": "2026-11-20",
-      "title": "keep compacted history queries honest"
     }
   ]
 }
