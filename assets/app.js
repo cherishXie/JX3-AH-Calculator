@@ -27,6 +27,12 @@
     lastPath: null
   };
 
+  const EXCEL_DOWNLOADS = [
+    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsm?v=3', file: '剑网3技艺收益与突破.xlsm', name: '宏版 .xlsm', desc: '打开自动拉取 + 手动按钮；失败保留快照', ext: '推荐' },
+    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel-auto.xlsx', file: '剑网3技艺收益与突破-auto.xlsx', name: '无宏自动版 .xlsx', desc: 'Power Query 打开时刷新；预填快照', ext: '自动' },
+    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsx', file: '剑网3技艺收益与突破.xlsx', name: '无宏静态版 .xlsx', desc: '内置快照，WPS / 离线可用', ext: '离线' }
+  ];
+
   /* ------------------------------------------------------------------ */
   /* 图标                                                               */
   /* ------------------------------------------------------------------ */
@@ -580,6 +586,23 @@
     ];
   }
 
+  function excelDownloadMenu() {
+    return '<details class="excel-menu-wrap">' +
+      '<summary class="icon-btn" aria-haspopup="menu" aria-label="下载 Excel 工作簿" title="下载 Excel 工作簿">' + icon('download') + '</summary>' +
+      '<div class="menu excel-menu" role="menu" aria-label="下载 Excel 工作簿">' +
+        '<div class="menu-label">下载 Excel 工作簿</div>' +
+        EXCEL_DOWNLOADS.map(function (it) {
+          return '<a class="menu-item" role="menuitem" href="' + it.href + '" download="' + U.esc(it.file) + '">' +
+            icon('download') +
+            '<span class="stack"><span class="name">' + U.esc(it.name) + '</span><span class="desc">' + U.esc(it.desc) + '</span></span>' +
+            '<span class="ext">' + U.esc(it.ext) + '</span></a>';
+        }).join('') +
+        '<div class="menu-sep"></div>' +
+        '<div class="menu-foot"><span class="tiny dim">宏版需启用宏；自动版需 Excel Power Query。</span></div>' +
+      '</div>' +
+    '</details>';
+  }
+
   function renderShell(path, p) {
     const srv = server();
     const nav = navItems();
@@ -602,6 +625,7 @@
       '</div>' +
       '<div class="side-scroll">' + navHtml + '</div>' +
       '<div class="side-foot">' +
+        '<button class="side-link" data-action="open-excel-downloads">' + icon('download') + '<span class="label">下载 Excel</span></button>' +
         '<button class="side-link" data-action="check-update">' + icon('refresh') + '<span class="label">检查更新</span></button>' +
         '<button class="side-link" data-action="open-data">' + icon('shield') + '<span class="label">数据说明</span></button>' +
         '<button class="side-link" data-action="open-settings">' + icon('settings') + '<span class="label">设置与备份</span></button>' +
@@ -634,6 +658,7 @@
             '<button class="menu-item" data-action="open-settings">' + icon('settings') + '<span>服务器与数据设置</span><span class="sub">⌘,</span></button>' +
           '</div>' +
         '</div>' +
+        excelDownloadMenu() +
         '<button class="icon-btn" data-action="check-update" aria-label="检查更新" title="检查更新">' + icon('refresh') + '</button>' +
         '<button class="icon-btn" data-action="toggle-theme" aria-label="切换明暗主题">' + icon(ui.theme === 'light' ? 'moon' : 'sun') + '</button>' +
         '<button class="icon-btn" data-action="open-data" aria-label="数据说明">' + icon('info') + '</button>' +
@@ -2693,6 +2718,16 @@
         '<div class="flex" style="margin-top:8px"><input type="file" id="import-json-file" accept="application/json,.json">' +
         '<span class="spacer"></span><span class="tiny dim">格式：剑网三物价助手 JSON 备份</span></div>';
       foot = '<button class="btn btn-primary" data-action="import-json-apply">覆盖并导入</button><button class="btn" data-action="close-modal">取消</button>';
+    } else if (ui.modal.type === 'excel') {
+      title = '下载 Excel 工作簿';
+      body = '<div class="excel-download-list">' + EXCEL_DOWNLOADS.map(function (it) {
+        return '<a class="excel-download-item" href="' + it.href + '" download="' + U.esc(it.file) + '">' +
+          icon('download') +
+          '<span class="stack"><span class="name">' + U.esc(it.name) + '</span><span class="desc">' + U.esc(it.desc) + '</span></span>' +
+          '<span class="ext">' + U.esc(it.ext) + '</span></a>';
+      }).join('') + '</div>' +
+        '<p class="tiny dim" style="margin-top:12px">宏版需要启用宏；无宏自动版依赖 Excel Power Query；WPS / LibreOffice 建议用无宏静态版或 CSV。</p>';
+      foot = '<button class="btn" data-action="close-modal">关闭</button>';
     } else if (ui.modal.type === 'confirm') {
       title = ui.modal.data.title || '确认操作';
       body = '<p style="font-size:13px;line-height:20px;color:var(--muted)">' + U.esc(ui.modal.data.message || '') + '</p>';
@@ -2963,6 +2998,7 @@
         break;
       }
       case 'open-settings': closeMenu(); openModal('settings'); break;
+      case 'open-excel-downloads': closeMenu(); openModal('excel'); break;
       case 'check-update': checkForUpdates(); break;
       case 'show-install': closeModal(); if (window.__showInstallGuide) window.__showInstallGuide(true); else toast('请用 Safari 打开后，点分享 → 添加到主屏幕', 'warn'); break;
       case 'open-data': closeMenu(); openModal('data'); break;
@@ -3549,6 +3585,8 @@
       if (ui.modal) { closeModal(); return; }
       if (ui.drawer) { closeDrawer(); return; }
       if (ui.serverMenuOpen) { closeMenu(); return; }
+      const excelOpen = document.querySelector('.excel-menu-wrap[open]');
+      if (excelOpen) { excelOpen.open = false; return; }
       const sb = document.getElementById('sidebar');
       if (sb && sb.classList.contains('open')) { sb.classList.remove('open'); return; }
     }
@@ -3612,6 +3650,13 @@
     document.addEventListener('focusout', function () { hideTip(); });
     document.addEventListener('click', function (e) {
       if (ui.serverMenuOpen && !e.target.closest('.server-wrap')) closeMenu();
+      if (e.target.closest('.excel-menu a')) {
+        const wrap = e.target.closest('.excel-menu-wrap');
+        if (wrap) wrap.open = false;
+      }
+      if (!e.target.closest('.excel-menu-wrap')) {
+        $$('.excel-menu-wrap[open]').forEach(function (d) { d.open = false; });
+      }
     });
     window.addEventListener('hashchange', function () {
       if (ui.booted) render();
