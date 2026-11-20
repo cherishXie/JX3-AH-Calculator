@@ -67,6 +67,21 @@ node scripts/price-history.mjs export --server 梦江南 --from 2026-11-20 --eff
 
 `--effective` 导出会用基准价补齐本服无报价物品，并标注价格来源，适合按时间点重算产出物收益。完整结构、字段和 `reindex` / `compact` 维护命令见 [`data/price-history/README.md`](../data/price-history/README.md)。
 
+## Web 物价走势
+
+分析模块的「物价走势」由 `assets/trends.js` 读取已发布的 `price-history/` JSON：
+
+- 按当前区服回放每天的 `base` + `samples`，得到每个历史节点的本服报价/基准价/有效价；
+- 支持按时间范围、材料/产物/五行石、技艺筛选；
+- 蜡烛图用于单个物品，散点图用于群体（价格或区间涨跌幅），并高亮当前选中物品；
+- 可查看每个节点的原始报价，导出节点 CSV/JSON 与区间走势 CSV。
+
+该页面只存在于 Web 版；小红书离线小工具不加载历史 JSON。数据回归测试：
+
+```bash
+node scripts/test-trends.cjs
+```
+
 ## 定时任务
 
 本机兜底由 launchd 运行 `scripts/local-price-cron.sh`（Asia/Shanghai，每天 08:09–22:09、每 2 小时）：

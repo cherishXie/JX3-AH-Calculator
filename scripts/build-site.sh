@@ -22,6 +22,7 @@ files = [
     'assets/breakthrough-data.js',
     'assets/stones.js',
     'assets/charts.js',
+    'assets/trends.js',
     'assets/app.js',
     'assets/pwa.js',
     'assets/install.js',

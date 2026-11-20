@@ -1608,3 +1608,42 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .bt-page .bt-val, .bt-page .kpi-value { white-space: nowrap; }
 @media (max-width: 768px) { .bt-page .bt-scenarios { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .bt-page .bt-scenario { transition: none; } }
+
+/* ------------------------------------------------------------------ */
+/* 物价走势                                                           */
+/* ------------------------------------------------------------------ */
+.trend-tools { gap: 8px; }
+.trend-range { display: inline-flex; align-items: center; gap: 6px; }
+.trend-date { width: 132px; height: 30px; font-size: 11.5px; }
+.trend-item-select { width: 196px; max-width: 28vw; }
+.trend-kpis { margin-top: 0; }
+.trend-chart-card .card-body { overflow-x: auto; overflow-y: hidden; }
+.trend-chart-card .chart-svg { min-width: 720px; }
+.trend-node-card .table-wrap { max-height: 520px; }
+.trend-node-table tbody tr { cursor: pointer; }
+.trend-node-table tbody tr:hover td { background: color-mix(in srgb, var(--text) 5%, transparent); }
+.trend-node-table tbody tr.selected td { background: color-mix(in srgb, var(--chart-1) 9%, transparent); }
+.trend-node-table td { height: 42px; }
+.trend-node-table .t1 { font-weight: 600; font-size: 12px; }
+.trend-node-table .t2 { color: var(--muted); font-size: 10.5px; margin-top: 1px; }
+.trend-raw-table { max-height: 620px; }
+.trend-raw-table td { height: 40px; }
+.trend-raw-table .t1 { font-weight: 500; }
+.trend-raw-table .t2 { color: var(--muted-2); font-size: 10px; font-variant-numeric: tabular-nums; margin-top: 1px; }
+.chart-legend .trend-ring {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--text); background: transparent; display: inline-block;
+}
+.chart-candle { outline: none; }
+.chart-candle:focus-visible rect,
+.chart-candle:focus-visible line { stroke: var(--info); stroke-width: 2; }
+@media (max-width: 768px) {
+  #chart-trend { overflow-x: auto; overflow-y: hidden; }
+  #chart-trend .chart-svg { min-width: 680px; }
+  .trend-tools { width: 100%; }
+  .trend-range { width: 100%; }
+  .trend-date { flex: 1; width: auto; min-width: 0; }
+  .trend-chart-card .card-head { flex-wrap: wrap; }
+  .trend-chart-card .card-tools { width: 100%; justify-content: flex-start; }
+  .trend-item-select { width: auto; max-width: none; flex: 1 1 160px; }
+}

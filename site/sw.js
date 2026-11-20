@@ -16,6 +16,7 @@ const SHELL = [
   './assets/breakthrough-data.js',
   './assets/stones.js',
   './assets/charts.js',
+  './assets/trends.js',
   './assets/app.js',
   './assets/install.css',
   './assets/install.js',
@@ -84,6 +85,22 @@ self.addEventListener('fetch', (event) => {
             .then((cache) => cache.match('./assets/data.js'))
             .then((hit) => hit || caches.match(request));
         })
+    );
+    return;
+  }
+
+  // 物价历史是持续增长的数据，网络优先；离线时回退到上次缓存。
+  if (url.pathname.includes('/price-history/')) {
+    event.respondWith(
+      fetch(request, { cache: 'no-cache' })
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(DATA_CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
     );
     return;
   }
