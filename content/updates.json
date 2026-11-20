@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "6853028aea618e32f1be6792ec433ae1a0cd0576",
+  "sourceCommit": "c81d27c5843c09a0d746a5f4970bdce6007475be",
   "date": "2026-11-20",
   "title": "新增物价走势分析",
   "notes": [
@@ -9,6 +9,11 @@
     "行情条新增「检查物价」，dev 预览自动跟随生产行情；跨技艺材料按实际配方用途展示"
   ],
   "history": [
+    {
+      "version": "c81d27c",
+      "date": "2026-11-20",
+      "title": "物价走势正式发布"
+    },
     {
       "version": "6853028",
       "date": "2026-11-20",
@@ -33,11 +38,6 @@
       "version": "c0aaad3",
       "date": "2026-11-20",
       "title": "unify item filters and index price axis"
-    },
-    {
-      "version": "90d08d6",
-      "date": "2026-11-20",
-      "title": "price box plot, item colors and price range filter"
     }
   ]
 }

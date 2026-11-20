@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-20 · c81d27c
+
+物价走势正式发布
+
 ## 2026-11-20 · 6853028
 
 default all trend filters, mobile collapse and price check
