@@ -17,7 +17,7 @@ Pages 发布的是仓库根目录的 Web 版（`index.html` + `assets/`）；小
 
 推送 `main` 后，`Deploy site and minitool` 自动完成：
 
-1. 验证并从真实提交生成 `CHANGELOG.md`、`content/updates.json`，提交日志变更。
+1. 验证并从真实提交生成全局 `CHANGELOG.md`，提交日志变更；它不驱动任何通道的更新提示。
 2. 使用已验证且包含日志的同一提交构建 Pages 和离线小工具，部署 GitHub Pages。
 3. 提供线上 `CHANGELOG.md`、`updates.json` 与稳定小工具下载地址。
 
@@ -68,7 +68,11 @@ git push --force-with-lease -u origin main
 
 脚本会：
 
-0. **应用壳更新前先改 `content/updates.json`**：更新 `title` / `notes`，PWA 更新提示会显示这段文案；只更新价格数据时不会触发提示，也不会覆盖这段文案。
+0. **三条更新通道分开维护**：
+   - 网页端：`content/updates/web.json`，PWA 只读它；
+   - 小程序：`content/updates/miniapp.json`，只进入小程序设置页；
+   - 小工具：`content/updates/minitool.json`，只进入小工具 zip。
+   只更新价格数据不会触发网页更新提示，也不会覆盖任何通道文案。
 1. `scripts/check-minitool.mjs` 审计小工具（无内联脚本、无外网请求、无 module、≤10 MiB）；
 2. `scripts/build-minitool.sh` 重打 `剑网三物价助手-minitool.zip`；
 3. `scripts/build-site.sh` 生成 `_site/`（含 `downloads/jx3-minitool.zip`）；
@@ -112,9 +116,11 @@ git push --force-with-lease -u origin main
 
 更新内容来源：
 
-- `content/updates.json`：手动维护 `title` / `notes` / `history`；
+- `content/updates/web.json`：网页端手动维护 `title` / `notes` / `history`；
+- `content/updates/miniapp.json`：小程序专用；
+- `content/updates/minitool.json`：小工具专用；
 - 每日价格机器人提交（`chore: update JX3BOX prices`）会自动换成“价格数据已更新”三条说明；
-- 想改某次更新的文案，提交前改 `content/updates.json` 即可。
+- 想改某次网页更新的文案，提交前改 `content/updates/web.json`；小程序/小工具改各自文件。
 
 本地验证：
 

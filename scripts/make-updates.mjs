@@ -1,59 +1,40 @@
 #!/usr/bin/env node
 /**
- * 生成 GitHub Pages 上的 updates.json。
+ * 生成网页端 PWA 的 _site/updates.json（只读 content/updates/web.json）。
  *
- * - 手动更新说明放在 content/updates.json（title / notes / history）。
- * - 每日价格机器人提交时自动换成“价格数据更新”文案。
- * - 版本号由 build-site.sh 传入，通常是当前 commit 短 SHA。
+ * 小程序、小工具使用各自的 content/updates/*.json，不会影响网页更新提示。
  *
- * 用法：node scripts/make-updates.mjs <version> <date> <out>
+ * 用法：node scripts/make-updates.mjs web <shellVersion> <date> <out>
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
 
-const [, , versionArg, dateArg, outArg] = process.argv;
+const [, , channelArg, versionArg, dateArg, outArg] = process.argv;
+const channel = channelArg || 'web';
 const version = versionArg || 'dev';
 const date = dateArg || new Date().toISOString();
 const out = outArg || '_site/updates.json';
 
-function git(command, fallback) {
-  try {
-    return execSync(command, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-  } catch {
-    return fallback;
-  }
+if (channel !== 'web') {
+  throw new Error('网页端更新只使用 web 通道；小程序/小工具请使用各自构建流程');
 }
 
 let manual = {};
 try {
-  manual = JSON.parse(fs.readFileSync('content/updates.json', 'utf8'));
-} catch {
+  manual = JSON.parse(fs.readFileSync(path.join('content', 'updates', 'web.json'), 'utf8'));
+} catch (e) {
   manual = {};
 }
+if (manual.channel && manual.channel !== 'web') {
+  throw new Error('content/updates/web.json 的 channel 必须是 web');
+}
 
-const subject = git('git log -1 --pretty=%s', '');
-const isPriceUpdate = /update\s+JX3BOX\s+prices/i.test(subject);
-
-// 更新提示只应在“应用壳”变化时出现；价格数据单独更新不会改变壳版本，
-// 因此这里优先使用 content/updates.json 中为本次应用发布手写的文案。
-// 只有手写文案缺失时，才退回提交标题/价格机器人文案。
-const hasManualNotes = manual && manual.title && Array.isArray(manual.notes) && manual.notes.length > 0;
-const title = hasManualNotes
-  ? manual.title
-  : (isPriceUpdate ? '价格数据已更新' : (subject || '体验与数据更新'));
-
-const notes = hasManualNotes
+const title = manual.title || '网页端更新';
+const notes = Array.isArray(manual.notes) && manual.notes.length
   ? manual.notes
-  : (isPriceUpdate
-      ? [
-          '同步 JX3BOX 全服拍卖价',
-          '重算制造配方成本与精力收益',
-          '无报价物品回退梦江南示例价'
-        ]
-      : ['修复已知问题', '优化加载与交互']);
-
+  : ['网页端已更新'];
 const payload = {
+  channel: 'web',
   // latest 是“发布 ID”，故意与 appVersion 区分：
   // 旧版 PWA 逻辑用 latest 对比页面版本，必须能感知到新版本。
   latest: version + '-r',
@@ -67,4 +48,4 @@ const payload = {
 
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify(payload, null, 2) + '\n');
-console.log(`updates.json: ${version} · ${title}`);
+console.log(`web updates.json: ${version} · ${title}`);

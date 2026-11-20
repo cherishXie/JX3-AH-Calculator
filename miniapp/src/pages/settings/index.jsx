@@ -10,6 +10,7 @@ import { fmt, fmtTime } from '../../shared/format';
 import { syncRemotePrices } from '../../shared/remotePrices';
 import { isCloudConfigured } from '../../shared/cloudConfig';
 import { applyTheme } from '../../shared/theme';
+import release from '../../shared/release.json';
 
 const THEME_OPTIONS = [{ value: 'light', label: '亮色' }, { value: 'dark', label: '暗色' }];
 
@@ -203,6 +204,17 @@ function Settings() {
             <Seg value={state.settings.theme === 'dark' ? 'dark' : 'light'} options={THEME_OPTIONS} onChange={changeTheme} />
           </View>
           <Text className='tiny dim'>亮色适合白天和户外；暗色适合夜间。主题只影响本机显示。</Text>
+        </View>
+      </View>
+
+      <View className='card'>
+        <View className='card-head'><View className='flex1'><Text className='card-title'>小程序更新</Text><Text className='card-sub'>只显示小程序通道，不影响网页端</Text></View></View>
+        <View className='card-body'>
+          <View className='kv'><Text className='k'>版本</Text><Text className='v'>{release.version} · {release.date}</Text></View>
+          <Text className='card-title' style={{ display: 'block', marginTop: '8rpx' }}>{release.title}</Text>
+          {release.notes.map(function (note, i) {
+            return <Text key={i} className='tiny dim' style={{ display: 'block', marginTop: '6rpx' }}>· {note}</Text>;
+          })}
         </View>
       </View>
 

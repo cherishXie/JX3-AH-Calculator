@@ -94,7 +94,7 @@ find _site -name '.DS_Store' -delete
 touch _site/.nojekyll
 
 
-node scripts/make-updates.mjs "$SHELL_VERSION" "$BUILD_DATE" _site/updates.json
+node scripts/make-updates.mjs web "$SHELL_VERSION" "$BUILD_DATE" _site/updates.json
 
 python3 - "$SHELL_VERSION" "$BUILD_DATE" "$GIT_COMMIT" <<'PY'
 import json

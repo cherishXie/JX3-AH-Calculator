@@ -13,6 +13,7 @@
     "verify:weapp": "node scripts/verify-weapp.js",
     "build:prices": "node scripts/build-remote-prices.mjs",
     "sync:trends": "node scripts/build-trends.mjs",
+    "sync:release": "node scripts/sync-release.mjs",
     "sync:cloud": "node scripts/sync-cloudbase-prices.mjs",
     "sync:cloud:history": "node scripts/sync-cloudbase-history.mjs",
     "postinstall": "node scripts/check-platform.js",

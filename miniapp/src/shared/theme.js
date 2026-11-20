@@ -15,6 +15,25 @@ const DARK_TABS = [
   { icon: 'assets/tabs/stones.png', selected: 'assets/tabs/stones-on.png' }
 ];
 
+const TAB_ROUTES = [
+  'pages/overview/index',
+  'pages/skills/index',
+  'pages/prices/index',
+  'pages/analysis/index',
+  'pages/stones/index'
+];
+
+function isTabPage() {
+  try {
+    const pages = Taro.getCurrentPages ? Taro.getCurrentPages() : [];
+    const current = pages && pages[pages.length - 1];
+    const route = current && (current.route || current.__route__);
+    return !!route && TAB_ROUTES.indexOf(String(route).replace(/^\//, '')) !== -1;
+  } catch (e) {
+    return false;
+  }
+}
+
 export function getTheme(state) {
   return state && state.settings && state.settings.theme === 'dark' ? 'dark' : 'light';
 }
@@ -64,7 +83,7 @@ export function applyTheme(theme) {
       if (meta) meta.setAttribute('content', bg);
     } catch (e) { /* H5 环境才更新 */ }
   }
-  if (mini) {
+  if (mini && isTabPage()) {
     const tabs = light ? LIGHT_TABS : DARK_TABS;
     tabs.forEach(function (item, index) {
       safe(function () {

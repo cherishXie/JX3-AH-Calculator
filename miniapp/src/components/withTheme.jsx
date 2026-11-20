@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useDidShow } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { useStore } from '../store';
 import { applyTheme, getTheme } from '../shared/theme';
@@ -16,6 +17,10 @@ export default function withTheme(Page) {
     useEffect(function () {
       applyTheme(theme);
     }, [theme]);
+
+    useDidShow(function () {
+      applyTheme(theme);
+    });
 
     return (
       <View className={'theme-root theme-' + theme}>

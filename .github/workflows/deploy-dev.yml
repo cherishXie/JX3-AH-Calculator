@@ -10,6 +10,9 @@ name: Deploy dev preview
 on:
   push:
     branches: [dev]
+    paths-ignore:
+      - 'miniapp/**'
+      - 'content/updates/miniapp.json'
   workflow_dispatch:
 
 permissions:
