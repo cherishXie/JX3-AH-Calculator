@@ -546,7 +546,3 @@ show actual price update time in price library
 ## 2026-11-18 · 5136fe2
 
 correct daily update timezone and skip no-op runs
-
-## 2026-11-18 · d097841
-
-expose check update in sidebar and speed up no-op checks
