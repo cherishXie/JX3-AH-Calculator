@@ -1472,6 +1472,8 @@ html.light .data-sync {
 }
 .stone-conclusion span { min-width: 0; }
 
+.stone-analysis-table { min-width: 0; }
+.stone-analysis-grid > * { min-width: 0; }
 .stone-analysis-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
