@@ -108,7 +108,7 @@ window.JX3Data = {
       }
     ],
     "scope": "收录 154 条当前版本制造配方 + 21 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
-    "priceUpdatedAt": "2026-11-20T19:07:15+08:00",
+    "priceUpdatedAt": "2026-11-20T19:23:37+08:00",
     "priceCoverage": {
       "updated": 199,
       "total": 267,
@@ -220,7 +220,7 @@ window.JX3Data = {
         "noQuote": 193
       }
     },
-    "stonePriceUpdatedAt": "2026-11-20T19:07:15+08:00",
+    "stonePriceUpdatedAt": "2026-11-20T19:23:37+08:00",
     "stoneVerifiedAt": "2026-11-19"
   },
   "tiers": [
