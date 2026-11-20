@@ -11,6 +11,8 @@ import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
 import StoneMiniCard from '../../components/StoneMiniCard';
 import BreakthroughMini from '../../components/BreakthroughMini';
+import Badge from '../../components/Badge';
+import LANDABILITY from '../../shared/landability.json';
 import { useStore, getState } from '../../store';
 import { DATA, rowsOf, filterRows, sortRows, median, simulate } from '../../shared/engine';
 import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
@@ -114,6 +116,7 @@ function Analysis() {
     };
   }, [filtered]);
 
+  const localLandability = LANDABILITY.servers[state.serverId] || null;
   const pool = filtered.filter(function (r) { return !r.calc.missing; });
   const a = pool.find(function (r) { return r.recipe.id === aId; }) || pool[0];
   const b = pool.find(function (r) { return r.recipe.id === bId && r !== a; }) || pool.find(function (r) { return r !== a; }) || pool[0];
@@ -154,6 +157,41 @@ function Analysis() {
       </View>
 
       <BreakthroughMini />
+
+      {localLandability ? (
+        <View className='card'>
+          <View className='card-head'>
+            <View className='flex1'>
+              <Text className='card-title'>本服可做</Text>
+              <Text className='card-sub'>发布快照 · 只看本服报价，跨服见区服趋势</Text>
+            </View>
+            <Badge tone='badge-neutral'>{'快照 ' + LANDABILITY.meta.snapshots}</Badge>
+          </View>
+          <View className='card-body'>
+            <View className='kpi-grid'>
+              <Kpi label='本服可做' value={String(localLandability.counts.A)} unit='条' meta='报价完整、价格稳' tone='pos' />
+              <Kpi label='谨慎' value={String(localLandability.counts.B)} unit='条' meta='断续/波动/需自产' tone='warn' />
+              <Kpi label='暂不可做' value={String(localLandability.counts.C)} unit='条' meta='缺价/无报价/负收益' />
+              <Kpi label='可做正收益' value={String(localLandability.counts.positive)} unit={'/ ' + (localLandability.counts.A + localLandability.counts.B + localLandability.counts.C)} meta='当前利润 > 0' tone='pos' />
+            </View>
+            <View className='mt'>
+              {localLandability.top.map(function (r) {
+                return (
+                  <View className='row-between mb' key={r.id} onClick={function () { Taro.navigateTo({ url: '/pages/recipe/index?id=' + r.id }); }}>
+                    <View className='row'>
+                      <Badge tone={r.grade === 'A' ? 'badge-positive' : 'badge-warning'}>{r.grade === 'A' ? '可做' : '谨慎'}</Badge>
+                      <Text className='ml'>{r.name}</Text>
+                    </View>
+                    <Text className='pos'>{fmt(r.perE, 2)} 金/精力</Text>
+                  </View>
+                );
+              })}
+            </View>
+            <Text className='tiny dim'>可做组合 +{fmt(localLandability.plan.profit, 0)} 金 / {fmtInt(localLandability.plan.energyUsed)} 精力；不含自产。</Text>
+          </View>
+          <View className='card-foot'>基于 {LANDABILITY.meta.snapshots} 个历史快照；仅当前服，跨服比较在区服趋势。</View>
+        </View>
+      ) : null}
 
       {process.env.TARO_ENV === 'weapp' ? (
         <View className='card st-entry' onClick={function () { Taro.navigateTo({ url: '/pages/server-trends/index' }); }}>

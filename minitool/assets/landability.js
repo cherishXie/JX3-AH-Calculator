@@ -32,6 +32,7 @@
     stats = stats || {};
     opts = opts || {};
     const allowSelfCraft = opts.allowSelfCraft !== false;
+    const localOnly = !!opts.localOnly;
     const outCov = Number(stats.outCov) || 0;
     const persistence = Number(stats.persistence);
     const cv = Number(stats.cv);
@@ -56,7 +57,7 @@
       };
     }
     if (ev.selfCraft) {
-      if (outCov < 4) {
+      if (!localOnly && outCov < 4) {
         return {
           grade: 'C', feasible: true, blockedBy: [],
           thinReasons: ['成品覆盖 ' + outCov + ' 服', '需要自产'],
@@ -76,11 +77,11 @@
         selfCraft: false, reasons: ['成品流动性不足']
       };
     }
-    if (feasibility >= 0.8 && outCov >= 8 && persistence >= 0.8 && (!Number.isFinite(cv) || cv <= 0.25) && (!Number.isFinite(medianPerE) || medianPerE > 0)) {
+    if (feasibility >= 0.8 && (!localOnly ? outCov >= 8 : true) && persistence >= 0.8 && (!Number.isFinite(cv) || cv <= 0.25) && (!Number.isFinite(medianPerE) || medianPerE > 0)) {
       return { grade: 'A', feasible: true, blockedBy: [], thinReasons: [], selfCraft: false, reasons: ['报价完整、流动性充足'] };
     }
-    if (feasibility >= 0.5 && outCov >= 4 && (!Number.isFinite(medianPerE) || medianPerE > 0)) {
-      if (outCov < 8) reasons.push('成品仅 ' + outCov + ' 服有报价');
+    if (feasibility >= 0.5 && (!localOnly ? outCov >= 4 : true) && (!Number.isFinite(medianPerE) || medianPerE > 0)) {
+      if (!localOnly && outCov < 8) reasons.push('成品仅 ' + outCov + ' 服有报价');
       if (persistence < 0.8) reasons.push('报价持续 ' + Math.round(persistence * 100) + '%');
       if (Number.isFinite(cv) && cv > 0.25) reasons.push('价格波动 ' + Math.round(cv * 100) + '%');
       if (!(ev.perEnergy > 0)) reasons.push('当前节点负收益');
@@ -119,7 +120,7 @@
       return true;
     }).map(function (r) {
       const stable = Math.sqrt(Math.max(0, r.perE) * Math.max(0, r.medianPerE || r.perE));
-      return { row: r, stable: stable, cap: capOf(r) };
+      return { row: r, stable: stable, cap: capOf(r, opts) };
     }).filter(function (x) { return x.cap > 0; })
       .sort(function (a, b2) { return b2.stable - a.stable; });
     let remaining = b;
