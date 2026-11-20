@@ -509,3 +509,52 @@ button::after { border: none; }
 .trend-node-row .val { text-align: right; }
 .trend-node-row .v { font-size: 23rpx; font-weight: 600; font-variant-numeric: tabular-nums; }
 .trend-node-row .u { font-size: 18rpx; color: var(--muted); margin-left: 4rpx; }
+
+/* 启动引导页（仅微信端） */
+.guide-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top) + 32rpx) 40rpx calc(env(safe-area-inset-bottom) + 32rpx);
+  background: linear-gradient(160deg, var(--bg) 0%, var(--card) 55%, var(--bg) 100%);
+}
+.guide-skip {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 24rpx);
+  right: 32rpx;
+  height: 56rpx;
+  padding: 0 18rpx;
+  display: flex;
+  align-items: center;
+  border: 1rpx solid var(--border);
+  border-radius: 28rpx;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 21rpx;
+}
+.guide-skip-count { margin-left: 6rpx; color: var(--text); font-variant-numeric: tabular-nums; }
+.guide-main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 80rpx 0 40rpx; }
+.guide-seal {
+  width: 96rpx; height: 96rpx; border-radius: 24rpx;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-blue); color: #fff;
+  font-size: 48rpx; font-weight: 700; letter-spacing: 2rpx;
+  box-shadow: 0 12rpx 32rpx rgba(29, 111, 224, 0.24);
+}
+.guide-title { display: block; margin-top: 28rpx; font-size: 52rpx; line-height: 68rpx; font-weight: 700; letter-spacing: 1rpx; }
+.guide-sub { display: block; margin-top: 8rpx; color: var(--muted); font-size: 23rpx; }
+.guide-desc { display: block; margin-top: 28rpx; max-width: 620rpx; color: var(--muted); font-size: 25rpx; line-height: 40rpx; }
+.guide-points { margin-top: 40rpx; }
+.guide-point { display: flex; align-items: center; min-height: 48rpx; color: var(--text-2); font-size: 24rpx; }
+.guide-dot { width: 8rpx; height: 8rpx; border-radius: 50%; background: var(--accent-blue); margin-right: 14rpx; flex-shrink: 0; }
+.guide-ad { margin-top: 40rpx; min-height: 120rpx; border-radius: 12rpx; overflow: hidden; }
+.guide-foot { padding-top: 24rpx; border-top: 1rpx solid var(--border); }
+.guide-tip { display: block; color: var(--muted-2); font-size: 19rpx; line-height: 28rpx; }
+.guide-enter {
+  margin-top: 18rpx; height: 84rpx; border-radius: 12rpx;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--text); color: var(--bg);
+  font-size: 27rpx; font-weight: 600;
+}
+.guide-enter-arrow { margin-left: 8rpx; font-size: 34rpx; line-height: 1; }

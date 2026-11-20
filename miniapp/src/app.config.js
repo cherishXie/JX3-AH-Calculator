@@ -1,12 +1,14 @@
 /* 微信端额外提供五行石/公式编辑；小红书端保持原有 4 Tab，避免影响现有工具布局 */
 const IS_WEAPP = process.env.TARO_ENV === 'weapp';
 
-const PAGES = [
+const PAGES = [];
+if (IS_WEAPP) PAGES.push('pages/guide/index');
+PAGES.push(
   'pages/overview/index',
   'pages/skills/index',
   'pages/prices/index',
   'pages/analysis/index'
-];
+);
 
 if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index', 'pages/trends/index');
 
