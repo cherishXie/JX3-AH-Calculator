@@ -1,14 +1,16 @@
 {
-  "sourceCommit": "9ff25b8c441ddd9dbff59a26c93d32ae6a27ce5b",
+  "sourceCommit": "04bb25806eb5ec77f485c775d8955e408ca5d2c0",
   "date": "2026-11-20",
-  "title": "新增物价历史与回溯",
+  "title": "clarify price history delta semantics",
   "notes": [
-    "每次价格变化按日写入 data/price-history JSON，可回溯各服各时间点报价",
-    "新增 scripts/price-history.mjs，支持 as-of、series 和 CSV 导出",
-    "导出可用基准价补齐本服无报价物品，并标注“本服报价 / 基准价”",
-    "未变化的行情检查不写历史，不产生额外提交"
+    "clarify price history delta semantics"
   ],
   "history": [
+    {
+      "version": "04bb258",
+      "date": "2026-11-20",
+      "title": "clarify price history delta semantics"
+    },
     {
       "version": "9ff25b8",
       "date": "2026-11-20",
@@ -33,11 +35,6 @@
       "version": "6a3eed1",
       "date": "2026-11-20",
       "title": "switch prices to hourly Cloudflare schedule"
-    },
-    {
-      "version": "b1f7eb0",
-      "date": "2026-11-20",
-      "title": "add file picker to WPS price refresh command"
     }
   ]
 }
