@@ -28,6 +28,7 @@
     lastPath: null,
     trendPickerOpen: false,
     trendPickerQuery: '',
+    trendRankAllOpen: false,
     trendScroll: Object.create(null),
     trendCenterKey: null
   };
@@ -2197,7 +2198,9 @@
       type = defaultItem && defaultItem.kind === 'material' ? 'material' : 'product';
     }
     const priceRange = trendPriceRange(p);
-    const allScope = T.items(type, skillId).map(function (item, index) {
+    const allScope = T.items(type, skillId).filter(function (item) {
+      return !(type === 'all' && item.kind === 'stone');
+    }).map(function (item, index) {
       return Object.assign({}, item, { color: trendItemColor(index) });
     });
     const seriesMap = {};
@@ -2373,15 +2376,20 @@
     return rows;
   }
   function trendRankCard(ctx) {
-    const rows = [];
+    const allRows = [];
     ctx.rankedItems.forEach(function (item) {
       const series = ctx.seriesMap[item.key] || [];
-      if (series.length < 2) return;
+      if (!series.length) return;
       const first = series[0].price;
       const last = series[series.length - 1].price;
       if (!(first > 0)) return;
-      rows.push({ item: item, change: (last / first - 1) * 100, last: last });
+      allRows.push({
+        item: item,
+        change: series.length > 1 ? (last / first - 1) * 100 : 0,
+        last: last
+      });
     });
+    const rows = allRows.filter(function (row) { return row.change !== 0; });
     const up = rows.filter(function (row) { return row.change > 0; })
       .sort(function (a, b) { return b.change - a.change; }).slice(0, 10);
     const down = rows.filter(function (row) { return row.change < 0; })
@@ -2401,12 +2409,29 @@
           '</div>';
       }).join('');
     }
+    const fullRows = allRows.slice().sort(function (a, b) {
+      return b.change - a.change || String(a.item.name).localeCompare(String(b.item.name), 'zh-CN');
+    });
+    const fullBody = fullRows.map(function (row, index) {
+      const cls = row.change > 0 ? 'pos' : row.change < 0 ? 'neg' : 'dim';
+      return '<tr class="trend-rank-all-row" data-trend-focus="' + U.esc(row.item.key) + '" tabindex="0">' +
+        '<td class="num dim">' + (index + 1) + '</td>' +
+        '<td><span class="trend-dot" style="--c:' + U.esc(row.item.color) + '"></span>' + U.esc(row.item.name) + '</td>' +
+        '<td class="dim">' + U.esc(row.item.skillName) + '</td>' +
+        '<td class="dim">' + U.esc(row.item.tierName) + '</td>' +
+        '<td class="num ' + cls + '">' + (row.change > 0 ? '+' : row.change < 0 ? '−' : '') + U.fmt(Math.abs(row.change), 1) + '%</td>' +
+        '<td class="num">' + U.fmt(row.last, 2) + ' 金</td></tr>';
+    }).join('');
+    const full = '<details class="trend-rank-all"' + (ui.trendRankAllOpen ? ' open' : '') + '><summary><span>全部涨跌数据</span><span class="badge badge-outline">' + allRows.length + '</span>' +
+      '<span class="chev">' + icon('chevronDown') + '</span></summary>' +
+      '<div class="trend-rank-all-wrap"><table class="data compact"><thead><tr><th class="num">#</th><th>物品</th><th>技艺</th><th>品阶</th><th class="num">区间涨跌</th><th class="num">最新价</th></tr></thead>' +
+      '<tbody>' + (fullBody || '<tr><td colspan="6">' + emptyState('暂无涨跌数据', '调整筛选条件。', '', 'filter') + '</td></tr>') + '</tbody></table></div></details>';
     return '<section class="card col-12 trend-rank-card"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">涨跌红黑榜</h2></div><div class="card-tools"><span class="tiny dim">筛选范围内前 10</span></div></div>' +
+      '<h2 class="card-title">涨跌红黑榜</h2></div><div class="card-tools"><span class="tiny dim">前 10 / 全量 ' + allRows.length + '</span></div></div>' +
       '<div class="trend-rank-grid">' +
         '<div class="trend-rank-col"><div class="trend-rank-head"><span class="pos">涨幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(up, 'up') + '</div>' +
         '<div class="trend-rank-col"><div class="trend-rank-head"><span class="neg">跌幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(down, 'down') + '</div>' +
-      '</div></section>';
+      '</div>' + full + '</section>';
   }
   function trendHeatmap(ctx) {
     const items = ctx.rankedItems;
@@ -2516,8 +2541,9 @@
   }
   function trendRawDetails(ctx) {
     const items = ctx.rankedItems;
-    const rows = [];
+    const groups = [];
     ctx.points.forEach(function (point) {
+      const rows = [];
       items.forEach(function (item) {
         let quote = null;
         let base = null;
@@ -2537,29 +2563,38 @@
         if (ctx.priceRange.min != null && price < ctx.priceRange.min) return;
         if (ctx.priceRange.max != null && price > ctx.priceRange.max) return;
         rows.push({
-          at: point.at, item: item, quote: quote, base: base, price: price,
+          item: item, quote: quote, base: base, price: price,
           source: quote != null ? '本服报价' : '基准价'
         });
       });
+      if (rows.length) groups.push({ point: point, rows: rows });
     });
-    const body = rows.map(function (row) {
-      return '<tr><td class="dim">' + U.esc(trendAtText(row.at)) + '</td>' +
-        '<td>' + U.esc(row.item.name) + '</td>' +
-        '<td>' + U.esc(row.item.kind === 'stone' ? '五行石' : row.item.kind === 'product' ? '产物' : '材料') + '</td>' +
-        '<td class="dim">' + U.esc(row.item.skillName) + '</td>' +
-        '<td class="num">' + (row.quote == null ? '—' : U.fmt(row.quote, 2)) + '</td>' +
-        '<td class="num">' + (row.base == null ? '—' : U.fmt(row.base, 2)) + '</td>' +
-        '<td class="num"><b>' + U.fmt(row.price, 2) + '</b></td>' +
-        '<td>' + (row.source === '本服报价' ? '<span class="badge badge-positive">本服报价</span>' : '<span class="badge badge-neutral">基准价</span>') + '</td></tr>';
+    let total = 0;
+    groups.forEach(function (group) { total += group.rows.length; });
+    const nodeHtml = groups.map(function (group, index) {
+      const rows = group.rows.map(function (row) {
+        return '<tr><td>' + U.esc(row.item.name) + '</td>' +
+          '<td>' + U.esc(row.item.kind === 'stone' ? '五行石' : row.item.kind === 'product' ? '产物' : '材料') + '</td>' +
+          '<td class="dim">' + U.esc(row.item.skillName) + '</td>' +
+          '<td class="num">' + (row.quote == null ? '—' : U.fmt(row.quote, 2)) + '</td>' +
+          '<td class="num">' + (row.base == null ? '—' : U.fmt(row.base, 2)) + '</td>' +
+          '<td class="num"><b>' + U.fmt(row.price, 2) + '</b></td>' +
+          '<td>' + (row.source === '本服报价' ? '<span class="badge badge-positive">本服报价</span>' : '<span class="badge badge-neutral">基准价</span>') + '</td></tr>';
+      }).join('');
+      return '<details class="trend-node-item"><summary>' +
+        '<span class="trend-node-time">' + U.esc(trendAtText(group.point.at)) + '</span>' +
+        '<span class="badge badge-outline">' + group.rows.length + ' 项</span>' +
+        '<span class="chev">' + icon('chevronDown') + '</span></summary>' +
+        '<div class="trend-node-body"><div class="table-wrap medium"><table class="data compact"><thead><tr>' +
+          '<th>物品</th><th>类别</th><th>技艺</th><th class="num">本服报价</th><th class="num">基准价</th><th class="num">采用价</th><th>来源</th>' +
+        '</tr></thead><tbody>' + rows + '</tbody></table></div></div></details>';
     }).join('');
     return '<details class="card col-12 trend-raw-details"><summary class="trend-raw-summary">' +
-      '<span>节点原始数据</span><span class="badge badge-outline">' + rows.length + ' 行</span><span class="chev">' + icon('chevronDown') + '</span></summary>' +
+      '<span>节点原始数据</span><span class="badge badge-outline">' + groups.length + ' 个节点 · ' + total + ' 行</span><span class="chev">' + icon('chevronDown') + '</span></summary>' +
       '<div class="trend-raw-body"><div class="trend-raw-tools">' +
         '<button class="btn btn-sm" data-action="trend-export-series">' + icon('download') + '走势 CSV</button>' +
         '<button class="btn btn-sm" data-action="trend-export-raw">' + icon('download') + '原始 CSV</button>' +
-      '</div><div class="table-wrap medium"><table class="data compact"><thead><tr>' +
-        '<th>时间</th><th>物品</th><th>类别</th><th>技艺</th><th class="num">本服报价</th><th class="num">基准价</th><th class="num">采用价</th><th>来源</th>' +
-      '</tr></thead><tbody>' + (body || '<tr><td colspan="8">' + emptyState('当前筛选没有原始数据', '换一个技艺、类型或时间范围。', '', 'filter') + '</td></tr>') + '</tbody></table></div></div></details>';
+      '</div>' + (nodeHtml || emptyState('当前筛选没有原始数据', '换一个技艺、类型或时间范围。', '', 'filter')) + '</div></details>';
   }
   function renderTrends(p) {
     const ctx = trendContext(p);
@@ -4456,6 +4491,9 @@
     }, true);
     document.addEventListener('keydown', onKeydown);
     document.addEventListener('toggle', function (e) {
+      if (e.target && e.target.classList && e.target.classList.contains('trend-rank-all')) {
+        ui.trendRankAllOpen = !!e.target.open;
+      }
       if (e.target && e.target.classList && e.target.classList.contains('trend-picker')) {
         ui.trendPickerOpen = !!e.target.open;
         if (!e.target.open) {
@@ -4592,6 +4630,7 @@
     if (pathChanged) {
       ui.trendPickerOpen = false;
       ui.trendPickerQuery = '';
+      ui.trendRankAllOpen = false;
       ui.trendScroll = Object.create(null);
       ui.trendCenterKey = null;
       if (ui.drawer) {
