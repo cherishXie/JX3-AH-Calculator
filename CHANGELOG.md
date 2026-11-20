@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 60fa90e
+
+update JX3BOX prices
+
 ## 2026-11-20 · ad3b121
 
 update JX3BOX prices
@@ -546,11 +550,3 @@ correct daily update timezone and skip no-op runs
 ## 2026-11-18 · d097841
 
 expose check update in sidebar and speed up no-op checks
-
-## 2026-11-18 · 547bd1c
-
-keep PWA assets in sync and add manual update check
-
-## 2026-11-18 · b057fe1
-
-add branded boot loader with retry
