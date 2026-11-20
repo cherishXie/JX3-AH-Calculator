@@ -2023,109 +2023,99 @@
     return html;
   }
 
-  function landabilityCard() {
-    const sid = Store.state.serverId;
-    const s = auditServer(sid);
-    if (!s || !window.JX3Landability) return '';
-    const rows = auditRowsFor(sid, { crossServer: false });
-    const counts = s.countsLocal || { A: 0, B: 0, C: 0, positive: 0, feasible: 0 };
-    const ab = rows.filter(function (r) { return (r.grade === 'A' || r.grade === 'B') && r.perE > 0; })
-      .sort(function (a, b) { return (b.perE || -1e9) - (a.perE || -1e9); });
-    const plan = window.JX3Landability.plan(rows, settings().energyBudget, { includeSelfCraft: false, localOnly: true });
-    const top = ab.slice(0, 15);
-    const more = ab.slice(15);
-    const rowHtml = function (r) {
-      const reasons = (r.blocked && r.blocked.length ? r.blocked : r.thin || []).join('、') || '—';
-      return '<tr class="clickable" data-recipe-id="' + U.esc(r.id) + '" tabindex="0">' +
-        '<td>' + gradeBadge(r.grade, { title: r.selfCraft ? '条件可落地：含自产' : '' }) + '</td>' +
-        '<td><div class="cell-main"><div class="txt"><div class="t1">' + U.esc(r.name) + '</div>' +
-          '<div class="t2">' + U.esc(skill(r.skill).name) + ' · ' + U.fmtInt(r.energy) + ' 精力</div></div></div></td>' +
-        '<td class="num"><b class="' + (r.perE > 0 ? 'pos' : 'neg') + '">' + U.fmt(r.perE, 2) + '</b></td>' +
-        '<td class="num dim">' + (r.medianPerE == null ? '—' : U.fmt(r.medianPerE, 2)) + '</td>' +
-        '<td class="num dim">' + (r.paperPerE == null ? '—' : U.fmt(r.paperPerE, 2)) + '</td>' +
-        '<td class="num">' + Math.round((r.persistence || 0) * 100) + '%</td>' +
-        '<td class="num ' + (r.profit > 0 ? 'pos' : 'neg') + '">' + U.fmtSigned(r.profit || 0, 0) + '</td>' +
-        '<td class="dim tiny">' + U.esc(reasons) + '</td></tr>';
-    };
-    let html = '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">可落地收益 · 当前节点</h2>' +
-      '<p class="card-sub">仅看当前区服：非商店材料/成品无本服报价不补基准价；自产另计，不混入 A。跨服比较见「区服趋势 / 物价走势」。</p></div>' +
-      '<div class="card-tools"><span class="badge badge-outline">' + U.esc(server().name) + '</span><span class="badge badge-neutral">快照 ' + (window.JX3Audit.meta.snapshots || '—') + '</span></div></div>' +
-      '<div class="card-body"><div class="kpi-grid landability-kpis">' +
-      '<div class="kpi"><div class="kpi-label">A 本服可落地</div><div class="kpi-value">' + counts.A + '<span class="kpi-unit">条</span></div><div class="kpi-meta">本服报价完整、价格稳</div></div>' +
-      '<div class="kpi"><div class="kpi-label">B 本服薄市</div><div class="kpi-value">' + counts.B + '<span class="kpi-unit">条</span></div><div class="kpi-meta">本服报价断续/波动/需自产</div></div>' +
-      '<div class="kpi"><div class="kpi-label">C 不可算/纸面</div><div class="kpi-value">' + counts.C + '<span class="kpi-unit">条</span></div><div class="kpi-meta">本服缺价、成品无报价、负收益</div></div>' +
-      '<div class="kpi"><div class="kpi-label">可落地正收益</div><div class="kpi-value">' + counts.positive + '<span class="kpi-unit">/ ' + rows.length + '</span></div><div class="kpi-meta">A+B 中当前利润 > 0</div></div>' +
-      '</div>';
-    html += '<div class="table-wrap" style="margin-top:12px"><table class="data compact"><thead><tr>' +
-      '<th>落地</th><th>配方</th><th class="num">当前金/精力</th><th class="num">样本中位</th><th class="num">纸面</th><th class="num">本服持续</th><th class="num">单次利润</th><th>卡点 / 薄市</th>' +
-      '</tr></thead><tbody>' + top.map(rowHtml).join('') + '</tbody></table></div>';
-    if (more.length) {
-      html += '<details style="margin-top:8px"><summary class="tiny dim">其余 ' + more.length + ' 条 A/B</summary><div class="table-wrap" style="margin-top:8px"><table class="data compact"><tbody>' + more.map(rowHtml).join('') + '</tbody></table></div></details>';
-    }
-    html += '<div class="card-foot"><span>仅本服报价；跨服比较见「区服趋势 / 物价走势」。纸面 = 站点旧口径（缺价回退 base）。自产条目（如归营旌）不计入下方组合，需单独按五技艺排产。</span></div>';
-    html += '<div class="hairline" style="margin:14px 0"></div><div class="flex" style="align-items:flex-end;gap:10px;flex-wrap:wrap">' +
-      '<div><div class="tiny dim">可执行组合（本服 A+B 限售，不含自产）</div><div style="font-size:22px;font-weight:700" class="pos">+' + U.fmt(plan.profit, 0) + ' 金</div></div>' +
-      '<div class="tiny dim">用尽 ' + U.fmtInt(plan.energyUsed) + ' / ' + U.fmtInt(plan.budget) + ' 精力 · 闲置 ' + U.fmtInt(plan.energyIdle) + '</div>' +
-      '</div>';
-    if (plan.allocations.length) {
-      html += '<div class="rec-list" style="margin-top:8px">' + plan.allocations.slice(0, 5).map(function (a, i) {
-        return '<div class="rec-item"><span class="rec-rank">' + (i + 1) + '</span><div class="rec-main"><div class="nm">' + U.esc(a.name) + '</div>' +
-          '<div class="ds">' + U.esc(skill(a.skill).name) + ' · ' + a.count + ' 次 × ' + U.fmtInt(a.energy / a.count) + ' 精力 · 上限 ' + a.cap + '</div></div>' +
-          '<div class="rec-val"><b class="pos">+' + U.fmt(a.profit, 0) + '</b><span>金</span></div></div>';
-      }).join('') + '</div>';
-    } else {
-      html += '<div class="tiny dim" style="margin-top:8px">当前没有可执行的正收益 A/B 配方。</div>';
-    }
-    html += '</div></section></div>';
-    return html;
+  function analysisLandBadge(row) {
+    if (!row) return '<span class="badge badge-neutral">—</span>';
+    if (row.landGrade === 'G') return '<span class="badge badge-neutral" title="采集产出，不参与配方 A/B/C">采</span>';
+    return gradeBadge(row.landGrade, { title: row.landSelfCraft ? '条件可落地：含自产' : '仅看本服报价' });
   }
 
   function renderAnalysis(p) {
     const basis = currentBasis(p);
     const complete = p.complete !== '0';
     const type = p.type || 'all';
-    const rows0 = currentRows(p);
-    let rows = filterRows(rows0, p);
-    if (complete) rows = rows.filter(function (r) { return !r.calc.missing; });
+    const landFilter = p.land === 'all' ? 'all' : 'ab';
+    const auditByRecipe = Object.create(null);
+    auditRowsFor(Store.state.serverId, { crossServer: false }).forEach(function (a) { auditByRecipe[a.id] = a; });
+    const rows0 = currentRows(p).map(function (r) {
+      const isGather = r.type === 'gather';
+      const a = isGather ? null : (auditByRecipe[r.recipe.id] || null);
+      const calc = Object.assign({}, r.calc);
+      if (a) {
+        calc.perEnergy = a.perE;
+        calc.profit = a.profit;
+        calc.energy = a.energy;
+        calc.missing = a.perE == null;
+      }
+      return Object.assign({}, r, {
+        calc: calc,
+        land: a,
+        landGrade: isGather ? 'G' : (a ? a.grade : 'C'),
+        landPerE: a ? a.perE : (isGather ? calc.perEnergy : null),
+        landProfit: a ? a.profit : (isGather ? calc.profit : null),
+        landSelfCraft: a ? a.selfCraft : false,
+        landThin: a ? a.thin : [],
+        landBlocked: a ? a.blocked : []
+      });
+    });
+    const scoped = filterRows(rows0, p);
+    const craftRows = scoped.filter(function (r) { return r.type !== 'gather'; });
+    const abRows = craftRows.filter(function (r) { return r.landGrade === 'A' || r.landGrade === 'B'; });
+    const gatherRows = scoped.filter(function (r) { return r.landGrade === 'G'; });
+    const cRows = craftRows.filter(function (r) { return r.landGrade === 'C'; });
+    let rows = landFilter === 'ab' ? abRows.concat(gatherRows) : scoped.slice();
+    if (complete && landFilter !== 'all') rows = rows.filter(function (r) { return !r.calc.missing; });
     const sorted = sortRows(rows, p.sort || 'perEnergy', p.dir || 'desc');
-    const valid = rows0.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
-    const best = Calc.bestOf(rows);
+    const valid = abRows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
+    const best = sortRows(abRows.filter(function (r) { return !r.calc.missing; }), 'perEnergy', 'desc')[0] || null;
     const median = Calc.median(valid.map(function (r) { return r.calc.perEnergy; }));
-    const negatives = rows.filter(function (r) { return !r.calc.missing && r.calc.profit < 0; }).length;
-    const sim = Calc.simulate(rows, settings().energyBudget);
+    const negatives = abRows.filter(function (r) { return !r.calc.missing && r.calc.profit < 0; }).length;
+    const cMissing = cRows.filter(function (r) { return r.calc.missing; }).length;
+    const cNegative = cRows.filter(function (r) { return !r.calc.missing && r.calc.profit < 0; }).length;
+    const planRows = abRows.map(function (r) {
+      return {
+        id: r.recipe.id, name: r.recipe.name, skill: r.recipe.skillId,
+        grade: r.landGrade, perE: r.calc.perEnergy, medianPerE: r.land ? r.land.medianPerE : null,
+        profit: r.calc.profit, energy: r.calc.energy, outCov: r.land ? r.land.outCov : 0,
+        selfCraft: r.landSelfCraft, blocked: r.landBlocked, thin: r.landThin
+      };
+    });
+    const plan = window.JX3Landability && window.JX3Landability.plan
+      ? window.JX3Landability.plan(planRows, settings().energyBudget, { includeSelfCraft: false, localOnly: true })
+      : { profit: 0, energyUsed: 0, budget: settings().energyBudget, energyIdle: settings().energyBudget, allocations: [] };
     const scatterRows = rows.filter(function (r) { return !r.calc.missing; });
 
     let html = '<div class="page">';
     html += '<div class="page-head"><div><h1 class="page-title">精力收益分析</h1>' +
-      '<p class="page-sub">上方「可落地收益」为严格购买口径；下方兼容榜保留原「' + (basis === 'min' ? '市场价与自制成本取低（仅优化成本，不计中间产物精力）' : '市场价') + '」口径，含示例价，非落地收益。</p></div>' +
+      '<p class="page-sub">本服购买口径审计：默认只看 A/B 可落地，C 纸面/缺价在「全部」中查看；A+B 限售组合按本服报价与单配方上限计算。' + (basis === 'min' ? '成本口径为市场价与自制成本取低（仅优化成本）。' : '') + '</p></div>' +
       '<div class="page-tools">' +
         '<div class="seg" role="group" aria-label="成本口径">' +
           '<button class="' + (basis === 'market' ? 'active' : '') + '" data-filter="basis" data-value="" title="材料按本服市场价计算">市场价</button>' +
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
+        '<div class="seg seg-sm" role="group" aria-label="落地口径">' +
+          '<button class="' + (landFilter === 'ab' ? 'active' : '') + '" data-filter="land" data-value="ab" title="配方只看 A/B，采集保留">A/B + 采集</button>' +
+          '<button class="' + (landFilter === 'all' ? 'active' : '') + '" data-filter="land" data-value="all" title="包含 C 纸面/缺价">全部含 C</button>' +
+        '</div>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
         '<button class="btn" data-action="export-csv" data-csv="analysis">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
       '</div></div>';
 
-    html += landabilityCard();
-    html += '<details class="compat-details" style="margin-top:18px"><summary class="card-sub" style="cursor:pointer">兼容口径（含示例价，非落地）· 展开旧榜</summary>';
     html += '<div class="kpi-grid">' +
-      '<div class="kpi"><div class="kpi-label">最高精力收益</div><div class="kpi-value">' + (best ? U.fmt(best.calc.perEnergy, 2) : '—') + '<span class="kpi-unit">金/精力</span></div>' +
-        '<div class="kpi-meta">' + (best ? icon('spark') + '<span class="strong">' + U.esc(best.recipe.name) + '</span><span class="sep"></span><span>' + U.esc(best.skill.name) + '</span>' : '<span>当前筛选无完整数据</span>') + '</div></div>' +
-      '<div class="kpi"><div class="kpi-label">全站中位</div><div class="kpi-value">' + (median == null ? '—' : U.fmt(median, 2)) + '<span class="kpi-unit">金/精力</span></div>' +
-        '<div class="kpi-meta"><span>用于判断一个配方是否值得做</span></div></div>' +
-      '<div class="kpi"><div class="kpi-label">亏损配方</div><div class="kpi-value">' + negatives + '<span class="kpi-unit">/ ' + rows.length + ' 项</span></div>' +
-        '<div class="kpi-meta"><span class="down">利润为负，建议观望或改价</span></div><div class="progress is-warn"><i style="width:' + (rows.length ? Math.round(negatives / rows.length * 100) : 0) + '%"></i></div></div>' +
-      '<div class="kpi"><div class="kpi-label">满精力预估</div><div class="kpi-value">' + U.fmt(sim.profit, 2) + '<span class="kpi-unit">金</span></div>' +
-        '<div class="kpi-meta"><span>预算 ' + U.fmtInt(settings().energyBudget) + ' 精力 · 用尽 ' + U.fmtInt(sim.used) + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">本服最高 A/B</div><div class="kpi-value">' + (best ? U.fmt(best.calc.perEnergy, 2) : '—') + '<span class="kpi-unit">金/精力</span></div>' +
+        '<div class="kpi-meta">' + (best ? icon('spark') + '<span class="strong">' + U.esc(best.recipe.name) + '</span><span class="sep"></span><span>' + gradeBadge(best.landGrade) + '</span>' : '<span>当前筛选无可落地数据</span>') + '</div></div>' +
+      '<div class="kpi"><div class="kpi-label">A+B 中位</div><div class="kpi-value">' + (median == null ? '—' : U.fmt(median, 2)) + '<span class="kpi-unit">金/精力</span></div>' +
+        '<div class="kpi-meta"><span>本服 A/B 可落地配方中位，用于判断值不值得做</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">C 纸面/缺价</div><div class="kpi-value">' + cRows.length + '<span class="kpi-unit">/ ' + craftRows.length + ' 项</span></div>' +
+        '<div class="kpi-meta"><span class="down">缺价 ' + cMissing + ' · 负收益 ' + cNegative + '；默认不参与排行</span></div><div class="progress is-warn"><i style="width:' + (rows0.length ? Math.round(cRows.length / rows0.length * 100) : 0) + '%"></i></div></div>' +
+      '<div class="kpi"><div class="kpi-label">A+B 限售组合</div><div class="kpi-value">' + U.fmt(plan.profit, 0) + '<span class="kpi-unit">金</span></div>' +
+        '<div class="kpi-meta"><span>预算 ' + U.fmtInt(settings().energyBudget) + ' 精力 · 用尽 ' + U.fmtInt(plan.energyUsed) + ' · 闲置 ' + U.fmtInt(plan.energyIdle) + '</span></div></div>' +
     '</div>';
 
     html += btMiniCard();
 
     const chartRows = sorted.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; }).slice(0, 15).map(function (r) {
       return {
-        label: r.recipe.name, meta: r.skill.name, value: r.calc.perEnergy,
+        label: r.recipe.name, meta: r.skill.name + ' · ' + r.landGrade, value: r.calc.perEnergy,
         color: r.type === 'gather' ? Charts.color.gather : Charts.color.craft,
         id: r.recipe.id,
         tip: r.recipe.name + ' · ' + U.fmt(r.calc.profit, 2) + ' 金利润 / ' + U.fmtInt(r.calc.energy) + ' 精力'
@@ -2133,7 +2123,7 @@
     });
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">精力收益排行</h2><p class="card-sub">按每点精力收益排序 · 最多 15 项 · 虚线为全站中位<span class="mobile-only"> · 左右滑动查看</span></p></div>' +
+      '<h2 class="card-title">精力收益排行</h2><p class="card-sub">A/B 可落地 · 按每点精力收益排序 · 最多 15 项 · 虚线为 A+B 中位<span class="mobile-only"> · 左右滑动查看</span></p></div>' +
       '<div class="card-tools">' +
         '<div class="seg seg-sm" role="group" aria-label="类型筛选">' +
           '<button class="' + (type === 'all' ? 'active' : '') + '" data-filter="type" data-value="">全部</button>' +
@@ -2142,13 +2132,13 @@
         '</div>' +
         '<select class="select" data-filter="skill" aria-label="技艺筛选" style="width:92px">' + skillOptions(p.skill || '') + '</select>' +
         '<select class="select" data-filter="tier" aria-label="品阶筛选" style="width:92px">' + tierOptions(p.tier || '') + '</select>' +
-        '<label class="switch"><input type="checkbox" data-toggle="complete" data-value="1"' + (complete ? ' checked' : '') + '><span class="track"></span>仅数据完整</label>' +
+        '<label class="switch" title="' + (landFilter === 'all' ? '全部含 C 时展示缺价项，此开关不生效' : '隐藏缺价项') + '"><input type="checkbox" data-toggle="complete" data-value="1"' + (complete ? ' checked' : '') + (landFilter === 'all' ? ' disabled' : '') + '><span class="track"></span>仅数据完整</label>' +
         '<button class="icon-btn" data-action="export-chart" data-target="chart-analysis" aria-label="导出排行图">' + icon('download') + '</button>' +
       '</div></div>' +
       '<div class="card-body tight" id="chart-analysis">' +
         Charts.barH(chartRows, {
           palette: Charts.palette(ui.theme), unit: ' 金/精力', refLine: median,
-          refLabel: '全站中位', limit: 15, emptyText: '当前筛选无完整数据', ariaLabel: '精力收益排行'
+          refLabel: 'A+B 中位', limit: 15, emptyText: '当前筛选无可落地数据', ariaLabel: '精力收益排行'
         }) +
       '</div>' +
       '<div class="card-foot"><div class="chart-legend">' +
@@ -2177,7 +2167,7 @@
     '</div>';
 
     // 对比
-    const comparePool = sortRows(rows0.filter(function (r) { return !r.calc.missing; }), 'perEnergy', 'desc');
+    const comparePool = sortRows(rows0.filter(function (r) { return (r.landGrade === 'A' || r.landGrade === 'B') && !r.calc.missing; }), 'perEnergy', 'desc');
     const aId = p.a && comparePool.some(function (r) { return r.recipe.id === p.a; }) ? p.a : (comparePool[0] ? comparePool[0].recipe.id : '');
     const bId = p.b && comparePool.some(function (r) { return r.recipe.id === p.b; }) ? p.b : (comparePool[1] ? comparePool[1].recipe.id : '');
     const ra = comparePool.find(function (r) { return r.recipe.id === aId; });
@@ -2202,33 +2192,33 @@
             : emptyState('暂无可对比的完整配方', '补齐价格或关闭「仅数据完整」。', '', 'compare')) +
         '</div></section>' +
 
-      '<section class="card col-5"><div class="card-head"><div class="card-head-main"><h2 class="card-title">满精力怎么分配？</h2>' +
-        '<p class="card-sub">按收益/精力从高到低贪心分配，可重复制作</p></div></div>' +
+      '<section class="card col-5"><div class="card-head"><div class="card-head-main"><h2 class="card-title">A+B 限售怎么分配？</h2>' +
+        '<p class="card-sub">按 A/B 本服收益与单配方上限分配，不含自产</p></div></div>' +
         '<div class="card-body">' +
           '<div class="flex" style="margin-bottom:12px"><label class="tiny dim" for="budget-input">精力预算</label>' +
           '<input class="input" id="budget-input" type="number" min="0" step="100" value="' + settings().energyBudget + '" data-setting="energyBudget" style="width:110px">' +
-          '<span class="tiny dim">点</span><span class="spacer"></span><span class="badge badge-outline">' + U.fmtInt(sim.allocations.length) + ' 项参与</span></div>' +
-          (sim.allocations.length ? '<div class="info-rows">' +
-            '<div class="info-row"><span class="k">预计总收益</span><span class="v pos">+' + U.fmt(sim.profit, 2) + ' 金</span></div>' +
-            '<div class="info-row"><span class="k">精力用尽</span><span class="v">' + U.fmtInt(sim.used) + ' / ' + U.fmtInt(sim.budget) + '</span></div>' +
-            '<div class="info-row"><span class="k">剩余精力</span><span class="v">' + U.fmtInt(sim.remaining) + '</span></div>' +
+          '<span class="tiny dim">点</span><span class="spacer"></span><span class="badge badge-outline">' + U.fmtInt(plan.allocations.length) + ' 项参与</span></div>' +
+          (plan.allocations.length ? '<div class="info-rows">' +
+            '<div class="info-row"><span class="k">预计总收益</span><span class="v pos">+' + U.fmt(plan.profit, 2) + ' 金</span></div>' +
+            '<div class="info-row"><span class="k">精力用尽</span><span class="v">' + U.fmtInt(plan.energyUsed) + ' / ' + U.fmtInt(plan.budget) + '</span></div>' +
+            '<div class="info-row"><span class="k">剩余精力</span><span class="v">' + U.fmtInt(plan.energyIdle) + '</span></div>' +
             '</div><div class="hairline"></div><div class="rec-list">' +
-            sim.allocations.slice(0, 5).map(function (a, i) {
-              return '<div class="rec-item"><span class="rec-rank">' + (i + 1) + '</span><div class="rec-main"><div class="nm">' + U.esc(a.row.recipe.name) + '</div>' +
-                '<div class="ds">' + U.esc(a.row.skill.name) + ' · ' + a.count + ' 次 × ' + U.fmtInt(a.row.calc.energy) + ' 精力</div></div>' +
+            plan.allocations.slice(0, 5).map(function (a, i) {
+              return '<div class="rec-item"><span class="rec-rank">' + (i + 1) + '</span><div class="rec-main"><div class="nm">' + U.esc(a.name) + ' ' + gradeBadge(a.grade) + '</div>' +
+                '<div class="ds">' + U.esc(skill(a.skill).name) + ' · ' + a.count + ' 次 × ' + U.fmtInt(a.energy / a.count) + ' 精力 · 上限 ' + a.cap + '</div></div>' +
                 '<div class="rec-val"><b class="pos">+' + U.fmt(a.profit, 2) + '</b><span>金</span></div></div>';
             }).join('') + '</div>' +
-            (sim.allocations.length > 5 ? '<div class="tiny dim" style="margin-top:8px">其余 ' + (sim.allocations.length - 5) + ' 项已计入总收益</div>' : '')
-            : emptyState('当前预算下没有正收益配方', '提高预算、校准价格，或切换成本口径。', '', 'coin')) +
+            (plan.allocations.length > 5 ? '<div class="tiny dim" style="margin-top:8px">其余 ' + (plan.allocations.length - 5) + ' 项已计入总收益</div>' : '')
+            : emptyState('当前预算下没有正收益 A/B 配方', '提高预算、校准价格，或切到「全部含 C」查看纸面项。', '', 'coin')) +
         '</div>' +
-        '<div class="card-foot"><span>模拟已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税，不含暴击额外产出与市场深度</span></div></section>' +
+        '<div class="card-foot"><span>按本服 A/B 报价与单配方上限；C 纸面不参与；已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税</span></div></section>' +
     '</div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">完整配方收益表</h2><p class="card-sub">' + sorted.length + ' 条 · 点击行查看成本拆解与配方编辑</p></div>' +
       '<div class="card-tools"><button class="btn btn-sm" data-action="export-csv" data-csv="analysis">' + icon('download') + ' 导出</button></div></div>' +
       '<div class="table-wrap tall"><table class="data analysis-table"><thead><tr>' +
-        '<th class="sticky"># / 配方</th><th>技艺</th><th>类型</th>' +
+        '<th class="sticky"># / 配方</th><th>技艺</th><th>类型</th><th>落地</th>' +
         sortHeader('总成本', 'cost', p, 'num') +
         '<th class="num">税前产值</th><th class="num">交易税</th>' +
         sortHeader('税后产值', 'output', p, 'num') +
@@ -2243,6 +2233,7 @@
             '<div class="t2">' + U.esc(r.outputNames) + '</div></div></div></td>' +
           '<td class="dim">' + U.esc(r.skill.name) + '</td>' +
           '<td>' + typeBadge(r.type) + '</td>' +
+          '<td>' + analysisLandBadge(r) + '</td>' +
           '<td class="num">' + U.fmt(c.totalCost, 2) + '</td>' +
           '<td class="num">' + U.fmt(c.outputValueGross, 2) + '</td>' +
           '<td class="num dim">' + U.fmt(c.tax, 2) + '</td>' +
@@ -2252,13 +2243,12 @@
           '<td class="num"><b class="' + (c.missing ? 'dim' : c.perEnergy >= 0 ? 'pos' : 'neg') + '">' + perEnergyText(c.perEnergy) + '</b></td>' +
           '<td>' + statusBadge(r) + '</td>' +
         '</tr>';
-      }).join('') : '<tr><td colspan="10">' + emptyState('没有匹配的配方', '清空搜索或筛选条件再试。', '', 'search') + '</td></tr>') +
+      }).join('') : '<tr><td colspan="11">' + emptyState('没有匹配的配方', '清空搜索或筛选条件再试。', '', 'search') + '</td></tr>') +
       '</tbody></table></div>' +
-      '<div class="card-foot"><span>精力收益 =（税后产值 − 材料成本 − 手续费）÷ 精力；售价已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税</span><span class="spacer"></span><span>已排除/标记缺价项</span></div>' +
+      '<div class="card-foot"><span>精力收益 =（税后产值 − 材料成本 − 手续费）÷ 精力；售价已扣 ' + U.fmtPct(currentTaxRate(), 0) + ' 交易税。默认 A/B；切「全部含 C」可看纸面项。</span><span class="spacer"></span><span>落地 = 本服报价审计</span></div>' +
       '</section></div>';
 
     html += stoneAnalysisCard();
-    html += '</details>';
 
     html += dataFoot();
     html += '</div>';
