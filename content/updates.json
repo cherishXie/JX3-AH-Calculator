@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "04bb25806eb5ec77f485c775d8955e408ca5d2c0",
+  "sourceCommit": "32c383e013b43ebf093aea420bacdf38cc4a16f1",
   "date": "2026-11-20",
-  "title": "clarify price history delta semantics",
+  "title": "keep compacted history queries honest",
   "notes": [
-    "clarify price history delta semantics"
+    "keep compacted history queries honest"
   ],
   "history": [
+    {
+      "version": "32c383e",
+      "date": "2026-11-20",
+      "title": "keep compacted history queries honest"
+    },
     {
       "version": "04bb258",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "4431edd",
       "date": "2026-11-20",
       "title": "trigger prices every 30 minutes"
-    },
-    {
-      "version": "6a3eed1",
-      "date": "2026-11-20",
-      "title": "switch prices to hourly Cloudflare schedule"
     }
   ]
 }
