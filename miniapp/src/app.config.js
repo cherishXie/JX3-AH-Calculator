@@ -10,7 +10,7 @@ PAGES.push(
   'pages/analysis/index'
 );
 
-if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index', 'pages/trends/index');
+if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index', 'pages/trends/index', 'pages/server-trends/index');
 
 PAGES.push('pages/breakthrough/index', 'pages/recipe/index', 'pages/settings/index');
 
