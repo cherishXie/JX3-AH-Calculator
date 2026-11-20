@@ -534,7 +534,3 @@ default transaction tax to 5% and refresh PWA notes
 ## 2026-11-19 · 6bd83e7
 
 move price schedule to dedicated workflow
-
-## 2026-11-19 · 6def8eb
-
-rebuild minitool zip with stone price library
