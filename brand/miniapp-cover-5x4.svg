@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="864" viewBox="0 0 1080 864">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#020817"/>
+      <stop offset="0.52" stop-color="#061426"/>
+      <stop offset="0.8" stop-color="#0b1d2a"/>
+      <stop offset="1" stop-color="#1a1a1b"/>
+    </linearGradient>
+    <radialGradient id="dawn" cx="0.74" cy="0.66" r="0.52">
+      <stop offset="0" stop-color="#f3c56a" stop-opacity="0.55"/>
+      <stop offset="0.35" stop-color="#c47a3a" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#c47a3a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#12303a"/>
+      <stop offset="1" stop-color="#081723"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d2531"/>
+      <stop offset="1" stop-color="#06121d"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#071722"/>
+      <stop offset="1" stop-color="#030b13"/>
+    </linearGradient>
+    <linearGradient id="river" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e8b44a" stop-opacity="0.05"/>
+      <stop offset="0.45" stop-color="#f3c56a" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#45d483" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="scrimL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#020817" stop-opacity="0.96"/>
+      <stop offset="0.55" stop-color="#020817" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#020817" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="scrimB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#020817" stop-opacity="0"/>
+      <stop offset="0.45" stop-color="#020817" stop-opacity="0.78"/>
+      <stop offset="1" stop-color="#020817" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd98a" stop-opacity="0.95"/>
+      <stop offset="0.35" stop-color="#e8b44a" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#e8b44a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="13.0"/>
+    </filter>
+    <filter id="tiny" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.7"/>
+    </filter>
+    <pattern id="grain" width="3" height="3" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.55" fill="#ffffff" fill-opacity="0.05"/>
+    </pattern>
+    </defs>
+  <rect width="1080" height="864" fill="#020817"/>
+    <g>
+      <rect width="1080" height="864" fill="url(#sky)"/>
+      <rect width="1080" height="864" fill="url(#grain)"/>
+      <rect width="1080" height="864" fill="url(#dawn)"/>
+      <g opacity="0.5">
+      <path d="M 43 104 H 1037" stroke="#9fc4c9" stroke-opacity="0.08" stroke-width="1"/>
+      <path d="M 43 294 H 1037" stroke="#9fc4c9" stroke-opacity="0.06" stroke-width="1"/>
+      <path d="M 43 484 H 1037" stroke="#9fc4c9" stroke-opacity="0.05" stroke-width="1"/>
+      <path d="M 130 69 V 536" stroke="#9fc4c9" stroke-opacity="0.05" stroke-width="1"/>
+      <path d="M 410 69 V 536" stroke="#9fc4c9" stroke-opacity="0.04" stroke-width="1"/>
+      <path d="M 691 69 V 536" stroke="#9fc4c9" stroke-opacity="0.04" stroke-width="1"/>
+      <path d="M 972 69 V 536" stroke="#9fc4c9" stroke-opacity="0.04" stroke-width="1"/>
+    </g>
+      <circle cx="821" cy="498" r="73" fill="url(#glow)" opacity="0.55" filter="url(#soft)"/>
+      <path d="M 0.0 501.1 C 12.6 491.0 50.4 443.5 75.6 440.6 C 100.8 437.8 122.4 492.5 151.2 483.8 C 180.0 475.2 216.0 394.6 248.4 388.8 C 280.8 383.0 313.2 452.2 345.6 449.3 C 378.0 446.4 410.4 373.0 442.8 371.5 C 475.2 370.1 505.8 442.1 540.0 440.6 C 574.2 439.2 613.8 364.3 648.0 362.9 C 682.2 361.4 712.8 426.2 745.2 432.0 C 777.6 437.8 808.2 391.7 842.4 397.4 C 876.6 403.2 910.8 462.2 950.4 466.6 C 990.0 470.9 1058.4 430.6 1080.0 423.4 L 1080 864 L 0 864 Z" fill="url(#far)" opacity="0.92"/>
+      <path d="M 0.0 501.1 C 12.6 491.0 50.4 443.5 75.6 440.6 C 100.8 437.8 122.4 492.5 151.2 483.8 C 180.0 475.2 216.0 394.6 248.4 388.8 C 280.8 383.0 313.2 452.2 345.6 449.3 C 378.0 446.4 410.4 373.0 442.8 371.5 C 475.2 370.1 505.8 442.1 540.0 440.6 C 574.2 439.2 613.8 364.3 648.0 362.9 C 682.2 361.4 712.8 426.2 745.2 432.0 C 777.6 437.8 808.2 391.7 842.4 397.4 C 876.6 403.2 910.8 462.2 950.4 466.6 C 990.0 470.9 1058.4 430.6 1080.0 423.4 L 1080 864 L 0 864 Z" fill="none" stroke="#7fb9bf" stroke-opacity="0.18" stroke-width="1.5"/>
+      <ellipse cx="324" cy="467" rx="454" ry="24" fill="#9fc4c9" opacity="0.08" filter="url(#soft)"/>
+      <path d="M 0.0 604.8 C 16.2 591.8 64.8 531.4 97.2 527.0 C 129.6 522.7 160.2 584.6 194.4 578.9 C 228.6 573.1 266.4 495.4 302.4 492.5 C 338.4 489.6 374.4 558.7 410.4 561.6 C 446.4 564.5 482.4 506.9 518.4 509.8 C 554.4 512.6 590.4 580.3 626.4 578.9 C 662.4 577.4 698.4 504.0 734.4 501.1 C 770.4 498.2 806.4 558.7 842.4 561.6 C 878.4 564.5 919.8 517.0 950.4 518.4 C 981.0 519.8 1004.4 567.4 1026.0 570.2 C 1047.6 573.1 1071.0 541.4 1080.0 535.7 L 1080 864 L 0 864 Z" fill="url(#mid)"/>
+      <path d="M 0.0 604.8 C 16.2 591.8 64.8 531.4 97.2 527.0 C 129.6 522.7 160.2 584.6 194.4 578.9 C 228.6 573.1 266.4 495.4 302.4 492.5 C 338.4 489.6 374.4 558.7 410.4 561.6 C 446.4 564.5 482.4 506.9 518.4 509.8 C 554.4 512.6 590.4 580.3 626.4 578.9 C 662.4 577.4 698.4 504.0 734.4 501.1 C 770.4 498.2 806.4 558.7 842.4 561.6 C 878.4 564.5 919.8 517.0 950.4 518.4 C 981.0 519.8 1004.4 567.4 1026.0 570.2 C 1047.6 573.1 1071.0 541.4 1080.0 535.7 L 1080 864 L 0 864 Z" fill="none" stroke="#6ea7ad" stroke-opacity="0.14" stroke-width="1.3"/>
+      <ellipse cx="756" cy="529" rx="497" ry="26" fill="#9fc4c9" opacity="0.07" filter="url(#soft)"/>
+      <path d="M 0.0 743.0 C 18.0 731.5 72.0 676.8 108.0 673.9 C 144.0 671.0 176.4 730.1 216.0 725.8 C 255.6 721.4 302.4 650.9 345.6 648.0 C 388.8 645.1 433.8 707.0 475.2 708.5 C 516.6 709.9 554.4 653.8 594.0 656.6 C 633.6 659.5 671.4 722.9 712.8 725.8 C 754.2 728.6 799.2 672.5 842.4 673.9 C 885.6 675.4 932.4 731.5 972.0 734.4 C 1011.6 737.3 1062.0 698.4 1080.0 691.2 L 1080 864 L 0 864 Z" fill="url(#near)"/>
+      <path d="M 0.0 743.0 C 18.0 731.5 72.0 676.8 108.0 673.9 C 144.0 671.0 176.4 730.1 216.0 725.8 C 255.6 721.4 302.4 650.9 345.6 648.0 C 388.8 645.1 433.8 707.0 475.2 708.5 C 516.6 709.9 554.4 653.8 594.0 656.6 C 633.6 659.5 671.4 722.9 712.8 725.8 C 754.2 728.6 799.2 672.5 842.4 673.9 C 885.6 675.4 932.4 731.5 972.0 734.4 C 1011.6 737.3 1062.0 698.4 1080.0 691.2 L 1080 864 L 0 864 Z" fill="none" stroke="#5e8f8a" stroke-opacity="0.10" stroke-width="1.3"/>
+      <path d="M 454 539 C 626 760 886 812 1102 907 L 1102 838 C 907 769 691 726 518 518 Z" fill="url(#river)" opacity="0.7"/>
+      <path d="M 540 518 C 713 743 950 804 1080 864" fill="none" stroke="#f3c56a" stroke-opacity="0.22" stroke-width="1.7"/>
+      <path d="M 670 804 q 86 -10 173 -4" fill="none" stroke="#f3c56a" stroke-opacity="0.16" stroke-width="1.3"/>
+      <g opacity="0.55">
+      <polyline points="626.4,259.2 712.8,207.4 788.4,241.9 874.8,155.5 961.2,190.1 1036.8,121.0" fill="none" stroke="#e8b44a" stroke-opacity="0.38" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="626.4" cy="259.2" r="3.5" fill="#e8b44a" opacity="0.72"/><circle cx="712.8" cy="207.4" r="3.5" fill="#e8b44a" opacity="0.72"/><circle cx="788.4" cy="241.9" r="3.5" fill="#e8b44a" opacity="0.72"/><circle cx="874.8" cy="155.5" r="3.5" fill="#e8b44a" opacity="0.72"/><circle cx="961.2" cy="190.1" r="3.5" fill="#e8b44a" opacity="0.72"/><circle cx="1036.8" cy="121.0" r="3.5" fill="#e8b44a" opacity="0.72"/>
+    </g>
+      <g transform="translate(799.2 224.6)">
+      <ellipse cx="0" cy="259.1" rx="193.4" ry="22.4" fill="#000" opacity="0.45" filter="url(#tiny)"/>
+      <!-- base -->
+      <path d="M -87.5 249.8 L 87.5 249.8 L 79.4 268.3 L -79.4 268.3 Z" fill="#06121c" stroke="#8a6a3a" stroke-opacity="0.30" stroke-width="1.0"/>
+      <rect x="-65.1" y="231.3" width="130.3" height="18.5" fill="#081722" stroke="#8a6a3a" stroke-opacity="0.34" stroke-width="1.0"/>
+      <!-- slab -->
+      <path d="M -50.9 231.3 L -50.9 37.0
+               Q -50.9 -11.6 0 -11.6
+               Q 50.9 -11.6 50.9 37.0
+               L 50.9 231.3 Z"
+            fill="#071521" stroke="#c9a25a" stroke-opacity="0.40" stroke-width="1.2"/>
+      <!-- stone shading -->
+      <path d="M -50.9 37.0 Q -50.9 -11.6 0 -11.6 Q 18.3 -11.6 24.4 4.6 L 6.1 231.3 L -18.3 231.3 Z" fill="#0a1c28" opacity="0.55"/>
+      <path d="M -50.9 37.0 L -50.9 231.3" stroke="#f3c56a" stroke-opacity="0.28" stroke-width="1.4"/>
+      <path d="M 50.9 37.0 L 50.9 231.3" stroke="#000" stroke-opacity="0.35" stroke-width="1.4"/>
+      <!-- cartouche: intentionally blank, the nameless stele -->
+      <rect x="-26.5" y="12.7" width="52.9" height="20.8"
+            fill="#051019" fill-opacity="0.7" stroke="#e8b44a" stroke-opacity="0.42" stroke-width="1.0"/>
+      <path d="M -22.4 19.7 H 22.4" stroke="#e8b44a" stroke-opacity="0.16" stroke-width="1.0"/>
+      <path d="M -36.6 55.5 H 36.6" stroke="#e8b44a" stroke-opacity="0.3" stroke-width="1.0" stroke-linecap="round"/><path d="M -27.5 76.3 H 27.5" stroke="#e8b44a" stroke-opacity="0.24" stroke-width="1.0" stroke-linecap="round"/><path d="M -34.6 97.2 H 34.6" stroke="#e8b44a" stroke-opacity="0.21" stroke-width="1.0" stroke-linecap="round"/><path d="M -22.4 118.0 H 22.4" stroke="#e8b44a" stroke-opacity="0.18" stroke-width="1.0" stroke-linecap="round"/><path d="M -31.6 138.8 H 31.6" stroke="#e8b44a" stroke-opacity="0.15" stroke-width="1.0" stroke-linecap="round"/><path d="M -18.3 159.6 H 18.3" stroke="#e8b44a" stroke-opacity="0.12" stroke-width="1.0" stroke-linecap="round"/><path d="M -28.5 180.4 H 28.5" stroke="#e8b44a" stroke-opacity="0.1" stroke-width="1.0" stroke-linecap="round"/>
+      <!-- cracks and chips -->
+      <path d="M -32.6 32.4 l 6.1 13.9 l -3.1 11.6 l 7.1 18.5" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="1.0"/>
+      <path d="M 38.7 120.3 l -5.1 8.1 l 2.0 9.3" fill="none" stroke="#000" stroke-opacity="0.28" stroke-width="1.0"/>
+      <path d="M -50.9 4.6 q 5.1 -4.6 9.2 1.2" fill="#020817" stroke="#c9a25a" stroke-opacity="0.22" stroke-width="1.0"/>
+      <!-- moss / grass at the base -->
+      <path d="M -56.0 229.0 q -18.3 -13.9 -10.2 -32.4" fill="none" stroke="#2c5b4a" stroke-opacity="0.6" stroke-width="2.0"/>
+      <path d="M -40.7 231.3 q -10.2 -11.6 -2.0 -25.4" fill="none" stroke="#2c5b4a" stroke-opacity="0.45" stroke-width="2.0"/>
+      <path d="M 44.8 231.3 q 12.2 -11.6 6.1 -27.8" fill="none" stroke="#2c5b4a" stroke-opacity="0.5" stroke-width="2.0"/>
+      <!-- brazier, the beacon of the living -->
+      <g transform="translate(87.5 222.1)">
+        <circle cx="0" cy="-18.5" r="152.7" fill="url(#glow)" opacity="0.75"/>
+        <path d="M -20.4 0 L 20.4 0 L 14.3 13.9 L -14.3 13.9 Z" fill="#0a1a24" stroke="#e8b44a" stroke-opacity="0.5" stroke-width="1.0"/>
+        <path d="M 0 -37.0 C -9.2 -23.1 -7.1 -6.9 0 0 C 8.1 -9.3 9.2 -23.1 0 -37.0 Z" fill="#ffd98a" opacity="0.96" filter="url(#tiny)"/>
+        <path d="M 0 -23.1 C -3.1 -13.9 0 -4.6 1.0 0 Z" fill="#fff3cf" opacity="0.95"/>
+      </g>
+    </g>
+      <path d="M 163.1 207.4 Q 168.9 202.0 172.8 207.4 Q 176.7 202.0 182.5 207.4" fill="none" stroke="#9fc4c9" stroke-opacity="0.35" stroke-width="1.3" stroke-linecap="round"/><path d="M 219.5 259.2 Q 223.9 255.2 226.8 259.2 Q 229.7 255.2 234.1 259.2" fill="none" stroke="#9fc4c9" stroke-opacity="0.35" stroke-width="1.2" stroke-linecap="round"/><path d="M 123.8 285.1 Q 127.3 281.9 129.6 285.1 Q 131.9 281.9 135.4 285.1" fill="none" stroke="#9fc4c9" stroke-opacity="0.35" stroke-width="1.2" stroke-linecap="round"/><path d="M 922.0 293.8 Q 926.1 290.0 928.8 293.8 Q 931.5 290.0 935.6 293.8" fill="none" stroke="#9fc4c9" stroke-opacity="0.35" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="712.8" cy="535.7" r="2.0" fill="#e8b44a" opacity="0.5"/><circle cx="766.8" cy="501.1" r="1.3" fill="#e8b44a" opacity="0.35"/><circle cx="864.0" cy="553.0" r="1.6" fill="#e8b44a" opacity="0.4"/><circle cx="907.2" cy="475.2" r="1.1" fill="#e8b44a" opacity="0.3"/><circle cx="669.6" cy="587.5" r="1.5" fill="#e8b44a" opacity="0.3"/><circle cx="972.0" cy="518.4" r="2.4" fill="#e8b44a" opacity="0.45"/><circle cx="820.8" cy="604.8" r="1.0" fill="#e8b44a" opacity="0.28"/><circle cx="745.2" cy="449.3" r="0.9" fill="#e8b44a" opacity="0.25"/>
+      <g opacity="0.55">
+        <path d="M 0 851 H 1080" stroke="#e8b44a" stroke-opacity="0.18" stroke-width="1"/>
+      </g>
+    </g>
+    <rect y="363" width="1080" height="501" fill="url(#scrimB)" opacity="0.92"/>
+    <g>
+      <g>
+      <rect x="72" y="56" width="67.2" height="67.2" rx="14.8" fill="#d94a3a"/>
+      <rect x="76.7" y="60.7" width="57.8" height="57.8" rx="9.4"
+            fill="none" stroke="#fff6e8" stroke-opacity="0.4" stroke-width="1.3"/>
+      <text x="105.6" y="103.0" text-anchor="middle" font-family="Songti SC, serif"
+            font-size="34.9" font-weight="900" fill="#fff8ec">精</text>
+    </g>
+      <text x="158.1" y="91.7" font-family="PingFang SC, sans-serif" font-size="26.2" font-weight="700" fill="#f6eedf">精力做什么</text>
+      <text x="159.2" y="114.8" font-family="PingFang SC, sans-serif" font-size="11.0" font-weight="600" letter-spacing="2.3" fill="#8fa6a8">JX3 LIFE PROFIT LEDGER · 玩家自制</text>
+    </g>
+    <rect x="72" y="206" width="5" height="22" rx="2.5" fill="#d94a3a"/>
+    <text x="90" y="224" font-family="PingFang SC, sans-serif" font-size="19" font-weight="600" letter-spacing="2.2" fill="#d9a07a">剑网3 · 苍生铸世 50 级</text>
+    <text x="68" y="550" font-family="Songti SC, serif" font-size="112" font-weight="900" fill="#f6eedf">今天精力</text>
+    <text x="68" y="668" font-family="Songti SC, serif" font-size="122" font-weight="900" fill="#e8b44a">做什么？</text>
+    <path d="M 70 690 C 170 683 290 688 400 680" fill="none" stroke="#e8b44a" stroke-opacity="0.55" stroke-width="4.4" stroke-linecap="round"/>
+    <text x="72" y="734" font-family="PingFang SC, sans-serif" font-size="23" font-weight="500" fill="#dfe7ef">按本服物价，算清生活技艺 · 五行石 · 突破收益</text>
+    <g>
+          <rect x="72.0" y="762.0" width="119.7" height="44.1" rx="22.1"
+                fill="#0a1a24" fill-opacity="0.82" stroke="#e8b44a" stroke-opacity="0.36" stroke-width="1.1"/>
+          <circle cx="88.8" cy="784.0" r="3.4" fill="#e8b44a" opacity="0.9"/>
+          <text x="101.4" y="790.4" font-family="PingFang SC, sans-serif" font-size="17.9" font-weight="600" fill="#f1e6cf">物价走势</text>
+        </g><g>
+          <rect x="204.3" y="762.0" width="119.7" height="44.1" rx="22.1"
+                fill="#0a1a24" fill-opacity="0.82" stroke="#e8b44a" stroke-opacity="0.36" stroke-width="1.1"/>
+          <circle cx="221.1" cy="784.0" r="3.4" fill="#e8b44a" opacity="0.9"/>
+          <text x="233.7" y="790.4" font-family="PingFang SC, sans-serif" font-size="17.9" font-weight="600" fill="#f1e6cf">区服趋势</text>
+        </g><g>
+          <rect x="336.6" y="762.0" width="119.7" height="44.1" rx="22.1"
+                fill="#0a1a24" fill-opacity="0.82" stroke="#e8b44a" stroke-opacity="0.36" stroke-width="1.1"/>
+          <circle cx="353.4" cy="784.0" r="3.4" fill="#e8b44a" opacity="0.9"/>
+          <text x="366.0" y="790.4" font-family="PingFang SC, sans-serif" font-size="17.9" font-weight="600" fill="#f1e6cf">突破升级</text>
+        </g>
+    <text x="72" y="842" font-family="PingFang SC, sans-serif" font-size="12.5" font-weight="500" fill="#7f8f93">非官方玩家工具 · 示例价可校准 · 数据仅存本机</text>
+</svg>

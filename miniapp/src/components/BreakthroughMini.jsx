@@ -13,6 +13,9 @@ export default function BreakthroughMini() {
   const top = list.slice(0, 4);
   const energyMin = Math.min.apply(null, list.filter(function (s) { return s.energy != null; }).map(function (s) { return s.energy; }));
   const energyMax = Math.max.apply(null, list.filter(function (s) { return s.energy != null; }).map(function (s) { return s.energy; }));
+  const totalProfit = list.reduce(function (n, s) { return n + (Number(s.total) || 0); }, 0);
+  const totalGate = list.reduce(function (n, s) { return n + (Number(s.gateCost) || 0); }, 0);
+  const best = list.slice().sort(function (a, b) { return (b.total || 0) - (a.total || 0); })[0] || null;
 
   function open(skillId) {
     Taro.navigateTo({ url: '/pages/breakthrough/index?skill=' + (skillId || 'duanzao') });
@@ -41,7 +44,19 @@ export default function BreakthroughMini() {
             <Text className='v'>{fmtInt(energyMin)}–{fmtInt(energyMax)}</Text>
             <Text className='s'>制造经验 = 精力 ×2</Text>
           </View>
+          <View className='bt-mini'>
+            <Text className='k'>8 项合计收益</Text>
+            <Text className={'v ' + (totalProfit > 0 ? 'pos' : totalProfit < 0 ? 'neg' : '')}>{fmtSigned(totalProfit, 0)}</Text>
+            <Text className='s'>突破材料共 {fmt(totalGate, 0)} 金</Text>
+          </View>
         </View>
+        {best ? (
+          <View className='bt-best'>
+            <Text className='badge badge-positive'>最优路线</Text>
+            <Text className='bt-best-name'>{best.name}</Text>
+            <Text className='tiny dim'>精力 {fmtInt(best.energy)} · 净赚 {fmtSigned(best.total, 0)} 金</Text>
+          </View>
+        ) : null}
         {top.map(function (s, i) {
           return (
             <View className='bt-sum-row' key={s.skillId} onClick={function () { open(s.skillId); }}>

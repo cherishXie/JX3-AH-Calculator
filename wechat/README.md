@@ -1,62 +1,58 @@
-# 精力做什么 · 微信小程序头像
+# 精力做什么 · 微信小程序头像与启动图
 
-## 文件
+## 当前素材（用户提供的 Q 版账房角色）
 
 | 文件 | 用途 | 规格 |
 | --- | --- | --- |
-| `avatar-144.png` | **微信公众平台后台上传（主文件）** | 144×144，约 12 KB |
-| `avatar-512.png` | 备用 / 其他平台 / 宣传 | 512×512，约 58 KB |
-| `avatar-1024.png` | 母版、商店或封面复用 | 1024×1024，约 140 KB |
-| `avatar-96.png` | 小尺寸可读性检查 | 96×96，约 7 KB |
-| `avatar.svg` | 矢量源文件 | 1024 viewBox，系统字体 |
-| `screenshots/01-overview.png` ~ `04-analysis.png` | 提审截图占位（H5 同构预览） | 780×1688，四个 Tab |
-| `screenshots/wechat-real-overview.png` | 微信开发者工具真实截图（总览） | 640×1386 JPEG |
-| `screenshots/wechat-real-stones.png` | 微信开发者工具真实截图（五行石） | 640×1386 JPEG |
-| `screenshots/wechat-real-stones-bottom.png` | 五行石页下半部分（7/8 级、剥离参考） | 640×1386 JPEG |
-| `screenshots/wechat-real-stones-jackpot.png` | 七级爆率改 25% 后的盈亏验证 | 640×1386 JPEG |
-| `screenshots/wechat-real-prices.png` | 价格库（含五行石行情专区） | 640×1386 JPEG |
-| `screenshots/wechat-real-overview-stone.png` | 总览五行石卡 | 640×1386 JPEG |
-| `screenshots/wechat-real-analysis.png` | 成本×收益散点 + 各技艺箱线图 | 640×1386 JPEG |
-| `screenshots/wechat-real-settings-tax.png` | 设置页交易税率 | 640×1386 JPEG |
-| `screenshots/wechat-real-stone-formula.png` | 五行石公式编辑页 | 640×1386 JPEG |
+| `avatar-144.png` | **微信公众平台后台上传（主文件）** | 144×144 PNG，约 42 KB |
+| `avatar-512.png` | 备用 / 其他平台 / 宣传 | 512×512 PNG，约 413 KB |
+| `avatar-1024.png` | 母版、商店或封面复用 | 1024×1024 PNG，约 1.5 MB（≤2 MB） |
+| `avatar-96.png` | 小尺寸可读性检查 | 96×96 PNG，约 19 KB |
+| `launch-9x16.jpg` | 启动引导页 / 平台宣传竖版 | 941×1672 JPEG，约 270 KB |
+| `avatar.svg` | 上一版红印「精」矢量图标，已归档 | 1024 viewBox |
 
-> `01`–`04` 是 Taro H5 同构渲染的占位图；`wechat-real-*` 是微信开发者工具基础库 **3.18.0** 模拟器的真实截图，带导航栏/状态栏。正式提审建议在开发者工具统一重截 5 张（新增五行石 Tab）。
+> 角色插画由用户提供并授权在本项目使用；画面不含官方 Logo、官方角色、游戏截图或官方字体。小程序内的启动引导页使用同源压缩图 `miniapp/src/assets/launch-default.jpg`（941×1672，约 231 KB）。
 
-## 微信端接入状态
+## 启动图说明
 
-- 微信构建：**12 页 / 5 Tab**（启动引导、总览、技艺、价格、分析、五行石、区服趋势；另有五行石公式、物价走势、突破升级、配方详情等子页），主包约 **1.48 MB**。
-- AppID 已写入 `miniapp/project.config.json`；头像用 `avatar-144.png`。
-- 静态验收：`cd miniapp && npm run verify:weapp`。
-- 官方 `wechatide` Skill 已跑通编译、模拟器截图、console 检查；完整流程见 [`../miniapp/WECHAT-DEPLOY.md`](../miniapp/WECHAT-DEPLOY.md)。
-- 可选云端行情：GitHub Actions 写微信云开发数据库，配置见 [`../miniapp/CLOUD-SYNC.md`](../miniapp/CLOUD-SYNC.md)；`CLOUD_ENV` 为空时保持离线。
-- 小红书仍保持 6 页 / 4 Tab，五行石页与公式编辑页只在微信端注册。
+- 微信小程序的**原生启动屏不可自定义**（由平台生成，显示头像/名称）。这里的 `launch-9x16.jpg` 用于：
+  1. 小程序内 `pages/guide/index` 的启动引导页默认图；
+  2. 公众平台资料页、分享卡片、宣传物料的竖版封面；
+  3. 小红书/公众号等外部渠道的 9:16 封面。
+- 引导页布局：图片按 `aspectFit` 完整展示（不裁掉标题和角色），底部浮层放「进入小程序 + 倒计时」，5 秒后自动进入总览。
+- 若平台后台要求 5:4 或 16:9 的分享图，可从 `launch-9x16.jpg` 居中裁切，或用 `brand/miniapp-cover-5x4.png` / `brand/miniapp-cover-16x9.png`。
 
 ## 设计说明
 
-- **红印「精」**：延续原「价」印的品牌资产，在小程序列表里一眼可认；单字在 144px 下仍然清楚。
-- **金色闪电徽章**：把「精力」变成图形，和红印形成冷暖对比；也是 96px 下仍能辨认的第二记忆点。
-- **深蓝工作台底**：头像沿用 `#020817` 的深蓝底；小程序默认亮色，可在设置页或顶部按钮切换暗色。
-- **安全区**：主体距四边 ≥ 90px（约 9%），微信裁圆角或圆形展示时不切字、不切徽章。
-- **配色**：`#020817` 背景 / `#E10600` 印泥红 / `#F5B301` 精力金 / `#F8FAFC` 字白。
+- **Q 版账房角色**：算盘、药碾、草药、五行石与账本，对应生活技艺、五行石与收益计算；青绿底色和米黄纸感让头像在小程序列表里更亲和。
+- **方形构图**：人物与算盘居中，144px 列表尺寸下脸部和算盘仍可辨；微信圆形/圆角裁切不切脸。
+- **配色**：米黄纸 `#f6eedf` / 青绿 `#1f5c3a` / 朱砂 `#d94a3a` / 精力金 `#e8b44a`。
+- **声明**：非官方玩家工具；示例价可校准；数据仅保存在本机。
 
 ## 微信规范与上传
 
-- 官方接口说明：头像图片支持 BMP / JPEG / JPG / GIF / PNG，**大小不超过 2 MB**，实际头像始终为正方形；一年内可申请修改 5 次（以后台实际提示为准）。
+- 官方接口说明：头像支持 BMP / JPEG / JPG / GIF / PNG，**大小不超过 2 MB**，实际始终按正方形展示；一年内可申请修改 5 次（以后台实际提示为准）。
   参考：[修改头像 · 微信开放文档](https://developers.weixin.qq.com/doc/oplatform/openApi/miniprogram-management/basic-info-management/api_setheadimage.html)
-- 公众平台后台上传时使用 **`avatar-144.png`** 即可，这是后台推荐的头像展示尺寸；如页面提示尺寸过小，改用 `avatar-512.png`。
-- 上传后确认 96px 列表尺寸下「精」和闪电仍可辨认。
+- 后台上传优先用 **`avatar-144.png`**；若提示尺寸过小，改用 `avatar-512.png`。
+- 上传后确认 96px 列表尺寸下人物脸部、算盘和青绿底仍可辨认。
 
 ## 重新导出
 
+源文件在 `brand/jingli-chibi-v1/`：
+
 ```bash
-cd <repo>
-rsvg-convert -w 1024 -h 1024 wechat/avatar.svg -o wechat/avatar-1024.png
-rsvg-convert -w 512  -h 512  wechat/avatar.svg -o wechat/avatar-512.png
-rsvg-convert -w 144  -h 144  wechat/avatar.svg -o wechat/avatar-144.png
-rsvg-convert -w 96   -h 96   wechat/avatar.svg -o wechat/avatar-96.png
+python3 - <<'PY'
+from PIL import Image
+icon = Image.open('brand/jingli-chibi-v1/icon-girl-1254.png').convert('RGB')
+for size, name in [(1024,'avatar-1024'), (512,'avatar-512'), (144,'avatar-144'), (96,'avatar-96')]:
+    icon.resize((size, size), Image.LANCZOS).save(f'wechat/{name}.png', 'PNG', optimize=True)
+launch = Image.open('brand/jingli-chibi-v1/launch-girl-941x1672.png').convert('RGB')
+launch.save('wechat/launch-9x16.jpg', 'JPEG', quality=86, optimize=True, progressive=True)
+launch.save('miniapp/src/assets/launch-default.jpg', 'JPEG', quality=82, optimize=True, progressive=True)
+PY
 ```
 
-> 字体使用系统中文字体（PingFang SC / Hiragino Sans GB / Heiti SC）。换机器导出时若字形变化，优先在 macOS 上导出，或把「精」转成路径后再分发 SVG。
+> `avatar.svg` 是上一版红印「精」图标，保留用于对比；当前头像以上面的 Q 版角色为准。
 
 ## 名称提示
 

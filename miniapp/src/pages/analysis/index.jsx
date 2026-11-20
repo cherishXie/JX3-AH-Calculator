@@ -11,6 +11,8 @@ import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
 import StoneMiniCard from '../../components/StoneMiniCard';
 import BreakthroughMini from '../../components/BreakthroughMini';
+import TrendMini from '../../components/TrendMini';
+import ServerTrendMini from '../../components/ServerTrendMini';
 import Badge from '../../components/Badge';
 import LANDABILITY from '../../shared/landability.json';
 import { useStore, getState } from '../../store';
@@ -147,7 +149,7 @@ function Analysis() {
 
   return (
     <View className='page'>
-      <TopBar title='精力收益分析' subtitle='比较采集与制造、成本与收益、单次与满精力产出' />
+      <TopBar title='精力收益分析' subtitle='比较采集与制造、物价走势、区服趋势与突破路线' />
 
       <View className='kpi-grid'>
         <Kpi label='最高精力收益' value={best ? fmt(best.calc.perEnergy, 2) : '—'} unit='金/精力' meta={best ? best.recipe.name : '当前筛选无数据'} tone='pos' />
@@ -155,6 +157,15 @@ function Analysis() {
         <Kpi label='亏损配方' value={String(negatives)} unit={'/ ' + filtered.length + ' 项'} meta='利润为负，建议观望或改价' tone={negatives ? 'neg' : ''} />
         <Kpi label='满精力预估' value={fmt(sim.profit, 2)} unit='金' meta={'预算 ' + fmtInt(state.settings.energyBudget)} tone='pos' />
       </View>
+
+      <View className='section-h mt-lg'>
+        <Text className='t'>行情与成长</Text>
+        <Text className='more'>物价走势 · 区服趋势 · 突破升级</Text>
+      </View>
+
+      <TrendMini />
+
+      <ServerTrendMini />
 
       <BreakthroughMini />
 
@@ -190,19 +201,6 @@ function Analysis() {
             <Text className='tiny dim'>可做组合 +{fmt(localLandability.plan.profit, 0)} 金 / {fmtInt(localLandability.plan.energyUsed)} 精力；不含自产。</Text>
           </View>
           <View className='card-foot'>基于 {LANDABILITY.meta.snapshots} 个历史快照；仅当前服，跨服比较在区服趋势。</View>
-        </View>
-      ) : null}
-
-      {process.env.TARO_ENV === 'weapp' ? (
-        <View className='card st-entry' onClick={function () { Taro.navigateTo({ url: '/pages/server-trends/index' }); }}>
-          <View className='card-head'>
-            <View className='flex1'>
-              <Text className='card-title'>区服趋势</Text>
-              <Text className='card-sub'>17 服净涨跌 · 物品跨服统计 · 热力图与区服榜</Text>
-            </View>
-            <View className='card-tool'><Text className='badge badge-info'>查看趋势 ›</Text></View>
-          </View>
-          <View className='card-body'><Text className='tiny dim'>看哪个区服在涨、哪些物品跨服更强势；数据来自本服历史快照与云端 history_*。</Text></View>
         </View>
       ) : null}
 

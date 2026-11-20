@@ -23,7 +23,7 @@ const TAB_ROUTES = [
   'pages/stones/index'
 ];
 
-function isTabPage() {
+export function isTabPage() {
   try {
     const pages = Taro.getCurrentPages ? Taro.getCurrentPages() : [];
     const current = pages && pages[pages.length - 1];
@@ -45,11 +45,19 @@ function safe(fn) {
   } catch (e) { /* 平台不支持时保持静态配置 */ }
 }
 
-/** 同步原生导航栏、页面底色、TabBar 颜色与图标。 */
+/**
+ * 同步原生导航栏、页面底色、TabBar 颜色与图标。
+ *
+ * 底部安全区（tabBar 下沿 / Home 指示条）取的是窗口底色，而不是 tabBar 自身
+ * 背景色；若窗口底色仍用页面深色 #020817，暗色模式下就会在 tabBar 下方留一条
+ * 纯黑长条，亮色模式切换 Tab 时也会闪一下黑底。这里让窗口底部与 tabBar 同色，
+ * 并让 `page` 本身保持透明（见 app.css），由窗口底色兜底。
+ */
 export function applyTheme(theme) {
   const light = theme !== 'dark';
   const mini = process.env.TARO_ENV === 'weapp';
   const bg = light ? '#f5f5f5' : '#020817';
+  const tabBg = light ? '#ffffff' : '#0f172a';
   const fg = light ? '#0f172a' : '#f8fafc';
   const muted = light ? '#64748b' : '#94a3b8';
   if (mini) {
@@ -64,14 +72,15 @@ export function applyTheme(theme) {
       Taro.setBackgroundColor({
         backgroundColor: bg,
         backgroundColorTop: bg,
-        backgroundColorBottom: bg
+        // 底部安全区必须与 TabBar 同色，否则暗色模式会出现黑色底条。
+        backgroundColorBottom: tabBg
       });
     });
     safe(function () {
       Taro.setTabBarStyle({
         color: muted,
         selectedColor: fg,
-        backgroundColor: light ? '#ffffff' : '#0f172a',
+        backgroundColor: tabBg,
         borderStyle: light ? 'white' : 'black'
       });
     });

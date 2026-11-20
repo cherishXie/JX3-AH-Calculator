@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { View, Text, Ad } from '@tarojs/components';
+import { View, Text, Image, Ad } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import withTheme from '../../components/withTheme';
+import launch from '../../assets/launch-default.jpg';
 import {
   GUIDE_ENABLED, GUIDE_TARGET, GUIDE_AD_ENABLED, GUIDE_AD_UNIT_ID, guideSeconds
 } from '../../shared/guideConfig';
@@ -57,36 +58,23 @@ function Guide() {
   }, []);
 
   return (
-    <View className='guide-page'>
-      <View className='guide-skip' onClick={enter}>
-        <Text>跳过</Text>
-        <Text className='guide-skip-count'>{left}s</Text>
-      </View>
+    <View className='guide-page guide-launch'>
+      <Image className='guide-launch-img' src={launch} mode='aspectFit' />
+      <View className='guide-launch-shade' />
 
-      <View className='guide-main'>
-        <View className='guide-seal'>精</View>
-        <Text className='guide-title'>精力做什么</Text>
-        <Text className='guide-sub'>剑网3 · 苍生铸世 50 级</Text>
-        <Text className='guide-desc'>按本服物价计算生活技艺、五行石与突破收益，帮你决定今天精力花在哪。</Text>
-
-        <View className='guide-points'>
-          <View className='guide-point'><Text className='guide-dot' /><Text>本服价格校准 · 云端行情</Text></View>
-          <View className='guide-point'><Text className='guide-dot' /><Text>五行石 / 突破 / 配方收益</Text></View>
-          <View className='guide-point'><Text className='guide-dot' /><Text>物价走势与历史节点</Text></View>
-        </View>
+      <View className='guide-launch-panel'>
+        <Text className='guide-launch-line'>物价走势 · 区服趋势 · 突破升级</Text>
+        <Text className='guide-launch-tip'>按本服物价算清生活技艺与五行石收益 · 数据仅存本机</Text>
 
         {GUIDE_AD_ENABLED && GUIDE_AD_UNIT_ID ? (
-          <View className='guide-ad'>
+          <View className='guide-launch-ad'>
             <Ad unitId={GUIDE_AD_UNIT_ID} adType='banner' adTheme='white' />
           </View>
         ) : null}
-      </View>
 
-      <View className='guide-foot'>
-        <Text className='guide-tip'>数据仅保存在本机 · 不收集个人信息</Text>
-        <View className='guide-enter' onClick={enter}>
-          <Text>先逛逛</Text>
-          <Text className='guide-enter-arrow'>›</Text>
+        <View className='guide-launch-go' onClick={enter}>
+          <Text>进入小程序</Text>
+          <Text className='guide-launch-count'>{left > 0 ? left + 's' : '›'}</Text>
         </View>
       </View>
     </View>

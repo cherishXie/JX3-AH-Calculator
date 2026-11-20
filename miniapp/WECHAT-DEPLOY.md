@@ -30,9 +30,10 @@
 | `miniapp/project.config.json` | 项目配置，AppID 已填入，`libVersion: 3.18.0` |
 | `wechat/screenshots/wechat-real-stones.png` | 微信模拟器真实截图（五行石页） |
 | `wechat/screenshots/wechat-real-stone-formula.png` | 微信模拟器真实截图（公式编辑页） |
-| `wechat/avatar-144.png` | 小程序头像（144×144，约 12 KB，≤2 MB） |
-| `wechat/avatar-512.png` | 头像备用尺寸 |
-| `wechat/avatar.svg` | 头像矢量源文件 |
+| `wechat/avatar-144.png` | 小程序头像（Q 版账房角色，144×144，约 42 KB，≤2 MB） |
+| `wechat/avatar-512.png` | 头像备用尺寸（512×512） |
+| `wechat/launch-9x16.jpg` | 启动引导页 / 宣传竖版默认图（941×1672） |
+| `wechat/avatar.svg` | 上一版红印「精」头像源文件（已归档） |
 | `wechat/README.md` | 头像设计说明与重新导出命令 |
 | `miniapp/README.md` | 小程序端开发说明 |
 | `miniapp/CLOUD-SYNC.md` | 云端行情同步的一次性配置、Secrets、排错 |
@@ -50,7 +51,7 @@
    - 名称规则：4–30 个字符，一个中文计 2 个字符；「精力做什么」= 10 个字符，符合要求。
    - 名称全平台唯一，是否可用以页面实时查重为准；若被占用，备选：`精力做点啥`、`今天精力做啥`、`精力收益榜`。
    - 参考：[小程序名称、简称设置规范](https://kf.qq.com/faq/170109umMvm6170109MZNnYV.html)
-4. **头像**：上传 `wechat/avatar-144.png`。
+4. **头像**：上传 `wechat/avatar-144.png`（Q 版账房角色；启动引导页默认图在 `miniapp/src/assets/launch-default.jpg`）。
 5. **简介**：可直接用下面这段（不写游戏名，降低类目/授权风险）：
 
    > 按本服物价计算生活技艺的材料成本与精力收益，帮你决定今天精力做什么；支持配方编辑、价格校准与本地备份，数据仅保存在本机。
@@ -249,7 +250,7 @@ wechatide -c DSH get_simulator_console --project "$(pwd)" --command "grep -i err
 是。改名、五行石页改的都是 `miniapp/src`，必须 `npm run build:weapp` 才会进入 `dist/weapp`。
 
 **Q：构建体积多大？**
-微信约 **1.48 MB**（12 页 / 5 Tab），小红书约 **1.08 MB**（7 页 / 4 Tab），都远低于 2 MB；头像 12 KB。
+微信约 **1.72 MB**（12 页 / 5 Tab），小红书约 **1.1 MB**（7 页 / 4 Tab），都低于 2 MB；头像 42 KB。
 
 **Q：`sitemap.json` 要配吗？**
 官方全局配置文档已标注 `sitemap.json` 下线，当前不需要配置；开发者工具若提示可忽略。
