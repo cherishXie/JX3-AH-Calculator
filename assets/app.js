@@ -3551,7 +3551,7 @@
         }).join('') +
       '</div></div></details>';
     html += '<details class="trend-picker server-item-picker"' + itemOpen + '><summary class="trend-picker-summary"><span>物品</span><b>' + (selectedItem ? U.esc(selectedItem.name) : '选择物品') + '</b>' + icon('chevronDown') + '</summary>' +
-      '<div class="trend-picker-panel server-item-panel"><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品 / 技艺 / 类型" title="支持模糊搜索，回车选择第一项" value="' + U.esc(ui.serverItemQuery || '') + '" data-server-item-search data-fkey="server-item-search" aria-label="搜索物品"></div><div class="server-search-hint">支持模糊搜索 · 回车选择第一项</div>' +
+      '<div class="trend-picker-panel server-item-panel"><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品 / 技艺 / 类型" title="支持模糊搜索，回车选择第一项" value="' + U.esc(ui.serverItemQuery || '') + '" data-server-item-search data-fkey="server-item-search" aria-label="搜索物品"></div><div class="server-search-hint"><span data-server-item-count>' + itemList.length + '</span> 个匹配 · 支持模糊搜索 · 回车选择第一项</div>' +
       '<div class="trend-picker-list">' +
         (itemList.map(function (item) {
           return '<button type="button" class="server-item-option' + (selectedItem && selectedItem.key === item.key ? ' on' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc([item.name, item.skillName, item.tierName, item.kind].join(' ')) + '">' +
@@ -3604,7 +3604,7 @@
     const all = ctx.itemRanking;
     const selected = ctx.item;
     let html = '<section class="card col-5 server-item-rank-card"><div class="card-head"><div><h2 class="card-title">物品跨服统计</h2><p class="card-sub">按上涨区服数排序 · ' + ctx.selection.all.length + ' 项中 ' + all.length + ' 项有可比样本</p></div><div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格">' + icon('download') + '</button></div></div>';
-    html += '<div class="server-rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品" value="' + U.esc(ui.serverItemRankQuery || '') + '" data-server-item-rank-search data-fkey="server-item-rank-search"><span class="tiny dim">按上涨面 · 回车选择</span></div>';
+    html += '<div class="server-rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品" value="' + U.esc(ui.serverItemRankQuery || '') + '" data-server-item-rank-search data-fkey="server-item-rank-search"><span class="tiny dim"><b data-server-item-rank-count>' + all.length + '</b> 项 · 回车选择</span></div>';
     html += '<div class="server-item-rank-wrap"><table class="server-item-rank-table"><thead><tr><th>物品</th><th>涨/跌/平</th><th>中位</th><th>覆盖</th></tr></thead><tbody>';
     all.forEach(function (row) {
       const item = row.item;
@@ -5370,9 +5370,14 @@
       const q = t.value.trim();
       ui.serverItemQuery = t.value;
       if (panel) {
+        let count = 0;
         panel.querySelectorAll('[data-server-item-text]').forEach(function (node) {
-          node.hidden = !!q && !serverSearchMatch(node.getAttribute('data-server-item-text') || '', q);
+          const show = !q || serverSearchMatch(node.getAttribute('data-server-item-text') || '', q);
+          node.hidden = !show;
+          if (show) count++;
         });
+        const countEl = panel.querySelector('[data-server-item-count]');
+        if (countEl) countEl.textContent = String(count);
       }
       return;
     }
@@ -5381,9 +5386,14 @@
       const q = t.value.trim();
       ui.serverItemRankQuery = t.value;
       if (card) {
+        let count = 0;
         card.querySelectorAll('tbody tr[data-server-item-text]').forEach(function (row) {
-          row.hidden = !!q && !serverSearchMatch(row.getAttribute('data-server-item-text') || '', q);
+          const show = !q || serverSearchMatch(row.getAttribute('data-server-item-text') || '', q);
+          row.hidden = !show;
+          if (show) count++;
         });
+        const countEl = card.querySelector('[data-server-item-rank-count]');
+        if (countEl) countEl.textContent = String(count);
       }
       return;
     }

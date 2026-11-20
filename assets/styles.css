@@ -1907,6 +1907,8 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .server-item-option:last-child { border-bottom: 0; }
 .server-item-option:hover { background: var(--accent); }
 .server-item-option.on { background: rgba(91,143,249,.10); box-shadow: inset 2px 0 0 var(--info); }
+.server-item-option[hidden] { display: none !important; }
+.server-item-rank-table tbody tr[hidden] { display: none !important; }
 .server-item-option .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .server-item-option .meta { font-size: 8px; color: var(--muted-2); white-space: nowrap; }
 .server-item-quick { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 27px; margin: -2px 0 10px; }
