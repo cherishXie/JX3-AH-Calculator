@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 27e495d
+
+update JX3BOX prices
+
 ## 2026-11-21 · 56bff37
 
 update JX3BOX prices
@@ -494,11 +498,3 @@ profit-based breakthrough results and 1-30/30-50 stage summary
 ## 2026-11-19 · 8a07b14
 
 update JX3BOX prices
-
-## 2026-11-19 · 3d1a5b7
-
-add onboarding guide, wechat/xhs deliverable packs and screenshots
-
-## 2026-11-19 · fd41a1a
-
-sync breakthrough module to miniapp; finalize stones and cloud sync
