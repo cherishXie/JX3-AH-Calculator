@@ -231,6 +231,7 @@ h1, h2, h3, p { margin: 0; }
 .crumbs .cur { color: var(--text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.server-wrap { position: relative; }
 .header-version {
   display: inline-flex;
   align-items: center;
@@ -1024,6 +1025,19 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
 @media (max-width: 600px) {
   .excel-menu-wrap { position: static; }
   .excel-menu { position: fixed; left: 12px; right: 12px; top: 62px; width: auto; min-width: 0; max-width: none; }
+  /* 服务器浮层默认右对齐到触发按钮，窄屏时 290px 宽会溢出到屏幕左侧，
+     服务器名整行被裁掉；手机端改成相对页头定位的贴边全宽浮层。 */
+  .server-wrap { position: static; }
+  .server-menu {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: 62px;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    max-height: min(70vh, 460px);
+  }
 }
 
 @media (max-width: 520px) {

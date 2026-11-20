@@ -647,7 +647,7 @@
       '<div class="crumbs"><span class="home">剑网三物价助手</span><span class="sep"></span><span class="cur">' + U.esc(title) + '</span></div>' +
       '<div class="header-right">' +
         '<span class="header-version"><span class="dot"></span><span class="v">' + U.esc(DATA.meta.version) + '</span></span>' +
-        '<div class="server-wrap" style="position:relative">' +
+        '<div class="server-wrap">' +
           '<button class="server-trigger" data-action="toggle-server-menu" aria-haspopup="listbox" aria-expanded="' + (ui.serverMenuOpen ? 'true' : 'false') + '">' +
             icon('database') + '<span class="sname">' + U.esc(srv.name) + '</span><span class="sregion">' + U.esc(srv.region || '') + '</span>' + icon('chevronDown', 'caret') +
           '</button>' +
