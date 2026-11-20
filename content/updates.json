@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "3c4d05cfa156faf9f7ced2161279b3556c0b878f",
+  "sourceCommit": "51a3a4906a674886cf40e782ea94916b1cd6fa7e",
   "date": "2026-11-20",
-  "title": "hint effective export for unquoted items",
+  "title": "make price history scripts executable",
   "notes": [
-    "hint effective export for unquoted items"
+    "make price history scripts executable"
   ],
   "history": [
+    {
+      "version": "51a3a49",
+      "date": "2026-11-20",
+      "title": "make price history scripts executable"
+    },
     {
       "version": "3c4d05c",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "f3a4d6a",
       "date": "2026-11-20",
       "title": "show separate market check time"
-    },
-    {
-      "version": "e1d46fa",
-      "date": "2026-11-20",
-      "title": "allow forced local price update"
     }
   ]
 }
