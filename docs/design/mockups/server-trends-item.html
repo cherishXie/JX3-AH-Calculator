@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>区服趋势 · 界面设计效果图</title>
+<style>
+:root{
+  --background:222.2 84% 4.9%; --foreground:210 40% 98%;
+  --card:222.2 84% 4.9%; --muted:217.2 32.6% 17.5%;
+  --muted-foreground:215 20.2% 65.1%; --border:217.2 32.6% 17.5%;
+  --sidebar:222.2 47.4% 11.2%; --sidebar-border:240 3.7% 15.9%;
+  --positive:142 69% 58%; --danger:345 88% 52%; --warning:45 93% 47%; --info:217 91% 60%;
+  --radius:8px; --header-h:60px; --sidebar-w:220px;
+  --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:hsl(var(--background));color:hsl(var(--foreground));font:13px/20px var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+.app{min-height:100vh;display:flex}
+.sidebar{width:var(--sidebar-w);flex:none;background:hsl(var(--sidebar));border-right:1px solid hsl(var(--sidebar-border));display:flex;flex-direction:column;min-height:100vh}
+.brand{height:var(--header-h);display:flex;align-items:center;gap:9px;padding:0 16px;border-bottom:1px solid hsl(var(--sidebar-border))}
+.seal{width:28px;height:28px;border-radius:7px;background:#e10600;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff}
+.brand b{font-size:13px;line-height:17px;display:block}
+.brand span{font-size:8px;line-height:11px;color:hsl(var(--muted-foreground));letter-spacing:.14em;display:block}
+.side-scroll{padding:10px 8px;flex:1}
+.nav-group{font-size:9px;font-weight:600;letter-spacing:.08em;color:hsl(var(--muted-foreground));text-transform:uppercase;padding:12px 10px 6px}
+.nav-item{display:flex;align-items:center;gap:8px;height:32px;padding:0 10px;border-radius:6px;color:hsl(var(--muted-foreground));font-size:12px}
+.nav-item .ic{width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
+.nav-item.active{background:hsl(var(--muted));color:hsl(var(--foreground));font-weight:600;box-shadow:inset 2px 0 0 #e10600}
+.nav-item .badge{margin-left:auto;font-size:8px;border:1px solid hsl(var(--border));border-radius:3px;padding:1px 4px;color:hsl(var(--muted-foreground))}
+.main{flex:1;min-width:0}
+.topbar{height:var(--header-h);border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;gap:10px;padding:0 22px;background:hsl(var(--background));position:sticky;top:0;z-index:10}
+.crumbs{display:flex;align-items:center;gap:8px;font-size:11px;color:hsl(var(--muted-foreground))}
+.crumbs .sep{width:1px;height:10px;background:hsl(var(--border))}
+.crumbs b{color:hsl(var(--foreground));font-weight:600}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:9px}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid hsl(var(--border));border-radius:5px;padding:4px 8px;font-size:10px;color:hsl(var(--muted-foreground))}
+.pill .dot{width:5px;height:5px;border-radius:50%;background:hsl(var(--positive))}
+.icon-btn{width:28px;height:28px;border:1px solid hsl(var(--border));border-radius:6px;background:transparent;display:inline-flex;align-items:center;justify-content:center;color:hsl(var(--muted-foreground));padding:0}
+.icon-btn svg{width:14px;height:14px}
+.content{padding:20px 24px 26px;max-width:1540px;margin:0 auto}
+.page-head{display:flex;align-items:flex-start;gap:16px;margin:0 0 14px}
+h1{font-size:20px;line-height:28px;font-weight:600;margin:0;letter-spacing:-.01em}
+.meta{margin:4px 0 0;color:hsl(var(--muted-foreground));font-size:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.meta .sep{width:1px;height:10px;background:hsl(var(--border))}
+.meta .badge{font-size:9px;border:1px solid hsl(var(--border));border-radius:4px;padding:1px 5px;color:hsl(var(--muted-foreground))}
+.page-tools{margin-left:auto;display:flex;gap:7px}
+.btn{height:29px;padding:0 10px;border:1px solid hsl(var(--border));border-radius:6px;background:transparent;font-size:11px;color:hsl(var(--muted-foreground));display:inline-flex;align-items:center;gap:5px}
+.btn svg{width:13px;height:13px}
+.btn.primary{background:hsl(var(--foreground));color:hsl(var(--background));border-color:transparent;font-weight:600}
+.filter-bar{border:1px solid hsl(var(--border));border-radius:7px;min-height:48px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:8px 12px;margin-bottom:14px;background:hsl(var(--card))}
+.filter-group{display:flex;align-items:center;gap:7px;font-size:10.5px;color:hsl(var(--muted-foreground));white-space:nowrap}
+.filter-group .flabel{color:hsl(var(--muted-foreground))}
+.seg{display:inline-flex;border:1px solid hsl(var(--border));border-radius:5px;overflow:hidden;height:27px}
+.seg button{border:0;background:transparent;padding:0 9px;font-size:10.5px;color:hsl(var(--muted-foreground));border-right:1px solid hsl(var(--border))}
+.seg button:last-child{border-right:0}
+.seg button.on{background:hsl(var(--muted));color:hsl(var(--foreground));font-weight:600}
+.select{height:27px;border:1px solid hsl(var(--border));border-radius:5px;background:transparent;color:hsl(var(--foreground));font-size:10.5px;padding:0 8px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.select .chev{width:10px;height:10px;color:hsl(var(--muted-foreground))}
+.filter-note{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px;color:hsl(var(--muted-foreground))}
+.mini-badge{font-size:8px;border:1px solid hsl(var(--border));border-radius:3px;padding:1px 4px;color:hsl(var(--muted-foreground))}
+.keyword-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:-2px 0 12px;min-height:31px}
+.keyword-label{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-foreground));font-weight:600;margin-right:2px}
+.kw{height:25px;border:1px solid hsl(var(--border));border-radius:4px;background:transparent;color:hsl(var(--muted-foreground));font-size:10px;padding:0 8px;display:inline-flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap}
+.kw b{font-weight:600;color:hsl(var(--foreground))}.kw.active{border-color:rgba(69,212,131,.35);background:rgba(69,212,131,.08);color:hsl(var(--foreground))}
+.kw .server-dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.keyword-hint{margin-left:auto;font-size:8.5px;color:hsl(var(--muted-foreground))}
+.skill-wrap{overflow:auto;border-top:1px solid hsl(var(--border));max-height:560px}
+.skill-table{width:100%;min-width:1120px;border-collapse:separate;border-spacing:0;font-size:9.5px;font-variant-numeric:tabular-nums}
+.skill-table th,.skill-table td{height:27px;padding:0 7px;border-bottom:1px solid hsl(var(--border));white-space:nowrap;text-align:right}
+.skill-table thead th{position:sticky;top:0;z-index:3;background:hsl(var(--card));font-size:9px;font-weight:500;color:hsl(var(--muted-foreground));text-align:center}
+.skill-table thead th:first-child{text-align:left;left:0;z-index:4}
+.skill-table tbody th{position:sticky;left:0;z-index:2;background:hsl(var(--card));text-align:left;font-weight:500}
+.skill-table td{text-align:center;color:hsl(var(--foreground))}
+.skill-table td.miss{color:hsl(var(--muted-foreground))}
+.skill-table .stone-col{color:#c084fc}
+.skill-table tr.sel td{background:rgba(255,255,255,.045)}
+.skill-table tr.sel th{box-shadow:inset 2px 0 0 hsl(var(--info))}
+.skill-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid hsl(var(--border));font-size:8.5px;color:hsl(var(--muted-foreground))}
+.skill-foot .sp{flex:1}
+.mobile-filter{display:none;align-items:center;gap:7px;height:38px;padding:0 10px;border:1px solid hsl(var(--border));border-radius:6px;margin-bottom:10px;font-size:11px;color:hsl(var(--foreground))}
+.mfilter-main{font-weight:600}.mfilter-sum{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9.5px;color:hsl(var(--muted-foreground))}
+.mobile-filter svg{width:13px;height:13px;color:hsl(var(--muted-foreground));flex:none}
+.filter-note .dot{width:4px;height:4px;border-radius:50%;background:hsl(var(--positive))}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.kpi{border:1px solid hsl(var(--border));background:hsl(var(--card));border-radius:7px;padding:11px 13px;min-height:76px}
+.kpi-label{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-foreground));display:flex;align-items:center;gap:4px}
+.kpi-value{font-size:24px;line-height:30px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:3px}
+.kpi-value small{font-size:11px;font-weight:500;color:hsl(var(--muted-foreground));margin-left:3px}
+.kpi-sub{display:flex;align-items:center;gap:4px;font-size:9.5px;color:hsl(var(--muted-foreground));margin-top:3px}
+.kpi-sub .pos{color:hsl(var(--positive))}.kpi-sub .neg{color:hsl(var(--danger))}
+.kpi-sub .dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.mini-bar{height:3px;border-radius:2px;background:hsl(var(--border));overflow:hidden;margin-top:6px;display:flex}
+.mini-bar i{display:block;height:100%}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px}
+.col-7{grid-column:span 7}.col-5{grid-column:span 5}.col-12{grid-column:span 12}
+.card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);min-width:0}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:13px 14px 10px}
+.card-title{font-size:13px;line-height:18px;font-weight:600;margin:0}
+.card-sub{font-size:9.5px;line-height:14px;color:hsl(var(--muted-foreground));margin:3px 0 0}
+.card-tools{margin-left:auto;display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.legend{display:flex;align-items:center;gap:8px;font-size:9px;color:hsl(var(--muted-foreground))}
+.legend .sw{width:7px;height:7px;border-radius:2px;display:inline-block}
+.heat-wrap{overflow:auto;border-top:1px solid hsl(var(--border));max-height:520px}
+.heat{width:100%;border-collapse:separate;border-spacing:0;font-size:10px;font-variant-numeric:tabular-nums}
+.heat th,.heat td{height:27px;padding:0 7px;border-bottom:1px solid hsl(var(--border));white-space:nowrap}
+.heat thead th{position:sticky;top:0;z-index:3;background:hsl(var(--card));font-size:9px;font-weight:500;color:hsl(var(--muted-foreground));text-align:right}
+.heat thead th:first-child{text-align:left;left:0;z-index:4}
+.heat tbody th{position:sticky;left:0;z-index:2;background:hsl(var(--card));text-align:left;font-weight:500}
+.heat td{text-align:right;color:hsl(var(--foreground))}
+.heat td.zero{color:hsl(var(--muted-foreground))}
+.server-cell{display:flex;align-items:center;gap:6px}
+.server-dot{width:5px;height:5px;border-radius:50%;flex:none}
+.server-name{font-size:10.5px}
+.server-region{font-size:8.5px;color:hsl(var(--muted-foreground));margin-left:2px}
+.low{font-size:8px;border:1px solid hsl(var(--border));border-radius:3px;padding:0 3px;color:hsl(var(--muted-foreground));margin-left:3px}
+.rank-wrap{overflow:auto;border-top:1px solid hsl(var(--border));max-height:520px}
+.rank{width:100%;border-collapse:separate;border-spacing:0;font-size:10px;font-variant-numeric:tabular-nums}
+.rank th,.rank td{height:27px;padding:0 8px;border-bottom:1px solid hsl(var(--border));white-space:nowrap}
+.rank thead th{position:sticky;top:0;z-index:2;background:hsl(var(--card));font-size:8.5px;font-weight:500;color:hsl(var(--muted-foreground));text-align:right}
+.rank thead th:first-child{text-align:left}
+.rank tbody td{text-align:right;color:hsl(var(--muted-foreground))}
+.rank tbody td:first-child{text-align:left;color:hsl(var(--foreground))}
+.rank tr.sel td{background:rgba(255,255,255,.045)}
+.rank tr.sel td:first-child{box-shadow:inset 2px 0 0 hsl(var(--info))}
+.pos{color:hsl(var(--positive))!important}.neg{color:hsl(var(--danger))!important}
+.coverage{display:inline-flex;align-items:center;gap:4px;justify-content:flex-end}
+.coverage .bar{width:30px;height:3px;border-radius:2px;background:hsl(var(--border));overflow:hidden;display:inline-block}
+.coverage .bar i{display:block;height:100%;background:hsl(var(--muted-foreground));border-radius:2px}
+.spark{width:38px;height:13px;display:block}
+.detail-body{padding:0 14px 13px;border-top:1px solid hsl(var(--border))}
+.detail-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0 7px}
+.tag{display:inline-flex;align-items:center;gap:4px;border:1px solid hsl(var(--border));border-radius:4px;padding:2px 6px;font-size:9px;color:hsl(var(--muted-foreground))}
+.tag.good{border-color:rgba(69,212,131,.25);color:hsl(var(--positive));background:rgba(69,212,131,.07)}
+.tag.bad{border-color:rgba(244,63,94,.25);color:hsl(var(--danger));background:rgba(244,63,94,.07)}
+.detail-link{margin-left:auto;font-size:9.5px;color:hsl(var(--muted-foreground));text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+.category-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 10px}
+.cat{border:1px solid hsl(var(--border));border-radius:5px;padding:7px 8px;background:rgba(255,255,255,.015)}
+.cat .k{font-size:8.5px;color:hsl(var(--muted-foreground));letter-spacing:.04em;text-transform:uppercase}
+.cat .v{font-size:13px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+.cat .t{font-size:8.5px;color:hsl(var(--muted-foreground));margin-top:1px}
+.movers{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.mover-h{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:600;margin:0 0 5px;color:hsl(var(--muted-foreground))}
+.mover-h .dot{width:5px;height:5px;border-radius:50%}
+.mover-row{display:flex;align-items:center;gap:7px;height:25px;border-bottom:1px solid hsl(var(--border));font-size:10px}
+.mover-row:last-child{border-bottom:0}
+.mover-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mover-change{width:47px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.mover-price{width:54px;text-align:right;color:hsl(var(--muted-foreground));font-variant-numeric:tabular-nums}
+.line-body{padding:4px 14px 10px;border-top:1px solid hsl(var(--border))}
+.line-body svg{width:100%;height:auto;display:block}
+.line-legend{display:flex;flex-wrap:wrap;gap:8px;padding:2px 2px 0;font-size:9px;color:hsl(var(--muted-foreground))}
+.line-legend span{display:inline-flex;align-items:center;gap:4px}
+.line-legend i{width:10px;height:2px;border-radius:1px;display:inline-block}
+.footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:hsl(var(--muted-foreground));font-size:9px;padding:12px 2px 0}
+.footer .sp{flex:1}
+.note{font-size:9px;color:hsl(var(--muted-foreground));border-left:2px solid hsl(var(--border));padding-left:7px}
+svg.icon{width:1em;height:1em;display:inline-block;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:900px){
+ .sidebar{display:none}.content{padding:14px 12px 22px}
+ .topbar{padding:0 12px}.top-right .pill{display:none}
+ h1{font-size:18px}.page-head{margin-bottom:12px}.page-tools{display:none}
+ .filter-bar{display:none}.mobile-filter{display:flex}
+ .kpis{grid-template-columns:1fr 1fr;gap:8px}.kpi{padding:9px 10px;min-height:70px}.kpi-value{font-size:21px}
+ .grid{grid-template-columns:1fr}.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-12{grid-column:span 1}
+ .heat-wrap,.rank-wrap{max-height:none}.heat{min-width:560px}.rank{min-width:520px}
+ .movers{grid-template-columns:1fr;gap:8px}.mover-row{height:27px}
+ .card-head{padding:11px 12px 9px}.detail-body,.line-body{padding-left:12px;padding-right:12px}
+ .keyword-bar{flex-wrap:nowrap;overflow:auto;padding-bottom:2px}.keyword-hint{display:none}.keyword-label{flex:none}
+ .skill-wrap{max-height:none}.skill-table{min-width:1040px}.skill-foot{padding-left:12px;padding-right:12px}
+ .footer{font-size:8.5px}
+}
+
+/* 物品视角 */
+.view-switch{display:inline-flex;border:1px solid hsl(var(--border));border-radius:6px;overflow:hidden;height:30px;margin-top:8px}
+.view-switch button{border:0;border-right:1px solid hsl(var(--border));background:transparent;color:hsl(var(--muted-foreground));font-size:10.5px;padding:0 12px;display:inline-flex;align-items:center;gap:5px}
+.view-switch button:last-child{border-right:0}
+.view-switch button.on{background:hsl(var(--muted));color:hsl(var(--foreground));font-weight:600}
+.item-filter{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.item-pick{display:flex;align-items:center;gap:8px;height:34px;border:1px solid hsl(var(--border));border-radius:6px;padding:0 10px;background:transparent;color:hsl(var(--foreground));font-size:12px;min-width:220px}
+.item-pick .nm{font-size:13px;font-weight:600}
+.item-pick .kind{font-size:9px;color:hsl(var(--muted-foreground));border-left:1px solid hsl(var(--border));padding-left:8px}
+.item-pick .chev{margin-left:auto;color:hsl(var(--muted-foreground))}
+.quick-items{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:-3px 0 11px}
+.quick-items .lab{font-size:9px;color:hsl(var(--muted-foreground));letter-spacing:.05em;text-transform:uppercase;margin-right:2px}
+.quick-chip{height:23px;border:1px solid hsl(var(--border));border-radius:4px;background:transparent;color:hsl(var(--muted-foreground));font-size:9.5px;padding:0 7px}
+.quick-chip.on{border-color:rgba(91,143,249,.45);background:rgba(91,143,249,.09);color:hsl(var(--foreground))}
+.kpis.five{grid-template-columns:repeat(5,1fr)}
+.kpis.five .kpi{min-height:80px}
+.kpis.five .kpi-value{font-size:22px}
+.kpis.five .kpi-value.two{font-size:16px;line-height:23px}
+.kpi-foot{font-size:9px;color:hsl(var(--muted-foreground));margin-top:3px}
+.dist-card .card-head{padding-bottom:8px}
+.dist-wrap{overflow:auto;border-top:1px solid hsl(var(--border));padding:8px 12px 10px}
+.dist-chart{min-width:600px}
+.dist-head{display:flex;align-items:center;gap:8px;font-size:8.5px;color:hsl(var(--muted-foreground));padding:0 0 5px;margin-left:128px}
+.dist-head .sp{flex:1}
+.dist-row{display:grid;grid-template-columns:120px minmax(0,1fr) 58px;align-items:center;gap:8px;height:26px;border-bottom:1px solid hsl(var(--border))}
+.dist-row:last-child{border-bottom:0}
+.dist-name{display:flex;align-items:center;gap:5px;min-width:0;font-size:10px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.dist-name .reg{font-size:8px;color:hsl(var(--muted-foreground))}
+.dist-track{position:relative;height:12px;background:hsl(var(--muted));border-radius:2px;overflow:hidden}
+.dist-track:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:hsl(var(--muted-foreground));opacity:.55}
+.dist-median{position:absolute;top:-2px;bottom:-2px;width:1px;background:rgba(147,197,253,.9);z-index:2}
+.dist-bar{position:absolute;top:3px;height:6px;border-radius:2px;opacity:.82}
+.dist-bar.pos{left:50%;background:hsl(var(--positive));width:var(--w)}
+.dist-bar.neg{right:50%;background:hsl(var(--danger));width:var(--w)}
+.dist-bar.flat{left:calc(50% - 2px);width:4px;background:hsl(var(--muted-foreground));opacity:.7}
+.dist-val{text-align:right;font-size:10px;font-weight:600;font-variant-numeric:tabular-nums}
+.dist-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:8.5px;color:hsl(var(--muted-foreground));padding:5px 0 0;margin-left:128px}
+.dist-legend i{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:-1px}
+.dist-legend .median-line{width:12px;height:1px;background:#93c5fd;display:inline-block;margin-right:3px;vertical-align:3px}
+.dist-foot{font-size:8.5px;color:hsl(var(--muted-foreground));margin-left:128px;padding-top:6px}
+.rank-table{width:100%;border-collapse:separate;border-spacing:0;font-size:10px;font-variant-numeric:tabular-nums}
+.rank-table th,.rank-table td{height:28px;padding:0 7px;border-bottom:1px solid hsl(var(--border));white-space:nowrap;text-align:right}
+.rank-table thead th{font-size:8.5px;color:hsl(var(--muted-foreground));font-weight:500;text-align:right}
+.rank-table thead th:first-child{text-align:left}
+.rank-table tbody td:first-child{text-align:left;color:hsl(var(--foreground))}
+.rank-table tbody tr{cursor:pointer}
+.rank-table tbody tr.sel td{background:rgba(91,143,249,.07)}
+.rank-table tbody tr.sel td:first-child{box-shadow:inset 2px 0 0 hsl(var(--info))}
+.rank-table .updown .u{color:hsl(var(--positive))}.rank-table .updown .d{color:hsl(var(--danger))}.rank-table .updown .f{color:hsl(var(--muted-foreground))}
+.rank-table .item-name{display:flex;align-items:center;gap:5px}
+.rank-table .item-name .dot{width:5px;height:5px;border-radius:50%;background:#5B8FF9}
+.rank-search{border-top:1px solid hsl(var(--border));padding:7px 12px;display:flex;align-items:center;gap:6px}
+.rank-search input{flex:1;height:26px;border:1px solid hsl(var(--border));border-radius:5px;background:transparent;color:hsl(var(--foreground));font-size:10px;padding:0 8px}
+.rank-foot{font-size:8px;color:hsl(var(--muted-foreground));text-align:right;padding:0 12px 7px}
+.price-table{width:100%;min-width:620px;border-collapse:separate;border-spacing:0;font-size:10px;font-variant-numeric:tabular-nums}
+.price-table th,.price-table td{height:27px;padding:0 9px;border-bottom:1px solid hsl(var(--border));white-space:nowrap;text-align:right}
+.price-table thead th{font-size:8.5px;color:hsl(var(--muted-foreground));font-weight:500}
+.price-table thead th:first-child,.price-table tbody td:first-child{text-align:left}
+.price-table tbody tr:hover{background:hsl(var(--muted))}
+.price-table .status{display:inline-flex;align-items:center;gap:4px;font-size:9px}
+.price-table .status i{width:5px;height:5px;border-radius:50%;display:inline-block}
+.insight{border:1px solid hsl(var(--border));border-radius:6px;padding:10px 12px;background:rgba(255,255,255,.015);display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.insight .item{font-size:9.5px;line-height:15px;color:hsl(var(--muted-foreground))}
+.insight .item b{color:hsl(var(--foreground));font-weight:600}
+.insight .item:before{content:"";display:block;width:14px;height:2px;border-radius:1px;background:hsl(var(--muted-foreground));margin-bottom:5px}
+.item-note{font-size:8.5px;color:hsl(var(--muted-foreground));line-height:15px}
+@media(max-width:900px){
+ .view-switch{width:100%;margin-top:5px}.view-switch button{flex:1;justify-content:center}
+ .kpis.five{grid-template-columns:1fr 1fr}.kpis.five .kpi:last-child{grid-column:span 2}
+ .item-filter{display:none}.mobile-filter{display:flex}
+ .quick-items{flex-wrap:nowrap;overflow:auto;padding-bottom:2px}.quick-chip{flex:none}
+ .dist-chart{min-width:620px}.dist-wrap{overflow-x:auto}
+ .rank-table{min-width:520px}.price-table{min-width:620px}
+ .insight{grid-template-columns:1fr;gap:8px}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="seal">账</span><div><b>剑网三物价助手</b><span>JX3 PRICE LEDGER</span></div></div>
+    <div class="side-scroll">
+      <div class="nav-group">工作台</div>
+      <div class="nav-item"><span class="ic">▦</span>总览</div>
+      <div class="nav-group">行情与配方</div>
+      <div class="nav-item"><span class="ic">⌁</span>生活技艺<span class="badge">8</span></div>
+      <div class="nav-item"><span class="ic">≡</span>价格库</div>
+      <div class="nav-item"><span class="ic">◇</span>五行石</div>
+      <div class="nav-group">分析</div>
+      <div class="nav-item"><span class="ic">↗</span>精力收益</div>
+      <div class="nav-item"><span class="ic">⌁</span>物价走势</div>
+      <div class="nav-item active"><span class="ic">◉</span>区服趋势</div>
+      <div class="nav-item"><span class="ic">↑</span>突破升级</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="crumbs"><span>剑网三物价助手</span><span class="sep"></span><b>区服趋势</b></div>
+      <div class="top-right">
+        <span class="pill"><span class="dot"></span>全服视角</span>
+        <span class="pill">行情 11-20 19:07</span>
+        <button class="icon-btn" title="下载当前视图" aria-label="下载当前视图"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button>
+        <button class="icon-btn" title="数据说明" aria-label="数据说明"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <h1>区服趋势</h1>
+          <div class="meta">
+            <span>物品视角</span><span class="sep"></span><span>全部 17 服</span><span class="sep"></span><span>今日 10:07–19:23</span><span class="sep"></span><span class="badge">示意数据</span>
+          </div>
+          <div class="view-switch" role="tablist" aria-label="区服趋势视角">
+            <button role="tab" aria-selected="false">区服视角</button>
+            <button role="tab" class="on" aria-selected="true">物品视角</button>
+          </div>
+        </div>
+        <div class="page-tools">
+          <button class="btn">数据说明</button>
+          <button class="btn primary"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>导出</button>
+        </div>
+      </div>
+
+      <div class="mobile-filter"><span class="mfilter-main">筛选</span><span class="mfilter-sum">羊皮 · 全部 17 服 · 今日</span><svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+      <section class="filter-bar item-filter" aria-label="物品视角筛选">
+        <div class="filter-group"><span class="flabel">时间</span><div class="seg"><button class="on">今日</button><button>近 3 日</button><button>近 7 日</button><button>近 30 日</button></div></div>
+        <div class="filter-group"><span class="flabel">区服</span><button class="select">全部 17 服 <svg class="chev icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+        <div class="item-pick" role="button" tabindex="0"><span class="nm">羊皮</span><span class="kind">材料 · 庖丁 · 二级</span><span class="chev">⌄</span></div>
+        <span class="filter-note"><span class="dot"></span>有报价才计入 · 缺失不算持平</span>
+      </section>
+
+      <div class="quick-items">
+        <span class="lab">快速查看</span>
+        <button class="quick-chip on">羊皮</button>
+        <button class="quick-chip">骨头</button>
+        <button class="quick-chip">猫眼石</button>
+        <button class="quick-chip">鱼肉</button>
+        <button class="quick-chip">五行石 · 六级</button>
+        <span class="item-note" style="margin-left:auto">当前范围：全部物品 275 项</span>
+      </div>
+
+      <section class="kpis five" aria-label="羊皮跨服统计">
+        <div class="kpi"><div class="kpi-label">有报价区服</div><div class="kpi-value">17<small>/ 17</small></div><div class="kpi-foot">覆盖 100% · 无缺失</div></div>
+        <div class="kpi"><div class="kpi-label">上涨区服</div><div class="kpi-value pos">5<small>服</small></div><div class="kpi-foot">平均涨幅 <span class="pos">+68.8%</span></div></div>
+        <div class="kpi"><div class="kpi-label">下跌区服</div><div class="kpi-value neg">11<small>服</small></div><div class="kpi-foot">平均跌幅 <span class="neg">−12.5%</span></div></div>
+        <div class="kpi"><div class="kpi-label">跨服中位涨跌</div><div class="kpi-value neg">−3.5<small>%</small></div><div class="kpi-foot">1 服持平 · 17 服可比</div></div>
+        <div class="kpi"><div class="kpi-label">区间极值</div><div class="kpi-value two"><span class="pos">+138.1%</span> <span class="dim">/</span> <span class="neg">−52.4%</span></div><div class="kpi-foot">飞龙在天 / 长安城</div></div>
+      </section>
+
+      <div class="grid">
+        <section class="card col-7 dist-card">
+          <div class="card-head">
+            <div><h2 class="card-title">羊皮 · 区服涨跌分布</h2><p class="card-sub">按涨跌幅排序 · 条形为压缩刻度，数字为真实涨跌 · 蓝线为中位数 −3.5%</p></div>
+            <div class="card-tools"><span class="legend"><span class="sw" style="background:hsl(var(--positive))"></span>涨<span class="sw" style="background:hsl(var(--danger))"></span>跌<span class="sw" style="background:hsl(var(--muted-foreground))"></span>平</span><button class="icon-btn" title="下载图片" aria-label="下载图片"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button></div>
+          </div>
+          <div class="dist-wrap">
+            <div class="dist-chart">
+              <div class="dist-head"><span>区服</span><span class="sp"></span><span style="width:58px;text-align:right">涨跌</span></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#5B8FF9"></span>飞龙在天 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar pos" style="--w:44%"></span></div><div class="dist-val pos">+138.1%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#61DDAA"></span>斗转星移 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar pos" style="--w:42%"></span></div><div class="dist-val pos">+102.3%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#F6BD16"></span>绝代天骄 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar pos" style="--w:36%"></span></div><div class="dist-val pos">+69.1%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#7262FD"></span>乾坤一掷 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar pos" style="--w:25%"></span></div><div class="dist-val pos">+28.0%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#78D3F8"></span>梦江南 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar pos" style="--w:14%"></span></div><div class="dist-val pos">+6.5%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#9661BC"></span>山海相逢 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar flat"></span></div><div class="dist-val dim">0.0%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#F6903D"></span>眉间雪 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:8%"></span></div><div class="dist-val neg">−1.1%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#008685"></span>剑胆琴心 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:12%"></span></div><div class="dist-val neg">−3.4%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#F08BB4"></span>蝶恋花 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:12%"></span></div><div class="dist-val neg">−3.5%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#E8684A"></span>唯我独尊 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:14%"></span></div><div class="dist-val neg">−4.4%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#6DC8EC"></span>天鹅坪 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:16%"></span></div><div class="dist-val neg">−6.1%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#9270CA"></span>龙争虎斗 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:18%"></span></div><div class="dist-val neg">−8.0%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#FF9D4D"></span>幽月轮 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:20%"></span></div><div class="dist-val neg">−9.5%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#269A99"></span>破阵子 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:22%"></span></div><div class="dist-val neg">−11.1%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#FF99C3"></span>傲血戰意 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:24%"></span></div><div class="dist-val neg">−14.3%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#FF6E76"></span>九天 <span class="reg">双线一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:28%"></span></div><div class="dist-val neg">−23.3%</div></div>
+              <div class="dist-row"><div class="dist-name"><span class="server-dot" style="--c:#5D7092"></span>长安城 <span class="reg">电信一区</span></div><div class="dist-track"><span class="dist-median" style="left:48.3%"></span><span class="dist-bar neg" style="--w:42%"></span></div><div class="dist-val neg">−52.4%</div></div>
+              <div class="dist-legend"><span><i style="background:hsl(var(--positive))"></i>上涨 5</span><span><i style="background:hsl(var(--danger))"></i>下跌 11</span><span><i style="background:hsl(var(--muted-foreground))"></i>持平 1</span><span><span class="median-line"></span>中位 −3.5%</span></div>
+              <div class="dist-foot">条形长度使用平方根压缩，避免 +138.1% 与 +102.3% 两个极端值压扁其余区服；实际数值以右侧数字为准。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card col-5">
+          <div class="card-head"><div><h2 class="card-title">物品跨服统计</h2><p class="card-sub">按上涨区服数排序 · 当前范围全部物品</p></div><div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button></div></div>
+          <div class="rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品"><span class="tiny dim">按上涨面</span></div>
+          <table class="rank-table">
+            <thead><tr><th>物品</th><th>涨/跌/平</th><th>中位</th><th>覆盖</th></tr></thead>
+            <tbody>
+              <tr><td><div class="item-name"><span class="dot" style="background:#61DDAA"></span>猫眼石</div></td><td class="updown"><span class="u">8</span>/<span class="d">5</span>/<span class="f">4</span></td><td>0.0%</td><td>17/17</td></tr>
+              <tr><td><div class="item-name"><span class="dot" style="background:#F6BD16"></span>甘草</div></td><td class="updown"><span class="u">8</span>/<span class="d">7</span>/<span class="f">2</span></td><td>0.0%</td><td>17/17</td></tr>
+              <tr><td><div class="item-name"><span class="dot" style="background:#7262FD"></span>鱼肉</div></td><td class="updown"><span class="u">7</span>/<span class="d">4</span>/<span class="f">6</span></td><td>0.0%</td><td>17/17</td></tr>
+              <tr><td><div class="item-name"><span class="dot" style="background:#78D3F8"></span>硼砂</div></td><td class="updown"><span class="u">6</span>/<span class="d">8</span>/<span class="f">3</span></td><td>0.0%</td><td>17/17</td></tr>
+              <tr><td><div class="item-name"><span class="dot" style="background:#9661BC"></span>鸡血石</div></td><td class="updown"><span class="u">6</span>/<span class="d">9</span>/<span class="f">2</span></td><td class="neg">−0.9%</td><td>17/17</td></tr>
+              <tr><td><div class="item-name"><span class="dot" style="background:#F6903D"></span>沉香木</div></td><td class="updown"><span class="u">6</span>/<span class="d">6</span>/<span class="f">5</span></td><td class="neg">−0.1%</td><td>17/17</td></tr>
+              <tr class="sel"><td><div class="item-name"><span class="dot" style="background:#008685"></span>羊皮 <span class="tag" style="margin-left:3px">当前</span></div></td><td class="updown"><span class="u">5</span>/<span class="d">11</span>/<span class="f">1</span></td><td class="neg">−3.5%</td><td>17/17</td></tr>
+              <tr><td><div class="item-name"><span class="dot" style="background:#F08BB4"></span>骨头</div></td><td class="updown"><span class="u">5</span>/<span class="d">8</span>/<span class="f">4</span></td><td>0.0%</td><td>17/17</td></tr>
+            </tbody>
+          </table>
+          <div class="rank-foot">展示 8 / 275 项 · 中位数为跨服中位涨跌</div>
+        </section>
+
+        <section class="card col-12">
+          <div class="card-head"><div><h2 class="card-title">羊皮 · 区服明细</h2><p class="card-sub">按涨跌幅排序 · 起始价 / 当前价 / 涨跌幅 · 点击行进入该服物价走势</p></div><div class="card-tools"><span class="tag">材料 · 庖丁 · 二级</span><button class="icon-btn" title="下载表格" aria-label="下载表格"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button></div></div>
+          <div style="overflow:auto;border-top:1px solid hsl(var(--border))"><table class="price-table">
+            <thead><tr><th>区服</th><th>起始价</th><th>当前价</th><th>涨跌幅</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr><td><span class="server-dot" style="--c:#5B8FF9"></span> 飞龙在天 <span class="dim">双线一区</span></td><td>5.67 金</td><td>13.50 金</td><td class="pos">+138.1%</td><td><span class="status"><i style="background:hsl(var(--positive))"></i>上涨</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#61DDAA"></span> 斗转星移 <span class="dim">双线一区</span></td><td>11.96 金</td><td>24.20 金</td><td class="pos">+102.3%</td><td><span class="status"><i style="background:hsl(var(--positive))"></i>上涨</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#F6BD16"></span> 绝代天骄 <span class="dim">电信一区</span></td><td>14.78 金</td><td>25.00 金</td><td class="pos">+69.1%</td><td><span class="status"><i style="background:hsl(var(--positive))"></i>上涨</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#7262FD"></span> 乾坤一掷 <span class="dim">电信一区</span></td><td>29.75 金</td><td>38.09 金</td><td class="pos">+28.0%</td><td><span class="status"><i style="background:hsl(var(--positive))"></i>上涨</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#78D3F8"></span> 梦江南 <span class="dim">电信一区</span></td><td>31.40 金</td><td>33.45 金</td><td class="pos">+6.5%</td><td><span class="status"><i style="background:hsl(var(--positive))"></i>上涨</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#9661BC"></span> 山海相逢 <span class="dim">双线一区</span></td><td>13.79 金</td><td>13.79 金</td><td class="dim">0.0%</td><td><span class="status"><i style="background:hsl(var(--muted-foreground))"></i>持平</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#F6903D"></span> 眉间雪 <span class="dim">电信一区</span></td><td>10.77 金</td><td>10.65 金</td><td class="neg">−1.1%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#008685"></span> 剑胆琴心 <span class="dim">电信一区</span></td><td>32.10 金</td><td>31.00 金</td><td class="neg">−3.4%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#F08BB4"></span> 蝶恋花 <span class="dim">电信一区</span></td><td>18.98 金</td><td>18.32 金</td><td class="neg">−3.5%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#E8684A"></span> 唯我独尊 <span class="dim">双线一区</span></td><td>30.87 金</td><td>29.50 金</td><td class="neg">−4.4%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#6DC8EC"></span> 天鹅坪 <span class="dim">双线一区</span></td><td>29.80 金</td><td>27.99 金</td><td class="neg">−6.1%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#9270CA"></span> 龙争虎斗 <span class="dim">电信一区</span></td><td>35.00 金</td><td>32.20 金</td><td class="neg">−8.0%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#FF9D4D"></span> 幽月轮 <span class="dim">双线一区</span></td><td>21.97 金</td><td>19.88 金</td><td class="neg">−9.5%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#269A99"></span> 破阵子 <span class="dim">双线一区</span></td><td>29.00 金</td><td>25.79 金</td><td class="neg">−11.1%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#FF99C3"></span> 傲血戰意 <span class="dim">电信一区</span></td><td>140.00 金</td><td>120.00 金</td><td class="neg">−14.3%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#FF6E76"></span> 九天 <span class="dim">双线一区</span></td><td>45.99 金</td><td>35.28 金</td><td class="neg">−23.3%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+              <tr><td><span class="server-dot" style="--c:#5D7092"></span> 长安城 <span class="dim">电信一区</span></td><td>39.99 金</td><td>19.04 金</td><td class="neg">−52.4%</td><td><span class="status"><i style="background:hsl(var(--danger))"></i>下跌</span></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <section class="col-12 insight">
+          <div class="item"><b>中位数说明</b><br>17 个区服中 5 涨、11 跌、1 平，跨服中位 −3.5%。中位数比均值更能代表“典型区服”。</div>
+          <div class="item"><b>极端值</b><br>飞龙在天 +138.1%、斗转星移 +102.3%，长安城 −52.4%；分布图用压缩刻度，但数字保留真实值。</div>
+          <div class="item"><b>口径</b><br>等权统计区服，不按成交量加权；无首尾报价的区服计入“无报价”，不当作持平。</div>
+        </section>
+      </div>
+
+      <div class="footer">
+        <span>数据来源：JX3BOX 拍卖样本 · 行情 2026-11-20 19:23</span><span class="sp"></span>
+        <span class="note">示意数据；羊皮示例基于当前样本区间 10:07–19:23。</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
