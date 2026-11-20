@@ -507,8 +507,8 @@
     }
     const firstDate = allDates[0];
     const lastDate = allDates[allDates.length - 1];
-    const allFrom = firstDate + 'T00:00';
-    const allTo = lastDate + 'T23:00';
+    let allFrom = firstDate + 'T00:00';
+    let allTo = lastDate + 'T23:00';
     const requestedFrom = parseBound(opts.from, false);
     const requestedTo = parseBound(opts.to, true);
     const fromDay = requestedFrom != null ? beijingDateOf(requestedFrom) : firstDate;
@@ -536,6 +536,10 @@
       };
     }
     const allPoints = buildPoints(serverId, dates.map(function (date) { return state.days[date]; }));
+    if (allPoints.length) {
+      allFrom = hourText(floorHourMs(Date.parse(allPoints[0].at)));
+      allTo = hourText(floorHourMs(Date.parse(allPoints[allPoints.length - 1].at)));
+    }
     const allFromMs = parseBound(allFrom, false);
     const allToMs = parseBound(allTo, true);
     let fromMs;
