@@ -27,12 +27,22 @@
   (DATA.skills || []).forEach(function (s, i) { skillOrder[s.id] = i; });
   const tierMap = {};
   (DATA.tiers || []).forEach(function (t) { tierMap[t.id] = t; });
+  const usageSkills = Object.create(null);
+  (DATA.recipes || []).forEach(function (recipe) {
+    (recipe.materials || []).forEach(function (mat) {
+      if (!mat || !mat.item) return;
+      const list = usageSkills[mat.item] || (usageSkills[mat.item] = []);
+      if (recipe.skillId && list.indexOf(recipe.skillId) === -1) list.push(recipe.skillId);
+    });
+  });
 
   const STONE_COLOR = '#C084FC';
   const catalog = [];
   (DATA.items || []).forEach(function (item) {
     if (!item || !item.id) return;
     const kind = item.kind === 'product' ? 'product' : 'material';
+    const used = (usageSkills[item.id] || []).slice();
+    if (item.skillId && used.indexOf(item.skillId) === -1) used.unshift(item.skillId);
     catalog.push({
       key: 'item:' + item.id,
       id: item.id,
@@ -40,6 +50,8 @@
       kind: kind,
       skillId: item.skillId || '',
       skillName: skillName(item.skillId),
+      skillIds: used.length ? used : (item.skillId ? [item.skillId] : []),
+      skillNames: (used.length ? used : (item.skillId ? [item.skillId] : [])).map(skillName).join(' / '),
       color: skillColor(item.skillId),
       skillOrder: skillOrder[item.skillId] == null ? 99 : skillOrder[item.skillId],
       tier: Number(item.tier) || 0,
@@ -303,7 +315,9 @@
     if (skillId === 'stone') {
       list = list.filter(function (item) { return item.kind === 'stone'; });
     } else if (skillId) {
-      list = list.filter(function (item) { return item.kind !== 'stone' && item.skillId === skillId; });
+      list = list.filter(function (item) {
+        return item.kind !== 'stone' && (item.skillIds || [item.skillId]).indexOf(skillId) !== -1;
+      });
     }
     list.sort(function (a, b) {
       if (a.skillOrder !== b.skillOrder) return a.skillOrder - b.skillOrder;

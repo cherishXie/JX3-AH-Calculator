@@ -649,7 +649,7 @@
         U.esc(label) + '</text>';
     });
     svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">' +
-      (useLog ? '单价（金 · 对数）' : '单价（金）') + '</text>';
+      U.esc(opts.axisLabel || (useLog ? '单价（金 · 对数）' : '单价（金）')) + '</text>';
 
     data.forEach(function (item, i) {
       const s = item.stats;
@@ -752,13 +752,15 @@
         U.esc(label) + '</text>';
     });
     svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">' +
-      (useLog ? '单价（金 · 对数）' : '单价（金）') + '</text>';
+      U.esc(opts.axisLabel || (useLog ? '单价（金 · 对数）' : '单价（金）')) + '</text>';
     data.forEach(function (r) {
       const item = items[r.itemIndex];
       if (!item) return;
       const x = cx(r.itemIndex) + (r.jitter || 0) * slot * 0.44;
       const yy = y(r.price);
-      const tip = r.name + ' · ' + String(r.at || '').replace('T', ' ') + ' · ' + U.fmt(r.price, 2) + ' 金' +
+      const shown = U.fmt(r.price, 1) + (r.rawPrice != null && Math.abs(Number(r.rawPrice) - Number(r.price)) > 1e-9
+        ? '（' + U.fmt(r.rawPrice, 2) + ' 金）' : (opts.axisLabel && opts.axisLabel.indexOf('指数') !== -1 ? ' 指数' : ' 金'));
+      const tip = r.name + ' · ' + String(r.at || '').replace('T', ' ') + ' · ' + shown +
         (Number.isFinite(Number(r.change)) ? ' · ' + (r.change >= 0 ? '+' : '') + U.fmt(r.change, 2) + '%' : '');
       svg += '<circle class="chart-point" tabindex="0" cx="' + x.toFixed(1) + '" cy="' + yy.toFixed(1) + '" r="' +
         (r.focus ? 4.6 : 3.2) + '" fill="' + (r.color || item.tierColor || COLOR.craft) + '" fill-opacity=".9"' +
