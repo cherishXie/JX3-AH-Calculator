@@ -88,6 +88,12 @@ cat dist/weapp/app.json    # navigationBarTitleText 应为「精力做什么」
 
 ---
 
+## 3.1 代码质量门槛（提交前必查）
+
+- `npm run verify:weapp` 已内置：组件按需注入、主包 1.5MB 代理预算、图片/音频 200KB、启动图 120KB、无 wx.request。
+- 开发者工具 **代码质量 → 重新扫描** 全绿后再上传；主包按 **1.5MB** 判定（硬上限 2MB）。
+- 当前基准：主包约 **1.55MB**（1,546,xxx B），启动图 **94KB**；新增素材先压到 100KB 以内。
+
 ## 4. 导入微信开发者工具
 
 1. 下载并安装 [微信开发者工具（稳定版）](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)。

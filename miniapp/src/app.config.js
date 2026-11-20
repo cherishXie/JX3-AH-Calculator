@@ -26,6 +26,8 @@ if (IS_WEAPP) {
 }
 
 export default {
+  // 微信代码质量「组件按需注入」：只注入页面实际用到的自定义组件。
+  ...(IS_WEAPP ? { lazyCodeLoading: 'requiredComponents' } : {}),
   pages: PAGES,
   window: {
     backgroundTextStyle: 'dark',

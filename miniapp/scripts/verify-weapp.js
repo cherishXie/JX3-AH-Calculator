@@ -139,12 +139,46 @@ if (app) {
   const title = app.window && app.window.navigationBarTitleText;
   if (title !== '精力做什么') fail('导航栏标题不是「精力做什么」：' + title);
   else pass('导航栏标题：精力做什么');
+
+  if (app.lazyCodeLoading === 'requiredComponents') pass('组件按需注入：requiredComponents');
+  else fail('未开启组件按需注入：app.json 需要 lazyCodeLoading="requiredComponents"');
 }
 
 const files = walk(dist, []);
 const total = files.reduce((sum, file) => sum + fs.statSync(file).size, 0);
-if (total > 2 * 1024 * 1024) fail('主包体积超过 2MB：' + mb(total));
-else pass('主包体积：' + mb(total) + '（上限 2 MB）');
+// 开发者工具「代码质量」主包线：size/1024 > 1024*1.5（即 1,572,864 B）。
+// DevTools 的编译包会比 dist 文件合计少约 116 KB（生成 wxml/wxss/config 等），
+// 这里用 +120 KB 的代理预算做本地守卫，避免再次出现 1.61 MB 才被发现的情况。
+const QUALITY_LINE = 1.5 * 1024 * 1024;
+const QUALITY_PROXY = QUALITY_LINE + 120 * 1024;
+if (total > 2 * 1024 * 1024) {
+  fail('主包体积超过 2MB 硬上限：' + mb(total));
+} else if (total > QUALITY_PROXY) {
+  fail('主包体积 ' + mb(total) + ' 超过代码质量 1.5MB 代理预算（' + mb(QUALITY_PROXY) + '）；请压缩图片/减少数据');
+} else {
+  pass('主包体积：' + mb(total) + '（硬上限 2 MB；代码质量 1.5 MB 线）');
+}
+
+const MEDIA_LIMIT = 200 * 1024;
+let maxMedia = 0;
+let maxMediaFile = '';
+for (const file of files) {
+  if (!/\.(png|jpe?g|webp|gif|mp3|wav|m4a|aac)$/i.test(file)) continue;
+  const bytes = fs.statSync(file).size;
+  if (bytes > maxMedia) { maxMedia = bytes; maxMediaFile = file; }
+  if (bytes > MEDIA_LIMIT) {
+    fail('图片/音频超过 200KB：' + path.relative(dist, file) + '（' + (bytes / 1024).toFixed(0) + 'KB）');
+  }
+}
+if (maxMedia) pass('图片/音频：最大 ' + (maxMedia / 1024).toFixed(0) + ' KB（上限 200 KB）');
+
+// 启动图是主包里最大的单文件，单独设 120KB 预算，防止再次顶穿 1.5MB 线。
+const launch = path.join(dist, 'assets', 'launch-default.jpg');
+if (fs.existsSync(launch)) {
+  const bytes = fs.statSync(launch).size;
+  if (bytes > 120 * 1024) fail('启动图超过 120KB：' + (bytes / 1024).toFixed(0) + 'KB，请压缩到 100KB 以内');
+  else pass('启动图：' + (bytes / 1024).toFixed(0) + ' KB（预算 120 KB）');
+}
 
 const sourceFiles = walk(path.join(root, 'src'), []).filter(function (f) {
   return /\.(js|jsx)$/.test(f);
