@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "f3a4d6a7a924d683fd4bcc95ba8be08d6ee12266",
+  "sourceCommit": "9ff25b8c441ddd9dbff59a26c93d32ae6a27ce5b",
   "date": "2026-11-20",
   "title": "新增物价历史与回溯",
   "notes": [
@@ -9,6 +9,11 @@
     "未变化的行情检查不写历史，不产生额外提交"
   ],
   "history": [
+    {
+      "version": "9ff25b8",
+      "date": "2026-11-20",
+      "title": "add price history JSON store and query tool"
+    },
     {
       "version": "f3a4d6a",
       "date": "2026-11-20",
@@ -33,11 +38,6 @@
       "version": "b1f7eb0",
       "date": "2026-11-20",
       "title": "add file picker to WPS price refresh command"
-    },
-    {
-      "version": "f19901c",
-      "date": "2026-11-19",
-      "title": "repair release notes json"
     }
   ]
 }
