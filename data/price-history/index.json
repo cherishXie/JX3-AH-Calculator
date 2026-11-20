@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-11-20T23:07:14+08:00",
+  "updatedAt": "2026-11-21T00:07:18+08:00",
   "catalogVersion": "v3.6",
   "itemCount": 267,
   "servers": [
@@ -102,6 +102,17 @@
       "itemCount": 267,
       "compacted": false,
       "bytes": 200483
+    },
+    {
+      "date": "2026-11-21",
+      "file": "days/2026-11-21.json",
+      "points": 1,
+      "baseAt": "2026-11-21T00:07:18+08:00",
+      "lastAt": "2026-11-21T00:07:18+08:00",
+      "catalogVersion": "v3.6",
+      "itemCount": 267,
+      "compacted": false,
+      "bytes": 57315
     }
   ]
 }
