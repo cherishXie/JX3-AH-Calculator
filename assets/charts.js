@@ -501,7 +501,8 @@
     };
 
     let yMin, yMax, y, ticks = [];
-    if (metric === 'price') {
+    const useLog = metric === 'price' && opts.log !== false;
+    if (metric === 'price' && useLog) {
       const vals = data.map(function (r) { return Number(r.price); });
       const logMin = Math.log10(Math.min.apply(null, vals));
       const logMax = Math.log10(Math.max.apply(null, vals));
@@ -514,6 +515,20 @@
         const v = Math.pow(10, lo + step * i);
         ticks.push(v);
       }
+    } else if (metric === 'price') {
+      const vals = data.map(function (r) { return Number(r.price); });
+      yMin = Math.min.apply(null, vals);
+      yMax = Math.max.apply(null, vals);
+      if (!(yMax > yMin)) {
+        const base = Math.max(1, Math.abs(yMin) * 0.04);
+        yMin = Math.max(0, yMin - base);
+        yMax += base;
+      }
+      const pad = (yMax - yMin) * 0.1;
+      yMin = Math.max(0, yMin - pad);
+      yMax += pad;
+      y = function (v) { return mt + plotH - ((v - yMin) / (yMax - yMin)) * plotH; };
+      for (let i = 0; i <= 4; i++) ticks.push(yMin + (yMax - yMin) * i / 4);
     } else {
       const vals = data.map(function (r) { return Number(r.change); }).concat([0]);
       yMin = Math.min.apply(null, vals);
@@ -539,12 +554,13 @@
         U.esc(label) + '</text>';
     });
     svg += '<text x="' + ml + '" y="' + (mt - 8) + '" font-size="10" fill="' + P.muted + '">' +
-      (metric === 'change' ? '区间涨跌幅' : '单价（金 · 对数）') + '</text>';
+      (metric === 'change' ? '区间涨跌幅' : (useLog ? '单价（金 · 对数）' : '单价（金）')) + '</text>';
 
-    const labelCount = 5;
+    const labelTimes = Array.isArray(opts.labelTimes) && opts.labelTimes.length ? opts.labelTimes : null;
+    const labelCount = labelTimes ? labelTimes.length : 5;
     for (let i = 0; i < labelCount; i++) {
-      const t = t0 + span * i / (labelCount - 1);
-      const xx = ml + (t - (t0 - span * 0.04)) / (span * 1.08) * plotW;
+      const t = labelTimes ? Date.parse(labelTimes[i]) : t0 + span * i / (labelCount - 1);
+      const xx = labelTimes ? x(labelTimes[i]) : ml + (t - (t0 - span * 0.04)) / (span * 1.08) * plotW;
       const d = new Date(t);
       const text = (d.getMonth() + 1) + '-' + String(d.getDate()).padStart(2, '0') + ' ' +
         String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
