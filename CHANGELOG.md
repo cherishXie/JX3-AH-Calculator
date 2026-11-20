@@ -518,7 +518,3 @@ keep price updates from triggering app update UI
 ## 2026-11-19 · c2fcc69
 
 default to light theme
-
-## 2026-11-19 · 63fc2e1
-
-adapt 11-19 life skill level changes
