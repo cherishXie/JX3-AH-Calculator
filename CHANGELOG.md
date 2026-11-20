@@ -554,7 +554,3 @@ keep PWA assets in sync and add manual update check
 ## 2026-11-18 · b057fe1
 
 add branded boot loader with retry
-
-## 2026-11-18 · 42f3459
-
-add PWA auto-update prompt with release notes
