@@ -526,7 +526,3 @@ update JX3BOX prices
 ## 2026-11-19 · 872963e
 
 add horse grass gathering to Shennong
-
-## 2026-11-19 · 44e7edf
-
-use current-season 40 energy for gathering
