@@ -1,15 +1,28 @@
 {
   "channel": "web",
   "date": "2026-11-20",
-  "title": "物价走势发布 · 行情同步修复",
+  "title": "区服趋势 dev 预览",
   "notes": [
+    "新增「区服趋势」dev 预览：默认全部 275 项（含五行石）与 17 服；跨服按净广度排序，缺失报价留空、不补 0、不计入分母；支持区服多选、指定产物多选、8 个技艺 + 五行石矩阵、关键词提炼、单服主要变动与物价走势下钻",
     "新增「物价走势」：历史节点、全部技艺/类型、物品搜索/多选、价格分布、涨跌红黑榜与热力图",
     "价格分布默认指数，可切原始金币；支持散点、单品折线、按节点折叠原始数据与 PNG/CSV 导出",
     "修复 CDN 返回旧 version.json 时反复显示“行情更新中”；远程旧行情不再覆盖本地新数据；移动端无 Service Worker 时也能检查更新"
   ],
   "history": [
-    { "version": "67b2619", "date": "2026-11-20", "title": "行情同步与移动端更新检查" },
-    { "version": "59ab312", "date": "2026-11-20", "title": "物价走势正式发布" },
-    { "version": "6853028", "date": "2026-11-20", "title": "default all trend filters, mobile collapse and price check" }
+    {
+      "version": "67b2619",
+      "date": "2026-11-20",
+      "title": "行情同步与移动端更新检查"
+    },
+    {
+      "version": "59ab312",
+      "date": "2026-11-20",
+      "title": "物价走势正式发布"
+    },
+    {
+      "version": "6853028",
+      "date": "2026-11-20",
+      "title": "default all trend filters, mobile collapse and price check"
+    }
   ]
 }
