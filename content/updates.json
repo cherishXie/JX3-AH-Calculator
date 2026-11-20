@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "e1d46fa08e035abec6ba478e41b9fd76068ee183",
+  "sourceCommit": "f3a4d6a7a924d683fd4bcc95ba8be08d6ee12266",
   "date": "2026-11-20",
   "title": "新增行情检查时间",
   "notes": [
@@ -8,6 +8,11 @@
     "行情更新时间仍只在 JX3BOX 报价变化时更新"
   ],
   "history": [
+    {
+      "version": "f3a4d6a",
+      "date": "2026-11-20",
+      "title": "show separate market check time"
+    },
     {
       "version": "e1d46fa",
       "date": "2026-11-20",
@@ -32,11 +37,6 @@
       "version": "f19901c",
       "date": "2026-11-19",
       "title": "repair release notes json"
-    },
-    {
-      "version": "b6c3d2a",
-      "date": "2026-11-19",
-      "title": "support inline-string price sheets in Excel patcher"
     }
   ]
 }
