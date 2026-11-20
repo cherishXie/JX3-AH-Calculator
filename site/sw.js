@@ -16,7 +16,9 @@ const SHELL = [
   './assets/breakthrough-data.js',
   './assets/stones.js',
   './assets/charts.js',
+  './assets/access-data.js',
   './assets/profit.js',
+  './assets/landability.js',
   './assets/trends.js',
   './assets/app.js',
   './assets/install.css',
@@ -35,7 +37,10 @@ self.addEventListener('install', (event) => {
     }),
     // 价格数据单独放一个缓存：应用壳更新时仍保留，数据更新不触发 SW 升级。
     caches.open(DATA_CACHE).then((cache) => {
-      return cache.add(new Request('./assets/data.js', { cache: 'reload' }));
+      return Promise.all([
+        cache.add(new Request('./assets/data.js', { cache: 'reload' })),
+        cache.add(new Request('./assets/audit-data.js', { cache: 'reload' })).catch(() => {})
+      ]);
     }).catch(() => {})
   ]));
 });
@@ -76,19 +81,20 @@ self.addEventListener('fetch', (event) => {
 
   // 价格数据网络优先：后台更新只改 data.js，不新增 SW、不弹更新提示。
   // 离线时回退到上一次缓存的数据。
-  if (url.pathname.endsWith('/assets/data.js')) {
+  if (url.pathname.endsWith('/assets/data.js') || url.pathname.endsWith('/assets/audit-data.js')) {
     event.respondWith(
       fetch(request, { cache: 'no-cache' })
         .then((response) => {
           if (response.ok) {
             const copy = response.clone();
-            caches.open(DATA_CACHE).then((cache) => cache.put('./assets/data.js', copy)).catch(() => {});
+            const key = url.pathname.endsWith('/assets/audit-data.js') ? './assets/audit-data.js' : './assets/data.js';
+            caches.open(DATA_CACHE).then((cache) => cache.put(key, copy)).catch(() => {});
           }
           return response;
         })
         .catch(() => {
           return caches.open(DATA_CACHE)
-            .then((cache) => cache.match('./assets/data.js'))
+            .then((cache) => cache.match(url.pathname.endsWith('/assets/audit-data.js') ? './assets/audit-data.js' : './assets/data.js'))
             .then((hit) => hit || caches.match(request));
         })
     );

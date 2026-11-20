@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-11-20T19:23:37+08:00",
+  "updatedAt": "2026-11-20T23:07:14+08:00",
   "catalogVersion": "v3.6",
   "itemCount": 267,
   "servers": [
@@ -93,15 +93,37 @@
   ],
   "days": [
     {
+      "date": "2026-11-18",
+      "file": "days/2026-11-18.json",
+      "points": 3,
+      "baseAt": "2026-11-18T14:45:04+08:00",
+      "lastAt": "2026-11-18T23:36:00+08:00",
+      "catalogVersion": "v3.3",
+      "itemCount": 267,
+      "compacted": false,
+      "bytes": 91466
+    },
+    {
+      "date": "2026-11-19",
+      "file": "days/2026-11-19.json",
+      "points": 11,
+      "baseAt": "2026-11-19T08:54:53+08:00",
+      "lastAt": "2026-11-19T23:30:24+08:00",
+      "catalogVersion": "v3.3",
+      "itemCount": 267,
+      "compacted": false,
+      "bytes": 223506
+    },
+    {
       "date": "2026-11-20",
       "file": "days/2026-11-20.json",
-      "points": 9,
-      "baseAt": "2026-11-20T10:07:31+08:00",
-      "lastAt": "2026-11-20T19:23:37+08:00",
+      "points": 16,
+      "baseAt": "2026-11-20T09:26:06+08:00",
+      "lastAt": "2026-11-20T23:07:14+08:00",
       "catalogVersion": "v3.6",
       "itemCount": 267,
       "compacted": false,
-      "bytes": 139436
+      "bytes": 291566
     }
   ]
 }

@@ -19,7 +19,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const PRICE_HISTORY_SCHEMA = 1;
+export const PRICE_HISTORY_SCHEMA = 2;
 export const PRICE_HISTORY_TIMEZONE = 'Asia/Shanghai';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;

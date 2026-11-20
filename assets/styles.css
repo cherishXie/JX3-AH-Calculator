@@ -588,6 +588,8 @@ table.data.compact { font-size: 12px; }
 .price-state.user { color: var(--positive); border-color: color-mix(in srgb, var(--positive) 30%, transparent); }
 .price-state.seed { color: var(--muted); }
 .price-state.missing { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
+.price-state.ok { color: var(--positive); border-color: color-mix(in srgb, var(--positive) 30%, transparent); }
+.price-state.vendor { color: var(--info); border-color: color-mix(in srgb, var(--info) 30%, transparent); }
 
 .pos { color: var(--positive); }
 .neg { color: var(--danger); }
@@ -2177,3 +2179,6 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
   .profit-top10-card .card-head { flex-direction: column; }
 }
 html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fafc; }
+@media (max-width: 768px) {
+  .landability-kpis { grid-template-columns: 1fr 1fr; }
+}

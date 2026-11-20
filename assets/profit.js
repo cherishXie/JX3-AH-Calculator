@@ -6,6 +6,7 @@
     fmt: function (v, d) { return Number(v).toFixed(d == null ? 2 : d); }
   };
   const DATA = window.JX3Data || {};
+  const ACCESS = window.JX3Access || { items: {} };
   const TAX_DEFAULT = 0.05;
   const MAX_DEPTH = 4;
 
@@ -32,6 +33,19 @@
     return v > 0 ? v : null;
   }
 
+  function accessOf(itemId) {
+    return (ACCESS.items && ACCESS.items[itemId]) || null;
+  }
+
+  function vendorPrice(point, itemId) {
+    const a = accessOf(itemId);
+    if (!a || (a.t !== 'vendor' && !a.v)) return null;
+    const catalog = point && point.catalog ? Number(point.catalog[itemId]) : 0;
+    const item = itemById[itemId];
+    const price = catalog > 0 ? catalog : Number(item && item.base) || 0;
+    return price > 0 ? price : null;
+  }
+
   function taxRate(value) {
     const n = Number(value);
     return Number.isFinite(n) ? Math.max(0, Math.min(1, n)) : TAX_DEFAULT;
@@ -50,6 +64,14 @@
         ok: true, itemId: itemId, qty: qty, quote: market, purchase: true,
         cost: market * qty, energy: 0, selfCraft: false,
         chain: [{ itemId: itemId, qty: qty, quote: market, path: '购买', energy: 0 }]
+      };
+    }
+    const vendor = vendorPrice(point, itemId);
+    if (vendor != null) {
+      return {
+        ok: true, itemId: itemId, qty: qty, quote: vendor, purchase: true, vendor: true,
+        cost: vendor * qty, energy: 0, selfCraft: false,
+        chain: [{ itemId: itemId, qty: qty, quote: vendor, path: '商店', energy: 0 }]
       };
     }
     const recipe = recipeFor(itemId);
@@ -89,7 +111,7 @@
       return { ok: false, reason: '成品当前无本服报价', item: item, recipe: recipe, missing: 'output' };
     }
     const qty = out && out.qty ? out.qty : 1;
-    let cost = 0, extraEnergy = 0, selfCraft = false;
+    let cost = 0, extraEnergy = 0, selfCraft = false, vendorUsed = false;
     const chain = [];
     for (const m of (recipe.materials || [])) {
       const sub = build(m.item, point, m.qty, [itemId]);
@@ -99,6 +121,7 @@
       cost += sub.cost;
       extraEnergy += sub.energy;
       if (sub.selfCraft) selfCraft = true;
+      if (sub.vendor) vendorUsed = true;
       (sub.chain || []).forEach(function (row) { chain.push(row); });
     }
     chain.unshift({
@@ -113,8 +136,8 @@
       ok: true, item: item, recipe: recipe, qty: qty, sale: sale, gross: gross, net: net,
       cost: cost, fee: recipe.fee || 0, profit: profit, energy: energy,
       perEnergy: energy > 0 ? profit / energy : null,
-      purchase: !selfCraft, selfCraft: selfCraft,
-      chain: chain, path: selfCraft ? '含自造' : '购买可落地'
+      purchase: !selfCraft, selfCraft: selfCraft, vendorUsed: vendorUsed,
+      chain: chain, path: selfCraft ? '含自造' : (vendorUsed ? '商店+购买' : '购买可落地')
     };
   }
 
@@ -194,6 +217,8 @@
     season: season,
     taxRate: taxRate,
     quote: quote,
+    vendorPrice: vendorPrice,
+    accessOf: accessOf,
     recipeFor: recipeFor,
     item: function (id) { return itemById[id] || null; },
     evaluate: evaluate,

@@ -4,6 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 node scripts/sync-breakthrough-model.mjs
+node scripts/build-access-data.mjs
+node scripts/build-audit-data.mjs
 
 # 应用壳版本 = 除 data.js 外的静态资源哈希。
 # 只更新价格时 data.js 变了但壳版本不变，SW 不升级，也就不会弹 PWA 更新提示。
@@ -22,7 +24,9 @@ files = [
     'assets/breakthrough-data.js',
     'assets/stones.js',
     'assets/charts.js',
+    'assets/access-data.js',
     'assets/profit.js',
+    'assets/landability.js',
     'assets/trends.js',
     'assets/app.js',
     'assets/pwa.js',
@@ -142,7 +146,7 @@ for rel in re.findall(r"'(\./[^']+)'", sw):
 
 required = [
     'sw.js', 'manifest.webmanifest', 'version.json', 'updates.json',
-    'assets/app.js', 'assets/core.js', 'assets/stones.js', 'assets/data.js', 'assets/charts.js', 'assets/profit.js',
+    'assets/app.js', 'assets/core.js', 'assets/stones.js', 'assets/data.js', 'assets/charts.js', 'assets/access-data.js', 'assets/profit.js', 'assets/landability.js', 'assets/audit-data.js',
     'assets/styles.css', 'assets/pwa.css', 'assets/pwa.js', 'assets/install.css', 'assets/install.js',
     'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png',
     'prices.json', 'prices.csv', 'prices.html',
