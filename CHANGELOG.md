@@ -486,7 +486,3 @@ update JX3BOX prices
 ## 2026-11-19 · b190e05
 
 label the final ranked quest as the level-50 breakthrough and show the 50 endpoint
-
-## 2026-11-19 · b9cf614
-
-update JX3BOX prices
