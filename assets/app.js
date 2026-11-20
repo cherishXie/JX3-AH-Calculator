@@ -2357,7 +2357,7 @@
       chartFoot = trendScatterLegend(scatterResult, metric, ctx.selected);
     }
 
-    html += '<div class="grid section-gap">' +
+    html += '<div class="grid section-gap trend-main-grid">' +
       '<section class="card col-8 trend-chart-card">' +
         '<div class="card-head"><div class="card-head-main"><h2 class="card-title">节点物价走势</h2>' +
         '<p class="card-sub">' + U.esc(chartSub) + '<span class="mobile-only"> · 左右滑动查看</span></p></div>' +

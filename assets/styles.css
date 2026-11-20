@@ -1631,6 +1631,9 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .trend-chart-card .card-body { overflow: visible; }
 #chart-trend { overflow-x: auto; overflow-y: hidden; }
 .trend-chart-card .chart-svg { width: 100%; min-width: 600px; height: auto; }
+.trend-main-grid { align-items: stretch; }
+.trend-node-card { height: 100%; }
+.trend-node-card .table-wrap { flex: 1; }
 .trend-node-card .table-wrap { max-height: 360px; }
 .trend-node-table tbody tr { cursor: pointer; }
 .trend-node-table tbody tr:hover td { background: color-mix(in srgb, var(--text) 5%, transparent); }
