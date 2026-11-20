@@ -27,7 +27,9 @@
     lastFocus: null,
     lastPath: null,
     trendPickerOpen: false,
-    trendScroll: Object.create(null)
+    trendPickerQuery: '',
+    trendScroll: Object.create(null),
+    trendCenterKey: null
   };
 
   const EXCEL_DOWNLOADS = [
@@ -2086,6 +2088,13 @@
     html += '<option value="stone"' + (current === 'stone' ? ' selected' : '') + '>五行石</option>';
     return html;
   }
+  function trendAxisControls(mode, key) {
+    return '<div class="seg seg-sm trend-axis-seg">' +
+      '<button class="' + (mode === 'index' ? 'active' : '') + '" data-filter="' + key + '" data-value="index">指数</button>' +
+      '<button class="' + (mode === 'price' ? 'active' : '') + '" data-filter="' + key + '" data-value="price">原始金币</button>' +
+      '</div>' +
+      '<span class="info" tabindex="0" role="img" aria-label="价格指数说明" data-tip="价格指数 = 节点价格 ÷ 区间首点价格 × 100。100 表示与首点持平，120 表示上涨 20%，80 表示下跌 20%；原始金币使用对数坐标。">' + icon('info') + '</span>';
+  }
   function trendDefaultItem(T, items, points) {
     if (!items.length) return '';
     const preferred = items.filter(function (item) { return item.kind === 'product'; });
@@ -2188,12 +2197,8 @@
       type = defaultItem && defaultItem.kind === 'material' ? 'material' : 'product';
     }
     const priceRange = trendPriceRange(p);
-    const q = String(p.tq || '').trim();
     const allScope = T.items(type, skillId).map(function (item, index) {
       return Object.assign({}, item, { color: trendItemColor(index) });
-    }).filter(function (item) {
-      if (!q) return true;
-      return U.includes([item.name, item.skillName, item.skillNames || '', item.tierName || ''].join(' '), q);
     });
     const seriesMap = {};
     const scopeItems = [];
@@ -2242,7 +2247,8 @@
       selectedKeys: selectedKeys, selectedItems: selectedItems,
       rankedItems: rankedItems, focusKey: focusKey, focusItem: focusItemColored, focusSeries: focusSeries,
       seriesMap: seriesMap, priceRange: priceRange,
-      axisMode: p.taxis === 'price' ? 'price' : 'index'
+      distAxis: p.tdaxis === 'price' ? 'price' : 'index',
+      scatterAxis: p.tsaxis === 'price' ? 'price' : 'index'
     };
   }
   function trendHead() {
@@ -2261,8 +2267,6 @@
     const pickerOpen = ui.trendPickerOpen ? ' open' : '';
     const skill = ctx.skill;
     let html = '<section class="card trend-filter-card"><div class="card-body tight"><div class="trend-filter">';
-    html += '<div class="search-box trend-search">' + icon('search') +
-      '<input class="input" type="search" placeholder="搜索物品" value="' + U.esc(p.tq || '') + '" data-search="tq" data-fkey="search" aria-label="搜索物品"></div>';
     html += '<div class="trend-time-group">' +
       '<span class="trend-time-label">开始</span>' +
       '<input class="input trend-date" type="date" value="' + U.esc(fromDate) + '" min="' + U.esc(minDate) +
@@ -2294,10 +2298,6 @@
       '<span class="dim">–</span>' +
       '<input class="input trend-price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="最高" value="' + U.esc(p.tmax || '') + '" data-filter="tmax" aria-label="最高价格">' +
     '</div>';
-    html += '<div class="trend-filter-field"><span>纵轴</span><div class="seg seg-sm">' +
-      '<button class="' + (ctx.axisMode === 'index' ? 'active' : '') + '" data-filter="taxis" data-value="index">指数</button>' +
-      '<button class="' + (ctx.axisMode === 'price' ? 'active' : '') + '" data-filter="taxis" data-value="price">原始金币</button>' +
-      '</div></div>';
     html += '<details class="trend-picker"' + pickerOpen + '>' +
       '<summary class="trend-picker-summary" title="可多选物品，支持全选/清空"><span>物品 <em>多选</em></span><b>' + selectedCount + ' / ' + total + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel">' +
@@ -2306,22 +2306,24 @@
           '<button class="btn btn-sm" data-action="trend-select-none">清空</button>' +
           '<span class="tiny dim">已选 ' + selectedCount + ' / ' + total + '</span>' +
         '</div>' +
+        '<div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品" value="' + U.esc(ui.trendPickerQuery || '') + '" data-trend-picker-search data-fkey="trend-picker-search" aria-label="搜索物品"></div>' +
         '<div class="trend-picker-list">' +
-          (ctx.scopeItems.length ? ctx.scopeItems.map(function (item) {
+          (ctx.scopeItems.filter(function (item) {
+            const q = String(ui.trendPickerQuery || '').trim();
+            if (!q) return true;
+            return U.includes([item.name, item.skillName, item.skillNames || '', item.tierName || ''].join(' '), q);
+          }).map(function (item) {
             const checked = ctx.selectedKeys.indexOf(item.key) !== -1;
-            return '<label class="trend-check"><input type="checkbox" data-trend-item-toggle="' + U.esc(item.key) + '"' + (checked ? ' checked' : '') + '>' +
+            const searchText = [item.name, item.skillName, item.skillNames || '', item.tierName || ''].join(' ');
+            return '<label class="trend-check" data-picker-item data-picker-text="' + U.esc(searchText) + '"><input type="checkbox" data-trend-item-toggle="' + U.esc(item.key) + '"' + (checked ? ' checked' : '') + '>' +
               '<span class="trend-dot" style="--c:' + U.esc(item.color) + '"></span>' +
               '<span class="nm">' + U.esc(item.name) + '</span><span class="tier">' + U.esc(item.tierName) + '</span></label>';
-          }).join('') : '<span class="tiny dim">当前技艺/类型下没有物品</span>') +
+          }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
         '</div>' +
       '</div>' +
     '</details>';
     html += '<button class="btn btn-sm" data-action="trend-refresh" title="重新加载历史数据">' + icon('refresh') + '刷新</button>';
-    html += '</div>';
-    html += '<div class="trend-axis-help">' + (ctx.axisMode === 'index'
-      ? '价格指数 = 节点价格 ÷ 区间首点价格 × 100；100 表示与首点持平，120 表示上涨 20%，80 表示下跌 20%。切换到「原始金币」查看实际价格。'
-      : '原始金币按对数坐标展示实际价格，适合同时观察不同价位的物品。') + '</div>';
-    html += '</div></section>';
+    html += '</div></div></section>';
     return html;
   }
   function trendTierLegend(ctx, withFocus) {
@@ -2342,7 +2344,7 @@
   }
   function trendDistributionItems(ctx) {
     return ctx.rankedItems.map(function (item) {
-      const series = trendAxisSeries(ctx.seriesMap[item.key] || [], ctx.axisMode);
+      const series = trendAxisSeries(ctx.seriesMap[item.key] || [], ctx.distAxis);
       return {
         key: item.key, name: item.name, tierName: item.tierName, tierColor: item.tierColor, color: item.color,
         stats: trendPriceStats(series), focus: item.key === ctx.focusKey
@@ -2354,7 +2356,7 @@
     ctx.rankedItems.forEach(function (item, index) {
       const raw = ctx.seriesMap[item.key] || [];
       if (!raw.length) return;
-      const series = trendAxisSeries(raw, ctx.axisMode);
+      const series = trendAxisSeries(raw, ctx.scatterAxis);
       const first = raw[0].price;
       const n = series.length;
       series.forEach(function (point, j) {
@@ -2369,6 +2371,42 @@
       });
     });
     return rows;
+  }
+  function trendRankCard(ctx) {
+    const rows = [];
+    ctx.rankedItems.forEach(function (item) {
+      const series = ctx.seriesMap[item.key] || [];
+      if (series.length < 2) return;
+      const first = series[0].price;
+      const last = series[series.length - 1].price;
+      if (!(first > 0)) return;
+      rows.push({ item: item, change: (last / first - 1) * 100, last: last });
+    });
+    const up = rows.filter(function (row) { return row.change > 0; })
+      .sort(function (a, b) { return b.change - a.change; }).slice(0, 10);
+    const down = rows.filter(function (row) { return row.change < 0; })
+      .sort(function (a, b) { return a.change - b.change; }).slice(0, 10);
+    function list(items, direction) {
+      if (!items.length) {
+        return '<div class="trend-rank-empty">筛选范围内暂无' + (direction === 'up' ? '上涨' : '下跌') + '物品</div>';
+      }
+      return items.map(function (row, index) {
+        const cls = direction === 'up' ? 'pos' : 'neg';
+        return '<div class="trend-rank-row" tabindex="0" data-trend-focus="' + U.esc(row.item.key) + '">' +
+          '<span class="trend-rank-no">' + (index + 1) + '</span>' +
+          '<span class="trend-dot" style="--c:' + U.esc(row.item.color) + '"></span>' +
+          '<span class="trend-rank-name">' + U.esc(row.item.name) + '</span>' +
+          '<span class="trend-rank-change ' + cls + '">' + (row.change >= 0 ? '+' : '−') + U.fmt(Math.abs(row.change), 1) + '%</span>' +
+          '<span class="trend-rank-price">' + U.fmt(row.last, 2) + ' 金</span>' +
+          '</div>';
+      }).join('');
+    }
+    return '<section class="card col-12 trend-rank-card"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">涨跌红黑榜</h2></div><div class="card-tools"><span class="tiny dim">筛选范围内前 10</span></div></div>' +
+      '<div class="trend-rank-grid">' +
+        '<div class="trend-rank-col"><div class="trend-rank-head"><span class="pos">涨幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(up, 'up') + '</div>' +
+        '<div class="trend-rank-col"><div class="trend-rank-head"><span class="neg">跌幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(down, 'down') + '</div>' +
+      '</div></section>';
   }
   function trendHeatmap(ctx) {
     const items = ctx.rankedItems;
@@ -2414,7 +2452,8 @@
       '<h2 class="card-title">区间涨跌热力图</h2></div><div class="card-tools"><div class="trend-heat-legend">' +
       '<span class="item"><span class="swatch" style="--sw:rgba(69,212,131,.8)"></span>涨</span>' +
       '<span class="item"><span class="swatch" style="--sw:rgba(244,63,94,.8)"></span>跌</span>' +
-      '<span class="tiny dim">相对区间首点</span></div></div></div>' +
+      '<span class="tiny dim">相对区间首点</span>' +
+      '<button class="icon-btn" data-action="trend-download-chart" data-trend-label="区间涨跌热力图" title="下载图片" aria-label="下载热力图图片">' + icon('download') + '</button></div></div></div>' +
       '<div class="trend-heat-wrap" data-trend-scroll="heatmap"><table class="trend-heatmap">' + head + '<tbody>' + body + '</tbody></table></div></section>';
   }
   function trendDistributionCard(ctx) {
@@ -2425,11 +2464,12 @@
     }
     const width = Math.max(1100, items.length * 64);
     return '<section class="card col-12 trend-chart-card"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">价格分布</h2></div><div class="card-tools"><span class="tiny dim">' + items.length + ' 个物品</span></div></div>' +
+      '<h2 class="card-title">价格分布</h2></div><div class="card-tools">' + trendAxisControls(ctx.distAxis, 'tdaxis') + '<span class="tiny dim">' + items.length + ' 个物品</span>' +
+      '<button class="icon-btn" data-action="trend-download-chart" data-trend-label="价格分布" title="下载图片" aria-label="下载价格分布图片">' + icon('download') + '</button></div></div>' +
       '<div class="trend-chart-wrap" data-trend-scroll="distribution">' + Charts.priceDistribution(items, {
         palette: Charts.palette(ui.theme), width: width, height: 360, focusKey: ctx.focusKey,
-        log: ctx.axisMode === 'price',
-        axisLabel: ctx.axisMode === 'index' ? '价格指数（首点 = 100）' : '原始金币（对数）'
+        log: ctx.distAxis === 'price',
+        axisLabel: ctx.distAxis === 'index' ? '价格指数（首点 = 100）' : '原始金币（对数）'
       }) + '</div>' +
       '<div class="card-foot"><div class="chart-legend">' +
         '<span class="item"><span class="trend-whisker"></span>最低 / 最高</span>' +
@@ -2448,11 +2488,12 @@
     }
     const width = Math.max(1100, items.length * 64);
     return '<section class="card col-12 trend-chart-card"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">价格散点</h2></div><div class="card-tools"><span class="tiny dim">' + rows.length + ' 个节点</span></div></div>' +
+      '<h2 class="card-title">价格散点</h2></div><div class="card-tools">' + trendAxisControls(ctx.scatterAxis, 'tsaxis') + '<span class="tiny dim">' + rows.length + ' 个节点</span>' +
+      '<button class="icon-btn" data-action="trend-download-chart" data-trend-label="价格散点" title="下载图片" aria-label="下载价格散点图片">' + icon('download') + '</button></div></div>' +
       '<div class="trend-chart-wrap" data-trend-scroll="scatter">' + Charts.categoryScatter(rows, {
         palette: Charts.palette(ui.theme), items: items, width: width, height: 320, focusKey: ctx.focusKey,
-        log: ctx.axisMode === 'price',
-        axisLabel: ctx.axisMode === 'index' ? '价格指数（首点 = 100）' : '原始金币（对数）'
+        log: ctx.scatterAxis === 'price',
+        axisLabel: ctx.scatterAxis === 'index' ? '价格指数（首点 = 100）' : '原始金币（对数）'
       }) + '</div>' +
       '<div class="card-foot"><span class="spacer"></span><span>' + items.length + ' 个物品</span></div></section>';
   }
@@ -2466,7 +2507,8 @@
     const change = first > 0 ? (last.price / first - 1) * 100 : null;
     return '<section class="card col-12 trend-chart-card"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">物价变化 · ' + U.esc(ctx.focusItem.name) + '</h2></div><div class="card-tools">' +
-      '<span class="tiny dim">最新 ' + U.fmt(last.price, 2) + ' 金' + (change == null ? '' : ' · ' + (change >= 0 ? '+' : '−') + U.fmt(Math.abs(change), 1) + '%') + '</span></div></div>' +
+      '<span class="tiny dim">最新 ' + U.fmt(last.price, 2) + ' 金' + (change == null ? '' : ' · ' + (change >= 0 ? '+' : '−') + U.fmt(Math.abs(change), 1) + '%') + '</span>' +
+      '<button class="icon-btn" data-action="trend-download-chart" data-trend-label="物价变化" title="下载图片" aria-label="下载物价变化图片">' + icon('download') + '</button></div></div>' +
       '<div class="trend-chart-wrap" data-trend-scroll="line">' + Charts.priceLine(ctx.focusSeries, {
         palette: Charts.palette(ui.theme), width: 1100, height: 260, color: ctx.focusItem.color || ctx.focusItem.tierColor || '#64748B'
       }) + '</div>' +
@@ -2524,12 +2566,12 @@
     const view = ctx.view;
     if (!view || view.status === 'loading') {
       const extra = view && view.total ? '正在加载 ' + view.loaded + ' / ' + view.total + ' 天历史…' : '正在加载物价历史…';
-      return '<div class="page">' + trendHead() +
+      return '<div class="page trend-page">' + trendHead() +
         '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
         notice(extra, 'info') + '</div></section></div>' + dataFoot() + '</div>';
     }
     if (view.status === 'error') {
-      return '<div class="page">' + trendHead() +
+      return '<div class="page trend-page">' + trendHead() +
         '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
         notice('无法加载物价历史：' + U.esc(view.error || '未知错误') + '。历史文件只在联网时读取；离线或本地 file:// 打开时不可用。<br>' +
           '<button class="btn btn-sm" data-action="trend-retry">' + icon('refresh') + '重试</button>' +
@@ -2537,17 +2579,18 @@
         '</div></section></div>' + dataFoot() + '</div>';
     }
     if (!ctx.points.length) {
-      return '<div class="page">' + trendHead() + trendFilter(ctx, p) +
+      return '<div class="page trend-page">' + trendHead() + trendFilter(ctx, p) +
         '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
         emptyState('当前时间范围没有历史节点', '扩大日期/小时范围，或等待下一次价格变化。', '', 'clock') +
         '</div></section></div>' + dataFoot() + '</div>';
     }
-    let html = '<div class="page">' + trendHead();
+    let html = '<div class="page trend-page">' + trendHead();
     if (!DATA.servers.some(function (item) { return item.id === Store.state.serverId; })) {
       html += notice('当前是自定义服务器。物价历史只覆盖 JX3BOX 的内置 17 个区服，下面按当日基准价展示；切换到内置区服可看本服拍卖报价。', 'info');
     }
     html += trendFilter(ctx, p);
     html += '<div class="grid section-gap">' + trendHeatmap(ctx) + '</div>';
+    html += '<div class="grid section-gap">' + trendRankCard(ctx) + '</div>';
     html += '<div class="grid section-gap">' + trendDistributionCard(ctx) + '</div>';
     html += '<div class="grid section-gap">' + trendScatterCard(ctx) + '</div>';
     html += '<div class="grid section-gap">' + trendLineCard(ctx) + '</div>';
@@ -2555,6 +2598,98 @@
     html += dataFoot();
     html += '</div>';
     return html;
+  }
+  function trendFileName(label) {
+    return String(label || '图表').replace(/[\\/:*?"<>|]/g, '_') + '_' + server().name + '_' +
+      (new Date()).toISOString().slice(0, 10) + '.png';
+  }
+  function saveCanvas(canvas, filename) {
+    canvas.toBlob(function (blob) {
+      if (!blob) { toast('图片导出失败', 'error'); return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 3000);
+      toast('已导出图片');
+    }, 'image/png');
+  }
+  function downloadTrendChart(card, label) {
+    if (!card) return;
+    const svg = card.querySelector('svg.chart-svg');
+    if (svg) {
+      const vb = svg.viewBox && svg.viewBox.baseVal;
+      const width = Math.max(1, Math.round((vb && vb.width) || svg.clientWidth || 1200));
+      const height = Math.max(1, Math.round((vb && vb.height) || svg.clientHeight || 360));
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('width', width);
+      clone.setAttribute('height', height);
+      clone.style.width = width + 'px';
+      clone.style.height = height + 'px';
+      clone.style.fontFamily = getComputedStyle(svg).fontFamily || 'system-ui, sans-serif';
+      const source = new XMLSerializer().serializeToString(clone);
+      const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = function () {
+        const scale = 2;
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+        const c = canvas.getContext('2d');
+        c.setTransform(scale, 0, 0, scale, 0, 0);
+        c.fillStyle = Charts.palette(ui.theme).bg;
+        c.fillRect(0, 0, width, height);
+        c.drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        saveCanvas(canvas, trendFileName(label));
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        toast('图片导出失败', 'error');
+      };
+      img.src = url;
+      return;
+    }
+    const table = card.querySelector('.trend-heatmap');
+    if (!table) { toast('当前图表暂不支持图片导出', 'warn'); return; }
+    const P = Charts.palette(ui.theme);
+    const rows = Array.prototype.slice.call(table.rows);
+    const firstW = 210, colW = 138, rowH = 30, top = 42, left = 0;
+    const width = firstW + Math.max(1, (rows[0] ? rows[0].cells.length : 1) - 1) * colW + 12;
+    const height = rows.length * rowH + top + 10;
+    const scale = 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = width * scale; canvas.height = height * scale;
+    const c = canvas.getContext('2d');
+    c.setTransform(scale, 0, 0, scale, 0, 0);
+    c.fillStyle = P.bg; c.fillRect(0, 0, width, height);
+    c.font = '12px system-ui, -apple-system, sans-serif';
+    c.textBaseline = 'middle';
+    c.fillStyle = P.text;
+    c.font = '600 16px system-ui, -apple-system, sans-serif';
+    c.fillText(String(label || '区间涨跌热力图'), 8, 20);
+    rows.forEach(function (row, r) {
+      let x = left;
+      Array.prototype.forEach.call(row.cells, function (cell, ci) {
+        const w = ci === 0 ? firstW : colW;
+        const y = top + r * rowH;
+        const bg = cell.style.backgroundColor;
+        if (bg && bg !== 'transparent') { c.fillStyle = bg; c.fillRect(x, y, w, rowH); }
+        c.strokeStyle = P.grid; c.lineWidth = 1;
+        c.beginPath(); c.moveTo(x, y + rowH); c.lineTo(x + w, y + rowH); c.stroke();
+        c.fillStyle = r === 0 ? P.muted : P.text;
+        if (r === 0) c.font = '11px system-ui, -apple-system, sans-serif';
+        else c.font = '12px system-ui, -apple-system, sans-serif';
+        let text = String(cell.innerText || '').replace(/\s+/g, ' ').trim();
+        if (r === 0 && ci > 0) text = text.replace(/^\d{4}-/, '');
+        if (text.length > (ci === 0 ? 14 : 12)) text = text.slice(0, ci === 0 ? 14 : 12) + '…';
+        c.fillText(text, x + 8, y + rowH / 2 + 1);
+        x += w;
+      });
+    });
+    saveCanvas(canvas, trendFileName(label));
   }
   function trendExportContext() {
     const ctx = trendContext(params());
@@ -3780,6 +3915,7 @@
       }
       case 'trend-export-raw': csvTrendRaw(); break;
       case 'trend-export-series': csvTrendSeries(); break;
+      case 'trend-download-chart': downloadTrendChart(el.closest('.card'), el.getAttribute('data-trend-label')); break;
       case 'trend-select-all': updateParams({ titems: '' }); break;
       case 'trend-select-none': updateParams({ titems: '__none__' }); break;
       case 'export-csv': {
@@ -4025,7 +4161,8 @@
     const focusEl = e.target.closest('[data-trend-focus]');
     if (focusEl) {
       captureTrendScroll();
-      updateParams({ tfocus: focusEl.getAttribute('data-trend-focus') });
+      ui.trendCenterKey = focusEl.getAttribute('data-trend-focus');
+      updateParams({ tfocus: ui.trendCenterKey });
       return;
     }
     const chartEl = e.target.closest('.chart-bar[data-recipe], .chart-point[data-recipe]');
@@ -4115,6 +4252,9 @@
     }
     if (t.matches('[data-filter]')) {
       const key = t.getAttribute('data-filter');
+      if (key === 'tskill' || key === 'ttype' || key === 'tmin' || key === 'tmax' || key === 'tdaxis' || key === 'tsaxis') {
+        ui.trendPickerQuery = '';
+      }
       updateParams({ [key]: t.value });
       return;
     }
@@ -4198,6 +4338,17 @@
   }
   function onInput(e) {
     const t = e.target;
+    if (t.matches('[data-trend-picker-search]')) {
+      const panel = t.closest('.trend-picker-panel');
+      const q = t.value.trim();
+      ui.trendPickerQuery = t.value;
+      if (panel) {
+        panel.querySelectorAll('[data-picker-item]').forEach(function (label) {
+          label.hidden = !!q && !U.includes(label.getAttribute('data-picker-text') || '', q);
+        });
+      }
+      return;
+    }
     if (!t.matches('[data-search]')) return;
     if (e.isComposing || ui.composing) return;
     scheduleSearch(t);
@@ -4292,12 +4443,27 @@
     document.addEventListener('scroll', function (e) {
       const el = e.target;
       if (!el || !el.matches || !el.matches('[data-trend-scroll]')) return;
-      ui.trendScroll[el.getAttribute('data-trend-scroll')] = el.scrollLeft;
+      const key = el.getAttribute('data-trend-scroll');
+      ui.trendScroll[key] = el.scrollLeft;
+      if (key === 'distribution' || key === 'scatter') {
+        const other = key === 'distribution' ? 'scatter' : 'distribution';
+        const peer = document.querySelector('[data-trend-scroll="' + other + '"]');
+        if (peer && Math.abs(peer.scrollLeft - el.scrollLeft) > 1) {
+          peer.scrollLeft = el.scrollLeft;
+          ui.trendScroll[other] = el.scrollLeft;
+        }
+      }
     }, true);
     document.addEventListener('keydown', onKeydown);
     document.addEventListener('toggle', function (e) {
       if (e.target && e.target.classList && e.target.classList.contains('trend-picker')) {
         ui.trendPickerOpen = !!e.target.open;
+        if (!e.target.open) {
+          ui.trendPickerQuery = '';
+          const input = e.target.querySelector('[data-trend-picker-search]');
+          if (input) input.value = '';
+          e.target.querySelectorAll('[data-picker-item]').forEach(function (label) { label.hidden = false; });
+        }
       }
     }, true);
     document.addEventListener('pointerover', function (e) {
@@ -4382,11 +4548,32 @@
       ui.trendScroll[el.getAttribute('data-trend-scroll')] = el.scrollLeft;
     });
   }
+  function centerTrendKey(key) {
+    const safe = String(key || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const target = document.querySelector('[data-trend-scroll="distribution"] [data-trend-focus="' + safe + '"]') ||
+      document.querySelector('[data-trend-scroll="scatter"] [data-trend-focus="' + safe + '"]');
+    if (!target) return;
+    const wrap = target.closest('[data-trend-scroll]');
+    if (!wrap) return;
+    const wr = wrap.getBoundingClientRect();
+    const tr = target.getBoundingClientRect();
+    let left = wrap.scrollLeft + (tr.left - wr.left) - (wrap.clientWidth - tr.width) / 2;
+    left = Math.max(0, Math.min(wrap.scrollWidth - wrap.clientWidth, left));
+    document.querySelectorAll('[data-trend-scroll="distribution"], [data-trend-scroll="scatter"]').forEach(function (el) {
+      el.scrollLeft = left;
+      ui.trendScroll[el.getAttribute('data-trend-scroll')] = left;
+    });
+  }
   function restoreTrendScroll() {
     document.querySelectorAll('[data-trend-scroll]').forEach(function (el) {
       const value = ui.trendScroll[el.getAttribute('data-trend-scroll')];
       if (value) el.scrollLeft = value;
     });
+    if (ui.trendCenterKey) {
+      const key = ui.trendCenterKey;
+      ui.trendCenterKey = null;
+      centerTrendKey(key);
+    }
   }
 
   function render() {
@@ -4403,6 +4590,10 @@
     const pathChanged = route.path !== ui.lastPath;
 
     if (pathChanged) {
+      ui.trendPickerOpen = false;
+      ui.trendPickerQuery = '';
+      ui.trendScroll = Object.create(null);
+      ui.trendCenterKey = null;
       if (ui.drawer) {
         ui.drawer = null;
         document.body.classList.remove('has-drawer');

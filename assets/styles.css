@@ -1613,10 +1613,9 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 /* ------------------------------------------------------------------ */
 /* 物价走势                                                           */
 /* ------------------------------------------------------------------ */
-.trend-page-head { min-height: 0; margin-bottom: 0; }
+.page.trend-page { padding-top: 16px; }
+.trend-page-head { min-height: 0; margin: 0 0 20px; }
 .trend-filter-card .card-body { padding: 10px 14px; position: relative; }
-.trend-search .input { width: 160px; height: 28px; font-size: 11.5px; }
-.trend-axis-help { margin-top: 6px; font-size: 10.5px; line-height: 16px; color: var(--muted); }
 .trend-filter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .trend-filter-field { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--muted); white-space: nowrap; }
 .trend-filter-field .select { height: 28px; font-size: 11.5px; }
@@ -1652,12 +1651,15 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 }
 .trend-picker-actions { display: flex; align-items: center; gap: 6px; padding-bottom: 8px; border-bottom: 1px solid var(--border-soft); }
 .trend-picker-actions .tiny { margin-left: auto; }
-.trend-picker-list { max-height: 280px; overflow: auto; padding-top: 6px; }
+.trend-picker-search { padding: 7px 0 5px; }
+.trend-picker-search .input { width: 100%; height: 28px; font-size: 11.5px; }
+.trend-picker-list { max-height: 280px; overflow: auto; padding-top: 2px; }
 .trend-check {
   display: flex; align-items: center; gap: 7px; min-height: 28px; padding: 0 4px;
   font-size: 12px; color: var(--text); cursor: pointer; border-radius: 4px;
 }
 .trend-check:hover { background: var(--accent); }
+.trend-check[hidden] { display: none; }
 .trend-check input { accent-color: var(--chart-1); flex: none; }
 .trend-check .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .trend-check .tier { margin-left: auto; font-size: 10px; color: var(--muted); flex: none; }
@@ -1689,12 +1691,32 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .trend-chart-wrap { overflow-x: auto; overflow-y: hidden; padding: 4px 14px 8px; }
 .trend-chart-wrap .chart-svg { display: block; }
 .trend-chart-card .card-head { padding-bottom: 0; }
+.trend-chart-card .card-tools .info { display: inline-flex; align-items: center; color: var(--muted-2); cursor: help; }
+.trend-chart-card .card-tools .info svg { width: 13px; height: 13px; }
+.trend-axis-seg { flex: none; }
+.trend-axis-seg button { height: 24px; padding: 0 7px; font-size: 10.5px; }
+
+.trend-rank-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border-soft); }
+.trend-rank-col { padding: 10px 18px 14px; min-width: 0; }
+.trend-rank-col + .trend-rank-col { border-left: 1px solid var(--border-soft); }
+.trend-rank-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 0 4px 6px; font-size: 12px; font-weight: 600; }
+.trend-rank-head .pos { color: var(--positive); }
+.trend-rank-head .neg { color: var(--danger); }
+.trend-rank-row { display: flex; align-items: center; gap: 8px; min-height: 30px; padding: 4px 4px; border-bottom: 1px solid var(--border-soft); cursor: pointer; border-radius: 4px; }
+.trend-rank-row:last-child { border-bottom: 0; }
+.trend-rank-row:hover { background: var(--accent); }
+.trend-rank-no { width: 18px; flex: none; text-align: right; font-size: 10px; color: var(--muted-2); font-variant-numeric: tabular-nums; }
+.trend-rank-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+.trend-rank-change { width: 58px; flex: none; text-align: right; font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.trend-rank-price { width: 70px; flex: none; text-align: right; font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.trend-rank-empty { padding: 14px 4px; font-size: 11px; color: var(--muted-2); }
 .trend-whisker { display: inline-block; width: 2px; height: 12px; background: var(--muted); position: relative; }
 .trend-whisker::before, .trend-whisker::after { content: ""; position: absolute; left: -3px; width: 8px; height: 1px; background: var(--muted); }
 .trend-whisker::before { top: 0; }
 .trend-whisker::after { bottom: 0; }
 .trend-avg { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--text); border: 1px solid var(--bg); }
 .trend-ring-label { display: inline-flex; align-items: center; gap: 6px; }
+.trend-rank-card .card-head { padding-bottom: 8px; }
 .trend-raw-details { padding: 0; }
 .trend-raw-summary {
   display: flex; align-items: center; gap: 10px; padding: 15px 18px; cursor: pointer;
@@ -1709,6 +1731,8 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .trend-raw-body .table-wrap { border-top: 1px solid var(--border-soft); }
 
 @media (max-width: 900px) {
+  .trend-rank-grid { grid-template-columns: 1fr; }
+  .trend-rank-col + .trend-rank-col { border-left: 0; border-top: 1px solid var(--border-soft); }
 }
 @media (max-width: 768px) {
   .trend-filter { align-items: flex-start; }
@@ -1717,8 +1741,6 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
   .trend-date { flex: 1; width: auto; min-width: 0; }
   .trend-hour { flex: none; }
   .trend-filter-field { flex: 1 1 100%; }
-  .trend-search { flex: 1 1 100%; }
-  .trend-search .input { width: 100%; }
   .trend-picker { flex: 1 1 100%; }
   .trend-picker-summary { width: 100%; justify-content: space-between; }
   .trend-picker-panel { position: static; width: auto; max-width: none; margin-top: 6px; box-shadow: none; }

@@ -18,6 +18,9 @@ const DATA = {
   ],
   stones: [
     { level: 6, itemId: 'stone_6', name: '五行石（六级）', base: 500 }
+  ],
+  recipes: [
+    { skillId: 's2', materials: [{ item: 'i2', qty: 1 }], outputs: [{ item: 'i3', qty: 1 }] }
   ]
 };
 const day = {
@@ -123,6 +126,8 @@ assert.equal(T._test.items('material').length, 1);
 assert.equal(T._test.items('product').length, 2);
 assert.equal(T._test.items('stone').length, 1);
 assert.equal(T._test.items('all', 's1').length, 2);
+assert.ok(T._test.items('material', 's2').some((item) => item.id === 'i2'), '材料按配方用途归入多个技艺');
+assert.ok(T._test.items('material', 's1').some((item) => item.id === 'i2'));
 assert.equal(T._test.atText(points[0].at), '2026-11-20 10:00');
 
 // 小时范围：起始取整点，结束包含该小时的 59:59.999；日期-only 结束取整天。
