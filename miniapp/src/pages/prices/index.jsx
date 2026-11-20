@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text, Input, Picker, Textarea } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
@@ -14,7 +15,7 @@ import { syncRemotePrices } from '../../shared/remotePrices';
 import { isCloudConfigured } from '../../shared/cloudConfig';
 import { fmt, fmtPct, fmtTime } from '../../shared/format';
 
-export default function Prices() {
+function Prices() {
   const [state, actions] = useStore();
   const [q, setQ] = useState('');
   const [skillId, setSkillId] = useState('');
@@ -208,3 +209,5 @@ export default function Prices() {
     </View>
   );
 }
+
+export default withTheme(Prices);

@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text, Input, Picker } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
@@ -23,7 +24,7 @@ function quantile(arr, q) {
   return a[base] + (a[base + 1] != null ? (a[base + 1] - a[base]) * rest : 0);
 }
 
-export default function Analysis() {
+function Analysis() {
   const [state, actions] = useStore();
   const [type, setType] = useState('all');
   const [skillId, setSkillId] = useState('');
@@ -357,3 +358,5 @@ export default function Analysis() {
     </View>
   );
 }
+
+export default withTheme(Analysis);

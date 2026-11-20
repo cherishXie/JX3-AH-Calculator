@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
@@ -15,7 +16,7 @@ import { useStore, getState } from '../../store';
 import { DATA, rowsOf, statsOf, simulate, median, avg, sortRows } from '../../shared/engine';
 import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
 
-export default function Overview() {
+function Overview() {
   const [state, actions] = useStore();
   const [type, setType] = useState('all');
 
@@ -209,3 +210,5 @@ export default function Overview() {
     </View>
   );
 }
+
+export default withTheme(Overview);

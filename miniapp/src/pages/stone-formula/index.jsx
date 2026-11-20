@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useState } from 'react';
 import { View, Text, Input, Picker } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
@@ -42,7 +43,7 @@ function draftOf(recipe) {
   };
 }
 
-export default function StoneFormula() {
+function StoneFormula() {
   const router = useRouter();
   const params = router.params || {};
   const id = params.id || null;
@@ -293,3 +294,5 @@ export default function StoneFormula() {
     </View>
   );
 }
+
+export default withTheme(StoneFormula);

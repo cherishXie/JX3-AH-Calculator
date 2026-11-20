@@ -93,7 +93,7 @@ cat dist/weapp/app.json    # navigationBarTitleText 应为「精力做什么」
 2. 打开开发者工具 → **导入项目**。
 3. 目录选 **`miniapp/`**（推荐，读取 `project.config.json` 里的 `miniprogramRoot: dist/weapp/`），或直接选 **`miniapp/dist/weapp/`**。
 4. AppID 填你自己的；后端服务选「不使用云服务」。
-5. 编译后应看到暗色「总览」页，底部 **5 个 Tab：总览 / 技艺 / 价格 / 分析 / 五行石**。
+5. 编译后应看到亮色「总览」页（默认亮色，可切换暗色），底部 **5 个 Tab：总览 / 技艺 / 价格 / 分析 / 五行石**。
 
 **常见导入错误**：
 
@@ -249,7 +249,7 @@ wechatide -c DSH get_simulator_console --project "$(pwd)" --command "grep -i err
 是。改名、五行石页改的都是 `miniapp/src`，必须 `npm run build:weapp` 才会进入 `dist/weapp`。
 
 **Q：构建体积多大？**
-微信约 **1.26 MB**（10 页 / 5 Tab），小红书约 **1.02 MB**（7 页 / 4 Tab），都远低于 2 MB；头像 12 KB。
+微信约 **1.27 MB**（10 页 / 5 Tab），小红书约 **1.04 MB**（7 页 / 4 Tab），都远低于 2 MB；头像 12 KB。
 
 **Q：`sitemap.json` 要配吗？**
 官方全局配置文档已标注 `sitemap.json` 下线，当前不需要配置；开发者工具若提示可忽略。

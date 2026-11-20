@@ -13,30 +13,30 @@ if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index', 'pag
 PAGES.push('pages/breakthrough/index', 'pages/recipe/index', 'pages/settings/index');
 
 const TAB_LIST = [
-  { pagePath: 'pages/overview/index', text: '总览', iconPath: 'assets/tabs/home.png', selectedIconPath: 'assets/tabs/home-on.png' },
-  { pagePath: 'pages/skills/index', text: '技艺', iconPath: 'assets/tabs/skills.png', selectedIconPath: 'assets/tabs/skills-on.png' },
-  { pagePath: 'pages/prices/index', text: '价格', iconPath: 'assets/tabs/prices.png', selectedIconPath: 'assets/tabs/prices-on.png' },
-  { pagePath: 'pages/analysis/index', text: '分析', iconPath: 'assets/tabs/analysis.png', selectedIconPath: 'assets/tabs/analysis-on.png' }
+  { pagePath: 'pages/overview/index', text: '总览', iconPath: 'assets/tabs/home-light.png', selectedIconPath: 'assets/tabs/home-on-light.png' },
+  { pagePath: 'pages/skills/index', text: '技艺', iconPath: 'assets/tabs/skills-light.png', selectedIconPath: 'assets/tabs/skills-on-light.png' },
+  { pagePath: 'pages/prices/index', text: '价格', iconPath: 'assets/tabs/prices-light.png', selectedIconPath: 'assets/tabs/prices-on-light.png' },
+  { pagePath: 'pages/analysis/index', text: '分析', iconPath: 'assets/tabs/analysis-light.png', selectedIconPath: 'assets/tabs/analysis-on-light.png' }
 ];
 
 if (IS_WEAPP) {
-  TAB_LIST.push({ pagePath: 'pages/stones/index', text: '五行石', iconPath: 'assets/tabs/stones.png', selectedIconPath: 'assets/tabs/stones-on.png' });
+  TAB_LIST.push({ pagePath: 'pages/stones/index', text: '五行石', iconPath: 'assets/tabs/stones-light.png', selectedIconPath: 'assets/tabs/stones-on-light.png' });
 }
 
 export default {
   pages: PAGES,
   window: {
     backgroundTextStyle: 'dark',
-    navigationBarBackgroundColor: '#020817',
+    navigationBarBackgroundColor: '#f5f5f5',
     navigationBarTitleText: '精力做什么',
-    navigationBarTextStyle: 'white',
-    backgroundColor: '#020817'
+    navigationBarTextStyle: 'black',
+    backgroundColor: '#f5f5f5'
   },
   tabBar: {
-    color: '#94A3B8',
-    selectedColor: '#F8FAFC',
-    backgroundColor: '#0F172A',
-    borderStyle: 'black',
+    color: '#64748B',
+    selectedColor: '#0F172A',
+    backgroundColor: '#FFFFFF',
+    borderStyle: 'white',
     list: TAB_LIST
   }
 };

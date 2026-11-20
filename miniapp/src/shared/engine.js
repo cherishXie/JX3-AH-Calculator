@@ -53,7 +53,9 @@ export function seedState() {
       craftEnergy: 100,
       basis: 'market',
       taxRate: 0.05,
-      taxRateVersion: 1
+      taxRateVersion: 1,
+      theme: 'light',
+      themeVersion: 1
     },
     seq: { item: 1, recipe: 1 }
   };
