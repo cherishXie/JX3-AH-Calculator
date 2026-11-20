@@ -18,7 +18,10 @@
     loadingDays: Object.create(null),
     indexError: null,
     dayError: null,
-    lastLoadedAt: 0
+    lastLoadedAt: 0,
+    viewCache: Object.create(null),
+    viewCacheOrder: [],
+    dataVersion: 0
   };
 
   const skillMap = {};
@@ -159,9 +162,9 @@
       try { fn(); } catch (err) { if (window.console) console.error(err); }
     });
   }
-  function fetchJson(url) {
+  function fetchJson(url, cacheMode) {
     if (typeof fetch !== 'function') return Promise.reject(new Error('当前浏览器不支持 fetch'));
-    return fetch(url, { cache: 'no-cache' }).then(function (res) {
+    return fetch(url, { cache: cacheMode || 'no-cache' }).then(function (res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
     });
@@ -175,6 +178,7 @@
       state.index = index;
       state.lastLoadedAt = Date.now();
       state.loadingIndex = null;
+      clearViewCache();
       notify();
       return index;
     }).catch(function (err) {
@@ -187,12 +191,19 @@
   }
 
   function loadDays(dates) {
+    const allDates = state.index && state.index.days ? state.index.days.map(function (d) { return d.date; }).sort() : [];
+    const lastDate = allDates.length ? allDates[allDates.length - 1] : '';
+    const pending = [];
     dates.forEach(function (date) {
-      if (state.days[date] || state.loadingDays[date]) return;
-      state.loadingDays[date] = fetchJson(historyUrl('days/' + date + '.json')).then(function (day) {
+      if (state.days[date]) return;
+      if (state.loadingDays[date]) { pending.push(state.loadingDays[date]); return; }
+      const cacheMode = lastDate && date < lastDate ? 'force-cache' : 'no-cache';
+      const p = fetchJson(historyUrl('days/' + date + '.json'), cacheMode).then(function (day) {
         state.days[date] = day;
         delete state.loadingDays[date];
         state.dayError = null;
+        state.dataVersion++;
+        clearViewCache();
         notify();
         return day;
       }).catch(function (err) {
@@ -201,7 +212,30 @@
         notify();
         throw err;
       });
+      state.loadingDays[date] = p;
+      pending.push(p);
     });
+    return Promise.allSettled(pending);
+  }
+
+  function clearViewCache() {
+    state.viewCache = Object.create(null);
+    state.viewCacheOrder = [];
+  }
+
+  function cacheView(key, value) {
+    if (!key) return value;
+    if (state.viewCache[key]) {
+      const idx = state.viewCacheOrder.indexOf(key);
+      if (idx >= 0) state.viewCacheOrder.splice(idx, 1);
+    }
+    state.viewCache[key] = value;
+    state.viewCacheOrder.push(key);
+    while (state.viewCacheOrder.length > 6) {
+      const old = state.viewCacheOrder.shift();
+      if (old) delete state.viewCache[old];
+    }
+    return value;
   }
 
   function applyServerDelta(target, delta, serverId) {
@@ -544,13 +578,20 @@
       };
     }
     const missing = dates.filter(function (date) { return !state.days[date]; });
+    const cacheKey = serverId + '|' + (opts.from || '') + '|' + (opts.to || '') + '|' + state.dataVersion;
+    if (!missing.length && state.viewCache[cacheKey]) return state.viewCache[cacheKey];
     if (missing.length) {
       loadDays(missing);
+      const meta = (state.index.days || []).filter(function (d) { return dates.indexOf(d.date) >= 0; });
+      const bytesTotal = meta.reduce(function (n, d) { return n + (Number(d.bytes) || 0); }, 0);
+      const bytesLoaded = meta.reduce(function (n, d) { return n + (state.days[d.date] ? (Number(d.bytes) || 0) : 0); }, 0);
       return {
         status: 'loading', index: state.index, dates: dates,
         from: placeholderFrom, to: placeholderTo,
         allFrom: allFrom, allTo: allTo,
-        loaded: dates.length - missing.length, total: dates.length
+        loaded: dates.length - missing.length, total: dates.length,
+        daysLoaded: dates.length - missing.length, daysTotal: dates.length,
+        bytesLoaded: bytesLoaded, bytesTotal: bytesTotal
       };
     }
     const allPoints = buildPoints(serverId, dates.map(function (date) { return state.days[date]; }));
@@ -573,11 +614,21 @@
     if (toMs > allToMs) toMs = allToMs;
     if (fromMs > toMs) { const tmp = fromMs; fromMs = toMs; toMs = tmp; }
     const points = slicePoints(allPoints, fromMs, toMs);
-    return {
+    const result = {
       status: 'ready', index: state.index, dates: dates, points: points,
       from: hourText(fromMs), to: hourText(toMs),
       allFrom: allFrom, allTo: allTo
     };
+    return cacheView(cacheKey, result);
+  }
+
+  function prefetch(opts) {
+    opts = opts || {};
+    return loadIndex().then(function (index) {
+      let dates = (index.days || []).map(function (d) { return d.date; }).sort();
+      if (opts.lastOnly && dates.length) dates = [dates[dates.length - 1]];
+      return loadDays(dates);
+    }).catch(function () {});
   }
 
   function reset() {
@@ -587,6 +638,8 @@
     state.loadingDays = Object.create(null);
     state.indexError = null;
     state.dayError = null;
+    state.dataVersion++;
+    clearViewCache();
   }
   function refresh() {
     reset();
@@ -618,6 +671,7 @@
     reset: reset,
     refresh: refresh,
     retry: retry,
+    prefetch: prefetch,
     state: state,
     _test: {
       buildPoints: buildPoints,

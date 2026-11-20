@@ -2958,14 +2958,33 @@
     return html;
   }
 
+  function historyLoadingCard(view, title) {
+    const total = Number(view && (view.daysTotal || view.total)) || 0;
+    const loaded = Number(view && (view.daysLoaded || view.loaded)) || 0;
+    const pct = total ? Math.max(4, Math.min(100, Math.round(loaded / total * 100))) : 6;
+    const bytesTotal = Number(view && view.bytesTotal) || 0;
+    const bytesLoaded = Number(view && view.bytesLoaded) || 0;
+    const kb = function (n) {
+      if (!n) return '0 KB';
+      return n >= 1024 * 1024 ? (n / 1024 / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+    };
+    const indexReady = !!(view && view.index);
+    const stepText = !indexReady ? '正在读取历史索引…' : (total ? '历史文件 ' + loaded + ' / ' + total + ' 天' : '正在读取历史索引…');
+    return '<div class="grid section-gap"><section class="card col-12 history-loading-card">' +
+      '<div class="history-loading-main"><span class="history-spinner" aria-hidden="true"></span><div>' +
+      '<h2 class="card-title">正在加载' + U.esc(title || '物价历史') + '</h2>' +
+      '<p class="card-sub">' + U.esc(stepText) + '，首次约 ' + (bytesTotal ? kb(bytesTotal) : '数百 KB') + '；之后走浏览器缓存，不需要重复下载。</p>' +
+      '</div></div>' +
+      '<div class="history-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="history-loading-meta"><span>索引 ' + (indexReady ? '✓' : '…') + '</span><span>历史 ' + (total ? loaded + '/' + total + ' 天' : '…') + '</span><span>已读 ' + (bytesLoaded ? kb(bytesLoaded) : '0 KB') + '</span><span>' + pct + '%</span></div>' +
+      '</section></div>';
+  }
+
   function renderTrends(p) {
     const ctx = trendContext(p);
     const view = ctx.view;
     if (!view || view.status === 'loading') {
-      const extra = view && view.total ? '正在加载 ' + view.loaded + ' / ' + view.total + ' 天历史…' : '正在加载物价历史…';
-      return '<div class="page trend-page">' + trendHead() +
-        '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
-        notice(extra, 'info') + '</div></section></div>' + dataFoot() + '</div>';
+      return '<div class="page trend-page">' + trendHead() + historyLoadingCard(view, '物价走势') + dataFoot() + '</div>';
     }
     if (view.status === 'error') {
       return '<div class="page trend-page">' + trendHead() +
@@ -3339,7 +3358,13 @@
     const views = servers.map(function (s) { return T.view(s.id, { from: range.from, to: range.to }); });
     const loading = views.filter(function (v) { return v.status === 'loading'; });
     if (loading.length) {
-      return { status: 'loading', range: range, total: loading.length, loaded: views.length - loading.length };
+      const first = loading[0] || {};
+      return {
+        status: 'loading', range: range, total: loading.length, loaded: views.length - loading.length,
+        daysLoaded: first.daysLoaded || 0, daysTotal: first.daysTotal || 0,
+        bytesLoaded: first.bytesLoaded || 0, bytesTotal: first.bytesTotal || 0,
+        index: first.index || null
+      };
     }
     const failed = views.filter(function (v) { return v.status === 'error'; })[0];
     if (failed) return { status: 'error', error: failed.error || '物价历史加载失败', range: range };
@@ -3933,7 +3958,7 @@
   function renderServerItemTrends(p) {
     const ctx = serverItemBuild(p);
     if (!ctx || ctx.status === 'loading') {
-      return '<div class="page trend-page server-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('正在加载物品与区服行情…', 'info') + '</div></div>' + dataFoot() + '</div>';
+      return '<div class="page trend-page server-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p) + historyLoadingCard(ctx, '区服趋势 · 物品视角') + dataFoot() + '</div>';
     }
     if (ctx.status === 'error') {
       return '<div class="page trend-page server-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('无法加载物品行情：' + U.esc(ctx.error || '未知错误'), 'info') + '</div></div>' + dataFoot() + '</div>';
@@ -3963,7 +3988,7 @@
     if (p.sview === 'item') return renderServerItemTrends(p);
     const ctx = serverBuild(p);
     if (!ctx || ctx.status === 'loading') {
-      return '<div class="page">' + serverHead(ctx) + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('正在加载区服行情与历史节点…', 'info') + '</div></div>' + dataFoot() + '</div>';
+      return '<div class="page">' + serverHead(ctx) + serverViewSwitch(p) + historyLoadingCard(ctx, '区服趋势') + dataFoot() + '</div>';
     }
     if (ctx.status === 'error') {
       return '<div class="page">' + serverHead(ctx) + serverViewSwitch(p) + '<div class="card"><div class="card-body">' + notice('无法加载区服行情：' + U.esc(ctx.error || '未知错误'), 'info') + '</div></div>' + dataFoot() + '</div>';
@@ -6141,6 +6166,7 @@
   }
 
   function boot() {
+    let trendPrefetchAt = 0;
     Store.init();
     if (Stone && Stone.ensure) Stone.ensure();
     ui.theme = settings().theme === 'light' ? 'light' : 'dark';
@@ -6162,6 +6188,16 @@
       });
     }
     bindEvents();
+    const prefetchTrends = function (e) {
+      const a = e.target && e.target.closest ? e.target.closest('a[href*="#/trends"],a[href*="#/server-trends"]') : null;
+      if (!a || !window.JX3Trends || !window.JX3Trends.prefetch) return;
+      const now = Date.now();
+      if (now - trendPrefetchAt < 3000) return;
+      trendPrefetchAt = now;
+      window.JX3Trends.prefetch({ lastOnly: a.getAttribute('href').indexOf('/server-trends') >= 0 });
+    };
+    document.addEventListener('pointerover', prefetchTrends, { passive: true });
+    document.addEventListener('pointerdown', prefetchTrends, { passive: true });
     renderSkeleton();
     setTimeout(dataSyncTick, isDevDeployment() ? 1200 : 5000);
     document.addEventListener('visibilitychange', function () {

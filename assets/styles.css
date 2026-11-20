@@ -2182,3 +2182,22 @@ html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fa
 @media (max-width: 768px) {
   .landability-kpis { grid-template-columns: 1fr 1fr; }
 }
+
+/* 物价历史加载进度 */
+.history-loading-card { padding: 18px 20px 16px; }
+.history-loading-main { display: flex; align-items: flex-start; gap: 12px; }
+.history-loading-main .card-title { margin: 0 0 4px; }
+.history-spinner {
+  width: 18px; height: 18px; flex: 0 0 18px; margin-top: 3px; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--positive) 30%, transparent);
+  border-top-color: var(--positive);
+  animation: history-spin .8s linear infinite;
+}
+@keyframes history-spin { to { transform: rotate(360deg); } }
+.history-progress { height: 6px; margin-top: 14px; border-radius: 999px; background: var(--accent-2); overflow: hidden; }
+.history-progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--positive), #2AA5B8); transition: width .25s ease; }
+.history-loading-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; font-size: 10.5px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+@media (max-width: 768px) {
+  .history-loading-card { padding: 14px; }
+  .history-loading-meta { gap: 10px; font-size: 10px; }
+}
