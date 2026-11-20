@@ -113,7 +113,7 @@ export function buildServerTrends(state, trendData, selectedIds, range) {
     return b.score - a.score;
   });
   if (!servers.length) {
-    return { servers: [], rank: [], items: items, globalUp: 0, globalDown: 0, globalBreadth: null, positive: 0, negative: 0, columns: [] };
+    return { servers: [], rank: [], items: items, globalUp: 0, globalDown: 0, globalBreadth: null, positive: 0, negative: 0, columns: [], skills: [] };
   }
   const globalReturns = [];
   servers.forEach(function (s) { s.returns.forEach(function (r) { globalReturns.push(r); }); });
