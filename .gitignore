@@ -32,3 +32,4 @@ project.private.config.json
 
 # local Excel build intermediates
 /build/
+minitool/release.json
