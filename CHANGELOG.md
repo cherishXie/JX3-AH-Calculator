@@ -562,7 +562,3 @@ update JX3BOX prices
 ## 2026-11-18 · db43a8f
 
 stop tracking generated delivery zip
-
-## 2026-11-18 · 2b981ad
-
-note workflow scope for gh
