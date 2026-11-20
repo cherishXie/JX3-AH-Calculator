@@ -16,6 +16,7 @@ BRANCH="${BRANCH:-main}"
 REMOTE="${REMOTE:-origin}"
 
 node scripts/test-changelog.mjs
+node scripts/test-price-history.mjs
 node scripts/sync-breakthrough-model.mjs
 node scripts/test-breakthrough.cjs
 ./scripts/build-minitool.sh
@@ -27,7 +28,7 @@ if [ "$#" -gt 0 ]; then
   COMMIT_PATHS=("$@")
 else
   COMMIT_PATHS=(
-    index.html sw.js manifest.webmanifest icons assets minitool site content miniapp brand docs screenshots scripts
+    index.html sw.js manifest.webmanifest icons assets minitool site content data miniapp brand docs screenshots scripts
     .github README.md MINITOOL.md DEPLOY.md LICENSE .gitignore .gitattributes
     AGENTS.md "剑网三物价助手-minitool.zip"
   )

@@ -16,6 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { spawnSync } from 'node:child_process';
+import { recordPriceSnapshot, shanghaiTimestamp } from './lib/price-history.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const args = process.argv.slice(2);
@@ -239,20 +240,7 @@ async function main() {
     return;
   }
 
-  const stampDate = new Date();
-  const stampFmt = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Shanghai',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hourCycle: 'h23'
-  });
-  const stampParts = {};
-  for (const part of stampFmt.formatToParts(stampDate)) stampParts[part.type] = part.value;
-  const priceStamp = `${stampParts.year}-${stampParts.month}-${stampParts.day}T${stampParts.hour}:${stampParts.minute}:${stampParts.second}+08:00`;
+  const priceStamp = shanghaiTimestamp();
   const primaryCoverage = serverCoverage[primaryId] || { updated: 0, total: data.items.length, filtered: 0, noQuote: 0 };
   data.meta.priceUpdatedAt = priceStamp;
   data.meta.stonePriceUpdatedAt = priceStamp;
@@ -262,6 +250,28 @@ async function main() {
 
   writeData(data);
   console.log(`已写入 assets/data.js、miniapp/src/shared/catalog.json、minitool/assets/data.js（${priceStamp}）`);
+
+  try {
+    const history = recordPriceSnapshot({
+      root: ROOT,
+      data,
+      at: priceStamp,
+      requestedServerIds: servers.map((server) => server.id),
+      serverCoverage,
+      source: 'update',
+      force: true,
+    });
+    if (history.created) {
+      console.log(`已建立当日物价历史 ${path.relative(ROOT, history.file)}（${priceStamp}）`);
+    } else if (history.appended) {
+      console.log(`已追加物价历史 ${path.relative(ROOT, history.file)}（${history.changed} 项变化）`);
+    } else {
+      console.log('物价历史已是最新，未追加快照。');
+    }
+  } catch (err) {
+    console.error(`[error] 写入物价历史失败：${err.stack || err.message}`);
+    process.exitCode = 1;
+  }
 
   if (!NO_ZIP) {
     const zip = path.join(ROOT, '剑网三物价助手-minitool.zip');

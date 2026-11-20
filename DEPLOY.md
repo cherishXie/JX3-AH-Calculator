@@ -157,6 +157,8 @@ cd _site && python3 -m http.server 8940
 
 价格更新由 **Cloudflare Worker Cron** 全天每 30 分钟 :06 / :36（北京时间）触发 `update-jx3-prices.yml` 的 `workflow_dispatch`，不再依赖 GitHub 的 `schedule`，也不限制 00:00–08:00。更新 `assets/data.js`、`minitool/assets/data.js`、`miniapp/src/shared/catalog.json` 并提交；提交完成后通过 `workflow_run` 自动触发 `deploy.yml`，同步 Pages 和小工具 zip。Cloudflare Worker 的配置与部署见 `cloudflare/price-cron/README.md`。
 
+价格有变化时还会追加 `data/price-history/` 的按日 JSON。它随 Pages 发布在 `/price-history/`，可用 `node scripts/price-history.mjs` 回溯/导出；结构和命令见 `data/price-history/README.md`。
+
 ## 常见问题
 
 - **Pages 404**：确认 Settings → Pages 的 Source 是 “GitHub Actions”；确认 deploy job 成功；首次发布等 1–2 分钟。

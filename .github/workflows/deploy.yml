@@ -42,6 +42,7 @@ jobs:
       - name: Validate release scripts and breakthrough calculations
         run: |
           node scripts/test-changelog.mjs
+          node scripts/test-price-history.mjs
           node scripts/sync-breakthrough-model.mjs
           node scripts/test-breakthrough.cjs
           ./scripts/build-minitool.sh

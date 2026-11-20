@@ -43,10 +43,29 @@ node scripts/update-jx3-prices.mjs --dry-run
   - `assets/data.js`（含 `serverPrices`）
   - `miniapp/src/shared/catalog.json`
   - `minitool/assets/data.js`
+  - `data/price-history/`（价格有变化时）
   - `剑网三物价助手-minitool.zip`
 - 价格更新不再修改 `seedVersion`；`seedVersion` 只随配方目录/结构变化，避免每次价格更新都触发本地数据迁移。
 - 价格与上次完全一致时：不写文件、不重打 zip、不产生提交，避免每日空提交和 PWA 更新提示；
 - 只有价格发生变化时才更新 `priceUpdatedAt`；时间统一按 `Asia/Shanghai` 生成。
+
+## 物价历史 JSON（回溯 / 二次分析）
+
+每次价格更新会把各服有效报价写入 `data/price-history/`，用于回溯某个区服、某个时间点的物价：
+
+- `index.json`：日期、快照点数、区服索引；
+- `days/YYYY-MM-DD.json`：当天第一个变化点的完整 `base`，后续只追加变化增量；
+- 未发生价格变化的行情检查不写历史，因此也不会产生空提交；
+- 除各服报价外，还保存当日目录基准价（`catalogPrices`），本服无报价时可用它还原实际收益口径。
+
+```bash
+node scripts/price-history.mjs list
+node scripts/price-history.mjs as-of 2026-11-20T12:00 --server 梦江南
+node scripts/price-history.mjs series --server 梦江南 --item 蜂王浆 --from 2026-11-20
+node scripts/price-history.mjs export --server 梦江南 --from 2026-11-20 --effective --out /tmp/mj.csv
+```
+
+`--effective` 导出会用基准价补齐本服无报价物品，并标注价格来源，适合按时间点重算产出物收益。完整结构、字段和 `reindex` / `compact` 维护命令见 [`data/price-history/README.md`](../data/price-history/README.md)。
 
 ## 定时任务
 

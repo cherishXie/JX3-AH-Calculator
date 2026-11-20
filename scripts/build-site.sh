@@ -47,6 +47,11 @@ rm -rf _site
 mkdir -p _site/icons _site/downloads
 cp index.html _site/index.html
 cp -R assets _site/assets
+# 物价历史 JSON（供回溯/二次分析；页面本身不加载）
+if [ -d data/price-history ]; then
+  cp -R data/price-history _site/price-history
+  find _site/price-history -name '.DS_Store' -delete
+fi
 # Excel 物价订阅：prices.json / prices.csv / prices.html
 node scripts/build-excel-prices.mjs _site
 if [ -f "excel/物价刷新.iqy" ]; then
@@ -142,6 +147,8 @@ required = [
     'downloads/剑网3技艺收益与突破.xlsm', 'downloads/jx3-excel.xlsm',
     'downloads/剑网3技艺收益与突破-auto.xlsx', 'downloads/jx3-excel-auto.xlsx',
 ]
+if (root / 'price-history').is_dir():
+    required.append('price-history/index.json')
 for rel in required:
     if not (root / rel).exists():
         missing.append(rel)

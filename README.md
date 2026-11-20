@@ -203,6 +203,16 @@ node scripts/update-jx3-prices.mjs --dry-run   # 预览
 
 支持 cron 定时执行；用法、样本阈值和注意事项见 [scripts/README.md](scripts/README.md)。
 
+每次价格变化还会写入 `data/price-history/` 的按日 JSON（当天完整基线 + 后续增量），可回溯各服各时间点报价。查询和导出：
+
+```bash
+node scripts/price-history.mjs list
+node scripts/price-history.mjs as-of 2026-11-20T12:00 --server 梦江南
+node scripts/price-history.mjs export --server 梦江南 --from 2026-11-20 --effective --out /tmp/mj.csv
+```
+
+`--effective` 会用当日基准价补齐本服无报价物品，并标注“本服报价 / 基准价”，方便按历史物价重算产出物收益。结构与字段见 [data/price-history/README.md](data/price-history/README.md)。
+
 ### 小红书小工具离线包
 
 另提供符合小红书小工具容器规范的离线 H5 zip：`剑网三物价助手-minitool.zip`。它把 Web 版适配为纯离线经典脚本、容器 Storage、无下载/无外链/无剪贴板的形态；构建源与校验结果见 [MINITOOL.md](MINITOOL.md)。
@@ -220,6 +230,8 @@ index.html                 入口
 assets/styles.css          设计令牌 + 布局 + 组件 + 响应式
 assets/data.js             苍生铸世 50 级种子数据（技能/物品/配方/服务器/来源）
 scripts/update-jx3-prices.mjs  JX3BOX 自动更新价格并重打 minitool zip
+scripts/price-history.mjs  查询/导出各服历史物价
+data/price-history/        按日保存的物价历史 JSON（base + 变化增量）
 scripts/build-breakthrough-data.mjs  生成突破升级数据（配方/经验/精力/突破材料/各服价），并同步 Web / 小程序 / 小工具
 .github/workflows/          每日自动更新工作流（可选）
 assets/core.js             状态、localStorage、价格种子、成本递归、路由
