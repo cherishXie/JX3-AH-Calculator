@@ -814,7 +814,7 @@
       svg += '<text x="' + (ml - 8) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
         U.esc(U.fmt(v, v < 1 ? 2 : v < 100 ? 1 : 0)) + '</text>';
     }
-    svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">单价（金）</text>';
+    svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">' + U.esc(opts.yLabel || '单价（金）') + '</text>';
     data.forEach(function (point, i) {
       if (i === 0) return;
       const prev = data[i - 1];
@@ -846,6 +846,60 @@
     return svg;
   }
 
+
+  function profitLine(series, opts) {
+    opts = opts || {};
+    const P = opts.palette || DARK;
+    const data = (series || []).filter(function (p) { return Number.isFinite(Number(p.price)); });
+    if (!data.length) return emptyChart(opts.width || 1000, opts.height || 250, opts.emptyText || '当前区间没有可落地节点', P);
+    const width = opts.width || 1000, height = opts.height || 250;
+    const ml = 64, mr = 22, mt = 22, mb = 44;
+    const plotW = width - ml - mr, plotH = height - mt - mb;
+    const values = data.map(function (p) { return Number(p.price); });
+    let minV = Math.min.apply(null, values.concat([0]));
+    let maxV = Math.max.apply(null, values.concat([0]));
+    if (!(maxV > minV)) { maxV = minV + 1; minV -= 1; }
+    const pad = (maxV - minV) * 0.12;
+    minV -= pad; maxV += pad;
+    const y = function (v) { return mt + plotH - ((v - minV) / (maxV - minV)) * plotH; };
+    const times = data.map(function (p) { return Date.parse(p.at); });
+    let t0 = Math.min.apply(null, times), t1 = Math.max.apply(null, times);
+    if (t1 <= t0) t1 = t0 + 3600000;
+    const x = function (at) { return ml + (Date.parse(at) - t0) / (t1 - t0) * plotW; };
+    let svg = '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" style="width:' + width + 'px;max-width:none" role="img" aria-label="' + attr(opts.ariaLabel || '精力收益走势') + '">';
+    svg += '<rect width="' + width + '" height="' + height + '" fill="' + P.bg + '"/>';
+    for (let i = 0; i <= 4; i++) {
+      const v = minV + (maxV - minV) * i / 4;
+      const yy = y(v);
+      svg += '<line x1="' + ml + '" y1="' + yy.toFixed(1) + '" x2="' + (width - mr) + '" y2="' + yy.toFixed(1) + '" stroke="' + P.grid + '" stroke-width="1"/>';
+      svg += '<text x="' + (ml - 8) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' + U.esc(U.fmt(v, 2)) + '</text>';
+    }
+    if (minV < 0 && maxV > 0) {
+      svg += '<line x1="' + ml + '" y1="' + y(0).toFixed(1) + '" x2="' + (width - mr) + '" y2="' + y(0).toFixed(1) + '" stroke="' + P.axis + '" stroke-dasharray="3 3"/>';
+    }
+    svg += '<text x="' + ml + '" y="' + (mt - 7) + '" font-size="10" fill="' + P.muted + '">' + U.esc(opts.yLabel || '金 / 精力') + '</text>';
+    data.forEach(function (point, i) {
+      if (i === 0) return;
+      const prev = data[i - 1];
+      svg += '<line x1="' + x(prev.at).toFixed(1) + '" y1="' + y(prev.price).toFixed(1) + '" x2="' + x(point.at).toFixed(1) + '" y2="' + y(point.price).toFixed(1) + '" stroke="' + (opts.color || COLOR.craft) + '" stroke-width="1.9" stroke-linejoin="round"/>';
+    });
+    data.forEach(function (point, i) {
+      const cx = x(point.at), cy = y(point.price);
+      const tip = String(point.at || '').replace('T', ' ') + ' · ' + U.fmt(point.price, 2) + ' 金/精力';
+      svg += '<circle class="chart-point" tabindex="0" cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + (i === data.length - 1 ? 4.2 : 3.2) + '" fill="' + (opts.color || COLOR.craft) + '" fill-opacity=".9" data-tip="' + attr(tip) + '" aria-label="' + attr(tip) + '"/>';
+    });
+    const labelCount = data.length <= 8 ? data.length : 5;
+    for (let i = 0; i < labelCount; i++) {
+      const point = data[data.length <= 8 ? i : Math.round(i * (data.length - 1) / 4)];
+      const cx = x(point.at);
+      const d = new Date(Date.parse(point.at));
+      const text = (d.getMonth() + 1) + '-' + String(d.getDate()).padStart(2, '0') + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      svg += '<text x="' + cx.toFixed(1) + '" y="' + (height - mb + 16) + '" text-anchor="middle" font-size="10" fill="' + P.muted + '">' + U.esc(text) + '</text>';
+    }
+    svg += '</svg>';
+    return svg;
+  }
+
   window.JX3Charts = {
     palette: palette,
     color: COLOR,
@@ -859,6 +913,7 @@
     priceDistribution: priceDistribution,
     categoryScatter: categoryScatter,
     priceLine: priceLine,
+    profitLine: profitLine,
     emptyChart: emptyChart
   };
 })();

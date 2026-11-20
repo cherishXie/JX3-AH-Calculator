@@ -2055,3 +2055,125 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .server-page .server-page-sub { display: none; }
 .server-page .page-head { min-height: 0; margin: 8px 0 14px; align-items: center; }
 .server-page .server-view-switch { margin: 0 0 14px; }
+
+/* ------------------------------------------------------------------ */
+/* 制作收益 · 物价 / 精力收益比 Tab                                     */
+/* ------------------------------------------------------------------ */
+.profit-page-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 14px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--accent);
+}
+.profit-page-tabs button {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 26px;
+  padding: 0 14px;
+  cursor: pointer;
+}
+.profit-page-tabs button.on {
+  background: var(--card);
+  color: var(--foreground);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
+}
+.profit-hero-card .card-head { align-items: flex-start; }
+.profit-season {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.profit-status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  line-height: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.profit-status.ok { color: var(--positive); background: rgba(69, 212, 131, .12); }
+.profit-status.missing { color: var(--warning); background: rgba(245, 158, 11, .12); }
+.profit-summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.profit-summary .profit-main { display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; }
+.profit-summary .profit-main .big { font-size: 34px; line-height: 38px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.profit-summary .profit-main .unit { font-size: 11px; color: var(--muted-foreground); margin-bottom: 5px; }
+.profit-stats { display: grid; grid-template-columns: repeat(4, minmax(100px, 1fr)); gap: 8px; flex: 1; min-width: 360px; }
+.profit-stats > div { border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; background: var(--panel); }
+.profit-stats span { display: block; font-size: 10px; color: var(--muted-foreground); }
+.profit-stats b { display: block; margin-top: 3px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.profit-feasibility {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: 1px solid rgba(69, 212, 131, .24);
+  background: rgba(69, 212, 131, .06);
+  border-radius: 6px;
+  padding: 7px 9px;
+  margin: 4px 0 10px;
+  font-size: 10px;
+  color: var(--muted-foreground);
+}
+.profit-feasibility .ok { color: var(--positive); font-weight: 600; }
+.profit-feasibility.miss { border-color: rgba(245, 158, 11, .3); background: rgba(245, 158, 11, .06); }
+.profit-feasibility .miss { color: var(--warning); font-weight: 600; }
+.profit-chart-wrap { border: 1px solid var(--border); border-radius: 6px; background: var(--card); overflow-x: auto; }
+.profit-chart-wrap .chart-svg { display: block; }
+.profit-legend { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 10px; color: var(--muted-foreground); margin-top: 7px; }
+.profit-legend i { display: inline-block; width: 9px; height: 3px; border-radius: 1px; margin-right: 4px; vertical-align: 1px; }
+.profit-empty { padding: 30px 14px; text-align: center; font-size: 11px; color: var(--muted-foreground); }
+.profit-table-wrap { width: 100%; overflow-x: auto; border-top: 1px solid var(--border); }
+.profit-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; font-variant-numeric: tabular-nums; }
+.profit-table th, .profit-table td { height: 28px; padding: 0 9px; border-bottom: 1px solid var(--border); white-space: nowrap; text-align: right; }
+.profit-table th:first-child, .profit-table td:first-child,
+.profit-table th:nth-child(2), .profit-table td:nth-child(2) { text-align: left; }
+.profit-table thead th { font-size: 10px; color: var(--muted-foreground); font-weight: 500; background: var(--accent); }
+.profit-table tbody tr:hover { background: var(--accent-2); }
+.profit-table tr[data-profit-pick] { cursor: pointer; }
+.profit-note { border-top: 1px solid var(--border); padding: 7px 14px 9px; font-size: 9.5px; color: var(--muted-foreground); }
+.profit-skill-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.profit-skill-tabs button {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted-foreground);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 10px;
+  cursor: pointer;
+}
+.profit-skill-tabs button.on { background: var(--accent); color: var(--text); font-weight: 600; }
+.profit-top10-card .card-head { align-items: flex-start; gap: 10px; }
+.profit-top10-card .card-tools { max-width: 100%; }
+
+@media (max-width: 760px) {
+  .profit-page-tabs { width: 100%; }
+  .profit-page-tabs button { flex: 1; }
+  .profit-stats { grid-template-columns: 1fr 1fr; min-width: 0; width: 100%; }
+  .profit-summary .profit-main .big { font-size: 28px; line-height: 32px; }
+  .profit-chart-wrap .chart-svg { min-width: 680px; }
+  .profit-table { min-width: 640px; }
+  .profit-top10-card .card-head { flex-direction: column; }
+}
+html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fafc; }

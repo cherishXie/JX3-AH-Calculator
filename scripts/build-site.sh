@@ -22,6 +22,7 @@ files = [
     'assets/breakthrough-data.js',
     'assets/stones.js',
     'assets/charts.js',
+    'assets/profit.js',
     'assets/trends.js',
     'assets/app.js',
     'assets/pwa.js',
@@ -141,7 +142,7 @@ for rel in re.findall(r"'(\./[^']+)'", sw):
 
 required = [
     'sw.js', 'manifest.webmanifest', 'version.json', 'updates.json',
-    'assets/app.js', 'assets/core.js', 'assets/stones.js', 'assets/data.js', 'assets/charts.js',
+    'assets/app.js', 'assets/core.js', 'assets/stones.js', 'assets/data.js', 'assets/charts.js', 'assets/profit.js',
     'assets/styles.css', 'assets/pwa.css', 'assets/pwa.js', 'assets/install.css', 'assets/install.js',
     'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png',
     'prices.json', 'prices.csv', 'prices.html',

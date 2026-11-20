@@ -30,6 +30,9 @@
     trendPickerQuery: '',
     trendFilterOpen: false,
     trendRankAllOpen: false,
+    trendTab: 'price',
+    serverItemTab: 'price',
+    profitSkill: '',
     serverPickerOpen: false,
     serverProductPickerOpen: false,
     serverProductQuery: '',
@@ -2674,6 +2677,161 @@
         '<button class="btn btn-sm" data-action="trend-export-raw">' + icon('download') + '原始 CSV</button>' +
       '</div>' + (nodeHtml || emptyState('当前筛选没有原始数据', '换一个技艺、类型或时间范围。', '', 'filter')) + '</div></details>';
   }
+  /* ------------------------------------------------------------------ */
+  /* 制作收益：落地校验                                           */
+  /* ------------------------------------------------------------------ */
+  function profitSkillList() {
+    return (DATA.skills || []).filter(function (s) { return s.type === 'craft'; });
+  }
+  function profitSkillName(id) {
+    const s = (DATA.skills || []).filter(function (x) { return x.id === id; })[0];
+    return s ? s.name : '技艺';
+  }
+  function profitTabs(active, kind) {
+    const price = active !== 'profit';
+    const a = kind === 'server' ? 'data-server-item-tab' : 'data-trend-tab';
+    return '<div class="profit-tabbar" role="tablist" aria-label="物价与制作收益">' +
+      '<button class="' + (price ? 'on' : '') + '" role="tab" aria-selected="' + (price ? 'true' : 'false') + '" ' + a + '="price">物价</button>' +
+      '<button class="' + (!price ? 'on' : '') + '" role="tab" aria-selected="' + (!price ? 'true' : 'false') + '" ' + a + '="profit">精力收益比</button>' +
+      '</div>';
+  }
+  function profitStatus(ev) {
+    if (!ev) return { cls: 'missing', label: '不可核价' };
+    if (ev.ok) return { cls: 'ok', label: ev.purchase ? '购买可落地' : '含自造 · 额外精力' };
+    if (ev.missing === 'output') return { cls: 'missing', label: '无产出报价' };
+    return { cls: 'missing', label: '不可核价' };
+  }
+  function profitSigned(v) {
+    if (v == null || !Number.isFinite(v)) return '—';
+    return (v >= 0 ? '+' : '−') + U.fmt(Math.abs(v), 2);
+  }
+  function profitStatusHtml(ev) {
+    const st = profitStatus(ev);
+    return '<span class="profit-status ' + st.cls + '">' + st.label + '</span>';
+  }
+  function profitSeasonBadge() {
+    if (!window.JX3Profit) return '';
+    return '<span class="profit-season">' + U.esc(window.JX3Profit.season.label) + ' · 当前赛季</span>';
+  }
+  function profitSkillTabs(skillId, selected) {
+    return '<div class="profit-skill-tabs">' + profitSkillList().map(function (s) {
+      return '<button class="' + (s.id === selected ? 'on' : '') + '" data-profit-skill="' + U.esc(s.id) + '">' + U.esc(s.name) + '</button>';
+    }).join('') + '</div>';
+  }
+  function profitTop10Html(skillId, point, kind, focusItemId) {
+    const P = window.JX3Profit;
+    if (!P || !point) return '';
+    const skill = skillId || (profitSkillList()[0] && profitSkillList()[0].id);
+    const rows = P.skillTop(skill, point, currentTaxRate(), 10);
+    let html = '<section class="card col-12 profit-top10-card"><div class="card-head"><div><h2 class="card-title">同技艺 Top10 · ' + U.esc(profitSkillName(skill)) + '</h2><p class="card-sub">只统计当前区服、当前节点可落地的产物</p></div><div class="card-tools">' + profitSkillTabs(skill, skill) + '</div></div>';
+    if (!rows.length) {
+      html += '<div class="card-body">' + emptyState('当前技艺没有可落地产物', '一线材料缺报价或无产出报价时不会进入榜单。', '', 'chart') + '</div></section>';
+      return html;
+    }
+    html += '<div class="profit-table-wrap"><table class="data compact profit-table"><thead><tr><th class="num">#</th><th>产物</th><th class="num">精力收益</th><th class="num">单次利润</th><th class="num">总精力</th><th>路径</th><th>关键瓶颈</th></tr></thead><tbody>';
+    rows.forEach(function (ev, i) {
+      const self = ev.chain.filter(function (r) { return !r.root && r.path === '含自造'; })[0];
+      const bottleneck = self ? (P.item(self.itemId) || {}).name || '—' : '—';
+      html += '<tr data-profit-pick="' + U.esc('item:' + ev.item.id) + '" data-profit-kind="' + kind + '"><td class="num dim">' + (i + 1) + '</td><td>' + U.esc(ev.item.name) + '</td><td class="num pos">' + U.fmt(ev.perEnergy, 2) + '</td><td class="num ' + (ev.profit >= 0 ? 'pos' : 'neg') + '">' + profitSigned(ev.profit) + '</td><td class="num">' + U.fmt(ev.energy, 0) + '</td><td>' + U.esc(ev.path) + '</td><td class="dim">' + U.esc(bottleneck) + '</td></tr>';
+    });
+    html += '</tbody></table></div><div class="profit-note">按可落地精力收益排序；同分按总精力升序。点击行可切换产物。</div></section>';
+    return html;
+  }
+  function trendProfitSection(ctx, p) {
+    const P = window.JX3Profit;
+    const item = ctx.focusItem;
+    if (!P || !item) {
+      return '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' + emptyState('请选择一个产物', '制作收益只支持有当前赛季配方的产物。', '', 'filter') + '</div></section></div>';
+    }
+    if (item.kind === 'stone' || !P.recipeFor(item.id)) {
+      return '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' + emptyState('该物品不是可制作产物', '请选择当前赛季制造配方产出的产物。', '', 'filter') + '</div></section></div>';
+    }
+    const tax = currentTaxRate();
+    const hist = P.history(item.id, ctx.points, tax);
+    const feasible = hist.filter(function (r) { return r.ev.ok; });
+    const latest = hist.length ? hist[hist.length - 1] : null;
+    const lastOk = feasible.length ? feasible[feasible.length - 1] : null;
+    const series = feasible.map(function (r) { return { at: r.at, price: r.ev.perEnergy }; });
+    const current = (latest && latest.ev) || (lastOk && lastOk.ev) || null;
+    const status = profitStatus(current);
+    let html = '<div class="grid section-gap">';
+    html += '<section class="card col-12 profit-hero-card"><div class="card-head"><div><h2 class="card-title">制作收益 · ' + U.esc(item.name) + '</h2><p class="card-sub">购买优先、缺货自造；自造精力计入总精力；不使用基准价补齐</p></div><div class="card-tools">' + profitSeasonBadge() + profitStatusHtml(current) + '</div></div><div class="card-body">';
+    html += '<div class="profit-summary">' +
+      '<div class="profit-main"><span class="big ' + (current && current.ok && current.perEnergy >= 0 ? 'pos' : 'neg') + '">' + (current && current.ok ? U.fmt(current.perEnergy, 2) : '—') + '</span><span class="unit">金 / 精力</span><span class="profit-status ' + status.cls + '">' + status.label + '</span></div>' +
+      '<div class="profit-stats">' +
+        '<div><span>单次利润</span><b class="' + (current && current.ok && current.profit >= 0 ? 'pos' : 'neg') + '">' + (current && current.ok ? profitSigned(current.profit) + ' 金' : '—') + '</b></div>' +
+        '<div><span>总精力</span><b>' + (current && current.ok ? U.fmt(current.energy, 0) + ' 点' : '—') + '</b></div>' +
+        '<div><span>材料成本</span><b>' + (current && current.ok ? U.fmt(current.cost, 2) + ' 金' : '—') + '</b></div>' +
+        '<div><span>税后产出</span><b>' + (current && current.ok ? U.fmt(current.net, 2) + ' 金' : '—') + '</b></div>' +
+      '</div></div>';
+    if (current && current.ok) {
+      html += '<div class="profit-feasibility"><span class="ok">' + U.esc(current.purchase ? '购买可落地' : '含自造可落地') + '</span><span>材料报价 ' + (current.purchase ? '全部有报价' : '缺货材料已自造') + '</span><span>配方 ' + U.esc(current.recipe.name) + ' · ' + U.fmt(current.recipe.energy, 0) + ' 精力</span><span>税率 ' + U.fmtPct(tax, 1) + '</span></div>';
+    } else {
+      html += '<div class="profit-feasibility miss"><span class="miss">' + U.esc(current ? current.reason : '当前节点不可核价') + '</span><span>缺价材料不会被当作可购买，不用基准价补齐</span></div>';
+    }
+    html += '<div class="trend-chart-wrap profit-chart-wrap">' + (series.length ? Charts.profitLine(series, { palette: Charts.palette(ui.theme), width: 1100, height: 250, color: '#61DDAA', yLabel: '金 / 精力', ariaLabel: '精力收益走势' }) : '<div class="profit-empty">当前区间没有可落地节点</div>') + '</div>';
+    html += '<div class="profit-legend"><span><i style="background:#61DDAA"></i>可落地节点 ' + feasible.length + ' / ' + hist.length + '</span><span>缺口 = 缺报价/不可核价</span></div>';
+    html += '</section>';
+    // chain
+    if (current && current.ok) {
+      html += '<section class="card col-12"><div class="card-head"><div><h2 class="card-title">材料链与获取路径</h2><p class="card-sub">购买优先；中间品缺价才自造，自造精力计入总精力</p></div></div><div class="profit-table-wrap"><table class="data compact profit-table"><thead><tr><th>层级</th><th>物品</th><th class="num">数量</th><th class="num">本服报价</th><th>采用路径</th><th class="num">额外精力</th></tr></thead><tbody>' + current.chain.map(function (row) {
+        const it = P.item(row.itemId);
+        return '<tr><td>' + (row.root ? '成品' : row.path === '含自造' ? '中间品' : '材料') + '</td><td>' + U.esc(it ? it.name : row.itemId) + '</td><td class="num">' + U.fmt(row.qty, 0) + '</td><td class="num">' + (row.quote == null ? '—' : U.fmt(row.quote, 2)) + '</td><td>' + U.esc(row.path) + '</td><td class="num">' + U.fmt(row.energy || 0, 0) + '</td></tr>';
+      }).join('') + '</tbody></table></div></section>';
+    }
+    // top10 point
+    const point = (latest && latest.point) || (lastOk && lastOk.point) || ctx.points[ctx.points.length - 1];
+    const skill = ui.profitSkill || item.skillId || (profitSkillList()[0] || {}).id;
+    html += profitTop10Html(skill, point, 'trend', item.id);
+    html += '</div>';
+    return html;
+  }
+  function serverItemProfitSection(ctx) {
+    const P = window.JX3Profit;
+    const item = ctx.item;
+    if (!P || !item) return '';
+    if (item.kind === 'stone' || !P.recipeFor(item.id)) {
+      return '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' + emptyState('该物品不是可制作产物', '请选择当前赛季制造配方产出的产物。', '', 'filter') + '</div></section></div>';
+    }
+    const tax = currentTaxRate();
+    const cross = P.crossServer(item.id, ctx.servers, ctx.columns, tax);
+    const currentServer = ctx.servers.filter(function (s) { return s.id === Store.state.serverId; })[0] || ctx.servers[0] || null;
+    const curPoint = currentServer && currentServer.points && currentServer.points.length ? currentServer.points[currentServer.points.length - 1] : null;
+    const curEv = curPoint ? P.evaluate(item.id, curPoint, tax) : null;
+    const st = profitStatus(curEv);
+    const best = cross.feasible.slice().sort(function (a, b) { return b.ev.perEnergy - a.ev.perEnergy; })[0];
+    let html = '<div class="grid section-gap">';
+    html += '<section class="card col-12 profit-hero-card"><div class="card-head"><div><h2 class="card-title">制作收益 · ' + U.esc(item.name) + '</h2><p class="card-sub">同一物品、同一筛选；只统计可落地区服，缺价区服不补基准价</p></div><div class="card-tools">' + profitSeasonBadge() + '<span class="profit-status ' + (cross.feasibleCount ? 'ok' : 'missing') + '">' + cross.feasibleCount + ' / ' + cross.total + ' 服可落地</span></div></div><div class="card-body">';
+    html += '<div class="profit-summary"><div class="profit-main"><span class="big ' + (cross.median != null && cross.median >= 0 ? 'pos' : 'neg') + '">' + (cross.median != null ? U.fmt(cross.median, 2) : '—') + '</span><span class="unit">金 / 精力 · 跨服中位</span></div><div class="profit-stats">' +
+      '<div><span>可落地区服</span><b class="pos">' + cross.feasibleCount + '</b></div>' +
+      '<div><span>不可核价</span><b class="neg">' + (cross.total - cross.feasibleCount) + '</b></div>' +
+      '<div><span>P25–P75</span><b>' + (cross.p25 != null ? U.fmt(cross.p25, 2) + '–' + U.fmt(cross.p75, 2) : '—') + '</b></div>' +
+      '<div><span>最佳区服</span><b>' + (best ? U.esc(best.server.name) + ' ' + U.fmt(best.ev.perEnergy, 2) : '—') + '</b></div></div></div>';
+    html += '<div class="trend-chart-wrap profit-chart-wrap">' + (cross.nodes.some(function (n) { return n.median != null; }) ? Charts.profitLine(cross.nodes.filter(function (n) { return n.median != null; }).map(function (n) { return { at: n.at, price: n.median }; }), { palette: Charts.palette(ui.theme), width: 1100, height: 250, color: '#61DDAA', yLabel: '金 / 精力 · 中位', ariaLabel: '跨服可落地精力收益' }) : '<div class="profit-empty">当前没有可落地区服</div>') + '</div>';
+    html += '<div class="profit-feasibility"><span class="ok">仅报价</span><span>成品和材料都必须有本服报价，或可自造到底层报价</span><span>税率 ' + U.fmtPct(tax, 1) + '</span><span>当前服：' + (currentServer ? U.esc(currentServer.name) : '—') + '</span></div></section>';
+    if (curEv && curEv.ok) {
+      html += '<section class="card col-12"><div class="card-head"><div><h2 class="card-title">当前服材料链 · ' + U.esc(currentServer ? currentServer.name : '') + '</h2><p class="card-sub">购买优先；中间品缺价才自造，自造精力计入总精力</p></div></div><div class="profit-table-wrap"><table class="data compact profit-table"><thead><tr><th>层级</th><th>物品</th><th class="num">数量</th><th class="num">本服报价</th><th>采用路径</th><th class="num">额外精力</th></tr></thead><tbody>' + curEv.chain.map(function (row) {
+        const it = P.item(row.itemId);
+        return '<tr><td>' + (row.root ? '成品' : row.path === '含自造' ? '中间品' : '材料') + '</td><td>' + U.esc(it ? it.name : row.itemId) + '</td><td class="num">' + U.fmt(row.qty, 0) + '</td><td class="num">' + (row.quote == null ? '—' : U.fmt(row.quote, 2)) + '</td><td>' + U.esc(row.path) + '</td><td class="num">' + U.fmt(row.energy || 0, 0) + '</td></tr>';
+      }).join('') + '</tbody></table></div></section>';
+    } else if (curEv) {
+      html += '<section class="card col-12"><div class="card-body">' + notice('当前服不可核价：' + U.esc(curEv.reason || '缺报价') + '。不生成落地收益，也不使用基准价补齐。', 'info') + '</div></section>';
+    }
+    // feasible server table
+    if (!cross.feasible.length) {
+      html += '<section class="card col-12"><div class="card-body">' + emptyState('当前没有可落地区服', '成品无报价，或一线材料缺报价；这些区服不会生成收益。', '', 'filter') + '</div></section>';
+    } else {
+      const sorted = cross.feasible.slice().sort(function (a, b) { return b.ev.perEnergy - a.ev.perEnergy; });
+      html += '<section class="card col-12"><div class="card-head"><div><h2 class="card-title">可落地区服 · 当前节点</h2><p class="card-sub">按精力收益排序 · 缺价区服不进入此表</p></div><div class="card-tools"><span class="tag">' + cross.feasibleCount + ' 服</span></div></div><div class="profit-table-wrap"><table class="data compact profit-table"><thead><tr><th>区服</th><th class="num">精力收益</th><th class="num">单次利润</th><th class="num">总精力</th><th>路径</th><th>状态</th></tr></thead><tbody>' + sorted.map(function (r) {
+        return '<tr><td>' + U.esc(r.server.name) + '</td><td class="num pos">' + U.fmt(r.ev.perEnergy, 2) + '</td><td class="num ' + (r.ev.profit >= 0 ? 'pos' : 'neg') + '">' + profitSigned(r.ev.profit) + '</td><td class="num">' + U.fmt(r.ev.energy, 0) + '</td><td>' + U.esc(r.ev.path) + '</td><td><span class="profit-status ok">可落地</span></td></tr>';
+      }).join('') + '</tbody></table></div><div class="profit-note">其余 ' + (cross.total - cross.feasibleCount) + ' 服因成品/一线材料无报价，未生成落地收益。</div></section>';
+    }
+    const topPoint = curPoint || (ctx.servers[0] && ctx.servers[0].points && ctx.servers[0].points[ctx.servers[0].points.length - 1]);
+    html += profitTop10Html(ui.profitSkill || item.skillId, topPoint, 'server', item.id);
+    html += '</div>';
+    return html;
+  }
+
   function renderTrends(p) {
     const ctx = trendContext(p);
     const view = ctx.view;
@@ -2702,12 +2860,19 @@
       html += notice('当前是自定义服务器。物价历史只覆盖 JX3BOX 的内置 17 个区服，下面按当日基准价展示；切换到内置区服可看本服拍卖报价。', 'info');
     }
     html += trendFilter(ctx, p);
-    html += '<div class="grid section-gap">' + trendHeatmap(ctx) + '</div>';
-    html += '<div class="grid section-gap">' + trendRankCard(ctx) + '</div>';
-    html += '<div class="grid section-gap">' + trendDistributionCard(ctx) + '</div>';
-    html += '<div class="grid section-gap">' + trendScatterCard(ctx) + '</div>';
-    html += '<div class="grid section-gap">' + trendLineCard(ctx) + '</div>';
-    html += '<div class="grid section-gap">' + trendRawDetails(ctx) + '</div>';
+    html += '<div class="profit-page-tabs" role="tablist" aria-label="物价与制作收益">' +
+      '<button role="tab" aria-selected="' + (ui.trendTab !== 'profit' ? 'true' : 'false') + '" class="' + (ui.trendTab !== 'profit' ? 'on' : '') + '" data-trend-tab="price">物价</button>' +
+      '<button role="tab" aria-selected="' + (ui.trendTab === 'profit' ? 'true' : 'false') + '" class="' + (ui.trendTab === 'profit' ? 'on' : '') + '" data-trend-tab="profit">精力收益比</button></div>';
+    if (ui.trendTab === 'profit') {
+      html += trendProfitSection(ctx, p);
+    } else {
+      html += '<div class="grid section-gap">' + trendHeatmap(ctx) + '</div>';
+      html += '<div class="grid section-gap">' + trendRankCard(ctx) + '</div>';
+      html += '<div class="grid section-gap">' + trendDistributionCard(ctx) + '</div>';
+      html += '<div class="grid section-gap">' + trendScatterCard(ctx) + '</div>';
+      html += '<div class="grid section-gap">' + trendLineCard(ctx) + '</div>';
+      html += '<div class="grid section-gap">' + trendRawDetails(ctx) + '</div>';
+    }
     html += dataFoot();
     html += '</div>';
     return html;
@@ -3653,10 +3818,17 @@
     let html = '<div class="page trend-page server-page server-item-page">' + serverHead(ctx, '物品视角') + serverViewSwitch(p);
     html += serverItemFilterCard(ctx, p);
     html += serverItemQuick(ctx, p);
-    html += serverItemKpi(ctx);
-    html += '<div class="grid section-gap">' + serverItemChart(ctx) + serverItemRanking(ctx, p) + '</div>';
-    html += '<div class="grid section-gap">' + serverItemTable(ctx) + '</div>';
-    html += '<div class="grid section-gap">' + serverItemInsight(ctx) + '</div>';
+    html += '<div class="profit-page-tabs" role="tablist" aria-label="物价与制作收益">' +
+      '<button role="tab" aria-selected="' + (ui.serverItemTab !== 'profit' ? 'true' : 'false') + '" class="' + (ui.serverItemTab !== 'profit' ? 'on' : '') + '" data-server-item-tab="price">物价</button>' +
+      '<button role="tab" aria-selected="' + (ui.serverItemTab === 'profit' ? 'true' : 'false') + '" class="' + (ui.serverItemTab === 'profit' ? 'on' : '') + '" data-server-item-tab="profit">精力收益比</button></div>';
+    if (ui.serverItemTab === 'profit') {
+      html += serverItemProfitSection(ctx);
+    } else {
+      html += serverItemKpi(ctx);
+      html += '<div class="grid section-gap">' + serverItemChart(ctx) + serverItemRanking(ctx, p) + '</div>';
+      html += '<div class="grid section-gap">' + serverItemTable(ctx) + '</div>';
+      html += '<div class="grid section-gap">' + serverItemInsight(ctx) + '</div>';
+    }
     html += dataFoot();
     return html + '</div>';
   }
@@ -3681,6 +3853,10 @@
     html += '<div class="grid section-gap">' + serverHeatCard(ctx) + serverRankCard(ctx) + '</div>';
     html += '<div class="grid section-gap">' + serverSkillCard(ctx) + '</div>';
     html += '<div class="grid section-gap">' + serverDetail(ctx) + '</div>';
+    if (ctx.selectedServer && ctx.selectedServer.points && ctx.selectedServer.points.length) {
+      const lastPoint = ctx.selectedServer.points[ctx.selectedServer.points.length - 1];
+      html += '<div class="grid section-gap">' + profitTop10Html(ui.profitSkill || (profitSkillList()[0] || {}).id, lastPoint, 'server', '') + '</div>';
+    }
     html += dataFoot();
     return html + '</div>';
   }
@@ -5102,6 +5278,36 @@
       go('/skills/' + skillRow.getAttribute('data-skill-link'));
       return;
     }
+    const trendTab = e.target.closest('[data-trend-tab]');
+    if (trendTab) {
+      ui.trendTab = trendTab.getAttribute('data-trend-tab') === 'profit' ? 'profit' : 'price';
+      render();
+      return;
+    }
+    const serverItemTab = e.target.closest('[data-server-item-tab]');
+    if (serverItemTab) {
+      ui.serverItemTab = serverItemTab.getAttribute('data-server-item-tab') === 'profit' ? 'profit' : 'price';
+      render();
+      return;
+    }
+    const profitSkill = e.target.closest('[data-profit-skill]');
+    if (profitSkill) {
+      ui.profitSkill = profitSkill.getAttribute('data-profit-skill');
+      render();
+      return;
+    }
+    const profitPick = e.target.closest('[data-profit-pick]');
+    if (profitPick) {
+      const id = profitPick.getAttribute('data-profit-pick');
+      if (profitPick.getAttribute('data-profit-kind') === 'server') {
+        ui.serverItemTab = 'profit';
+        updateParams({ sview: 'item', sitem: id });
+      } else {
+        ui.trendTab = 'profit';
+        updateParams({ tfocus: id });
+      }
+      return;
+    }
     const serverView = e.target.closest('[data-server-view]');
     if (serverView) {
       const view = serverView.getAttribute('data-server-view');
@@ -5115,6 +5321,7 @@
       ui.serverItemPickerOpen = false;
       ui.serverItemQuery = '';
       ui.serverItemRankQuery = '';
+      ui.profitSkill = '';
       updateParams({ sview: 'item', sitem: pickedKey });
       return;
     }
@@ -5252,6 +5459,12 @@
       const key = t.getAttribute('data-server-product-toggle');
       if (t.checked) set.add(key); else set.delete(key);
       const selected = all.filter(function (item) { return set.has(item.key); });
+      // 多选后清空搜索词，保留已选，下一次输入从完整目录重新匹配。
+      ui.serverProductQuery = '';
+      const picker = document.querySelector('.server-product-picker');
+      const search = picker && picker.querySelector('[data-server-product-search]');
+      if (search) search.value = '';
+      if (picker) picker.querySelectorAll('[data-server-product-item]').forEach(function (node) { node.hidden = false; });
       updateParams({ sitems: serverItemParam(selected, all), skeyword: '', sskill: '' });
       return;
     }
@@ -5264,6 +5477,12 @@
       let value = '';
       if (!set.size) value = '__none__';
       else if (set.size < ctx.scopeKeys.length) value = ctx.scopeKeys.filter(function (k) { return set.has(k); }).join(',');
+      // 多选后清空搜索词，保留已勾选项，下一次输入从完整目录重新匹配。
+      ui.trendPickerQuery = '';
+      const picker = document.querySelector('.trend-picker');
+      const search = picker && picker.querySelector('[data-trend-picker-search]');
+      if (search) search.value = '';
+      if (picker) picker.querySelectorAll('[data-picker-item]').forEach(function (node) { node.hidden = false; });
       updateParams({ titems: value });
       return;
     }
@@ -5711,6 +5930,9 @@
       ui.serverItemPickerOpen = false;
       ui.serverItemQuery = '';
       ui.serverItemRankQuery = '';
+      ui.trendTab = 'price';
+      ui.serverItemTab = 'price';
+      ui.profitSkill = '';
       ui.trendScroll = Object.create(null);
       ui.trendCenterKey = null;
       if (ui.drawer) {

@@ -16,6 +16,7 @@ const SHELL = [
   './assets/breakthrough-data.js',
   './assets/stones.js',
   './assets/charts.js',
+  './assets/profit.js',
   './assets/trends.js',
   './assets/app.js',
   './assets/install.css',
