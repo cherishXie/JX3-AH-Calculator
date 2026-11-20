@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "80ae140b8227e48f3ba904198f2f587c36817fbf",
+  "sourceCommit": "6853028aea618e32f1be6792ec433ae1a0cd0576",
   "date": "2026-11-20",
   "title": "新增物价走势分析",
   "notes": [
@@ -10,34 +10,34 @@
   ],
   "history": [
     {
-      "version": "80ae140",
+      "version": "6853028",
       "date": "2026-11-20",
-      "title": "手机端服务器下拉溢出屏幕导致名称被裁切"
+      "title": "default all trend filters, mobile collapse and price check"
     },
     {
-      "version": "b1c43be",
+      "version": "e5690f5",
       "date": "2026-11-20",
-      "title": "接入百度统计记录站外访问量"
+      "title": "align trend counts, sticky filters and node lists"
     },
     {
-      "version": "543f58c",
+      "version": "4d318aa",
       "date": "2026-11-20",
-      "title": "cache-bust Excel workbook downloads"
+      "title": "link trend charts, rank board and image export"
     },
     {
-      "version": "3262074",
+      "version": "873617e",
       "date": "2026-11-20",
-      "title": "add Excel download menu to web"
+      "title": "preserve trend chart scroll and explain index axis"
     },
     {
-      "version": "51a3a49",
+      "version": "c0aaad3",
       "date": "2026-11-20",
-      "title": "make price history scripts executable"
+      "title": "unify item filters and index price axis"
     },
     {
-      "version": "3c4d05c",
+      "version": "90d08d6",
       "date": "2026-11-20",
-      "title": "hint effective export for unquoted items"
+      "title": "price box plot, item colors and price range filter"
     }
   ]
 }

@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-20 · 6853028
+
+default all trend filters, mobile collapse and price check
+
 ## 2026-11-20 · 47f20a5
 
 update JX3BOX prices
@@ -10,21 +14,81 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-20 · e5690f5
+
+align trend counts, sticky filters and node lists
+
+## 2026-11-20 · 4d318aa
+
+link trend charts, rank board and image export
+
+## 2026-11-20 · 873617e
+
+preserve trend chart scroll and explain index axis
+
+## 2026-11-20 · c0aaad3
+
+unify item filters and index price axis
+
 ## 2026-11-20 · 74cd89a
 
 update JX3BOX prices
+
+## 2026-11-20 · 90d08d6
+
+price box plot, item colors and price range filter
+
+## 2026-11-20 · 02846ae
+
+multi-item trend charts and heatmap
+
+## 2026-11-20 · 9387559
+
+新增通用数据图规范（去行业术语）
+
+## 2026-11-20 · 12d96d5
+
+use actual data hour bounds
+
+## 2026-11-20 · 3fb0398
+
+style: balance trend chart and node panel
 
 ## 2026-11-20 · 6f3bb93
 
 keep production service worker out of dev preview
 
+## 2026-11-20 · 82376b6
+
+style: show hour select affordance
+
+## 2026-11-20 · b180788
+
+refine trend filters, hour range and dev PWA updates
+
 ## 2026-11-20 · 422877c
 
 update JX3BOX prices
 
+## 2026-11-20 · 9bd884e
+
+note stable dev preview deployment
+
 ## 2026-11-20 · 97c50b3
 
 preserve dev preview during main deployments
+
+## 2026-11-20 · 74273ba
+
+use separate environment for dev preview deploy
+
+## 2026-11-20 · 583aabb
+
+hour-precision trend range and dev preview deploy
+
+## 2026-11-20 · 3a3df5b
+
+add price trend analysis
 
 ## 2026-11-20 · 612f2ad
 
