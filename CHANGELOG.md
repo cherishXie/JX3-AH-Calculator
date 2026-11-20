@@ -494,7 +494,3 @@ restore direct price schedule and add recovery checks
 ## 2026-11-19 · 9200682
 
 profit-based breakthrough results and 1-30/30-50 stage summary
-
-## 2026-11-19 · 8a07b14
-
-update JX3BOX prices
