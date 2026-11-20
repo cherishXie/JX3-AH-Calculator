@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "6a3eed1c48b2776bb645be1695743f0e3060da0c",
+  "sourceCommit": "4431edd73384d1bb5248107a21757448b3c59661",
   "date": "2026-11-20",
   "title": "全天每 30 分钟自动更新",
   "notes": [
@@ -8,6 +8,11 @@
     "不整页刷新、不跳位置，代码更新仍显示进度条"
   ],
   "history": [
+    {
+      "version": "4431edd",
+      "date": "2026-11-20",
+      "title": "trigger prices every 30 minutes"
+    },
     {
       "version": "6a3eed1",
       "date": "2026-11-20",
@@ -32,11 +37,6 @@
       "version": "228d13e",
       "date": "2026-11-19",
       "title": "refresh Excel prices in WPS without Power Query"
-    },
-    {
-      "version": "e7e8910",
-      "date": "2026-11-19",
-      "title": "use native Excel Web Query for price refresh"
     }
   ]
 }
