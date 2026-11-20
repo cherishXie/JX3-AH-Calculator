@@ -14,14 +14,14 @@ import { isCloudConfigured } from '../../shared/cloudConfig';
 import StoneMiniCard from '../../components/StoneMiniCard';
 import { useStore, getState } from '../../store';
 import { DATA, rowsOf, statsOf, simulate, median, avg, sortRows } from '../../shared/engine';
-import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
+import { fmt, fmtTime, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
 
 function Overview() {
   const [state, actions] = useStore();
   const [type, setType] = useState('all');
 
   useDidShow(function () {
-    if (isCloudConfigured()) syncRemotePrices(actions, false, getState());
+    if (isCloudConfigured()) syncRemotePrices(actions, true, getState());
   });
 
   const rows = useMemo(function () {
@@ -29,6 +29,10 @@ function Overview() {
   }, [state]);
 
   const stats = statsOf(state, state.serverId);
+  const marketStamp = state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+  const seedStamp = Date.parse(DATA.meta.priceUpdatedAt || '');
+  const priceStamp = Number.isFinite(marketStamp) ? marketStamp : seedStamp;
+  const priceSource = state.marketMeta ? '云端行情' : '包内示例';
   const valid = rows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
   const best = valid.slice().sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; })[0];
   const med = median(valid.map(function (r) { return r.calc.perEnergy; }));
@@ -195,6 +199,8 @@ function Overview() {
         <View className='card-body'>
           <View className='kv'><Text className='k'>当前服务器</Text><Text className='v'>{state.servers.find(function (s) { return s.id === state.serverId; })?.name || '—'}</Text></View>
           <View className='kv'><Text className='k'>已校准价格</Text><Text className='v'>{stats.user} / {stats.total}</Text></View>
+          <View className='kv'><Text className='k'>行情时间</Text><Text className='v'>{fmtTime(priceStamp)}</Text></View>
+          <View className='kv'><Text className='k'>行情来源</Text><Text className='v'>{priceSource}</Text></View>
           <View className='kv'><Text className='k'>云端行情</Text><Text className='v'>{stats.market} 项</Text></View>
           <View className='kv'><Text className='k'>示例价</Text><Text className='v'>{stats.seed} 项</Text></View>
           <View className='kv'><Text className='k'>缺少价格</Text><Text className={'v ' + (stats.missing ? 'neg' : 'pos')}>{stats.missing} 项</Text></View>

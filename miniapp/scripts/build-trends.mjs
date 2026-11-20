@@ -4,7 +4,7 @@
  *
  * 输出：miniapp/src/shared/trends.json
  * 约束：
- * - 只保留最近 7 天，避免主包超过 2MB；
+ * - 只保留最近 2 天（云端历史保留 7 天），避免主包超过 2MB；
  * - 单文件超过 900KB 时自动减少天数；
  * - 数据只含历史价格，不含用户数据，可随小程序版本发布。
  *
@@ -19,8 +19,8 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..', '..');
 const sourceDir = path.join(repo, 'data', 'price-history');
 const outFile = path.join(repo, 'miniapp', 'src', 'shared', 'trends.json');
-const MAX_DAYS = 7;
-const MAX_BYTES = 900 * 1024;
+const MAX_DAYS = 2;
+const MAX_BYTES = 400 * 1024;
 
 if (!fs.existsSync(path.join(sourceDir, 'index.json'))) {
   throw new Error('缺少 data/price-history/index.json');

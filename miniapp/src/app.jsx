@@ -2,6 +2,7 @@ import { Component } from 'react';
 import Taro from '@tarojs/taro';
 import { actions, getState } from './store';
 import { syncRemotePrices } from './shared/remotePrices';
+import { PRICE_AUTO_SYNC_MS } from './shared/cloudConfig';
 import { applyTheme, getTheme } from './shared/theme';
 import './app.css';
 
@@ -23,9 +24,40 @@ class App extends Component {
   componentDidMount() {
     applyTheme(getTheme(getState()));
     setupMiniUpdate();
-    if (process.env.TARO_ENV === 'weapp') {
-      // 自动同步失败时静默回退到本地行情；手动同步会在价格页给出提示。
-      syncRemotePrices(actions, false, getState());
+    this.startPriceSync();
+  }
+
+  componentDidShow() {
+    applyTheme(getTheme(getState()));
+    // 从后台回到前台时立即强制刷新，避免继续使用旧行情。
+    this.startPriceSync();
+  }
+
+  componentDidHide() {
+    this.stopPriceSync();
+  }
+
+  componentWillUnmount() {
+    this.stopPriceSync();
+  }
+
+  syncPrices(force) {
+    if (process.env.TARO_ENV !== 'weapp') return;
+    syncRemotePrices(actions, force, getState());
+  }
+
+  startPriceSync() {
+    if (process.env.TARO_ENV !== 'weapp') return;
+    this.syncPrices(true);
+    if (this.priceTimer) clearInterval(this.priceTimer);
+    // 停留在任意页面时，前台每分钟自动检查一次云端行情。
+    this.priceTimer = setInterval(() => this.syncPrices(true), PRICE_AUTO_SYNC_MS);
+  }
+
+  stopPriceSync() {
+    if (this.priceTimer) {
+      clearInterval(this.priceTimer);
+      this.priceTimer = null;
     }
   }
 

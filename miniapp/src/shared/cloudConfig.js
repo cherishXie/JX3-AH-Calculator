@@ -15,7 +15,8 @@ export const CLOUD_ENV = 'cloud1-d3g3bpdtmafb3abca';
 
 export const PRICE_COLLECTION = 'prices';
 export const PRICE_DOC_ID = 'current';
-export const PRICE_TTL_MS = 6 * 60 * 60 * 1000;
+export const PRICE_TTL_MS = 60 * 1000;
+export const PRICE_AUTO_SYNC_MS = 60 * 1000;
 
 export function isCloudConfigured() {
   return process.env.TARO_ENV === 'weapp' && !!CLOUD_ENV && CLOUD_ENV.indexOf('your-') !== 0;

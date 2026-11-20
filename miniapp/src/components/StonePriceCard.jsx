@@ -51,7 +51,7 @@ export default function StonePriceCard() {
           );
         })}
       </View>
-      <View className='card-foot'>行情时间 {fmtTime(stonePriceUpdatedAt(state))} · 五行石价格与生活技艺价格库分开保存</View>
+      <View className='card-foot'>行情时间 {fmtTime(stonePriceUpdatedAt(state))} · {state.marketMeta ? '云端行情' : '包内示例'} · 五行石价格与生活技艺价格库分开保存</View>
     </View>
   );
 }

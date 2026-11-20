@@ -27,10 +27,13 @@ function Prices() {
   const stats = statsOf(state, state.serverId);
   const allSpreads = serverSpreads(state);
   const spreads = allSpreads.slice(0, 5);
-  const priceStamp = Date.parse((state.marketMeta && state.marketMeta.priceUpdatedAt) || DATA.meta.priceUpdatedAt);
+  const marketStamp = state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+  const seedStamp = Date.parse(DATA.meta.priceUpdatedAt || '');
+  const priceStamp = Number.isFinite(marketStamp) ? marketStamp : seedStamp;
+  const priceSource = state.marketMeta ? '云端行情' : '包内示例';
 
   useDidShow(function () {
-    if (isCloudConfigured()) syncRemotePrices(actions, false, getState());
+    if (isCloudConfigured()) syncRemotePrices(actions, true, getState());
   });
 
   const items = useMemo(function () {
@@ -114,7 +117,7 @@ function Prices() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>本服物品价格</Text>
-            <Text className='card-sub'>失焦或回车即保存 · {items.length} 项 · 行情 {fmtTime(priceStamp)}</Text>
+            <Text className='card-sub'>失焦或回车即保存 · {items.length} 项 · 行情 {fmtTime(priceStamp)} · {priceSource}</Text>
           </View>
           <View className='card-tool'>
             {isCloudConfigured() ? (
@@ -174,7 +177,7 @@ function Prices() {
             );
           }) : <Empty title='没有匹配的物品' desc='调整搜索或筛选条件，或去生活技艺新增物品。' />}
         </View>
-        <View className='card-foot'>行情时间 {fmtTime(priceStamp)} · 示例价来自包内样本，云端行情不覆盖你的手动校准</View>
+        <View className='card-foot'>行情时间 {fmtTime(priceStamp)} · {priceSource} · 手动校准优先，自动同步不覆盖</View>
       </View>
 
 
