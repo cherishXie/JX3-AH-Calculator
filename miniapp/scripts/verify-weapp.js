@@ -86,10 +86,10 @@ if (project) {
 }
 
 if (app) {
-  if (!Array.isArray(app.pages) || app.pages.length !== 10) {
-    fail('app.json pages 应为 10 个，当前 ' + (app.pages ? app.pages.length : 0));
+  if (!Array.isArray(app.pages) || app.pages.length !== 12) {
+    fail('app.json pages 应为 12 个，当前 ' + (app.pages ? app.pages.length : 0));
   } else {
-    pass('页面数量：10');
+    pass('页面数量：12');
   }
 
   const tabs = (app.tabBar && app.tabBar.list) || [];

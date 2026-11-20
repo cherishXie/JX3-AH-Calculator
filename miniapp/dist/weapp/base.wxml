@@ -117,6 +117,10 @@
   </canvas>
 </template>
 
+<template name="tmpl_0_9">
+  <ad unit-id="{{i.p3}}" ad-intervals="{{i.p0}}" bindload="eh" binderror="eh" bindclose="eh" ad-type="{{xs.b(i.p2,'banner')}}" ad-theme="{{xs.b(i.p1,'white')}}" style="{{i.st}}" class="{{i.cl}}" bindtap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></ad>
+</template>
+
 <template name="tmpl_0_8">
   <block>{{i.v}}</block>
 </template>

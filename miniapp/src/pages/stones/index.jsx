@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
@@ -51,7 +52,7 @@ function RateInput(props) {
   );
 }
 
-export default function Stones() {
+function Stones() {
   const [state, actions] = useStore();
   const [mode, setMode] = useState('profit');
   const summary = useMemo(function () { return stoneSummary(state); }, [state]);
@@ -302,3 +303,5 @@ export default function Stones() {
     </View>
   );
 }
+
+export default withTheme(Stones);

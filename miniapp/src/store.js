@@ -78,6 +78,17 @@ export const actions = {
     });
   },
 
+  setTheme: function (theme) {
+    const next = theme === 'dark' ? 'dark' : 'light';
+    commit(function (s) {
+      s.settings = s.settings || {};
+      s.settings.theme = next;
+      s.settings.themePicked = true;
+      s.settings.themeVersion = 1;
+    });
+    return next;
+  },
+
   setTaxRate: function (pct) {
     const n = Number(pct);
     if (!Number.isFinite(n) || n < 0 || n > 100) return false;

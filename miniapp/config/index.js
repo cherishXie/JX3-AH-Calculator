@@ -1,5 +1,7 @@
 const path = require('path');
 
+const outputRoot = 'dist/' + (process.env.TARO_ENV || 'weapp');
+
 const config = {
   projectName: 'jingli-zuoshenme',
   date: '2026-11-18',
@@ -10,13 +12,16 @@ const config = {
     828: 1.81 / 2
   },
   sourceRoot: 'src',
-  outputRoot: 'dist/' + (process.env.TARO_ENV || 'weapp'),
+  outputRoot: outputRoot,
   plugins: [
     '@tarojs/plugin-platform-xhs'
   ],
   defineConstants: {},
   copy: {
-    patterns: [],
+    // 主题切换需要在运行时引用亮/暗两套 Tab 图标；静态 tabBar 只能声明一套。
+    patterns: [
+      { from: 'src/assets/tabs', to: outputRoot + '/assets/tabs' }
+    ],
     options: {}
   },
   framework: 'react',

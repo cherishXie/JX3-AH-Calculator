@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useState } from 'react';
 import { View, Text, Input, Picker, Textarea } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
@@ -32,7 +33,7 @@ function makeDraft(state, skillId, recipe) {
   };
 }
 
-export default function Recipe() {
+function Recipe() {
   const router = useRouter();
   const params = router.params || {};
   const isNew = params.new === '1';
@@ -513,3 +514,5 @@ export default function Recipe() {
     </View>
   );
 }
+
+export default withTheme(Recipe);

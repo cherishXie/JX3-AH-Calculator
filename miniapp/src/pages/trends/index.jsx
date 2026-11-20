@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Picker, Canvas } from '@tarojs/components';
 import Taro from '@tarojs/taro';
@@ -30,7 +31,7 @@ function timeText(at) {
   return text.length >= 16 ? text.slice(11, 16) : '';
 }
 
-function drawChart(series) {
+function drawChart(series, theme) {
   if (!series || !series.length) return;
   setTimeout(function () {
     const query = Taro.createSelectorQuery();
@@ -48,6 +49,11 @@ function drawChart(series) {
       ctx.scale(dpr, dpr);
       ctx.clearRect(0, 0, width, height);
 
+      const light = theme === 'light';
+      const gridColor = light ? 'rgba(15,23,42,0.12)' : 'rgba(148,163,184,0.18)';
+      const labelColor = light ? '#64748b' : '#94a3b8';
+      const lineColor = light ? '#0f9f6e' : '#61DDAA';
+      const pointStroke = light ? '#ffffff' : '#0F172A';
       const padL = 58;
       const padR = 12;
       const padT = 16;
@@ -72,8 +78,8 @@ function drawChart(series) {
       };
 
       ctx.font = '10px sans-serif';
-      ctx.fillStyle = '#94a3b8';
-      ctx.strokeStyle = 'rgba(148,163,184,0.18)';
+      ctx.fillStyle = labelColor;
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
       for (let i = 0; i < 3; i++) {
         const y = padT + (plotH / 2) * i;
@@ -89,8 +95,8 @@ function drawChart(series) {
       ctx.fillText(fmt(min, 2), padL - 6, padT + plotH);
 
       const grad = ctx.createLinearGradient(0, padT, 0, padT + plotH);
-      grad.addColorStop(0, 'rgba(97,221,170,0.24)');
-      grad.addColorStop(1, 'rgba(97,221,170,0.01)');
+      grad.addColorStop(0, light ? 'rgba(15,159,110,0.18)' : 'rgba(97,221,170,0.24)');
+      grad.addColorStop(1, light ? 'rgba(15,159,110,0.01)' : 'rgba(97,221,170,0.01)');
       ctx.beginPath();
       series.forEach(function (p, i) {
         const x = xOf(i);
@@ -111,7 +117,7 @@ function drawChart(series) {
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = '#61DDAA';
+      ctx.strokeStyle = lineColor;
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -120,14 +126,14 @@ function drawChart(series) {
         const y = yOf(p.price);
         ctx.beginPath();
         ctx.arc(x, y, 2.6, 0, Math.PI * 2);
-        ctx.fillStyle = '#61DDAA';
+        ctx.fillStyle = lineColor;
         ctx.fill();
-        ctx.strokeStyle = '#0F172A';
+        ctx.strokeStyle = pointStroke;
         ctx.lineWidth = 1;
         ctx.stroke();
       });
 
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = labelColor;
       ctx.textBaseline = 'top';
       ctx.textAlign = 'left';
       ctx.fillText(timeText(series[0].at), padL, padT + plotH + 8);
@@ -139,7 +145,7 @@ function drawChart(series) {
   }, 40);
 }
 
-export default function Trends() {
+function Trends() {
   const [state] = useStore();
   const [range, setRange] = useState('24h');
   const [type, setType] = useState('all');
@@ -219,8 +225,8 @@ export default function Trends() {
   const focusIdx = Math.max(0, allItems.findIndex(function (i) { return focusItem && i.key === focusItem.key; }));
 
   useEffect(function () {
-    drawChart(focusSeries);
-  }, [focusSeries, focusItem]);
+    drawChart(focusSeries, state.settings.theme === 'dark' ? 'dark' : 'light');
+  }, [focusSeries, focusItem, state.settings.theme]);
 
   if (!meta.points) {
     return (
@@ -365,3 +371,5 @@ export default function Trends() {
     </View>
   );
 }
+
+export default withTheme(Trends);

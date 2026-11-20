@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { useRouter } from '@tarojs/taro';
@@ -20,7 +21,7 @@ const STRATEGIES = [
   { value: 'effort', label: '省心' }
 ];
 
-export default function Breakthrough() {
+function Breakthrough() {
   const router = useRouter();
   const params = router.params || {};
   const [state] = useStore();
@@ -375,3 +376,5 @@ function GateBlock(props) {
     </View>
   );
 }
+
+export default withTheme(Breakthrough);

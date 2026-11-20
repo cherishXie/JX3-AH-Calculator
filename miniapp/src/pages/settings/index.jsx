@@ -1,14 +1,20 @@
+import withTheme from '../../components/withTheme';
 import { useEffect, useState } from 'react';
 import { View, Text, Input, Picker, Textarea, ScrollView } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import TopBar from '../../components/TopBar';
+import Seg from '../../components/Seg';
 import { useStore } from '../../store';
 import { DATA } from '../../shared/engine';
 import { fmt, fmtTime } from '../../shared/format';
 import { syncRemotePrices } from '../../shared/remotePrices';
 import { isCloudConfigured } from '../../shared/cloudConfig';
+import { applyTheme } from '../../shared/theme';
+import release from '../../shared/release.json';
 
-export default function Settings() {
+const THEME_OPTIONS = [{ value: 'light', label: '亮色' }, { value: 'dark', label: '暗色' }];
+
+function Settings() {
   const [state, actions] = useStore();
   const router = useRouter();
   const [newName, setNewName] = useState('');
@@ -20,6 +26,12 @@ export default function Settings() {
   const [backup, setBackup] = useState('');
   const [importText, setImportText] = useState('');
   const [syncing, setSyncing] = useState(false);
+
+  function changeTheme(value) {
+    actions.setTheme(value);
+    applyTheme(value);
+    Taro.showToast({ title: value === 'light' ? '已切换为亮色' : '已切换为暗色', icon: 'none' });
+  }
 
   function copyText(text, okText) {
     try {
@@ -185,6 +197,28 @@ export default function Settings() {
       <TopBar title='设置与数据' subtitle={'当前构建：' + platform} />
 
       <View className='card'>
+        <View className='card-head'><View className='flex1'><Text className='card-title'>外观</Text><Text className='card-sub'>默认亮色 · 切换后立即生效并保存</Text></View></View>
+        <View className='card-body'>
+          <View className='form-field'>
+            <Text className='form-label'>主题</Text>
+            <Seg value={state.settings.theme === 'dark' ? 'dark' : 'light'} options={THEME_OPTIONS} onChange={changeTheme} />
+          </View>
+          <Text className='tiny dim'>亮色适合白天和户外；暗色适合夜间。主题只影响本机显示。</Text>
+        </View>
+      </View>
+
+      <View className='card'>
+        <View className='card-head'><View className='flex1'><Text className='card-title'>小程序更新</Text><Text className='card-sub'>只显示小程序通道，不影响网页端</Text></View></View>
+        <View className='card-body'>
+          <View className='kv'><Text className='k'>版本</Text><Text className='v'>{release.version} · {release.date}</Text></View>
+          <Text className='card-title' style={{ display: 'block', marginTop: '8rpx' }}>{release.title}</Text>
+          {release.notes.map(function (note, i) {
+            return <Text key={i} className='tiny dim' style={{ display: 'block', marginTop: '6rpx' }}>· {note}</Text>;
+          })}
+        </View>
+      </View>
+
+      <View className='card'>
         <View className='card-head'><View className='flex1'><Text className='card-title'>服务器</Text><Text className='card-sub'>每个服务器一套独立价格 · {state.servers.length} 个</Text></View></View>
         <View className='card-body' style={{ paddingTop: '4rpx' }}>
           {state.servers.map(function (s) {
@@ -325,3 +359,5 @@ export default function Settings() {
     </View>
   );
 }
+
+export default withTheme(Settings);

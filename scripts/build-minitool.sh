@@ -9,11 +9,12 @@ ZIP_LIMIT=$((10 * 1024 * 1024))
 
 node scripts/sync-breakthrough-model.mjs
 node scripts/check-minitool.mjs
+cp content/updates/minitool.json minitool/release.json
 
 rm -f "$OUT"
 (
   cd minitool
-  zip -rX "../$OUT" index.html assets -x '*.DS_Store' >/dev/null
+  zip -rX "../$OUT" index.html assets release.json -x '*.DS_Store' >/dev/null
 )
 
 if ! unzip -l "$OUT" | awk '{print $4}' | grep -qx 'index.html'; then

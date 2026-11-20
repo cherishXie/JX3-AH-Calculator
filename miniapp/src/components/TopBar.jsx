@@ -1,6 +1,7 @@
 import { View, Text, Picker } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useStore } from '../store';
+import { applyTheme } from '../shared/theme';
 
 export default function TopBar(props) {
   const [state, actions] = useStore();
@@ -34,6 +35,17 @@ export default function TopBar(props) {
             <Text className='caret'>⌄</Text>
           </View>
         </Picker>
+        <View
+          className='icon-btn'
+          onClick={function () {
+            const next = state.settings.theme === 'dark' ? 'light' : 'dark';
+            actions.setTheme(next);
+            applyTheme(next);
+            Taro.showToast({ title: next === 'light' ? '已切换为亮色' : '已切换为暗色', icon: 'none' });
+          }}
+        >
+          {state.settings.theme === 'dark' ? '☀' : '☾'}
+        </View>
         <View
           className='icon-btn'
           onClick={function () { Taro.navigateTo({ url: '/pages/settings/index' }); }}

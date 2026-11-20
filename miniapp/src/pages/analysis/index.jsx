@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text, Input, Picker } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
@@ -23,7 +24,7 @@ function quantile(arr, q) {
   return a[base] + (a[base + 1] != null ? (a[base + 1] - a[base]) * rest : 0);
 }
 
-export default function Analysis() {
+function Analysis() {
   const [state, actions] = useStore();
   const [type, setType] = useState('all');
   const [skillId, setSkillId] = useState('');
@@ -153,6 +154,19 @@ export default function Analysis() {
       </View>
 
       <BreakthroughMini />
+
+      {process.env.TARO_ENV === 'weapp' ? (
+        <View className='card st-entry' onClick={function () { Taro.navigateTo({ url: '/pages/server-trends/index' }); }}>
+          <View className='card-head'>
+            <View className='flex1'>
+              <Text className='card-title'>区服趋势</Text>
+              <Text className='card-sub'>17 服净涨跌 · 物品跨服统计 · 热力图与区服榜</Text>
+            </View>
+            <View className='card-tool'><Text className='badge badge-info'>查看趋势 ›</Text></View>
+          </View>
+          <View className='card-body'><Text className='tiny dim'>看哪个区服在涨、哪些物品跨服更强势；数据来自本服历史快照与云端 history_*。</Text></View>
+        </View>
+      ) : null}
 
       <View className='card'>
         <View className='card-head'>
@@ -357,3 +371,5 @@ export default function Analysis() {
     </View>
   );
 }
+
+export default withTheme(Analysis);

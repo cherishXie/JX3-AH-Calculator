@@ -1,3 +1,4 @@
+import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text, ScrollView, Input, Picker } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
@@ -11,7 +12,7 @@ import { useStore } from '../../store';
 import { DATA, priceOf, rowsOf, filterRows, sortRows, avg, findItem } from '../../shared/engine';
 import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
 
-export default function Skills() {
+function Skills() {
   const [state, actions] = useStore();
   const storedSkill = Taro.getStorageSync('activeSkill');
   const [activeSkill, setActiveSkill] = useState(DATA.skills.some(function (s) { return s.id === storedSkill; }) ? storedSkill : 'shennong');
@@ -196,3 +197,5 @@ export default function Skills() {
     </View>
   );
 }
+
+export default withTheme(Skills);
