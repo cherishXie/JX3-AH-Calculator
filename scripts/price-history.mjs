@@ -269,7 +269,7 @@ function listCommand(options, root) {
 
 function asOfCommand(options, root, { servers, catalog }) {
   const atText = options.at || options._[1];
-  if (!atText) throw new Error('用法：node scripts/price-history.mjs as-of <时间> [--server 梦江南] [--format table|json|csv]');
+  if (!atText) throw new Error('用法：node scripts/price-history.mjs as-of <时间> [--server 梦江南] [--effective] [--format table|json|csv]');
   const target = parseTime(atText, { endOfDay: true });
   const point = priceHistoryStateAt(root, new Date(target));
   if (!point) throw new Error(`在 ${atText} 之前没有可用的物价历史快照`);
@@ -300,7 +300,14 @@ function asOfCommand(options, root, { servers, catalog }) {
       stoneCatalogPrices: point.state.stoneCatalogPrices || {},
       prices: rows,
     };
-    console.log(JSON.stringify(payload, null, 2));
+    const text = JSON.stringify(payload, null, 2) + '\n';
+    if (options.out) {
+      fs.mkdirSync(path.dirname(path.resolve(options.out)), { recursive: true });
+      fs.writeFileSync(options.out, text, 'utf8');
+      console.log(`已写入 ${options.out}（${rows.length} 行）`);
+    } else {
+      process.stdout.write(text);
+    }
     return;
   }
   if ((!serverIds || serverIds.length !== 1) && (options.format === 'csv' || options.format === 'json')) {
@@ -463,7 +470,7 @@ function help() {
 用法：
   node scripts/price-history.mjs list [--limit 30] [--json]
   node scripts/price-history.mjs as-of <时间> [--server 梦江南] [--effective] [--format table|json|csv]
-  node scripts/price-history.mjs series --server 梦江南 --item 玄元星平衫 [--from 日期] [--to 日期] [--effective] [--format table|csv|json]
+  node scripts/price-history.mjs series --server 梦江南 --item 蜂王浆 [--from 日期] [--to 日期] [--effective] [--format table|csv|json]
   node scripts/price-history.mjs export --server 梦江南 [--item 物品] [--from 日期] [--to 日期] [--effective] [--format csv|json] [--out 文件]
   node scripts/price-history.mjs reindex
   node scripts/price-history.mjs compact --before YYYY-MM-DD

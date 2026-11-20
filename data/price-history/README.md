@@ -97,6 +97,6 @@ node scripts/price-history.mjs reindex
 node scripts/price-history.mjs compact --before 2026-06-01
 ```
 
-`compact` 会丢弃旧日期日内的高频变化点，只保留当天最后一个完整快照；需要保留高频明细时不要执行。原始文件仍可从 git 历史找回。
+`compact` 会丢弃旧日期日内的高频变化点，只保留当天最后一个完整快照；折叠后查询早于该快照的时间会返回无数据。需要保留高频明细时不要执行，原始文件仍可从 git 历史找回。
 
 线上静态站同步发布在 `https://cherishxie.github.io/JX3-AH-Calculator/price-history/`，可直接读取 `index.json` 与 `days/YYYY-MM-DD.json`。

@@ -561,6 +561,10 @@ export function priceHistoryStateAt(root, at) {
   for (const entry of days) {
     const day = loadPriceHistoryDay(root, entry.date);
     if (!day) continue;
+    const baseMs = Date.parse(day.base.at);
+    // 折叠后的旧日期只剩当天最后一个快照。目标时间早于它时，日内更早的价格
+    // 已被有意丢弃，不能悄悄回退到更早一天的旧值。
+    if (day.compacted && Number.isFinite(baseMs) && baseMs > target) return null;
     const point = replayPriceHistoryDayTo(day, target);
     if (point) return Object.assign({ date: day.date }, point);
   }

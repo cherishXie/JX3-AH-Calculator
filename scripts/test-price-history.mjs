@@ -193,6 +193,7 @@ try {
   assert.equal(seedPriceHistory(root, makeData()).skipped, 'day-exists');
   assert.equal(seedPriceHistory(root, makeData(), '2026-11-19T09:00:00+08:00').created, true);
   assert.equal(listPriceHistoryDays(root).length, 3);
+  assert.equal(priceHistoryStateAt(root, new Date('2026-11-20T09:30:00+08:00')), null);
 
   // 9. 同秒重跑：替换最后一条 sample，而不是重复追加。
   const replay = makeData();
