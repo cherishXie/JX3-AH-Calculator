@@ -86,10 +86,10 @@ if (project) {
 }
 
 if (app) {
-  if (!Array.isArray(app.pages) || app.pages.length !== 9) {
-    fail('app.json pages 应为 9 个，当前 ' + (app.pages ? app.pages.length : 0));
+  if (!Array.isArray(app.pages) || app.pages.length !== 10) {
+    fail('app.json pages 应为 10 个，当前 ' + (app.pages ? app.pages.length : 0));
   } else {
-    pass('页面数量：8');
+    pass('页面数量：10');
   }
 
   const tabs = (app.tabBar && app.tabBar.list) || [];
@@ -159,7 +159,7 @@ for (const file of sourceFiles) {
   }
   if (/\b(?:Taro|wx)\.cloud\./.test(text)) cloudUse = true;
 }
-if (cloudUse) pass('云端行情：wx.cloud（CLOUD_ENV 为空时自动跳过）');
+if (cloudUse) pass('云端行情：wx.cloud（配置后启用）');
 if (!networkUse) pass('网络请求：未直接使用 wx.request');
 
 console.log('\n微信小程序构建验收（miniapp/dist/weapp）\n');

@@ -6,11 +6,8 @@ import './app.css';
 class App extends Component {
   componentDidMount() {
     if (process.env.TARO_ENV === 'weapp') {
-      syncRemotePrices(actions, false, getState()).then(function (res) {
-        if (res && !res.ok && !res.skipped) {
-          console.warn('[cloud prices]', res.error || 'sync failed');
-        }
-      });
+      // 自动同步失败时静默回退到本地行情；手动同步会在价格页给出提示。
+      syncRemotePrices(actions, false, getState());
     }
   }
 

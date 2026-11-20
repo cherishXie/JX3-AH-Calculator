@@ -1,14 +1,19 @@
 {
   "sourceCommit": "67b261985ee20f5317639aa2d72a239528ea46fb",
   "date": "2026-11-20",
-  "title": "物价走势发布 · 行情同步修复",
+  "title": "物价走势发布 · 小程序云端历史",
   "notes": [
-    "新增「物价走势」：历史节点、全部技艺/类型、物品搜索/多选、价格分布、涨跌红黑榜与热力图",
-    "价格分布默认指数、可切原始金币；支持散点、单品折线、按节点折叠原始数据与 PNG/CSV 导出",
+    "新增「物价走势」：历史节点、全部技艺/类型、物品搜索/多选、价格分布、涨跌红黑榜与热力图；价格分布默认指数，可切原始金币，支持散点、单品折线、按节点折叠原始数据与 PNG/CSV 导出",
     "修复 CDN 返回旧 version.json 时反复显示“行情更新中”的问题；远程旧行情不再覆盖本地新数据",
-    "移动端无 Service Worker 时也能用 updates.json 检查更新，不再直接提示“浏览器不支持更新检查”"
+    "移动端无 Service Worker 时也能用 updates.json 检查更新，不再直接提示“浏览器不支持更新检查”",
+    "小程序「物价走势」改为优先读云端历史：Action 每次更新写入 history_*，最多 7 天，本地缓存 1 小时，失败回退离线快照"
   ],
   "history": [
+    {
+      "version": "miniapp-trends-cloud",
+      "date": "2026-11-20",
+      "title": "小程序走势接入云端历史"
+    },
     {
       "version": "67b2619",
       "date": "2026-11-20",
@@ -33,11 +38,6 @@
       "version": "6853028",
       "date": "2026-11-20",
       "title": "default all trend filters, mobile collapse and price check"
-    },
-    {
-      "version": "e5690f5",
-      "date": "2026-11-20",
-      "title": "align trend counts, sticky filters and node lists"
     }
   ]
 }

@@ -101,6 +101,19 @@ npm run build:weapp
 
 **这一步之后**，日常物价更新只需要 GitHub Actions + 云数据库，不再需要发版。
 
+## 趋势历史自动更新
+
+物价走势使用现有 `prices` 集合，不新建集合：
+
+- `prices/history_YYYY-MM-DD`：每天全部节点（base + samples）
+- `prices/history_meta`：最近 7 天索引、更新时间、服务器列表
+
+`Update JX3 prices` 和 `Sync prices to WeChat Cloud` 都会在写入 `prices/current` 后写入最近 7 天历史。小程序优先读云端历史，缓存 1 小时；云端不可用时回退到打包快照。
+
+注意：单日历史约 125 KB，7 天约 0.9 MB；当前保留 7 天，避免客户端一次读取过大。
+
+---
+
 ## 日常更新流程
 
 ```

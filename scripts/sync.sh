@@ -18,6 +18,7 @@ REMOTE="${REMOTE:-origin}"
 node scripts/test-changelog.mjs
 node scripts/test-price-history.mjs
 node scripts/test-trends.cjs
+node miniapp/scripts/build-trends.mjs
 node scripts/sync-breakthrough-model.mjs
 node scripts/test-breakthrough.cjs
 ./scripts/build-minitool.sh

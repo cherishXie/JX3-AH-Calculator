@@ -134,6 +134,21 @@ export default function Overview() {
 
       <StoneMiniCard />
 
+      {process.env.TARO_ENV === 'weapp' ? (
+        <View className='card trend-entry' onClick={function () { Taro.navigateTo({ url: '/pages/trends/index' }); }}>
+          <View className='card-head'>
+            <View className='flex1'>
+              <Text className='card-title'>物价走势</Text>
+              <Text className='card-sub'>本服历史报价 · 涨跌榜与单品曲线</Text>
+            </View>
+            <View className='card-tool'><Text className='badge badge-info'>查看走势 ›</Text></View>
+          </View>
+          <View className='card-body'>
+            <Text className='tiny dim'>按历史快照看区间涨跌、最高 / 最低与节点价格；不会覆盖你的手动校准。</Text>
+          </View>
+        </View>
+      ) : null}
+
       <View className='card'>
         <View className='card-head'>
           <View className='flex1'>

@@ -8,7 +8,7 @@ const PAGES = [
   'pages/analysis/index'
 ];
 
-if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index');
+if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index', 'pages/trends/index');
 
 PAGES.push('pages/breakthrough/index', 'pages/recipe/index', 'pages/settings/index');
 
