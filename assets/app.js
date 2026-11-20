@@ -26,7 +26,8 @@
     modal: null,
     lastFocus: null,
     lastPath: null,
-    trendPickerOpen: false
+    trendPickerOpen: false,
+    trendScroll: Object.create(null)
   };
 
   const EXCEL_DOWNLOADS = [
@@ -2295,7 +2296,7 @@
     '</div>';
     html += '<div class="trend-filter-field"><span>纵轴</span><div class="seg seg-sm">' +
       '<button class="' + (ctx.axisMode === 'index' ? 'active' : '') + '" data-filter="taxis" data-value="index">指数</button>' +
-      '<button class="' + (ctx.axisMode === 'price' ? 'active' : '') + '" data-filter="taxis" data-value="price">价格</button>' +
+      '<button class="' + (ctx.axisMode === 'price' ? 'active' : '') + '" data-filter="taxis" data-value="price">原始金币</button>' +
       '</div></div>';
     html += '<details class="trend-picker"' + pickerOpen + '>' +
       '<summary class="trend-picker-summary" title="可多选物品，支持全选/清空"><span>物品 <em>多选</em></span><b>' + selectedCount + ' / ' + total + '</b>' + icon('chevronDown') + '</summary>' +
@@ -2316,7 +2317,11 @@
       '</div>' +
     '</details>';
     html += '<button class="btn btn-sm" data-action="trend-refresh" title="重新加载历史数据">' + icon('refresh') + '刷新</button>';
-    html += '</div></div></section>';
+    html += '</div>';
+    html += '<div class="trend-axis-help">' + (ctx.axisMode === 'index'
+      ? '价格指数 = 节点价格 ÷ 区间首点价格 × 100；100 表示与首点持平，120 表示上涨 20%，80 表示下跌 20%。切换到「原始金币」查看实际价格。'
+      : '原始金币按对数坐标展示实际价格，适合同时观察不同价位的物品。') + '</div>';
+    html += '</div></section>';
     return html;
   }
   function trendTierLegend(ctx, withFocus) {
@@ -2410,7 +2415,7 @@
       '<span class="item"><span class="swatch" style="--sw:rgba(69,212,131,.8)"></span>涨</span>' +
       '<span class="item"><span class="swatch" style="--sw:rgba(244,63,94,.8)"></span>跌</span>' +
       '<span class="tiny dim">相对区间首点</span></div></div></div>' +
-      '<div class="trend-heat-wrap"><table class="trend-heatmap">' + head + '<tbody>' + body + '</tbody></table></div></section>';
+      '<div class="trend-heat-wrap" data-trend-scroll="heatmap"><table class="trend-heatmap">' + head + '<tbody>' + body + '</tbody></table></div></section>';
   }
   function trendDistributionCard(ctx) {
     const items = trendDistributionItems(ctx);
@@ -2421,10 +2426,10 @@
     const width = Math.max(1100, items.length * 64);
     return '<section class="card col-12 trend-chart-card"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">价格分布</h2></div><div class="card-tools"><span class="tiny dim">' + items.length + ' 个物品</span></div></div>' +
-      '<div class="trend-chart-wrap">' + Charts.priceDistribution(items, {
+      '<div class="trend-chart-wrap" data-trend-scroll="distribution">' + Charts.priceDistribution(items, {
         palette: Charts.palette(ui.theme), width: width, height: 360, focusKey: ctx.focusKey,
         log: ctx.axisMode === 'price',
-        axisLabel: ctx.axisMode === 'index' ? '价格指数（首点 = 100）' : '单价（金 · 对数）'
+        axisLabel: ctx.axisMode === 'index' ? '价格指数（首点 = 100）' : '原始金币（对数）'
       }) + '</div>' +
       '<div class="card-foot"><div class="chart-legend">' +
         '<span class="item"><span class="trend-whisker"></span>最低 / 最高</span>' +
@@ -2444,10 +2449,10 @@
     const width = Math.max(1100, items.length * 64);
     return '<section class="card col-12 trend-chart-card"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">价格散点</h2></div><div class="card-tools"><span class="tiny dim">' + rows.length + ' 个节点</span></div></div>' +
-      '<div class="trend-chart-wrap">' + Charts.categoryScatter(rows, {
+      '<div class="trend-chart-wrap" data-trend-scroll="scatter">' + Charts.categoryScatter(rows, {
         palette: Charts.palette(ui.theme), items: items, width: width, height: 320, focusKey: ctx.focusKey,
         log: ctx.axisMode === 'price',
-        axisLabel: ctx.axisMode === 'index' ? '价格指数（首点 = 100）' : '单价（金 · 对数）'
+        axisLabel: ctx.axisMode === 'index' ? '价格指数（首点 = 100）' : '原始金币（对数）'
       }) + '</div>' +
       '<div class="card-foot"><span class="spacer"></span><span>' + items.length + ' 个物品</span></div></section>';
   }
@@ -2462,7 +2467,7 @@
     return '<section class="card col-12 trend-chart-card"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">物价变化 · ' + U.esc(ctx.focusItem.name) + '</h2></div><div class="card-tools">' +
       '<span class="tiny dim">最新 ' + U.fmt(last.price, 2) + ' 金' + (change == null ? '' : ' · ' + (change >= 0 ? '+' : '−') + U.fmt(Math.abs(change), 1) + '%') + '</span></div></div>' +
-      '<div class="trend-chart-wrap">' + Charts.priceLine(ctx.focusSeries, {
+      '<div class="trend-chart-wrap" data-trend-scroll="line">' + Charts.priceLine(ctx.focusSeries, {
         palette: Charts.palette(ui.theme), width: 1100, height: 260, color: ctx.focusItem.color || ctx.focusItem.tierColor || '#64748B'
       }) + '</div>' +
       '<div class="card-foot"><span class="trend-ring-label"><span class="trend-ring"></span>' + U.esc(ctx.focusItem.name) + '</span></div></section>';
@@ -4019,6 +4024,7 @@
     }
     const focusEl = e.target.closest('[data-trend-focus]');
     if (focusEl) {
+      captureTrendScroll();
       updateParams({ tfocus: focusEl.getAttribute('data-trend-focus') });
       return;
     }
@@ -4283,6 +4289,11 @@
     document.addEventListener('input', onInput);
     document.addEventListener('compositionstart', onCompositionStart);
     document.addEventListener('compositionend', onCompositionEnd);
+    document.addEventListener('scroll', function (e) {
+      const el = e.target;
+      if (!el || !el.matches || !el.matches('[data-trend-scroll]')) return;
+      ui.trendScroll[el.getAttribute('data-trend-scroll')] = el.scrollLeft;
+    }, true);
     document.addEventListener('keydown', onKeydown);
     document.addEventListener('toggle', function (e) {
       if (e.target && e.target.classList && e.target.classList.contains('trend-picker')) {
@@ -4364,6 +4375,18 @@
       }).join('') + '</div>' +
       '<div class="grid section-gap"><div class="skeleton col-8" style="height:380px"></div><div class="skeleton col-4" style="height:380px"></div></div>' +
       '</div>';
+  }
+
+  function captureTrendScroll() {
+    document.querySelectorAll('[data-trend-scroll]').forEach(function (el) {
+      ui.trendScroll[el.getAttribute('data-trend-scroll')] = el.scrollLeft;
+    });
+  }
+  function restoreTrendScroll() {
+    document.querySelectorAll('[data-trend-scroll]').forEach(function (el) {
+      const value = ui.trendScroll[el.getAttribute('data-trend-scroll')];
+      if (value) el.scrollLeft = value;
+    });
   }
 
   function render() {
@@ -4454,6 +4477,7 @@
         } catch (err) { /* ignore */ }
       }
     }
+    requestAnimationFrame(restoreTrendScroll);
   }
 
   function boot() {
