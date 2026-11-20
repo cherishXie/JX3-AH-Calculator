@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "ba9230122d9f3a37bda8bc9dd2e67949ba212340",
+  "sourceCommit": "59ab312f3359380e0a7d0558786af31066ff25f0",
   "date": "2026-11-20",
   "title": "新增物价走势分析",
   "notes": [
@@ -9,6 +9,11 @@
     "行情条新增「检查物价」，dev 预览自动跟随生产行情；跨技艺材料按实际配方用途展示"
   ],
   "history": [
+    {
+      "version": "59ab312",
+      "date": "2026-11-20",
+      "title": "物价走势正式发布"
+    },
     {
       "version": "ba92301",
       "date": "2026-11-20",
@@ -33,11 +38,6 @@
       "version": "4d318aa",
       "date": "2026-11-20",
       "title": "link trend charts, rank board and image export"
-    },
-    {
-      "version": "873617e",
-      "date": "2026-11-20",
-      "title": "preserve trend chart scroll and explain index axis"
     }
   ]
 }
