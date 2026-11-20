@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "221103f5f5ddc0411ea70377fdbdec0bb96080e1",
+  "sourceCommit": "64d3244a07fb5c2b4314825465f85b0fe6390699",
   "date": "2026-11-20",
-  "title": "rebuild mini program bundles for cloud trends",
+  "title": "update mini program page count",
   "notes": [
-    "rebuild mini program bundles for cloud trends"
+    "update mini program page count"
   ],
   "history": [
+    {
+      "version": "64d3244",
+      "date": "2026-11-20",
+      "title": "update mini program page count"
+    },
     {
       "version": "221103f",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "6b40e29",
       "date": "2026-11-20",
       "title": "小程序新增物价走势与云环境"
-    },
-    {
-      "version": "59ab312",
-      "date": "2026-11-20",
-      "title": "物价走势正式发布"
     }
   ]
 }
