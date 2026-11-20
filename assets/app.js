@@ -37,6 +37,7 @@
     serverItemPickerOpen: false,
     serverItemQuery: '',
     serverItemRankQuery: '',
+    serverRecentItems: null,
     trendScroll: Object.create(null),
     trendCenterKey: null
   };
@@ -3425,6 +3426,69 @@
       }).join('') : '<div class="server-empty">—</div>') + '</div></div></div></section>';
     return html;
   }
+  const SERVER_RECENT_KEY = 'jx3.serverItemRecent.v1';
+  const SERVER_RECENT_MAX = 15;
+  const SERVER_QUICK_ITEM_NAMES = ['羊皮', '骨头', '猫眼石', '鱼肉'];
+  function serverSearchMatch(text, query) {
+    const hay = String(text || '').toLowerCase().replace(/\s+/g, '');
+    const needle = String(query || '').toLowerCase().replace(/\s+/g, '');
+    if (!needle) return true;
+    if (hay.indexOf(needle) !== -1) return true;
+    // 轻量模糊匹配：按顺序出现即可，例如“青玉”可匹配“青魄玉”
+    let pos = 0;
+    for (let i = 0; i < hay.length && pos < needle.length; i++) {
+      if (hay.charAt(i) === needle.charAt(pos)) pos++;
+    }
+    return pos === needle.length;
+  }
+  function serverRecentLoad() {
+    try {
+      const raw = window.localStorage.getItem(SERVER_RECENT_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(function (key) { return typeof key === 'string' && key; }).slice(0, SERVER_RECENT_MAX);
+    } catch (err) {
+      return [];
+    }
+  }
+  function serverRecentSave(keys) {
+    try { window.localStorage.setItem(SERVER_RECENT_KEY, JSON.stringify(keys)); } catch (err) { /* ignore */ }
+  }
+  function serverDefaultQuickKeys(all) {
+    const keys = [];
+    SERVER_QUICK_ITEM_NAMES.forEach(function (name) {
+      const item = serverItemByName(all, name);
+      if (item) keys.push(item.key);
+    });
+    const stone = serverItemStone(all, 6);
+    if (stone) keys.push(stone.key);
+    return keys;
+  }
+  function serverRecentKeys(ctx) {
+    const all = ctx.selection.all;
+    if (ui.serverRecentItems === null || ui.serverRecentItems === undefined) {
+      let loaded = serverRecentLoad();
+      if (!loaded.length) loaded = serverDefaultQuickKeys(all);
+      ui.serverRecentItems = loaded;
+    }
+    let keys = ui.serverRecentItems.filter(function (key) {
+      return all.some(function (item) { return item.key === key; });
+    });
+    if (ctx.item && keys.indexOf(ctx.item.key) === -1) keys.unshift(ctx.item.key);
+    if (keys.length > SERVER_RECENT_MAX) keys = keys.slice(0, SERVER_RECENT_MAX);
+    return keys;
+  }
+  function serverRememberItem(key) {
+    if (!key) return;
+    const all = serverCatalog();
+    let keys = ui.serverRecentItems;
+    if (!keys || !keys.length) keys = serverDefaultQuickKeys(all);
+    keys = keys.filter(function (itemKey) { return itemKey !== key; });
+    keys.unshift(key);
+    if (keys.length > SERVER_RECENT_MAX) keys = keys.slice(0, SERVER_RECENT_MAX);
+    ui.serverRecentItems = keys;
+    serverRecentSave(keys);
+  }
   function serverItemColor(item) {
     const all = serverCatalog();
     const index = all.findIndex(function (x) { return x.key === item.key; });
@@ -3442,16 +3506,14 @@
   }
   function serverItemQuick(ctx, p) {
     const all = ctx.selection.all;
-    const quick = [
-      serverItemByName(all, '羊皮'), serverItemByName(all, '骨头'),
-      serverItemByName(all, '猫眼石'), serverItemByName(all, '鱼肉'),
-      serverItemStone(all, 6)
-    ].filter(Boolean);
+    const recent = serverRecentKeys(ctx).map(function (key) {
+      return all.filter(function (item) { return item.key === key; })[0];
+    }).filter(Boolean);
     return '<div class="server-item-quick"><span class="lab">快速查看</span>' +
-      quick.map(function (item) {
+      recent.map(function (item) {
         return '<button class="server-quick-chip' + (ctx.item && ctx.item.key === item.key ? ' on' : '') + '" data-server-item-pick="' + U.esc(item.key) + '">' + U.esc(item.kind === 'stone' ? '五行石 · ' + item.level + ' 级' : item.name) + '</button>';
       }).join('') +
-      '<span class="server-quick-note">当前范围：全部物品 ' + all.length + ' 项</span></div>';
+      '<span class="server-quick-note">最近 ' + SERVER_RECENT_MAX + ' 个 · 全部 ' + all.length + ' 项</span></div>';
   }
   function serverItemFilterCard(ctx, p) {
     const all = ctx.selection.all;
@@ -3463,7 +3525,7 @@
     const query = String(ui.serverItemQuery || '').trim();
     const itemList = all.filter(function (item) {
       if (!query) return true;
-      return U.includes([item.name, item.skillName, item.tierName, item.kind].join(' '), query);
+      return serverSearchMatch([item.name, item.skillName, item.tierName, item.kind].join(' '), query);
     });
     const selectedItem = ctx.item;
     const allProductSelected = selectedServers.length === totalServers;
@@ -3489,7 +3551,7 @@
         }).join('') +
       '</div></div></details>';
     html += '<details class="trend-picker server-item-picker"' + itemOpen + '><summary class="trend-picker-summary"><span>物品</span><b>' + (selectedItem ? U.esc(selectedItem.name) : '选择物品') + '</b>' + icon('chevronDown') + '</summary>' +
-      '<div class="trend-picker-panel server-item-panel"><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品 / 技艺 / 类型" value="' + U.esc(ui.serverItemQuery || '') + '" data-server-item-search data-fkey="server-item-search" aria-label="搜索物品"></div>' +
+      '<div class="trend-picker-panel server-item-panel"><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品 / 技艺 / 类型" title="支持模糊搜索，回车选择第一项" value="' + U.esc(ui.serverItemQuery || '') + '" data-server-item-search data-fkey="server-item-search" aria-label="搜索物品"></div><div class="server-search-hint">支持模糊搜索 · 回车选择第一项</div>' +
       '<div class="trend-picker-list">' +
         (itemList.map(function (item) {
           return '<button type="button" class="server-item-option' + (selectedItem && selectedItem.key === item.key ? ' on' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc([item.name, item.skillName, item.tierName, item.kind].join(' ')) + '">' +
@@ -3542,7 +3604,7 @@
     const all = ctx.itemRanking;
     const selected = ctx.item;
     let html = '<section class="card col-5 server-item-rank-card"><div class="card-head"><div><h2 class="card-title">物品跨服统计</h2><p class="card-sub">按上涨区服数排序 · ' + ctx.selection.all.length + ' 项中 ' + all.length + ' 项有可比样本</p></div><div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格">' + icon('download') + '</button></div></div>';
-    html += '<div class="server-rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品" value="' + U.esc(ui.serverItemRankQuery || '') + '" data-server-item-rank-search data-fkey="server-item-rank-search"><span class="tiny dim">按上涨面</span></div>';
+    html += '<div class="server-rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品" value="' + U.esc(ui.serverItemRankQuery || '') + '" data-server-item-rank-search data-fkey="server-item-rank-search"><span class="tiny dim">按上涨面 · 回车选择</span></div>';
     html += '<div class="server-item-rank-wrap"><table class="server-item-rank-table"><thead><tr><th>物品</th><th>涨/跌/平</th><th>中位</th><th>覆盖</th></tr></thead><tbody>';
     all.forEach(function (row) {
       const item = row.item;
@@ -5048,10 +5110,12 @@
     }
     const itemPick = e.target.closest('[data-server-item-pick]');
     if (itemPick) {
+      const pickedKey = itemPick.getAttribute('data-server-item-pick');
+      serverRememberItem(pickedKey);
       ui.serverItemPickerOpen = false;
       ui.serverItemQuery = '';
       ui.serverItemRankQuery = '';
-      updateParams({ sview: 'item', sitem: itemPick.getAttribute('data-server-item-pick') });
+      updateParams({ sview: 'item', sitem: pickedKey });
       return;
     }
     const itemTrend = e.target.closest('[data-server-item-trends]');
@@ -5307,7 +5371,7 @@
       ui.serverItemQuery = t.value;
       if (panel) {
         panel.querySelectorAll('[data-server-item-text]').forEach(function (node) {
-          node.hidden = !!q && !U.includes(node.getAttribute('data-server-item-text') || '', q);
+          node.hidden = !!q && !serverSearchMatch(node.getAttribute('data-server-item-text') || '', q);
         });
       }
       return;
@@ -5318,7 +5382,7 @@
       ui.serverItemRankQuery = t.value;
       if (card) {
         card.querySelectorAll('tbody tr[data-server-item-text]').forEach(function (row) {
-          row.hidden = !!q && !U.includes(row.getAttribute('data-server-item-text') || '', q);
+          row.hidden = !!q && !serverSearchMatch(row.getAttribute('data-server-item-text') || '', q);
         });
       }
       return;
@@ -5389,6 +5453,22 @@
       if (excelOpen) { excelOpen.open = false; return; }
       const sb = document.getElementById('sidebar');
       if (sb && sb.classList.contains('open')) { sb.classList.remove('open'); return; }
+    }
+    if (e.key === 'Enter' && !e.isComposing && e.target.matches) {
+      if (e.target.matches('[data-server-item-search]')) {
+        e.preventDefault();
+        const panel = e.target.closest('.server-item-picker');
+        const first = panel ? panel.querySelector('.server-item-option:not([hidden])') : null;
+        if (first) first.click();
+        return;
+      }
+      if (e.target.matches('[data-server-item-rank-search]')) {
+        e.preventDefault();
+        const card = e.target.closest('.server-item-rank-card');
+        const first = card ? card.querySelector('tbody tr[data-server-item-pick]:not([hidden])') : null;
+        if (first) first.click();
+        return;
+      }
     }
     trapFocus(e);
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('th[data-sort]')) {

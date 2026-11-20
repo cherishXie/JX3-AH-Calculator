@@ -1984,3 +1984,4 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 }
 .server-item-rank-wrap{max-height:448px;overflow:auto}
 .server-item-rank-wrap thead th{position:sticky;top:0;z-index:2;background:var(--card)}
+.server-search-hint{font-size:8px;color:var(--muted-2);padding:4px 8px 2px}
