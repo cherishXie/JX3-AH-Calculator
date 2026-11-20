@@ -2,6 +2,22 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-20 · 221103f
+
+rebuild mini program bundles for cloud trends
+
+## 2026-11-20 · ad802b1
+
+include mini program trends build
+
+## 2026-11-20 · bc9ba3e
+
+update JX3BOX prices
+
+## 2026-11-20 · 6ccc443
+
+走势历史接入微信云
+
 ## 2026-11-20 · 67b2619
 
 行情同步与移动端更新检查
@@ -9,6 +25,10 @@
 ## 2026-11-20 · 8c90bf2
 
 update JX3BOX prices
+
+## 2026-11-20 · 6b40e29
+
+小程序新增物价走势与云环境
 
 ## 2026-11-20 · 59ab312
 
