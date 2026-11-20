@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 6d9d24f
+
+update JX3BOX prices
+
 ## 2026-11-21 · d9f9a2e
 
 release: 本服可做判断上线，更新小程序与小工具
@@ -526,11 +530,3 @@ add horse grass gathering to Shennong
 ## 2026-11-19 · 44e7edf
 
 use current-season 40 energy for gathering
-
-## 2026-11-19 · 455a469
-
-default transaction tax to 5% and refresh PWA notes
-
-## 2026-11-19 · 6bd83e7
-
-move price schedule to dedicated workflow
