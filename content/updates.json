@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "32c383e013b43ebf093aea420bacdf38cc4a16f1",
+  "sourceCommit": "3c4d05cfa156faf9f7ced2161279b3556c0b878f",
   "date": "2026-11-20",
-  "title": "keep compacted history queries honest",
+  "title": "hint effective export for unquoted items",
   "notes": [
-    "keep compacted history queries honest"
+    "hint effective export for unquoted items"
   ],
   "history": [
+    {
+      "version": "3c4d05c",
+      "date": "2026-11-20",
+      "title": "hint effective export for unquoted items"
+    },
     {
       "version": "32c383e",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "e1d46fa",
       "date": "2026-11-20",
       "title": "allow forced local price update"
-    },
-    {
-      "version": "4431edd",
-      "date": "2026-11-20",
-      "title": "trigger prices every 30 minutes"
     }
   ]
 }
