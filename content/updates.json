@@ -1,9 +1,11 @@
 {
   "sourceCommit": "e1d46fa08e035abec6ba478e41b9fd76068ee183",
   "date": "2026-11-20",
-  "title": "allow forced local price update",
+  "title": "新增行情检查时间",
   "notes": [
-    "allow forced local price update"
+    "顶部独立显示「行情更新」和「行情检查」两个时间",
+    "每次前端成功检查行情都会刷新检查时间，即使价格没变",
+    "行情更新时间仍只在 JX3BOX 报价变化时更新"
   ],
   "history": [
     {

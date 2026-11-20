@@ -253,6 +253,11 @@ html.light .boot-loader__retry:hover { background: #f1f5f9; }
     <aside class="sidebar" id="sidebar" aria-label="主导航"></aside>
     <div class="main">
       <header class="header" id="header"></header>
+      <div id="market-status" class="market-status" role="status" aria-live="polite" title="行情更新时间来自 JX3BOX 报价；行情检查时间是本页最近一次成功检查的时间">
+        <span class="market-status__item"><span class="market-status__label">行情更新</span><b data-market-updated>—</b></span>
+        <span class="market-status__divider" aria-hidden="true"></span>
+        <span class="market-status__item"><span class="market-status__label">行情检查</span><b data-market-checked>—</b></span>
+      </div>
       <main id="page" tabindex="-1"></main>
     </div>
   </div>

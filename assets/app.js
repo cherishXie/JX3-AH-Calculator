@@ -121,12 +121,32 @@
   var lastDataCheck = 0;
   var dataSyncStarted = 0;
   var dataSyncHideTimer = null;
+  var marketCheckedAt = 0;
+  try { marketCheckedAt = Number(localStorage.getItem('jx3-market-checked-at')) || 0; } catch (e) { /* ignore */ }
 
   function shanghaiClock() {
     // 不依赖 Intl/时区数据库：用 UTC + 8 小时得到北京时间。
     var now = new Date();
     var cst = new Date(now.getTime() + 8 * 3600000);
     return { hour: cst.getUTCHours(), minute: cst.getUTCMinutes() };
+  }
+
+  function marketTimeText(ts) {
+    return ts ? U.fmtTime(ts) : '—';
+  }
+
+  function updateMarketStatus() {
+    var updated = Date.parse(DATA.meta.priceUpdatedAt) || 0;
+    var a = document.querySelector('[data-market-updated]');
+    var b = document.querySelector('[data-market-checked]');
+    if (a) a.textContent = marketTimeText(updated);
+    if (b) b.textContent = marketTimeText(marketCheckedAt);
+  }
+
+  function setMarketChecked(ts) {
+    marketCheckedAt = ts;
+    try { localStorage.setItem('jx3-market-checked-at', String(ts)); } catch (e) { /* ignore */ }
+    updateMarketStatus();
   }
 
   function dataSyncBox() {
@@ -257,6 +277,7 @@
       .then(function (response) { return response.ok ? response.json() : null; })
       .then(function (version) {
         if (!version || !version.dataUpdatedAt) return;
+        setMarketChecked(Date.now());
         if (version.dataUpdatedAt === DATA.meta.priceUpdatedAt) return;
 
         dataSyncStarted = Date.now();
@@ -3675,6 +3696,7 @@
     }
 
     renderShell(route.path, p);
+    updateMarketStatus();
 
     let html = '';
     let title = '总览';
