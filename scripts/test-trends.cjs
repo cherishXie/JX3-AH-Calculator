@@ -125,4 +125,20 @@ assert.equal(T._test.items('stone').length, 1);
 assert.equal(T._test.items('all', 's1').length, 2);
 assert.equal(T._test.atText(points[0].at), '2026-11-20 10:00');
 
-console.log('PASS: trends buildPoints, fallback, series, candles, scatter, scope stats and filters.');
+// 小时范围：起始取整点，结束包含该小时的 59:59.999；日期-only 结束取整天。
+const ten = T._test.parseBound('2026-11-20T10:00', false);
+const tenEnd = T._test.parseBound('2026-11-20T10:00', true);
+const eleven = T._test.parseBound('2026-11-20T11:00', false);
+assert.equal(ten, Date.parse('2026-11-20T10:00:00+08:00'));
+assert.equal(tenEnd, Date.parse('2026-11-20T10:59:59.999+08:00'));
+assert.equal(T._test.parseBound('2026-11-20', true), Date.parse('2026-11-20T23:59:59.999+08:00'));
+assert.equal(T._test.hourText(Date.parse('2026-11-20T13:07:15+08:00')), '2026-11-20T13:00');
+assert.equal(T._test.hourText(tenEnd), '2026-11-20T10:00');
+const firstHour = T._test.slicePoints(points, ten, tenEnd);
+assert.equal(firstHour.length, 1);
+assert.equal(firstHour[0].at, '2026-11-20T10:00:00+08:00');
+const firstTwoHours = T._test.slicePoints(points, ten, T._test.parseBound('2026-11-20T11:00', true));
+assert.equal(firstTwoHours.length, 2);
+assert.equal(T._test.slicePoints(points, eleven, T._test.endOfHourMs(Date.parse('2026-11-20T11:30:00+08:00'))).length, 1);
+
+console.log('PASS: trends buildPoints, fallback, series, candles, scatter, scope stats, filters and hour range.');

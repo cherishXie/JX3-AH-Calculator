@@ -82,9 +82,49 @@
     const text = String(at || '');
     return text.slice(0, 10);
   }
-  function normalizeDate(value) {
-    const text = String(value || '');
-    return /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : '';
+  function beijingParts(ms) {
+    const d = new Date(ms + 8 * 3600000);
+    return {
+      year: d.getUTCFullYear(),
+      month: d.getUTCMonth() + 1,
+      day: d.getUTCDate(),
+      hour: d.getUTCHours()
+    };
+  }
+  function beijingDateOf(ms) {
+    const p = beijingParts(ms);
+    return p.year + '-' + String(p.month).padStart(2, '0') + '-' + String(p.day).padStart(2, '0');
+  }
+  function hourText(ms) {
+    const p = beijingParts(ms);
+    return p.year + '-' + String(p.month).padStart(2, '0') + '-' + String(p.day).padStart(2, '0') +
+      'T' + String(p.hour).padStart(2, '0') + ':00';
+  }
+  function floorHourMs(ms) {
+    const p = beijingParts(ms);
+    return Date.UTC(p.year, p.month - 1, p.day, p.hour) - 8 * 3600000;
+  }
+  function endOfHourMs(ms) {
+    return floorHourMs(ms) + 3599999;
+  }
+  function parseBound(value, isEnd) {
+    const text = String(value || '').trim();
+    const match = text.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2})(?::\d{2})?(?::\d{2})?)?$/);
+    if (!match) return null;
+    const date = match[1] + '-' + match[2] + '-' + match[3];
+    if (match[4] === undefined) {
+      const start = Date.parse(date + 'T00:00:00+08:00');
+      return Number.isFinite(start) ? (isEnd ? start + 86399999 : start) : null;
+    }
+    const start = Date.parse(date + 'T' + match[4] + ':00:00+08:00');
+    if (!Number.isFinite(start)) return null;
+    return isEnd ? start + 3599999 : start;
+  }
+  function slicePoints(points, fromMs, toMs) {
+    return (points || []).filter(function (point) {
+      const ms = Date.parse(point.at);
+      return Number.isFinite(ms) && ms >= fromMs && ms <= toMs;
+    });
   }
   function baseUrl() {
     try { return document.baseURI || location.href; } catch (err) { return 'https://localhost/'; }
@@ -458,29 +498,56 @@
     if (!allDates.length) {
       return { status: 'ready', index: state.index, dates: [], points: [], from: '', to: '', allFrom: '', allTo: '' };
     }
-    const allFrom = allDates[0];
-    const allTo = allDates[allDates.length - 1];
-    let from = normalizeDate(opts.from) || allFrom;
-    let to = normalizeDate(opts.to) || allTo;
-    if (from < allFrom) from = allFrom;
-    if (to > allTo) to = allTo;
-    if (from > to) { const tmp = from; from = to; to = tmp; }
-    const dates = allDates.filter(function (date) { return date >= from && date <= to; });
+    const firstDate = allDates[0];
+    const lastDate = allDates[allDates.length - 1];
+    const allFrom = firstDate + 'T00:00';
+    const allTo = lastDate + 'T23:00';
+    const requestedFrom = parseBound(opts.from, false);
+    const requestedTo = parseBound(opts.to, true);
+    const fromDay = requestedFrom != null ? beijingDateOf(requestedFrom) : firstDate;
+    const toDay = requestedTo != null ? beijingDateOf(requestedTo) : lastDate;
+    let dayFrom = fromDay < firstDate ? firstDate : fromDay;
+    let dayTo = toDay > lastDate ? lastDate : toDay;
+    if (dayFrom > dayTo) { const tmp = dayFrom; dayFrom = dayTo; dayTo = tmp; }
+    const dates = allDates.filter(function (date) { return date >= dayFrom && date <= dayTo; });
+    const placeholderFrom = requestedFrom != null ? hourText(requestedFrom) : dayFrom + 'T00:00';
+    const placeholderTo = requestedTo != null ? hourText(requestedTo) : dayTo + 'T23:00';
     if (state.dayError) {
-      return { status: 'error', error: state.dayError, index: state.index, dates: dates, from: from, to: to, allFrom: allFrom, allTo: allTo };
+      return {
+        status: 'error', error: state.dayError, index: state.index, dates: dates,
+        from: placeholderFrom, to: placeholderTo, allFrom: allFrom, allTo: allTo
+      };
     }
     const missing = dates.filter(function (date) { return !state.days[date]; });
     if (missing.length) {
       loadDays(missing);
       return {
-        status: 'loading', index: state.index, dates: dates, from: from, to: to,
-        allFrom: allFrom, allTo: allTo, loaded: dates.length - missing.length, total: dates.length
+        status: 'loading', index: state.index, dates: dates,
+        from: placeholderFrom, to: placeholderTo,
+        allFrom: allFrom, allTo: allTo,
+        loaded: dates.length - missing.length, total: dates.length
       };
     }
-    const points = buildPoints(serverId, dates.map(function (date) { return state.days[date]; }));
+    const allPoints = buildPoints(serverId, dates.map(function (date) { return state.days[date]; }));
+    const allFromMs = parseBound(allFrom, false);
+    const allToMs = parseBound(allTo, true);
+    let fromMs;
+    let toMs;
+    if (allPoints.length) {
+      fromMs = requestedFrom != null ? requestedFrom : floorHourMs(Date.parse(allPoints[0].at));
+      toMs = requestedTo != null ? requestedTo : endOfHourMs(Date.parse(allPoints[allPoints.length - 1].at));
+    } else {
+      fromMs = requestedFrom != null ? requestedFrom : allFromMs;
+      toMs = requestedTo != null ? requestedTo : allToMs;
+    }
+    if (fromMs < allFromMs) fromMs = allFromMs;
+    if (toMs > allToMs) toMs = allToMs;
+    if (fromMs > toMs) { const tmp = fromMs; fromMs = toMs; toMs = tmp; }
+    const points = slicePoints(allPoints, fromMs, toMs);
     return {
       status: 'ready', index: state.index, dates: dates, points: points,
-      from: from, to: to, allFrom: allFrom, allTo: allTo
+      from: hourText(fromMs), to: hourText(toMs),
+      allFrom: allFrom, allTo: allTo
     };
   }
 
@@ -527,7 +594,12 @@
       scopeStats: scopeStats,
       items: items,
       item: item,
-      atText: atText
+      atText: atText,
+      parseBound: parseBound,
+      hourText: hourText,
+      floorHourMs: floorHourMs,
+      endOfHourMs: endOfHourMs,
+      slicePoints: slicePoints
     }
   };
 })();

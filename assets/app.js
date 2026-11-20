@@ -101,6 +101,9 @@
     const meta = document.querySelector('meta[name="app-version"]');
     return meta ? (meta.getAttribute('content') || 'dev') : 'dev';
   }
+  function isDevDeployment() {
+    try { return /\/dev(?:\/|$)/.test(location.pathname); } catch (err) { return false; }
+  }
 
   function checkForUpdates() {
     const api = window.__JX3_PWA__;
@@ -649,6 +652,7 @@
       '<button class="icon-btn mobile-menu" data-action="toggle-mobile-nav" aria-label="打开导航">' + icon('menu') + '</button>' +
       '<div class="crumbs"><span class="home">剑网三物价助手</span><span class="sep"></span><span class="cur">' + U.esc(title) + '</span></div>' +
       '<div class="header-right">' +
+        (isDevDeployment() ? '<span class="badge badge-warning dev-badge" title="开发预览环境，非生产版本">DEV</span>' : '') +
         '<span class="header-version"><span class="dot"></span><span class="v">' + U.esc(DATA.meta.version) + '</span></span>' +
         '<div class="server-wrap">' +
           '<button class="server-trigger" data-action="toggle-server-menu" aria-haspopup="listbox" aria-expanded="' + (ui.serverMenuOpen ? 'true' : 'false') + '">' +
@@ -2160,19 +2164,19 @@
   }
   function trendHead(p, view, ctx) {
     let html = '<div class="page-head"><div><h1 class="page-title">物价走势</h1>' +
-      '<p class="page-sub">按历史节点回溯各区服物价。历史只记录价格变化点；两次变化之间价格保持不变。' +
-      (view && view.allFrom ? '<span class="tiny dim"> 数据范围 ' + U.esc(view.allFrom) + ' ~ ' + U.esc(view.allTo) + '。</span>' : '') +
+      '<p class="page-sub">按历史节点回溯各区服物价。历史只记录价格变化点；两次变化之间价格保持不变。时间范围按整点选择，结束小时包含该小时内的节点。' +
+      (view && view.allFrom ? '<span class="tiny dim"> 数据范围 ' + U.esc(trendAtText(view.allFrom)) + ' ~ ' + U.esc(trendAtText(view.allTo)) + '。</span>' : '') +
       '</p></div>';
     if (view && view.index) {
       const type = ctx ? ctx.type : trendTypeOf(p);
       const skillId = ctx ? ctx.skillId : trendSkillOf(p, type);
       html += '<div class="page-tools trend-tools">' +
         '<div class="trend-range">' +
-          '<input class="input trend-date" type="date" value="' + U.esc(view.from) + '" min="' + U.esc(view.allFrom) +
-            '" max="' + U.esc(view.allTo) + '" data-filter="tfrom" aria-label="开始日期">' +
+          '<input class="input trend-date" type="datetime-local" step="3600" value="' + U.esc(view.from) + '" min="' + U.esc(view.allFrom) +
+            '" max="' + U.esc(view.allTo) + '" data-filter="tfrom" aria-label="开始时间（小时）">' +
           '<span class="tiny dim">至</span>' +
-          '<input class="input trend-date" type="date" value="' + U.esc(view.to) + '" min="' + U.esc(view.allFrom) +
-            '" max="' + U.esc(view.allTo) + '" data-filter="tto" aria-label="结束日期">' +
+          '<input class="input trend-date" type="datetime-local" step="3600" value="' + U.esc(view.to) + '" min="' + U.esc(view.allFrom) +
+            '" max="' + U.esc(view.allTo) + '" data-filter="tto" aria-label="结束时间（小时）">' +
         '</div>' +
         '<div class="seg seg-sm" role="group" aria-label="物品类型">' +
           '<button class="' + (type === 'all' ? 'active' : '') + '" data-filter="ttype" data-value="">全部</button>' +
@@ -4206,7 +4210,7 @@
     page.innerHTML = html;
     const pageEl = page.querySelector('.page');
     if (pageEl && pathChanged) pageEl.classList.add('page-enter');
-    document.title = title + ' · 剑网三物价助手 | JX3 生活技艺计算器';
+    document.title = (isDevDeployment() ? '[DEV] ' : '') + title + ' · 剑网三物价助手 | JX3 生活技艺计算器';
     const sb = document.getElementById('sidebar');
     if (sb) sb.classList.remove('open');
     if (window.innerWidth <= 768) {

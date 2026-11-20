@@ -70,19 +70,44 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout main (production)
+        uses: actions/checkout@v4
         with:
           ref: ${{ needs.changelog.outputs.revision }}
+          path: main
+
+      - name: Checkout dev (preview)
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          path: dev
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Build minitool zip
-        run: ./scripts/build-minitool.sh
+      - name: Build production site
+        run: |
+          cd main
+          ./scripts/build-minitool.sh
+          ./scripts/build-site.sh
 
-      - name: Build static site
-        run: ./scripts/build-site.sh
+      - name: Build dev preview
+        continue-on-error: true
+        run: |
+          cd dev
+          ./scripts/build-site.sh
+
+      - name: Combine production and /dev preview
+        run: |
+          mkdir -p _site
+          cp -R main/_site/. _site/
+          if [ -f dev/_site/index.html ]; then
+            mkdir -p _site/dev
+            cp -R dev/_site/. _site/dev/
+          else
+            echo "WARN: dev preview build missing; production only" >&2
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

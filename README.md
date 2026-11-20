@@ -4,7 +4,7 @@
 
 > 设计遵循 `docs/design/01-设计规范.md` 与 `docs/design/02-模块交互规范.md`：暗色工作台、12 列栅格、一卡一问、控件贴数据、颜色即编码、状态三态、口径常驻。
 
-> 在线版：<https://cherishxie.github.io/JX3-AH-Calculator/> · 小工具包：<https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip>
+> 在线版：<https://cherishxie.github.io/JX3-AH-Calculator/> · 开发预览：<https://cherishxie.github.io/JX3-AH-Calculator/dev/>（带 DEV 标识） · 小工具包：<https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip>
 >
 > 部署与「Web + 小红书小工具」双端同步流程见 [DEPLOY.md](DEPLOY.md)。
 
@@ -36,7 +36,7 @@ python3 -m http.server 8931
 | **五行石** | 合到几级最赚精力？7/8 级要多少爆率才不亏？ | 1-8 级行情、快速/最优合成对比、5/6 级单颗收益、7/8 级爆率盈亏线、剥七/剥八参考、公式全可编辑 |
 | **精力收益分析** | 哪个制品最值得做？差距多少？ | 收益排行、成本×收益散点、各技艺箱线图、双制品对比、满精力贪心分配、完整收益表、五行石收益卡 |
 | **突破升级** | 技艺怎么从 1 升到 50 最省？突破要交什么？ | 8 技艺 30/35/40/45 晋秩（45 级宗师之后继续升至 50，无独立 50 级任务）、逐段最优配方与产出价值、总精力/收益/制作次数、金币优先 / 精力优先 / 省心、八技艺横评 |
-| **物价走势** | 某个物品或技艺最近怎么涨跌？ | 历史节点原始报价、时间范围/材料产物/技艺筛选、蜡烛图、散点图（价格/涨跌幅）、节点与区间 CSV/JSON 导出 |
+| **物价走势** | 某个物品或技艺最近怎么涨跌？ | 历史节点原始报价、小时级时间范围、材料产物/技艺筛选、蜡烛图、散点图（价格/涨跌幅）、节点与区间 CSV/JSON 导出 |
 
 ### 核心操作
 
