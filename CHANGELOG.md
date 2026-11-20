@@ -2,6 +2,34 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-20 · e7db24e
+
+release: 区服趋势与物品视角上线
+
+## 2026-11-20 · 7f7b383
+
+style: 区服趋势标题与说明精简
+
+## 2026-11-20 · efc7f4d
+
+修正区服趋势更新说明
+
+## 2026-11-20 · db6f6b8
+
+区服趋势清空区服时的空态处理
+
+## 2026-11-20 · f03d21f
+
+小程序新增区服趋势与物品视角
+
+## 2026-11-20 · 92567e3
+
+style: 区服趋势字号对齐设计规范
+
+## 2026-11-20 · a5e099e
+
+物品搜索下拉即时过滤
+
 ## 2026-11-20 · 80ba228
 
 区服趋势上线，补齐物品视角与搜索
@@ -10,17 +38,61 @@
 
 新增区服趋势
 
+## 2026-11-20 · deb2e14
+
+物品搜索与快速查看优化
+
+## 2026-11-20 · cf545c7
+
+小程序启动引导页与可配置倒计时
+
 ## 2026-11-20 · 084ac7d
 
 update JX3BOX prices
+
+## 2026-11-20 · 580237f
+
+区服趋势物品榜展示优化
+
+## 2026-11-20 · 034b519
+
+统一区服趋势物品口径与搜索
+
+## 2026-11-20 · 308198a
+
+区服趋势物品视角
+
+## 2026-11-20 · b7181b9
+
+区服趋势更新说明
+
+## 2026-11-20 · 8ca4b7f
+
+ignore generated minitool release metadata
+
+## 2026-11-20 · 1f010fb
+
+分通道更新提示（网页/小程序/小工具）
+
+## 2026-11-20 · 0dc0090
+
+新增区服趋势
 
 ## 2026-11-20 · fb424d6
 
 update JX3BOX prices (local cron)
 
+## 2026-11-20 · 664f0e6
+
+sync latest price data for theme build
+
 ## 2026-11-20 · 5a872eb
 
 update JX3BOX prices
+
+## 2026-11-20 · 3e0723b
+
+小程序支持亮暗主题，默认亮色
 
 ## 2026-11-20 · d7d5eac
 
@@ -29,6 +101,10 @@ restore release notes for mini program trends
 ## 2026-11-20 · 64d3244
 
 update mini program page count
+
+## 2026-11-20 · cc73b86
+
+行情同步与移动端更新检查
 
 ## 2026-11-20 · 221103f
 
@@ -494,19 +570,3 @@ make sync script portable across gh configs
 ## 2026-11-18 · 589e508
 
 document redapp upload flow
-
-## 2026-11-18 · e98ec09
-
-ignore local auth artifacts and use gh for push
-
-## 2026-11-18 · 7e9092f
-
-deploy web app to GitHub Pages and sync minitool
-
-## 2026-11-18 · 1bb929b
-
-Initial commit
-
-## 2026-11-18 · 7df23cf
-
-Initial commit
