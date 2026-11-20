@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "b1f7eb0c72d59876b3846c48cb36b930f1b088ca",
+  "sourceCommit": "6a3eed1c48b2776bb645be1695743f0e3060da0c",
   "date": "2026-11-20",
   "title": "全天每小时自动更新",
   "notes": [
@@ -8,6 +8,11 @@
     "不整页刷新、不跳位置，代码更新仍显示进度条"
   ],
   "history": [
+    {
+      "version": "6a3eed1",
+      "date": "2026-11-20",
+      "title": "switch prices to hourly Cloudflare schedule"
+    },
     {
       "version": "b1f7eb0",
       "date": "2026-11-20",
@@ -32,11 +37,6 @@
       "version": "e7e8910",
       "date": "2026-11-19",
       "title": "use native Excel Web Query for price refresh"
-    },
-    {
-      "version": "fb3c6fb",
-      "date": "2026-11-19",
-      "title": "seed snapshot into no-macro auto workbook"
     }
   ]
 }
