@@ -28,9 +28,9 @@
   };
 
   const EXCEL_DOWNLOADS = [
-    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsm?v=3', file: '剑网3技艺收益与突破.xlsm', name: '宏版 .xlsm', desc: '打开自动拉取 + 手动按钮；失败保留快照', ext: '推荐' },
-    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel-auto.xlsx', file: '剑网3技艺收益与突破-auto.xlsx', name: '无宏自动版 .xlsx', desc: 'Power Query 打开时刷新；预填快照', ext: '自动' },
-    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsx', file: '剑网3技艺收益与突破.xlsx', name: '无宏静态版 .xlsx', desc: '内置快照，WPS / 离线可用', ext: '离线' }
+    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsm?v=4', file: '剑网3技艺收益与突破.xlsm', name: '宏版 .xlsm', desc: '打开自动拉取 + 手动按钮；失败保留快照', ext: '推荐' },
+    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel-auto.xlsx?v=4', file: '剑网3技艺收益与突破-auto.xlsx', name: '无宏自动版 .xlsx', desc: 'Power Query 打开时刷新；预填快照', ext: '自动' },
+    { href: 'https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-excel.xlsx?v=4', file: '剑网3技艺收益与突破.xlsx', name: '无宏静态版 .xlsx', desc: '内置快照，WPS / 离线可用', ext: '离线' }
   ];
 
   /* ------------------------------------------------------------------ */
