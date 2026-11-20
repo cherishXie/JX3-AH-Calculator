@@ -9,5 +9,5 @@
 - 业务变动优先在 `content/updates.json` 写清楚用户能感知的变化；Action 会保留当次手写说明，后续未手写的提交则自动从提交标题/正文生成。
 - 新增或修改突破模型后，执行 `node scripts/sync-breakthrough-model.mjs` 和 `node scripts/test-breakthrough.cjs`。发布流程检查 `node scripts/test-changelog.mjs`，构建小工具和静态站点。
 - 推送后检查 `Deploy dev preview` 的运行结果和 dev 在线地址的 `version.json` / `updates.json`；只有确认部署成功后，才能告知用户已上线。`main` 生产部署只在用户确认发布后检查。失败时继续处理或如实说明阻碍。
-- GitHub Pages 只有单个站点：`Deploy dev preview` 会把 main 根站点和 dev 子目录一起部署；`main` 上旧的 `Deploy site and minitool` 若随后运行会覆盖 `/dev/`。把 `deploy.yml` 的合并部署逻辑合并到 `main` 后，dev 预览才会长期稳定。
+- GitHub Pages 只有一个站点：`Deploy site and minitool` 与 `Deploy dev preview` 都同时构建 main 根站点和 `/dev/` 预览，互不覆盖。生产发布仍需用户明确同意后再执行 `BRANCH=main ./scripts/sync.sh`。
 - GitHub Action 只能处理已推送的提交；本地提交推送由当前协作任务执行，不启用监视文件即提交的后台任务。

@@ -87,7 +87,7 @@ node scripts/test-trends.cjs
 - 默认开发分支：`dev`，推送到 `dev` 会运行 `Deploy dev preview`。
 - 线上地址：`https://cherishxie.github.io/JX3-AH-Calculator/dev/`，页面会显示 `DEV` 标识。
 - 预览工作流会同时构建 `main` 根站点和 `dev` 子目录，避免 dev 部署把生产站清空。
-- GitHub Pages 每个仓库只有一个站点；`main` 上旧的 `Deploy site and minitool` 工作流如果之后运行，会覆盖 `/dev/`。把 `deploy-dev.yml` 的合并部署逻辑同步到 `main` 后，主站部署也会保留 dev 预览。生产发布需用户明确同意后再执行 `BRANCH=main ./scripts/sync.sh`。
+- GitHub Pages 每个仓库只有一个站点；`Deploy site and minitool`（main）和 `Deploy dev preview`（dev）都会同时构建根站点与 `/dev/` 预览，因此主站部署不会清空 dev 预览。生产发布需用户明确同意后再执行 `BRANCH=main ./scripts/sync.sh`。
 
 ## 定时任务
 

@@ -4,8 +4,8 @@ name: Deploy dev preview
 #   /            -> main 分支构建（保持生产站不变）
 #   /dev/        -> dev 分支构建（开发在线版，带 DEV 标识）
 # 由于 GitHub Pages 每个仓库只有一个站点，这里把两者打包进同一个 artifact。
-# main 分支上旧的 Deploy site and minitool 工作流仍会部署根站点；如果它随后运行，
-# 会覆盖 /dev/。把本工作流同步到 main 后即可让主站部署也保留 dev 预览。
+# main 分支的 Deploy site and minitool 也采用同样的合并部署逻辑，因此主站部署
+# 不会清空 /dev/ 预览。
 
 on:
   push:
