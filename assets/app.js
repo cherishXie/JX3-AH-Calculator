@@ -2267,9 +2267,7 @@
       type = 'all';
     }
     const priceRange = trendPriceRange(p);
-    const allScope = T.items(type, skillId).filter(function (item) {
-      return !(type === 'all' && item.kind === 'stone');
-    }).map(function (item, index) {
+    const allScope = T.items(type, skillId).map(function (item, index) {
       return Object.assign({}, item, { color: trendItemColor(index) });
     });
     const seriesMap = {};
@@ -3543,23 +3541,14 @@
   function serverItemRanking(ctx, p) {
     const all = ctx.itemRanking;
     const selected = ctx.item;
-    let list = all.slice();
-    const query = String(ui.serverItemRankQuery || '').trim();
-    if (query) list = list.filter(function (row) { return U.includes(row.item.name, query); });
-    let display = list.slice(0, 8);
-    if (selected && !display.some(function (row) { return row.item.key === selected.key; })) {
-      const found = all.filter(function (row) { return row.item.key === selected.key; })[0];
-      if (found) { display = display.slice(0, 7).concat([found]); }
-    }
     let html = '<section class="card col-5 server-item-rank-card"><div class="card-head"><div><h2 class="card-title">物品跨服统计</h2><p class="card-sub">按上涨区服数排序 · 当前范围全部物品</p></div><div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格">' + icon('download') + '</button></div></div>';
     html += '<div class="server-rank-search"><input type="search" placeholder="搜索物品" aria-label="搜索物品" value="' + U.esc(ui.serverItemRankQuery || '') + '" data-server-item-rank-search data-fkey="server-item-rank-search"><span class="tiny dim">按上涨面</span></div>';
-    html += '<table class="server-item-rank-table"><thead><tr><th>物品</th><th>涨/跌/平</th><th>中位</th><th>覆盖</th></tr></thead><tbody>';
-    display.forEach(function (row) {
+    html += '<div class="server-item-rank-wrap"><table class="server-item-rank-table"><thead><tr><th>物品</th><th>涨/跌/平</th><th>中位</th><th>覆盖</th></tr></thead><tbody>';
+    all.forEach(function (row) {
       const item = row.item;
       html += '<tr class="' + (selected && selected.key === item.key ? 'sel' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc(item.name) + '"><td><span class="server-dot" style="--c:' + U.esc(serverItemColor(item)) + '"></span><span class="server-item-name">' + U.esc(item.name) + '</span></td><td class="updown"><span class="pos">' + row.up + '</span>/<span class="neg">' + row.down + '</span>/<span class="dim">' + row.flat + '</span></td><td class="' + serverToneClass(row.median) + '">' + serverPct(row.median) + '</td><td>' + row.comparable + '/' + ctx.selectedServers.length + '</td></tr>';
     });
-    if (!display.length) html += '<tr><td colspan="4" class="dim">没有匹配的物品</td></tr>';
-    html += '</tbody></table><div class="server-rank-foot">展示 ' + display.length + ' / ' + all.length + ' 项 · 中位数为跨服中位涨跌</div></section>';
+    html += '</tbody></table></div><div class="server-rank-foot">当前范围 ' + all.length + ' 项 · 中位数为跨服中位涨跌</div></section>';
     return html;
   }
   function serverItemTable(ctx) {
@@ -5324,8 +5313,14 @@
       return;
     }
     if (t.matches('[data-server-item-rank-search]')) {
+      const card = t.closest('.server-item-rank-card');
+      const q = t.value.trim();
       ui.serverItemRankQuery = t.value;
-      render();
+      if (card) {
+        card.querySelectorAll('tbody tr[data-server-item-text]').forEach(function (row) {
+          row.hidden = !!q && !U.includes(row.getAttribute('data-server-item-text') || '', q);
+        });
+      }
       return;
     }
     if (t.matches('[data-server-product-search]')) {
