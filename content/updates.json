@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "80ae140b8227e48f3ba904198f2f587c36817fbf",
+  "sourceCommit": "97c50b3cf9cca499597f6d861f17e4fa5ff131cb",
   "date": "2026-11-20",
-  "title": "手机端服务器下拉溢出屏幕导致名称被裁切",
+  "title": "preserve dev preview during main deployments",
   "notes": [
-    "手机端服务器下拉溢出屏幕导致名称被裁切"
+    "preserve dev preview during main deployments"
   ],
   "history": [
+    {
+      "version": "97c50b3",
+      "date": "2026-11-20",
+      "title": "preserve dev preview during main deployments"
+    },
     {
       "version": "80ae140",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "51a3a49",
       "date": "2026-11-20",
       "title": "make price history scripts executable"
-    },
-    {
-      "version": "3c4d05c",
-      "date": "2026-11-20",
-      "title": "hint effective export for unquoted items"
     }
   ]
 }
