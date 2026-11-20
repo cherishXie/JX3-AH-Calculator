@@ -28,6 +28,7 @@
     lastPath: null,
     trendPickerOpen: false,
     trendPickerQuery: '',
+    trendFilterOpen: false,
     trendRankAllOpen: false,
     trendScroll: Object.create(null),
     trendCenterKey: null
@@ -150,6 +151,9 @@
   function marketTimeText(ts) {
     return ts ? U.fmtTime(ts) : '—';
   }
+  function dataRoot(path) {
+    return (isDevDeployment() ? '../' : './') + path;
+  }
 
   function updateMarketStatus() {
     var updated = Date.parse(DATA.meta.priceUpdatedAt) || 0;
@@ -256,6 +260,7 @@
       apply(C.Store.state.items);
       C.Store.save();
     }
+    if (window.JX3Trends && window.JX3Trends.reset) window.JX3Trends.reset();
     return true;
   }
 
@@ -280,7 +285,10 @@
   }
 
   function checkForDataUpdate(force) {
-    if (dataSyncBusy) return;
+    if (dataSyncBusy) {
+      if (force) toast('正在检查行情，请稍候', 'info');
+      return;
+    }
     if (!force && Date.now() - lastDataCheck < 60000) return;
     if (ui.drawer || ui.modal) return;
     var active = document.activeElement;
@@ -289,17 +297,24 @@
     dataSyncBusy = true;
     lastDataCheck = Date.now();
 
-    fetchWithTimeout('./version.json?t=' + Date.now(), { cache: 'no-store' }, 10000)
+    fetchWithTimeout(dataRoot('version.json') + '?t=' + Date.now(), { cache: 'no-store' }, 10000)
       .then(function (response) { return response.ok ? response.json() : null; })
       .then(function (version) {
-        if (!version || !version.dataUpdatedAt) return;
+        if (!version || !version.dataUpdatedAt) {
+          if (force) toast('无法确认远程行情', 'warn');
+          return;
+        }
         setMarketChecked(Date.now());
-        if (version.dataUpdatedAt === DATA.meta.priceUpdatedAt) return;
+        if (version.dataUpdatedAt === DATA.meta.priceUpdatedAt) {
+          if (force) toast('行情已是最新 · ' + U.fmtTime(Date.parse(version.dataUpdatedAt)), 'success');
+          return;
+        }
 
         dataSyncStarted = Date.now();
         showDataSync('loading', '行情更新中…');
+        if (force) toast('检测到行情更新，正在同步…', 'info');
 
-        return fetchWithTimeout('./assets/data.js?t=' + Date.now(), { cache: 'no-store' }, 15000)
+        return fetchWithTimeout(dataRoot('assets/data.js') + '?t=' + Date.now(), { cache: 'no-store' }, 15000)
           .then(function (response) {
             if (!response.ok) throw new Error('HTTP ' + response.status);
             return response.text();
@@ -330,9 +345,12 @@
           })
           .catch(function () {
             finishDataSync('error', '行情更新失败，稍后重试');
+            if (force) toast('行情更新失败，稍后重试', 'error');
           });
       })
-      .catch(function () { /* 版本检查失败时静默，等下一轮 */ })
+      .catch(function () {
+        if (force) toast('行情检查失败，请稍后重试', 'error');
+      })
       .then(function () { dataSyncBusy = false; });
   }
 
@@ -2181,21 +2199,18 @@
     const allItems = T.items('all', '');
     const defaultKey = trendDefaultItem(T, allItems, points);
     const defaultItem = T.item(defaultKey);
-    let skillId;
-    if (p.tskill === 'all') skillId = '';
-    else if (p.tskill) skillId = p.tskill;
-    else skillId = defaultItem ? defaultItem.skillId : '';
+    let skillId = !p.tskill || p.tskill === 'all' ? '' : p.tskill;
     if (skillId && skillId !== 'stone' && !DATA.skills.some(function (s) { return s.id === skillId; })) {
-      skillId = defaultItem ? defaultItem.skillId : '';
+      skillId = '';
     }
     const skill = DATA.skills.filter(function (s) { return s.id === skillId; })[0];
-    let type = p.ttype || '';
+    let type = p.ttype || 'all';
     if (skillId === 'stone') {
       type = 'stone';
     } else if (skill && skill.type === 'gather') {
       type = 'material';
     } else if (type !== 'material' && type !== 'product' && type !== 'all') {
-      type = defaultItem && defaultItem.kind === 'material' ? 'material' : 'product';
+      type = 'all';
     }
     const priceRange = trendPriceRange(p);
     const allScope = T.items(type, skillId).filter(function (item) {
@@ -2269,7 +2284,17 @@
     const total = ctx.scopeItems.length;
     const pickerOpen = ui.trendPickerOpen ? ' open' : '';
     const skill = ctx.skill;
-    let html = '<section class="card trend-filter-card"><div class="card-body tight"><div class="trend-filter">';
+    const skillLabel = ctx.skillId === 'stone' ? '五行石' : (skill ? skill.name : '全部技艺');
+    const typeLabel = ctx.type === 'material' ? '材料' : ctx.type === 'product' ? '产物' : ctx.type === 'stone' ? '五行石' : '全部类型';
+    const timeLabel = fromDate.slice(5) + ' ' + fromHour + ':00 – ' + toDate.slice(5) + ' ' + toHour + ':00';
+    const filterOpen = ui.trendFilterOpen;
+    let html = '<section class="card trend-filter-card"><div class="card-body tight">' +
+      '<button class="trend-filter-toggle" data-action="toggle-trend-filter" aria-expanded="' + (filterOpen ? 'true' : 'false') + '">' +
+        '<span class="trend-filter-toggle-main">' + icon('filter') + '筛选</span>' +
+        '<span class="trend-filter-toggle-sum">' + U.esc(skillLabel + ' · ' + typeLabel + ' · ' + selectedCount + '/' + total + ' · ' + timeLabel) + '</span>' +
+        icon('chevronDown') +
+      '</button>' +
+      '<div class="trend-filter-body' + (filterOpen ? ' open' : '') + '"><div class="trend-filter">';
     html += '<div class="trend-time-group">' +
       '<span class="trend-time-label">开始</span>' +
       '<input class="input trend-date" type="date" value="' + U.esc(fromDate) + '" min="' + U.esc(minDate) +
@@ -2326,7 +2351,7 @@
       '</div>' +
     '</details>';
     html += '<button class="btn btn-sm" data-action="trend-refresh" title="重新加载历史数据">' + icon('refresh') + '刷新</button>';
-    html += '</div></div></section>';
+    html += '</div></div></div></section>';
     return html;
   }
   function trendTierLegend(ctx, withFocus) {
@@ -3950,6 +3975,18 @@
       }
       case 'trend-export-raw': csvTrendRaw(); break;
       case 'trend-export-series': csvTrendSeries(); break;
+      case 'check-prices':
+        if (window.App && window.App.checkDataUpdate) window.App.checkDataUpdate(true);
+        else if (window.__JX3_DATA_SYNC__) window.__JX3_DATA_SYNC__.check();
+        break;
+      case 'toggle-trend-filter':
+        ui.trendFilterOpen = !ui.trendFilterOpen;
+        if (!ui.trendFilterOpen) {
+          ui.trendPickerOpen = false;
+          ui.trendPickerQuery = '';
+        }
+        render();
+        break;
       case 'trend-download-chart': downloadTrendChart(el.closest('.card'), el.getAttribute('data-trend-label')); break;
       case 'trend-select-all': updateParams({ titems: '' }); break;
       case 'trend-select-none': updateParams({ titems: '__none__' }); break;
@@ -4630,6 +4667,7 @@
     if (pathChanged) {
       ui.trendPickerOpen = false;
       ui.trendPickerQuery = '';
+      ui.trendFilterOpen = false;
       ui.trendRankAllOpen = false;
       ui.trendScroll = Object.create(null);
       ui.trendCenterKey = null;
@@ -4733,7 +4771,7 @@
     }
     bindEvents();
     renderSkeleton();
-    setTimeout(dataSyncTick, 5000);
+    setTimeout(dataSyncTick, isDevDeployment() ? 1200 : 5000);
     document.addEventListener('visibilitychange', function () {
       if (!document.hidden) checkForDataUpdate();
     });

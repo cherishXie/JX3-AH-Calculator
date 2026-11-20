@@ -1088,9 +1088,22 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
   margin: 0 12px;
   background: var(--border);
 }
+.market-status__check {
+  margin-left: auto;
+  height: 24px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+.market-status__check:hover { color: var(--text); border-color: var(--muted-2); }
 @media (max-width: 768px) {
   .market-status { margin-top: 9px; padding: 0 12px; font-size: 11.5px; }
   .market-status__divider { margin: 0 8px; }
+  .market-status__check { margin-left: 0; margin-top: 3px; }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1617,6 +1630,13 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .trend-page-head { min-height: 0; margin: 0 0 20px; }
 .trend-filter-card { position: sticky; top: var(--header-h); z-index: 20; box-shadow: 0 8px 20px rgba(2, 8, 23, .08); }
 .trend-filter-card .card-body { padding: 10px 14px; position: relative; }
+.trend-filter-toggle { display: none; width: 100%; align-items: center; gap: 8px; padding: 0; border: 0; background: transparent; color: var(--text); font-size: 12px; text-align: left; cursor: pointer; }
+.trend-filter-toggle-main { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; flex: none; }
+.trend-filter-toggle-main svg { width: 14px; height: 14px; color: var(--muted); }
+.trend-filter-toggle-sum { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10.5px; color: var(--muted); }
+.trend-filter-toggle > svg { width: 14px; height: 14px; color: var(--muted); flex: none; transition: transform 150ms ease; }
+.trend-filter-toggle[aria-expanded="true"] > svg { transform: rotate(180deg); }
+.trend-filter-body.open { margin-top: 8px; }
 .trend-filter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .trend-filter-field { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--muted); white-space: nowrap; }
 .trend-filter-field .select { height: 28px; font-size: 11.5px; }
@@ -1754,6 +1774,9 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
   .trend-rank-col + .trend-rank-col { border-left: 0; border-top: 1px solid var(--border-soft); }
 }
 @media (max-width: 768px) {
+  .trend-filter-toggle { display: flex; }
+  .trend-filter-body { display: none; }
+  .trend-filter-body.open { display: block; }
   .trend-filter { align-items: flex-start; }
   .trend-time-group { flex: 1 1 100%; }
   .trend-time-sep { display: none; }

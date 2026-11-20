@@ -148,7 +148,11 @@
     try { return document.baseURI || location.href; } catch (err) { return 'https://localhost/'; }
   }
   function historyUrl(path) {
-    return new URL('price-history/' + path, baseUrl()).href;
+    let root = baseUrl();
+    try {
+      if (/\/dev(?:\/|$)/.test(location.pathname)) root = new URL('../', root).href;
+    } catch (err) { /* ignore */ }
+    return new URL('price-history/' + path, root).href;
   }
   function notify() {
     listeners.slice().forEach(function (fn) {
@@ -576,13 +580,16 @@
     };
   }
 
-  function refresh() {
+  function reset() {
     state.index = null;
     state.days = Object.create(null);
     state.loadingIndex = null;
     state.loadingDays = Object.create(null);
     state.indexError = null;
     state.dayError = null;
+  }
+  function refresh() {
+    reset();
     notify();
   }
   function retry() {
@@ -608,6 +615,7 @@
     scatter: scatter,
     scopeStats: scopeStats,
     onUpdate: onUpdate,
+    reset: reset,
     refresh: refresh,
     retry: retry,
     state: state,
