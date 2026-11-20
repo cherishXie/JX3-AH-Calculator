@@ -561,7 +561,7 @@
       const cy = y(value);
       const rad = r.highlight ? 5.4 : 3.1;
       const color = r.color || COLOR.craft;
-      const tip = r.name + ' · ' + r.skillName + ' · ' + String(r.at || '').replace('T', ' ') +
+      const tip = r.name + ' · ' + (r.tierName || r.skillName) + ' · ' + String(r.at || '').replace('T', ' ') +
         ' · ' + U.fmt(price, 2) + ' 金' +
         (Number.isFinite(Number(r.change)) ? ' · ' + (r.change >= 0 ? '+' : '') + U.fmt(r.change, 2) + '%' : '');
       svg += '<circle class="chart-point" tabindex="0" data-tip="' + attr(tip) + '"' +

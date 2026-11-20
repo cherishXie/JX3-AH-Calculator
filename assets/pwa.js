@@ -10,6 +10,9 @@
 
   var meta = document.querySelector('meta[name="app-version"]');
   var APP_VERSION = meta ? (meta.getAttribute('content') || '') : '';
+  var buildMeta = document.querySelector('meta[name="app-build"]');
+  var APP_BUILD = buildMeta ? (buildMeta.getAttribute('content') || '') : '';
+  var IS_DEV = /\/dev(?:\/|$)/.test(location.pathname);
   // 未构建的本地文件（占位符）不启用更新提示。
   if (!APP_VERSION || APP_VERSION.indexOf('__') === 0) return;
 
@@ -182,13 +185,19 @@
     }).then(function (waiting) {
       return fetchUpdates().then(function (data) {
         var appVersion = data && (data.appVersion || data.version || data.latest);
-        if (waiting && appVersion && appVersion !== APP_VERSION) {
+        var buildChanged = IS_DEV && APP_BUILD && data && data.date && data.date !== APP_BUILD;
+        if (waiting && (buildChanged || (appVersion && appVersion !== APP_VERSION))) {
           render(data);
           return { status: 'available' };
         }
         if (waiting && !data) {
           // 拉不到更新说明时宁可静默等待，不能把不确定的等待 SW 当成代码更新弹窗。
           return { status: 'pending' };
+        }
+        if (buildChanged) {
+          // Dev 预览即使只改文档/数据也提示新构建；没有 waiting SW 时点击更新会直接刷新。
+          render(data);
+          return { status: 'available' };
         }
         if (appVersion && appVersion !== APP_VERSION) {
           return { status: 'pending' };
@@ -204,7 +213,8 @@
     fetchUpdates().then(function (data) {
       if (!data) return;
       var appVersion = data.appVersion || data.version;
-      if (!appVersion || appVersion === APP_VERSION) return;
+      var buildChanged = IS_DEV && APP_BUILD && data.date && data.date !== APP_BUILD;
+      if ((!appVersion || appVersion === APP_VERSION) && !buildChanged) return;
       try {
         if (sessionStorage.getItem('pwa-later:' + (data.latest || appVersion))) return;
       } catch (e) { /* ignore */ }

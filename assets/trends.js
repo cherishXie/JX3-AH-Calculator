@@ -25,6 +25,8 @@
   (DATA.skills || []).forEach(function (s) { skillMap[s.id] = s; });
   const skillOrder = {};
   (DATA.skills || []).forEach(function (s, i) { skillOrder[s.id] = i; });
+  const tierMap = {};
+  (DATA.tiers || []).forEach(function (t) { tierMap[t.id] = t; });
 
   const STONE_COLOR = '#C084FC';
   const catalog = [];
@@ -40,7 +42,9 @@
       skillName: skillName(item.skillId),
       color: skillColor(item.skillId),
       skillOrder: skillOrder[item.skillId] == null ? 99 : skillOrder[item.skillId],
-      tier: Number(item.tier) || 0
+      tier: Number(item.tier) || 0,
+      tierName: (tierMap[item.tier] || {}).name || '其他',
+      tierColor: (tierMap[item.tier] || {}).color || '#64748B'
     });
   });
   (DATA.stones || []).forEach(function (stone) {
@@ -55,7 +59,9 @@
       skillName: '五行石',
       color: STONE_COLOR,
       skillOrder: 100,
-      tier: 0
+      tier: 0,
+      tierName: '五行石',
+      tierColor: STONE_COLOR
     });
   });
   const itemMap = {};
@@ -421,7 +427,8 @@
           kind: meta.kind,
           skillId: meta.skillId,
           skillName: meta.skillName,
-          color: meta.color,
+          tierName: meta.tierName,
+          color: meta.tierColor || meta.color,
           price: price,
           basePrice: base,
           change: change,

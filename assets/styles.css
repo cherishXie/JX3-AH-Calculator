@@ -1613,23 +1613,36 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 /* 物价走势                                                           */
 /* ------------------------------------------------------------------ */
 .trend-tools { gap: 8px; }
-.trend-range { display: inline-flex; align-items: center; gap: 6px; }
-.trend-date { width: 176px; height: 30px; font-size: 11.5px; }
-.trend-item-select { width: 196px; max-width: 28vw; }
+.trend-time-group {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--input-bg);
+}
+.trend-time-label { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.trend-time-sep { font-size: 11px; color: var(--muted); }
+.trend-date { width: 122px; height: 26px; font-size: 11.5px; border: 0; background: transparent; padding: 0 2px; }
+.trend-hour { width: 76px; height: 26px; font-size: 11.5px; border: 0; background: transparent; padding-left: 6px; padding-right: 22px; }
+.trend-scope { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 0 0 10px; }
+.trend-scope-field { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.trend-scope-field .select { height: 28px; font-size: 11.5px; }
+.trend-scope-item .select { width: 210px; }
+.trend-scope-note { font-size: 10.5px; color: var(--muted-2); }
 .trend-kpis { margin-top: 0; }
-.trend-chart-card .card-body { overflow-x: auto; overflow-y: hidden; }
-.trend-chart-card .chart-svg { min-width: 720px; }
-.trend-node-card .table-wrap { max-height: 520px; }
+.trend-chart-card .card-body { overflow: visible; }
+#chart-trend { overflow-x: auto; overflow-y: hidden; }
+.trend-chart-card .chart-svg { width: 100%; min-width: 600px; height: auto; }
+.trend-node-card .table-wrap { max-height: 360px; }
 .trend-node-table tbody tr { cursor: pointer; }
 .trend-node-table tbody tr:hover td { background: color-mix(in srgb, var(--text) 5%, transparent); }
 .trend-node-table tbody tr.selected td { background: color-mix(in srgb, var(--chart-1) 9%, transparent); }
 .trend-node-table td { height: 42px; }
 .trend-node-table .t1 { font-weight: 600; font-size: 12px; }
 .trend-node-table .t2 { color: var(--muted); font-size: 10.5px; margin-top: 1px; }
-.trend-raw-table { max-height: 620px; }
+.trend-raw-table { max-height: 440px; }
 .trend-raw-table td { height: 40px; }
 .trend-raw-table .t1 { font-weight: 500; }
 .trend-raw-table .t2 { color: var(--muted-2); font-size: 10px; font-variant-numeric: tabular-nums; margin-top: 1px; }
+.trend-raw-table tbody tr.selected td { background: color-mix(in srgb, var(--chart-1) 9%, transparent); }
 .chart-legend .trend-ring {
   width: 10px; height: 10px; border-radius: 50%;
   border: 2px solid var(--text); background: transparent; display: inline-block;
@@ -1637,15 +1650,20 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .chart-candle { outline: none; }
 .chart-candle:focus-visible rect,
 .chart-candle:focus-visible line { stroke: var(--info); stroke-width: 2; }
-@media (max-width: 768px) {
-  #chart-trend { overflow-x: auto; overflow-y: hidden; }
-  #chart-trend .chart-svg { min-width: 680px; }
-  .trend-tools { width: 100%; }
-  .trend-range { width: 100%; }
-  .trend-date { flex: 1; width: auto; min-width: 0; }
+@media (max-width: 900px) {
   .trend-chart-card .card-head { flex-wrap: wrap; }
   .trend-chart-card .card-tools { width: 100%; justify-content: flex-start; }
-  .trend-item-select { width: auto; max-width: none; flex: 1 1 160px; }
+}
+@media (max-width: 768px) {
+  .trend-tools { width: 100%; }
+  .trend-time-group { flex: 1 1 100%; }
+  .trend-time-sep { display: none; }
+  .trend-date { flex: 1; width: auto; min-width: 0; }
+  .trend-hour { flex: none; }
+  .trend-scope { align-items: flex-start; }
+  .trend-scope-item { flex: 1 1 100%; }
+  .trend-scope-item .select { width: 100%; }
+  #chart-trend .chart-svg { min-width: 620px; }
 }
 
 /* 开发预览环境标识 */

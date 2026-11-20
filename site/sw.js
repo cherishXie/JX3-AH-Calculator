@@ -62,6 +62,11 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // 根 SW 不能接管 /dev/ 预览：否则会把生产 index.html 返回给 dev，
+  // 导致 dev 的 PWA/更新提示异常。dev 目录由 /dev/sw.js 自己管理。
+  const IS_DEV_SW = self.location.pathname.includes('/dev/sw.js');
+  if (!IS_DEV_SW && /\/dev(?:\/|$)/.test(url.pathname)) return;
+
   // 版本/更新说明永远走网络，避免被缓存成旧内容。
   if (url.pathname.endsWith('/version.json') || url.pathname.endsWith('/updates.json') || url.pathname.endsWith('/CHANGELOG.md')) {
     event.respondWith(fetch(request, { cache: 'no-store' }));
