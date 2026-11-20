@@ -2050,3 +2050,8 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .server-page .server-kpis.five .kpi-value.small-two { font-size: 16px; line-height: 24px; }
 .server-page .page-head > div:first-child { min-width: 0; flex: 1; }
 .server-page .server-page-sub { max-width: 100%; overflow-wrap: anywhere; white-space: normal; }
+
+/* 区服趋势 · 去掉页级说明，收紧标题上下节奏 */
+.server-page .server-page-sub { display: none; }
+.server-page .page-head { min-height: 0; margin: 8px 0 14px; align-items: center; }
+.server-page .server-view-switch { margin: 0 0 14px; }
