@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "97c50b3cf9cca499597f6d861f17e4fa5ff131cb",
+  "sourceCommit": "6f3bb93ebc98de171403f4a9c7314dd45913d6b5",
   "date": "2026-11-20",
-  "title": "preserve dev preview during main deployments",
+  "title": "keep production service worker out of dev preview",
   "notes": [
-    "preserve dev preview during main deployments"
+    "keep production service worker out of dev preview"
   ],
   "history": [
+    {
+      "version": "6f3bb93",
+      "date": "2026-11-20",
+      "title": "keep production service worker out of dev preview"
+    },
     {
       "version": "97c50b3",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "3262074",
       "date": "2026-11-20",
       "title": "add Excel download menu to web"
-    },
-    {
-      "version": "51a3a49",
-      "date": "2026-11-20",
-      "title": "make price history scripts executable"
     }
   ]
 }
