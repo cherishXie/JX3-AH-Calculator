@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 56bff37
+
+update JX3BOX prices
+
 ## 2026-11-21 · 69875f6
 
 update JX3BOX prices
@@ -502,11 +506,3 @@ sync breakthrough module to miniapp; finalize stones and cloud sync
 ## 2026-11-19 · e887062
 
 add breakthrough leveling module to web and minitool
-
-## 2026-11-19 · 0a03d1d
-
-add Cloudflare Worker cloud price scheduler
-
-## 2026-11-19 · 90ad1a4
-
-update JX3BOX prices (local cron)
