@@ -502,7 +502,3 @@ add onboarding guide, wechat/xhs deliverable packs and screenshots
 ## 2026-11-19 · fd41a1a
 
 sync breakthrough module to miniapp; finalize stones and cloud sync
-
-## 2026-11-19 · e887062
-
-add breakthrough leveling module to web and minitool
