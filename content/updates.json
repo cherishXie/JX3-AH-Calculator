@@ -1,11 +1,16 @@
 {
-  "sourceCommit": "543f58c82b701ecfa6cf52ecb063381a7b780e88",
+  "sourceCommit": "b1c43bec03bc44ee9e718b49922a9fcaf6a33196",
   "date": "2026-11-20",
-  "title": "cache-bust Excel workbook downloads",
+  "title": "接入百度统计记录站外访问量",
   "notes": [
-    "cache-bust Excel workbook downloads"
+    "接入百度统计记录站外访问量"
   ],
   "history": [
+    {
+      "version": "b1c43be",
+      "date": "2026-11-20",
+      "title": "接入百度统计记录站外访问量"
+    },
     {
       "version": "543f58c",
       "date": "2026-11-20",
@@ -30,11 +35,6 @@
       "version": "32c383e",
       "date": "2026-11-20",
       "title": "keep compacted history queries honest"
-    },
-    {
-      "version": "04bb258",
-      "date": "2026-11-20",
-      "title": "clarify price history delta semantics"
     }
   ]
 }
