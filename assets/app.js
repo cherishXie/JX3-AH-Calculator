@@ -30,6 +30,10 @@
     trendPickerQuery: '',
     trendFilterOpen: false,
     trendRankAllOpen: false,
+    serverPickerOpen: false,
+    serverProductPickerOpen: false,
+    serverProductQuery: '',
+    serverFilterOpen: false,
     trendScroll: Object.create(null),
     trendCenterKey: null
   };
@@ -631,6 +635,7 @@
     '/prices': '价格库',
     '/analysis': '精力收益分析',
     '/trends': '物价走势',
+    '/server-trends': '区服趋势',
     '/breakthrough': '突破升级',
     '/stones': '五行石'
   };
@@ -655,6 +660,7 @@
         group: '分析', items: [
           { href: Route.href('/analysis'), label: '精力收益', icon: 'chart', path: '/analysis', badge: rows.filter(function (r) { return !r.calc.missing; }).length },
           { href: Route.href('/trends'), label: '物价走势', icon: 'trend', path: '/trends' },
+          { href: Route.href('/server-trends'), label: '区服趋势', icon: 'trend', path: '/server-trends' },
           { href: Route.href('/breakthrough'), label: '突破升级', icon: 'arrowUp', path: '/breakthrough' }
         ]
       }
@@ -2859,6 +2865,505 @@
     toast('已导出走势数据 ' + U.fmtInt(rows.length - 1) + ' 行');
   }
 
+  /* ------------------------------------------------------------------ */
+  /* 区服趋势                                                           */
+  /* ------------------------------------------------------------------ */
+  const SERVER_KEYWORD_TOKENS = ['丹', '丸', '散', '膏', '玉', '石', '布', '皮', '木', '矿', '香', '药', '鱼', '肉', '骨', '酒', '茶', '锦', '缎', '铁', '铜', '银', '草', '花', '叶', '果', '露', '令', '牌'];
+  function serverLatestDate() {
+    const text = String((DATA.meta && DATA.meta.priceUpdatedAt) || '');
+    const date = text.slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+    const now = new Date(Date.now() + 8 * 3600000);
+    return now.toISOString().slice(0, 10);
+  }
+  function serverRange(p) {
+    const days = ({ today: 1, '3d': 3, '7d': 7, '30d': 30 })[p.srange] || 1;
+    const latest = serverLatestDate();
+    const base = Date.parse(latest + 'T12:00:00+08:00');
+    const start = new Date(base - (days - 1) * 86400000 + 8 * 3600000).toISOString().slice(0, 10);
+    return {
+      from: start + 'T00:00', to: latest + 'T23:00', days: days,
+      label: days === 1 ? '今日' : '近 ' + days + ' 日'
+    };
+  }
+  function serverCatalog() {
+    const T = window.JX3Trends;
+    return T ? T.items('all', '') : [];
+  }
+  function serverQuote(point, item) {
+    if (!point || !item) return null;
+    if (item.kind === 'stone') {
+      const value = point.stones && point.stones[item.level];
+      return value > 0 ? value : null;
+    }
+    const value = point.quotes && point.quotes[item.id];
+    return value > 0 ? value : null;
+  }
+  function serverMedian(values) {
+    const list = (values || []).filter(function (v) { return Number.isFinite(v); }).sort(function (a, b) { return a - b; });
+    if (!list.length) return null;
+    const mid = Math.floor((list.length - 1) / 2);
+    return list.length % 2 ? list[mid] : (list[mid] + list[mid + 1]) / 2;
+  }
+  function serverPct(value) {
+    if (value == null || !Number.isFinite(value)) return '—';
+    return (value >= 0 ? '+' : '−') + U.fmt(Math.abs(value * 100), 1) + '%';
+  }
+  function serverBreadth(value) {
+    if (value == null || !Number.isFinite(value)) return '—';
+    return (value >= 0 ? '+' : '−') + U.fmt(Math.abs(value * 100), 0) + '%';
+  }
+  function serverItemKind(item) {
+    if (!item) return '—';
+    if (item.kind === 'stone') return '五行石';
+    return item.kind === 'product' ? '产物' : '材料';
+  }
+  function serverItemParam(selected, all) {
+    const selectedSet = new Set((selected || []).map(function (item) { return item.key; }));
+    if (selectedSet.size === all.length) return '';
+    if (!selectedSet.size) return '__none__';
+    if (selectedSet.size > all.length / 2) {
+      return 'except:' + all.filter(function (item) { return !selectedSet.has(item.key); }).map(function (item) { return item.key; }).join(',');
+    }
+    return 'only:' + all.filter(function (item) { return selectedSet.has(item.key); }).map(function (item) { return item.key; }).join(',');
+  }
+  function serverItemSelection(p) {
+    const all = serverCatalog();
+    let selected = all.slice();
+    if (p.sitems === '__none__') {
+      selected = [];
+    } else if (p.sitems) {
+      const raw = String(p.sitems);
+      if (raw.indexOf('only:') === 0) {
+        const keys = new Set(raw.slice(5).split(','));
+        selected = all.filter(function (item) { return keys.has(item.key); });
+      } else if (raw.indexOf('except:') === 0) {
+        const keys = new Set(raw.slice(7).split(','));
+        selected = all.filter(function (item) { return !keys.has(item.key); });
+      } else {
+        const keys = new Set(raw.split(','));
+        selected = all.filter(function (item) { return keys.has(item.key); });
+      }
+    }
+    const keyword = String(p.skeyword || '').trim();
+    if (keyword) selected = selected.filter(function (item) { return String(item.name).indexOf(keyword) !== -1; });
+    return { all: all, selected: selected, keyword: keyword };
+  }
+  function serverSelectedServers(p) {
+    const all = (DATA.servers || []).slice();
+    if (p.sservers === '__none__') return [];
+    if (!p.sservers) return all;
+    const keys = new Set(String(p.sservers).split(','));
+    return all.filter(function (s) { return keys.has(s.id); });
+  }
+  function serverSkillGroups() {
+    const craft = [];
+    const gather = [];
+    (DATA.skills || []).forEach(function (s) {
+      const group = { id: s.id, name: s.name, type: s.type };
+      if (s.type === 'gather') gather.push(group); else craft.push(group);
+    });
+    return craft.concat(gather, [{ id: 'stone', name: '五行石', type: 'stone' }]);
+  }
+  function serverGroupItems(group, items) {
+    return (items || []).filter(function (item) {
+      if (group.id === 'stone') return item.kind === 'stone' && ['6', '7', '8'].indexOf(String(item.level)) !== -1;
+      if (group.type === 'gather') return item.kind === 'material' && item.skillId === group.id;
+      return item.kind === 'product' && item.skillId === group.id;
+    });
+  }
+  function serverKeywordChips(ctx, p) {
+    const chips = [];
+    const global = ctx.globalReturns;
+    const score = function (kind) {
+      const rows = global.filter(function (row) { return row.item.kind === kind; });
+      if (!rows.length) return null;
+      const up = rows.filter(function (row) { return row.ret > 0.005; }).length;
+      const down = rows.filter(function (row) { return row.ret < -0.005; }).length;
+      return (up - down) / rows.length;
+    };
+    const material = score('material');
+    const product = score('product');
+    const stone = score('stone');
+    if (material != null && product != null && material - product > 0.02) {
+      chips.push({ type: 'trend', label: material > 0 ? '材料偏强' : '材料相对抗跌', value: serverBreadth(material), tone: material > 0 ? 'pos' : 'neutral' });
+    } else if (material != null && product != null && product - material > 0.02) {
+      chips.push({ type: 'trend', label: product > 0 ? '产物偏强' : '产物相对抗跌', value: serverBreadth(product), tone: product > 0 ? 'pos' : 'neutral' });
+    }
+    if (stone != null && stone < -0.02) {
+      chips.push({ type: 'trend', label: '五行石承压', value: serverBreadth(stone), tone: 'neg' });
+    } else if (stone != null && stone > 0.02) {
+      chips.push({ type: 'trend', label: '五行石走强', value: serverBreadth(stone), tone: 'pos' });
+    }
+    const strong = ctx.rank.filter(function (s) { return !s.low && s.score != null; })[0];
+    const weak = ctx.rank.filter(function (s) { return !s.low && s.score != null; }).slice(-1)[0];
+    if (strong) chips.push({ type: 'trend', label: strong.name + (strong.score >= 0 ? '领涨' : '相对最强'), tone: strong.score >= 0 ? 'pos' : 'neutral', dot: strong.color });
+    if (strong && weak && strong.score - weak.score > 0.15) chips.push({ type: 'trend', label: '区服分化', tone: 'neutral' });
+    if (ctx.lowCount) chips.push({ type: 'trend', label: '低覆盖 ' + ctx.lowCount + ' 服', tone: 'warn' });
+    // 物品名称关键词：从主要涨跌物品中提炼
+    const seen = {};
+    const movers = [];
+    ctx.servers.forEach(function (server) {
+      server.topUp.concat(server.topDown).forEach(function (row) {
+        if (!row || !row.item || row.item.kind === 'stone' || seen[row.item.key]) return;
+        seen[row.item.key] = true;
+        movers.push(row);
+      });
+    });
+    movers.sort(function (a, b) { return Math.abs(b.ret) - Math.abs(a.ret); });
+    const tokens = {};
+    movers.slice(0, 36).forEach(function (row) {
+      SERVER_KEYWORD_TOKENS.forEach(function (token) {
+        if (String(row.item.name).indexOf(token) === -1) return;
+        if (!tokens[token]) tokens[token] = { token: token, count: 0, max: 0 };
+        tokens[token].count++;
+        tokens[token].max = Math.max(tokens[token].max, Math.abs(row.ret));
+      });
+    });
+    Object.keys(tokens).sort(function (a, b) {
+      return tokens[b].count - tokens[a].count || tokens[b].max - tokens[a].max;
+    }).slice(0, 3).forEach(function (token) {
+      chips.push({ type: 'item', token: token, label: token + '类活跃', value: tokens[token].count + ' 项', tone: 'neutral' });
+    });
+    if (movers.length) {
+      const top = movers[0];
+      chips.push({ type: 'item', token: top.item.name, label: top.item.name, value: serverPct(top.ret), tone: top.ret >= 0 ? 'pos' : 'neg' });
+    }
+    if (p.skeyword) {
+      chips.unshift({ type: 'active', token: p.skeyword, label: '关键词：' + p.skeyword, tone: 'active' });
+    }
+    return chips.slice(0, 8);
+  }
+  function serverBuild(p) {
+    const T = window.JX3Trends;
+    if (!T) return { status: 'error', error: '走势模块未加载' };
+    const range = serverRange(p);
+    const selection = serverItemSelection(p);
+    const servers = serverSelectedServers(p);
+    if (!servers.length || !selection.selected.length) {
+      return { status: 'ready', range: range, selection: selection, servers: [], columns: [], rank: [], globalReturns: [], lowCount: 0, serverCount: servers.length };
+    }
+    const views = servers.map(function (s) { return T.view(s.id, { from: range.from, to: range.to }); });
+    const loading = views.filter(function (v) { return v.status === 'loading'; });
+    if (loading.length) {
+      return { status: 'loading', range: range, total: loading.length, loaded: views.length - loading.length };
+    }
+    const failed = views.filter(function (v) { return v.status === 'error'; })[0];
+    if (failed) return { status: 'error', error: failed.error || '物价历史加载失败', range: range };
+    const columns = ((views.filter(function (v) { return v.points && v.points.length; })[0] || { points: [] }).points || []).map(function (point) { return point.at; });
+    const items = selection.selected;
+    const itemDenom = items.length;
+    const groups = serverSkillGroups();
+    const dataServers = [];
+    const allReturns = [];
+    views.forEach(function (view, index) {
+      const server = servers[index];
+      const points = view.points || [];
+      if (!points.length) return;
+      const start = points[0];
+      const end = points[points.length - 1];
+      const returns = [];
+      const byKey = {};
+      items.forEach(function (item) {
+        const p0 = serverQuote(start, item);
+        const p1 = serverQuote(end, item);
+        if (!(p0 > 0 && p1 > 0)) return;
+        const row = { item: item, p0: p0, p1: p1, ret: p1 / p0 - 1 };
+        returns.push(row);
+        byKey[item.key] = row;
+        allReturns.push(row);
+      });
+      const median = serverMedian(returns.map(function (r) { return r.ret; }));
+      const up = returns.filter(function (r) { return r.ret > 0.005; }).length;
+      const down = returns.filter(function (r) { return r.ret < -0.005; }).length;
+      const flat = returns.length - up - down;
+      const comparable = returns.length;
+      const coverage = itemDenom ? comparable / itemDenom : 0;
+      // 全物品口径下大量物品持平，中位数常为 0；用净涨跌广度作为区服主排序指标。
+      const score = comparable ? (up - down) / comparable : null;
+      const low = itemDenom >= 30 && (comparable < 30 || coverage < 0.3);
+      const heat = points.map(function (point) {
+        let hUp = 0, hDown = 0, hCount = 0;
+        items.forEach(function (item) {
+          const p0 = serverQuote(start, item);
+          const p1 = serverQuote(point, item);
+          if (!(p0 > 0 && p1 > 0)) return;
+          const ret = p1 / p0 - 1;
+          hCount++;
+          if (ret > 0.005) hUp++; else if (ret < -0.005) hDown++;
+        });
+        return hCount ? (hUp - hDown) / hCount : null;
+      });
+      const skillStats = {};
+      const globalIndex = (DATA.servers || []).findIndex(function (s) { return s.id === server.id; });
+      groups.forEach(function (group) {
+        const groupItems = serverGroupItems(group, items);
+        const vals = [];
+        groupItems.forEach(function (item) {
+          if (byKey[item.key]) vals.push(byKey[item.key].ret);
+        });
+        const sUp = vals.filter(function (v) { return v > 0.005; }).length;
+        const sDown = vals.filter(function (v) { return v < -0.005; }).length;
+        skillStats[group.id] = {
+          median: serverMedian(vals), count: vals.length, up: sUp, down: sDown,
+          score: vals.length ? (sUp - sDown) / vals.length : null
+        };
+      });
+      const topUp = returns.slice().filter(function (r) { return r.ret > 0.005; }).sort(function (a, b) { return b.ret - a.ret; }).slice(0, 5);
+      const topDown = returns.slice().filter(function (r) { return r.ret < -0.005; }).sort(function (a, b) { return a.ret - b.ret; }).slice(0, 5);
+      dataServers.push({
+        id: server.id, name: server.name, region: server.region || '',
+        color: trendItemColor(globalIndex < 0 ? index : globalIndex), points: points, returns: returns, byKey: byKey,
+        median: median, score: score, up: up, down: down, flat: flat, comparable: comparable, coverage: coverage, low: low,
+        heat: heat, skillStats: skillStats, topUp: topUp, topDown: topDown
+      });
+    });
+    dataServers.sort(function (a, b) {
+      if (a.score == null) return 1;
+      if (b.score == null) return -1;
+      return b.score - a.score;
+    });
+    const nonLow = dataServers.filter(function (s) { return !s.low; });
+    const lowCount = dataServers.length - nonLow.length;
+    let selectedServer = p.sserver ? dataServers.filter(function (s) { return s.id === p.sserver; })[0] : null;
+    if (!selectedServer) selectedServer = nonLow[0] || dataServers[0] || null;
+    const selectedSkill = groups.filter(function (g) { return g.id === p.sskill; })[0] || null;
+    const detailReturns = selectedServer
+      ? (selectedSkill ? serverGroupItems(selectedSkill, items).filter(function (item) { return selectedServer.byKey[item.key]; }).map(function (item) { return selectedServer.byKey[item.key]; }) : selectedServer.returns)
+      : [];
+    const globalUp = allReturns.filter(function (r) { return r.ret > 0.005; }).length;
+    const globalDown = allReturns.filter(function (r) { return r.ret < -0.005; }).length;
+    const ctx = {
+      status: 'ready', range: range, selection: selection, servers: dataServers,
+      columns: columns, rank: dataServers, globalReturns: allReturns,
+      globalUp: globalUp, globalDown: globalDown, lowCount: lowCount,
+      selectedServer: selectedServer, selectedSkill: selectedSkill,
+      detailReturns: detailReturns, skillGroups: groups,
+      serverCount: servers.length
+    };
+    ctx.keywords = serverKeywordChips(ctx, p);
+    return ctx;
+  }
+
+  function serverHead(ctx) {
+    let meta = '';
+    if (ctx && ctx.range) {
+      const first = ctx.columns && ctx.columns.length ? serverTimeLabel(ctx.columns[0]) : '';
+      const last = ctx.columns && ctx.columns.length ? serverTimeLabel(ctx.columns[ctx.columns.length - 1]) : '';
+      const ready = ctx.status === 'ready';
+      const selected = ready && ctx.selection ? ctx.selection.selected.length : serverCatalog().length;
+      const total = ctx.selection && ctx.selection.all ? ctx.selection.all.length : serverCatalog().length;
+      const scope = ready && !selected ? '未选物品' : (selected !== total ? '所选 ' + selected + ' 项物品' : '全部物品 ' + total + ' 项（含五行石）');
+      const serverTotal = ctx.serverCount != null ? ctx.serverCount : (DATA.servers || []).length;
+      meta = '<p class="page-sub server-page-sub">' + scope + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + ' · 缺失报价留空</p>';
+    }
+    return '<div class="page-head"><div><h1 class="page-title">区服趋势</h1>' + meta + '</div></div>';
+  }
+  function serverTimeLabel(at) {
+    const text = String(at || '');
+    return text.length >= 16 ? text.slice(5, 16).replace('T', ' ') : text;
+  }
+  function serverToneClass(value) {
+    return value > 0.0005 ? 'pos' : value < -0.0005 ? 'neg' : 'dim';
+  }
+  function serverHeatStyle(value) {
+    if (value == null || !Number.isFinite(value)) return '';
+    const alpha = Math.min(0.5, 0.05 + Math.abs(value) / 0.06 * 0.45);
+    if (Math.abs(value) < 0.0005) return '';
+    return 'background:' + (value > 0 ? 'rgba(69,212,131,' : 'rgba(244,63,94,') + alpha.toFixed(3) + ')';
+  }
+  function serverFilterCard(ctx, p) {
+    const range = ctx.range;
+    const selection = ctx.selection;
+    const allServers = selection.all ? DATA.servers : [];
+    const selectedServers = serverSelectedServers(p).map(function (s) { return s.id; });
+    const selectedServerSet = new Set(selectedServers);
+    const selectedItemSet = new Set(selection.selected.map(function (item) { return item.key; }));
+    const allItems = selection.all;
+    const productOpen = ui.serverProductPickerOpen ? ' open' : '';
+    const serverOpen = ui.serverPickerOpen ? ' open' : '';
+    const totalItems = allItems.length;
+    const productQuery = String(ui.serverProductQuery || '').trim();
+    const productList = allItems.filter(function (item) {
+      if (!productQuery) return true;
+      return U.includes([item.name, item.skillName, item.tierName].join(' '), productQuery);
+    });
+    const serverCount = selectedServers.length;
+    const totalServers = (DATA.servers || []).length;
+    const selectedCount = selection.selected.length;
+    const allProductSelected = selectedCount === totalItems && !selection.keyword;
+    const serverAll = selectedServers.length === totalServers;
+    let html = '<section class="card server-filter-card"><div class="card-body tight">';
+    html += '<button class="server-filter-toggle' + (ui.serverFilterOpen ? ' open' : '') + '" data-action="toggle-server-filter">' + icon('filter') + '<span>筛选</span><span class="sum">' + serverCount + ' / ' + totalServers + ' 服 · ' + (allProductSelected ? '全部 ' + totalItems + ' 项' : '已选 ' + selectedCount + ' 项') + ' · ' + ctx.range.label + '</span>' + icon('chevronDown') + '</button>';
+    html += '<div class="server-filter-body' + (ui.serverFilterOpen ? ' open' : '') + '"><div class="server-filter">';
+    html += '<div class="seg seg-sm server-range">' +
+      '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
+      '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
+      '<button class="' + (p.srange === '7d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
+      '<button class="' + (p.srange === '30d' ? 'active' : '') + '" data-server-range="30d">近 30 日</button>' +
+    '</div>';
+    html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + serverCount + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
+      '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
+        '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (serverAll ? ' checked' : '') + '>全选</label>' +
+        '<button class="btn btn-sm" data-action="server-select-none">清空</button>' +
+        '<span class="tiny dim">已选 ' + serverCount + ' / ' + totalServers + '</span>' +
+      '</div><div class="trend-picker-list">' +
+        (DATA.servers || []).map(function (s, index) {
+          return '<label class="trend-check"><input type="checkbox" data-server-toggle="' + U.esc(s.id) + '"' + (selectedServerSet.has(s.id) ? ' checked' : '') + '>' +
+            '<span class="server-dot" style="--c:' + U.esc(trendItemColor(index)) + '"></span><span class="nm">' + U.esc(s.name) + '</span><span class="tier">' + U.esc(s.region || '') + '</span></label>';
+        }).join('') +
+      '</div></div></details>';
+    html += '<details class="trend-picker server-product-picker"' + productOpen + '><summary class="trend-picker-summary"><span>指定产物 <em>多选</em></span><b>' + (allProductSelected ? '全部 ' + totalItems : selectedCount + ' / ' + totalItems) + '</b>' + icon('chevronDown') + '</summary>' +
+      '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
+        '<label class="trend-check trend-check-all"><input type="checkbox" data-server-product-all-toggle' + (allProductSelected ? ' checked' : '') + '>全选</label>' +
+        '<button class="btn btn-sm" data-action="server-product-none">清空</button>' +
+        '<span class="tiny dim">已选 ' + selectedCount + ' / ' + totalItems + '</span>' +
+      '</div><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索材料 / 产物 / 五行石" value="' + U.esc(ui.serverProductQuery || '') + '" data-server-product-search data-fkey="server-product-search" aria-label="搜索指定产物"></div>' +
+      '<div class="trend-picker-list">' +
+        (productList.map(function (item) {
+          return '<label class="trend-check" data-server-product-item data-server-product-text="' + U.esc([item.name, item.skillName, item.tierName].join(' ')) + '"><input type="checkbox" data-server-product-toggle="' + U.esc(item.key) + '"' + (selectedItemSet.has(item.key) ? ' checked' : '') + '>' +
+            '<span class="trend-dot" style="--c:' + U.esc(item.color || '#64748B') + '"></span><span class="nm">' + U.esc(item.name) + '</span><span class="tier">' + U.esc(item.tierName || item.skillName) + '</span></label>';
+        }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
+      '</div></div></details>';
+    html += '<button class="btn btn-sm" data-action="server-reset">' + icon('refresh') + '重置</button>';
+    html += '<span class="filter-note"><span class="dot"></span>缺失报价留空 · 不计入分母</span>';
+    html += '</div></div></div></section>';
+    return html;
+  }
+  function serverKeywordBar(ctx, p) {
+    const chips = ctx.keywords || [];
+    if (!chips.length) return '';
+    return '<div class="server-keywords"><span class="server-keywords-label">本期关键词</span>' +
+      chips.map(function (chip) {
+        const cls = 'server-kw ' + (chip.tone || '') + (chip.type === 'active' ? ' active' : '');
+        const inner = (chip.dot ? '<i class="server-dot" style="--c:' + U.esc(chip.dot) + '"></i>' : '') +
+          U.esc(chip.label) + (chip.value ? ' <b>' + U.esc(chip.value) + '</b>' : '');
+        if (chip.type === 'item') return '<button class="' + cls + '" data-server-keyword="' + U.esc(chip.token) + '">' + inner + '</button>';
+        if (chip.type === 'active') return '<button class="' + cls + '" data-server-clear-keyword="1">' + inner + ' ×</button>';
+        return '<span class="' + cls + '">' + inner + '</span>';
+      }).join('') +
+      '<span class="server-keywords-hint">点击物品词筛选</span></div>';
+  }
+  function serverKpi(ctx) {
+    const nonLow = ctx.rank.filter(function (s) { return !s.low && s.score != null; });
+    const up = ctx.rank.filter(function (s) { return s.score > 0.0005; }).length;
+    const down = ctx.rank.filter(function (s) { return s.score < -0.0005; }).length;
+    const breadth = ctx.globalUp + ctx.globalDown ? ctx.globalUp / (ctx.globalUp + ctx.globalDown) : 0;
+    const strongest = nonLow[0] || null;
+    const weakest = nonLow.slice(-1)[0] || null;
+    return '<div class="kpi-grid server-kpis">' +
+      '<div class="kpi"><div class="kpi-label">净广度为正 / 为负</div><div class="kpi-value"><span class="pos">' + up + '</span><small>/</small><span class="neg">' + down + '</span><small>服</small></div><div class="kpi-meta"><span>全部 ' + ctx.rank.length + ' 服 · 低覆盖 ' + ctx.lowCount + ' 服</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">全服涨跌广度</div><div class="kpi-value">' + U.fmt(breadth * 100, 0) + '<span class="kpi-unit">%</span></div><div class="mini-bar"><i style="width:' + Math.round(breadth * 100) + '%;background:var(--positive)"></i><i style="width:' + Math.round((1 - breadth) * 100) + '%;background:var(--danger)"></i></div><div class="kpi-meta"><span>上涨 ' + ctx.globalUp + ' · 下跌 ' + ctx.globalDown + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">最强区服</div><div class="kpi-value">' + (strongest ? '<span class="server-dot" style="--c:' + U.esc(strongest.color) + ';display:inline-block;margin-right:6px"></span>' + U.esc(strongest.name) : '—') + '</div><div class="kpi-meta">' + (strongest ? '<span class="pos">' + serverBreadth(strongest.score) + '</span><span class="sep"></span><span>覆盖 ' + strongest.comparable + ' / ' + (ctx.selection.selected.length) + '</span>' : '样本不足') + '</div></div>' +
+      '<div class="kpi"><div class="kpi-label">最弱区服</div><div class="kpi-value">' + (weakest ? '<span class="server-dot" style="--c:' + U.esc(weakest.color) + ';display:inline-block;margin-right:6px"></span>' + U.esc(weakest.name) : '—') + '</div><div class="kpi-meta">' + (weakest ? '<span class="neg">' + serverBreadth(weakest.score) + '</span><span class="sep"></span><span>覆盖 ' + weakest.comparable + ' / ' + (ctx.selection.selected.length) + '</span>' : '样本不足') + '</div></div>' +
+    '</div>';
+  }
+  function serverHeatCard(ctx) {
+    const selected = ctx.selectedServer;
+    const columns = ctx.columns;
+    const rows = ctx.rank;
+    let html = '<section class="card col-7 server-heat-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">区服净广度热力图</h2><p class="card-sub">相对区间首点的上涨/下跌净占比 · 行按末点排序</p></div><div class="card-tools"><span class="chart-legend"><span class="item"><span class="swatch" style="--sw:var(--positive)"></span>涨</span><span class="item"><span class="swatch" style="--sw:var(--danger)"></span>跌</span></span></div></div>';
+    html += '<div class="server-heat-wrap"><table class="trend-heatmap server-heatmap"><thead><tr><th class="sticky">区服</th>' +
+      columns.map(function (at) { return '<th class="num">' + U.esc(serverTimeLabel(at)) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (s) {
+      html += '<tr class="' + (selected && selected.id === s.id ? 'sel' : '') + '" data-server-focus="' + U.esc(s.id) + '">' +
+        '<th class="sticky"><span class="server-dot" style="--c:' + U.esc(s.color) + '"></span><span class="trend-heat-name">' + U.esc(s.name) + '</span>' + (s.low ? '<span class="low-badge">低覆盖</span>' : '') + '</th>' +
+        columns.map(function (at, i) {
+          const value = s.heat[i];
+          return '<td class="num ' + serverToneClass(value) + '" style="' + serverHeatStyle(value) + '">' + (i === 0 || value == null ? '—' : serverBreadth(value)) + '</td>';
+        }).join('') + '</tr>';
+    });
+    html += '</tbody></table></div></section>';
+    return html;
+  }
+  function serverRankCard(ctx) {
+    const selected = ctx.selectedServer;
+    let html = '<section class="card col-5 server-rank-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">区服净广度榜</h2><p class="card-sub">' + ctx.rank.length + ' 服 · 全部物品 / 所选范围</p></div></div>' +
+      '<div class="server-rank-wrap"><table class="data compact server-rank"><thead><tr><th>区服</th><th class="num">净广度</th><th class="num">涨/跌/平</th><th class="num">覆盖</th><th>主要上涨</th></tr></thead><tbody>';
+    ctx.rank.forEach(function (s) {
+      const top = s.topUp[0];
+      html += '<tr class="' + (selected && selected.id === s.id ? 'sel' : '') + '" data-server-focus="' + U.esc(s.id) + '">' +
+        '<td><span class="server-dot" style="--c:' + U.esc(s.color) + '"></span><span class="server-rank-name">' + U.esc(s.name) + '</span>' + (s.low ? '<span class="low-badge">低</span>' : '') + '</td>' +
+        '<td class="num ' + serverToneClass(s.score) + '">' + serverBreadth(s.score) + '</td>' +
+        '<td class="num"><span class="pos">' + s.up + '</span>/<span class="neg">' + s.down + '</span>/<span class="dim">' + s.flat + '</span></td>' +
+        '<td class="num"><span class="server-coverage"><i style="width:' + Math.round((s.coverage || 0) * 100) + '%"></i></span>' + Math.round((s.coverage || 0) * 100) + '%</td>' +
+        '<td class="server-rank-top">' + (top ? U.esc(top.item.name) + ' <span class="pos">' + serverPct(top.ret) + '</span>' : '—') + '</td></tr>';
+    });
+    html += '</tbody></table></div></section>';
+    return html;
+  }
+  function serverSkillCard(ctx) {
+    const selected = ctx.selectedServer;
+    let html = '<section class="card col-12 server-skill-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">技艺 × 区服净广度矩阵</h2><p class="card-sub">制造取产物 · 采集取材料 · 五行石 6–8 级独立列 · 无数据留空</p></div><div class="card-tools"><span class="chart-legend"><span class="item"><span class="swatch" style="--sw:var(--positive)"></span>涨</span><span class="item"><span class="swatch" style="--sw:var(--danger)"></span>跌</span></span></div></div>';
+    html += '<div class="server-skill-wrap"><table class="server-skill-table"><thead><tr><th>区服</th>' +
+      ctx.skillGroups.map(function (g) { return '<th class="' + (g.id === 'stone' ? 'stone' : '') + '">' + U.esc(g.name) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    ctx.rank.forEach(function (s) {
+      html += '<tr class="' + (selected && selected.id === s.id ? 'sel' : '') + '"><th><span class="server-dot" style="--c:' + U.esc(s.color) + '"></span><span class="server-rank-name">' + U.esc(s.name) + '</span>' + (s.low ? '<span class="low-badge">低</span>' : '') + '</th>' +
+        ctx.skillGroups.map(function (g) {
+          const stat = s.skillStats[g.id] || {};
+          if (!stat.count) return '<td class="num miss">—</td>';
+          return '<td class="num ' + serverToneClass(stat.score) + '" style="' + serverHeatStyle(stat.score) + '" data-server-focus="' + U.esc(s.id) + '" data-server-skill="' + U.esc(g.id) + '">' + serverBreadth(stat.score) + '<small>' + stat.count + '</small></td>';
+        }).join('') + '</tr>';
+    });
+    html += '</tbody></table></div><div class="card-foot"><span>单元格下方数字为可比物品数；点击单元格聚焦区服 + 技艺</span></div></section>';
+    return html;
+  }
+  function serverDetail(ctx) {
+    const server = ctx.selectedServer;
+    if (!server) return '';
+    const skill = ctx.selectedSkill;
+    const returns = ctx.detailReturns || [];
+    const up = returns.filter(function (r) { return r.ret > 0.005; }).sort(function (a, b) { return b.ret - a.ret; }).slice(0, 5);
+    const down = returns.filter(function (r) { return r.ret < -0.005; }).sort(function (a, b) { return a.ret - b.ret; }).slice(0, 5);
+    const cats = [
+      { label: '材料', kind: 'material' },
+      { label: '产物', kind: 'product' },
+      { label: '五行石', kind: 'stone' }
+    ].map(function (cat) {
+      const vals = returns.filter(function (r) { return r.item.kind === cat.kind; }).map(function (r) { return r.ret; });
+      const cUp = vals.filter(function (v) { return v > 0.005; }).length;
+      const cDown = vals.filter(function (v) { return v < -0.005; }).length;
+      return { label: cat.label, score: vals.length ? (cUp - cDown) / vals.length : null, count: vals.length };
+    });
+    const title = server.name + ' · 主要变动' + (skill ? ' · ' + skill.name : '');
+    let html = '<section class="card col-12 server-detail-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">' + U.esc(title) + '</h2><p class="card-sub">' + (skill ? '当前聚焦：' + U.esc(skill.name) + ' · ' : '') + '全部范围 · 涨幅/跌幅前 5</p></div><div class="card-tools"><span class="badge badge-outline">覆盖 ' + server.comparable + ' / ' + ctx.selection.selected.length + '</span>' +
+      (skill ? '<button class="btn btn-sm" data-action="server-clear-skill">看全部技艺</button>' : '') +
+      '<a class="btn btn-sm" href="' + Route.href('/trends', { server: server.id, tfrom: ctx.range.from, tto: ctx.range.to }) + '">查看该服物价走势 ' + icon('arrowRight') + '</a></div></div>';
+    html += '<div class="server-detail-body"><div class="server-cats">' +
+      cats.map(function (cat) {
+        return '<div class="server-cat"><div class="k">' + cat.label + '</div><div class="v ' + serverToneClass(cat.score) + '">' + serverBreadth(cat.score) + '</div><div class="t">净广度 · ' + cat.count + ' 个可比</div></div>';
+      }).join('') + '</div><div class="server-movers">' +
+      '<div><div class="server-mover-head"><span class="pos">涨幅前 5</span></div>' + (up.length ? up.map(function (r) {
+        return '<a class="server-mover-row" href="' + Route.href('/trends', { server: server.id, tfocus: r.item.key, tfrom: ctx.range.from, tto: ctx.range.to }) + '"><span class="nm">' + U.esc(r.item.name) + '</span><span class="chg pos">' + serverPct(r.ret) + '</span><span class="px">' + U.fmt(r.p1, 2) + ' 金</span></a>';
+      }).join('') : '<div class="server-empty">—</div>') + '</div>' +
+      '<div><div class="server-mover-head"><span class="neg">跌幅前 5</span></div>' + (down.length ? down.map(function (r) {
+        return '<a class="server-mover-row" href="' + Route.href('/trends', { server: server.id, tfocus: r.item.key, tfrom: ctx.range.from, tto: ctx.range.to }) + '"><span class="nm">' + U.esc(r.item.name) + '</span><span class="chg neg">' + serverPct(r.ret) + '</span><span class="px">' + U.fmt(r.p1, 2) + ' 金</span></a>';
+      }).join('') : '<div class="server-empty">—</div>') + '</div></div></div></section>';
+    return html;
+  }
+  function renderServerTrends(p) {
+    const ctx = serverBuild(p);
+    if (!ctx || ctx.status === 'loading') {
+      return '<div class="page">' + serverHead(ctx) + '<div class="card"><div class="card-body">' + notice('正在加载区服行情与历史节点…', 'info') + '</div></div>' + dataFoot() + '</div>';
+    }
+    if (ctx.status === 'error') {
+      return '<div class="page">' + serverHead(ctx) + '<div class="card"><div class="card-body">' + notice('无法加载区服行情：' + U.esc(ctx.error || '未知错误'), 'info') + '</div></div>' + dataFoot() + '</div>';
+    }
+    let html = '<div class="page trend-page server-page">' + serverHead(ctx);
+    html += serverFilterCard(ctx, p);
+    html += serverKeywordBar(ctx, p);
+    if (!ctx.servers.length) {
+      html += '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' + emptyState('当前筛选没有可比物品或区服', '调整区服或指定产物范围。', '', 'filter') + '</div></section></div>';
+      return html + dataFoot() + '</div>';
+    }
+    html += serverKpi(ctx);
+    html += '<div class="grid section-gap">' + serverHeatCard(ctx) + serverRankCard(ctx) + '</div>';
+    html += '<div class="grid section-gap">' + serverSkillCard(ctx) + '</div>';
+    html += '<div class="grid section-gap">' + serverDetail(ctx) + '</div>';
+    html += dataFoot();
+    return html + '</div>';
+  }
+
   function compareTable(a, b) {
     const dims = [
       { label: '总成本', av: a.calc.totalCost, bv: b.calc.totalCost, better: 'low', fmt: 2, unit: '金' },
@@ -4035,6 +4540,11 @@
       case 'trend-download-chart': downloadTrendChart(el.closest('.card'), el.getAttribute('data-trend-label')); break;
       case 'trend-select-all': updateParams({ titems: '' }); break;
       case 'trend-select-none': updateParams({ titems: '__none__' }); break;
+      case 'toggle-server-filter': ui.serverFilterOpen = !ui.serverFilterOpen; render(); break;
+      case 'server-select-none': updateParams({ sservers: '__none__' }); break;
+      case 'server-product-none': updateParams({ sitems: '__none__', skeyword: '' }); break;
+      case 'server-clear-skill': updateParams({ sskill: '' }); break;
+      case 'server-reset': updateParams({ srange: 'today', sservers: '', sitems: '', sserver: '', sskill: '', skeyword: '' }); break;
       case 'export-csv': {
         const kind = el.getAttribute('data-csv');
         if (kind === 'prices') csvPrices();
@@ -4270,6 +4780,30 @@
       go('/skills/' + skillRow.getAttribute('data-skill-link'));
       return;
     }
+    const serverRange = e.target.closest('[data-server-range]');
+    if (serverRange) {
+      updateParams({ srange: serverRange.getAttribute('data-server-range'), sserver: '', sskill: '' });
+      return;
+    }
+    const serverFocus = e.target.closest('[data-server-focus]');
+    if (serverFocus) {
+      updateParams({
+        sserver: serverFocus.getAttribute('data-server-focus'),
+        sskill: serverFocus.getAttribute('data-server-skill') || ''
+      });
+      return;
+    }
+    const serverKeyword = e.target.closest('[data-server-keyword]');
+    if (serverKeyword) {
+      const key = serverKeyword.getAttribute('data-server-keyword');
+      updateParams({ skeyword: params().skeyword === key ? '' : key, sskill: '' });
+      return;
+    }
+    const serverClearKeyword = e.target.closest('[data-server-clear-keyword]');
+    if (serverClearKeyword) {
+      updateParams({ skeyword: '' });
+      return;
+    }
     const trendNode = e.target.closest('[data-trend-node]');
     if (trendNode) {
       updateParams({ tnode: trendNode.getAttribute('data-trend-node') });
@@ -4343,6 +4877,36 @@
     }
     if (t.matches('[data-trend-toggle-all]')) {
       updateParams({ titems: t.checked ? '' : '__none__' });
+      return;
+    }
+    if (t.matches('[data-server-toggle-all]')) {
+      updateParams({ sservers: t.checked ? '' : '__none__' });
+      return;
+    }
+    if (t.matches('[data-server-product-all-toggle]')) {
+      updateParams({ sitems: t.checked ? '' : '__none__', skeyword: '' });
+      return;
+    }
+    if (t.matches('[data-server-toggle]')) {
+      const all = DATA.servers || [];
+      const current = serverSelectedServers(params());
+      const set = new Set(current.map(function (s) { return s.id; }));
+      const key = t.getAttribute('data-server-toggle');
+      if (t.checked) set.add(key); else set.delete(key);
+      let value = '';
+      if (!set.size) value = '__none__';
+      else if (set.size < all.length) value = all.filter(function (s) { return set.has(s.id); }).map(function (s) { return s.id; }).join(',');
+      updateParams({ sservers: value });
+      return;
+    }
+    if (t.matches('[data-server-product-toggle]')) {
+      const all = serverCatalog();
+      const current = serverItemSelection(Object.assign({}, params(), { skeyword: '' }));
+      const set = new Set(current.selected.map(function (item) { return item.key; }));
+      const key = t.getAttribute('data-server-product-toggle');
+      if (t.checked) set.add(key); else set.delete(key);
+      const selected = all.filter(function (item) { return set.has(item.key); });
+      updateParams({ sitems: serverItemParam(selected, all), skeyword: '', sskill: '' });
       return;
     }
     if (t.matches('[data-trend-item-toggle]')) {
@@ -4455,6 +5019,17 @@
   }
   function onInput(e) {
     const t = e.target;
+    if (t.matches('[data-server-product-search]')) {
+      const panel = t.closest('.server-product-picker');
+      const q = t.value.trim();
+      ui.serverProductQuery = t.value;
+      if (panel) {
+        panel.querySelectorAll('[data-server-product-item]').forEach(function (label) {
+          label.hidden = !!q && !U.includes(label.getAttribute('data-server-product-text') || '', q);
+        });
+      }
+      return;
+    }
     if (t.matches('[data-trend-picker-search]')) {
       const panel = t.closest('.trend-picker-panel');
       const q = t.value.trim();
@@ -4575,6 +5150,18 @@
     document.addEventListener('toggle', function (e) {
       if (e.target && e.target.classList && e.target.classList.contains('trend-rank-all')) {
         ui.trendRankAllOpen = !!e.target.open;
+      }
+      if (e.target && e.target.classList && e.target.classList.contains('server-picker')) {
+        ui.serverPickerOpen = !!e.target.open;
+      }
+      if (e.target && e.target.classList && e.target.classList.contains('server-product-picker')) {
+        ui.serverProductPickerOpen = !!e.target.open;
+        if (!e.target.open) {
+          ui.serverProductQuery = '';
+          const input = e.target.querySelector('[data-server-product-search]');
+          if (input) input.value = '';
+          e.target.querySelectorAll('[data-server-product-item]').forEach(function (label) { label.hidden = false; });
+        }
       }
       if (e.target && e.target.classList && e.target.classList.contains('trend-picker')) {
         ui.trendPickerOpen = !!e.target.open;
@@ -4714,6 +5301,10 @@
       ui.trendPickerQuery = '';
       ui.trendFilterOpen = false;
       ui.trendRankAllOpen = false;
+      ui.serverPickerOpen = false;
+      ui.serverProductPickerOpen = false;
+      ui.serverProductQuery = '';
+      ui.serverFilterOpen = false;
       ui.trendScroll = Object.create(null);
       ui.trendCenterKey = null;
       if (ui.drawer) {
@@ -4747,6 +5338,8 @@
       html = renderAnalysis(p); title = '精力收益分析';
     } else if (route.path === '/trends') {
       html = renderTrends(p); title = '物价走势';
+    } else if (route.path === '/server-trends') {
+      html = renderServerTrends(p); title = '区服趋势';
     } else if (route.path === '/breakthrough') {
       html = renderBreakthrough(p); title = '突破升级';
     } else if (route.path === '/stones') {
@@ -4811,7 +5404,7 @@
     if (window.JX3Trends && window.JX3Trends.onUpdate) {
       window.JX3Trends.onUpdate(function () {
         if (!ui.booted) return;
-        if (Route.parse().path === '/trends') render();
+        if (Route.parse().path === '/trends' || Route.parse().path === '/server-trends') render();
       });
     }
     bindEvents();

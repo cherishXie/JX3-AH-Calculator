@@ -1791,3 +1791,107 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 
 /* 开发预览环境标识 */
 .dev-badge { align-self: center; margin-right: 2px; letter-spacing: 0.08em; }
+
+/* ------------------------------------------------------------------ */
+/* 区服趋势                                                           */
+/* ------------------------------------------------------------------ */
+.server-filter-card .card-body { padding: 9px 12px; }
+.server-filter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.server-filter .seg-sm { flex: none; }
+.server-filter .trend-picker { flex: none; }
+.server-page-sub { max-width: 760px; }
+.server-keywords { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 32px; margin: 10px 0 8px; }
+.server-keywords-label { font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--muted-2); text-transform: uppercase; margin-right: 2px; }
+.server-kw {
+  display: inline-flex; align-items: center; gap: 5px; height: 25px; padding: 0 8px;
+  border: 1px solid var(--border); border-radius: 4px; background: transparent;
+  color: var(--muted); font-size: 10px; white-space: nowrap; cursor: default;
+}
+.server-kw b { font-weight: 600; color: var(--text); }
+.server-kw.pos { border-color: rgba(69,212,131,.28); background: rgba(69,212,131,.07); color: var(--positive); }
+.server-kw.neg { border-color: rgba(244,63,94,.28); background: rgba(244,63,94,.07); color: var(--danger); }
+.server-kw.warn { border-color: rgba(234,179,8,.28); color: var(--warning); }
+.server-kw.active { border-color: rgba(91,143,249,.45); background: rgba(91,143,249,.10); color: var(--text); cursor: pointer; }
+.server-kw[data-server-keyword] { cursor: pointer; }
+.server-kw[data-server-keyword]:hover { border-color: var(--muted-2); color: var(--text); }
+.server-keywords-hint { font-size: 8.5px; color: var(--muted-2); margin-left: auto; }
+.server-kpis .kpi { min-width: 0; }
+.server-kpis .kpi-value { display: flex; align-items: baseline; gap: 2px; white-space: nowrap; }
+.server-kpis .kpi-value .server-dot { width: 7px; height: 7px; align-self: center; }
+.mini-bar { height: 4px; border-radius: 2px; overflow: hidden; display: flex; background: var(--border); margin-top: 6px; }
+.mini-bar i { height: 100%; display: block; }
+.server-heat-wrap { overflow: auto; max-height: none; border-top: 1px solid var(--border-soft); }
+.server-heatmap { width: 100%; min-width: 760px; }
+.server-heatmap tbody tr { cursor: pointer; }
+.server-heatmap tbody tr:hover td, .server-heatmap tbody tr:hover th { filter: brightness(1.05); }
+.server-heatmap tbody tr.sel td { box-shadow: inset 0 0 0 1px rgba(91,143,249,.32); }
+.server-heatmap tbody tr.sel th { box-shadow: inset 2px 0 0 var(--info); }
+.server-heatmap .low-badge, .server-skill-table .low-badge { margin-left: 4px; }
+.server-rank-wrap { overflow: auto; max-height: 560px; border-top: 1px solid var(--border-soft); }
+.server-rank { width: 100%; min-width: 570px; }
+.server-rank tbody tr { cursor: pointer; }
+.server-rank tbody tr:hover { background: var(--accent); }
+.server-rank tbody tr.sel { background: rgba(91,143,249,.08); }
+.server-rank tbody tr.sel td:first-child { box-shadow: inset 2px 0 0 var(--info); }
+.server-rank-name { margin-left: 5px; }
+.server-rank-top { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+.server-coverage { display: inline-block; width: 28px; height: 3px; border-radius: 2px; background: var(--border); vertical-align: middle; margin-right: 4px; overflow: hidden; }
+.server-coverage i { display: block; height: 100%; background: var(--muted); }
+.server-skill-wrap { overflow: auto; max-height: 600px; border-top: 1px solid var(--border-soft); }
+.server-skill-table { width: 100%; min-width: 1020px; border-collapse: separate; border-spacing: 0; font-size: 10px; font-variant-numeric: tabular-nums; }
+.server-skill-table th, .server-skill-table td { height: 27px; padding: 0 7px; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
+.server-skill-table thead th { position: sticky; top: 0; z-index: 3; background: var(--card); font-size: 9px; font-weight: 500; color: var(--muted); text-align: center; }
+.server-skill-table thead th:first-child { text-align: left; left: 0; z-index: 4; }
+.server-skill-table tbody th { position: sticky; left: 0; z-index: 2; background: var(--card); text-align: left; font-weight: 500; }
+.server-skill-table td { text-align: center; cursor: pointer; }
+.server-skill-table td small { display: block; margin-top: -2px; font-size: 7.5px; color: var(--muted-2); }
+.server-skill-table td.miss { color: var(--muted-2); cursor: default; }
+.server-skill-table tbody tr:hover td, .server-skill-table tbody tr:hover th { filter: brightness(1.05); }
+.server-skill-table tbody tr.sel th { box-shadow: inset 2px 0 0 var(--info); }
+.server-skill-table .stone { color: #c084fc; }
+.server-detail-body { padding: 0 16px 14px; border-top: 1px solid var(--border-soft); }
+.server-cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 0; }
+.server-cat { border: 1px solid var(--border); border-radius: 5px; padding: 7px 9px; background: rgba(255,255,255,.015); }
+.server-cat .k { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.server-cat .v { font-size: 14px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.server-cat .t { font-size: 8.5px; color: var(--muted-2); margin-top: 1px; }
+.server-movers { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.server-mover-head { font-size: 10px; font-weight: 600; padding: 2px 0 5px; }
+.server-mover-row { display: flex; align-items: center; gap: 8px; height: 27px; border-bottom: 1px solid var(--border-soft); color: var(--text); text-decoration: none; }
+.server-mover-row:last-child { border-bottom: 0; }
+.server-mover-row:hover { background: var(--accent); }
+.server-mover-row .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.server-mover-row .chg { width: 56px; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.server-mover-row .px { width: 64px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.server-empty { padding: 10px 0; color: var(--muted-2); font-size: 10px; }
+.low-badge { display: inline-block; border: 1px solid var(--border); border-radius: 3px; padding: 0 3px; font-size: 8px; color: var(--muted-2); margin-left: 4px; vertical-align: middle; }
+.server-page .card-head { padding-bottom: 8px; }
+@media (max-width: 900px) {
+  .server-filter { align-items: flex-start; }
+  .server-filter .seg-sm { flex: 1 1 100%; }
+  .server-filter .trend-picker { flex: 1 1 100%; }
+  .server-filter .trend-picker-summary { width: 100%; justify-content: space-between; }
+  .server-filter .trend-picker-panel { position: static; width: auto; max-width: none; margin-top: 5px; box-shadow: none; }
+  .server-filter .filter-note { margin-left: 0; }
+  .server-keywords { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 3px; }
+  .server-keywords-hint { display: none; }
+  .server-kw { flex: none; }
+  .server-kpis { grid-template-columns: 1fr 1fr; }
+  .server-heatmap { min-width: 680px; }
+  .server-rank { min-width: 540px; }
+  .server-skill-table { min-width: 960px; }
+  .server-cats { grid-template-columns: 1fr 1fr; }
+  .server-movers { grid-template-columns: 1fr; gap: 8px; }
+  .server-page .card-tools .btn { font-size: 10px; }
+}
+.server-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--c,#64748B);flex:none;vertical-align:middle;}
+.server-keywords-label{flex:none;white-space:nowrap;}
+.server-filter-toggle{display:none;}
+@media (max-width: 900px){
+  .server-filter-toggle{display:flex;align-items:center;gap:8px;width:100%;height:38px;padding:0 10px;margin-bottom:6px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text);font-size:11px;}
+  .server-filter-toggle .sum{flex:1;text-align:left;color:var(--muted);font-size:9.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .server-filter-toggle .chev{transition:transform .15s ease;}
+  .server-filter-toggle.open .chev{transform:rotate(180deg);}
+  .server-filter-body{display:none;}
+  .server-filter-body.open{display:block;}
+}
