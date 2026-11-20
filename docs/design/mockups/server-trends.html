@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>区服趋势 · 界面设计效果图</title>
+<style>
+:root{
+  --background:222.2 84% 4.9%; --foreground:210 40% 98%;
+  --card:222.2 84% 4.9%; --muted:217.2 32.6% 17.5%;
+  --muted-foreground:215 20.2% 65.1%; --border:217.2 32.6% 17.5%;
+  --sidebar:222.2 47.4% 11.2%; --sidebar-border:240 3.7% 15.9%;
+  --positive:142 69% 58%; --danger:345 88% 52%; --warning:45 93% 47%; --info:217 91% 60%;
+  --radius:8px; --header-h:60px; --sidebar-w:220px;
+  --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:hsl(var(--background));color:hsl(var(--foreground));font:13px/20px var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+.app{min-height:100vh;display:flex}
+.sidebar{width:var(--sidebar-w);flex:none;background:hsl(var(--sidebar));border-right:1px solid hsl(var(--sidebar-border));display:flex;flex-direction:column;min-height:100vh}
+.brand{height:var(--header-h);display:flex;align-items:center;gap:9px;padding:0 16px;border-bottom:1px solid hsl(var(--sidebar-border))}
+.seal{width:28px;height:28px;border-radius:7px;background:#e10600;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff}
+.brand b{font-size:13px;line-height:17px;display:block}
+.brand span{font-size:8px;line-height:11px;color:hsl(var(--muted-foreground));letter-spacing:.14em;display:block}
+.side-scroll{padding:10px 8px;flex:1}
+.nav-group{font-size:9px;font-weight:600;letter-spacing:.08em;color:hsl(var(--muted-foreground));text-transform:uppercase;padding:12px 10px 6px}
+.nav-item{display:flex;align-items:center;gap:8px;height:32px;padding:0 10px;border-radius:6px;color:hsl(var(--muted-foreground));font-size:12px}
+.nav-item .ic{width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
+.nav-item.active{background:hsl(var(--muted));color:hsl(var(--foreground));font-weight:600;box-shadow:inset 2px 0 0 #e10600}
+.nav-item .badge{margin-left:auto;font-size:8px;border:1px solid hsl(var(--border));border-radius:3px;padding:1px 4px;color:hsl(var(--muted-foreground))}
+.main{flex:1;min-width:0}
+.topbar{height:var(--header-h);border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;gap:10px;padding:0 22px;background:hsl(var(--background));position:sticky;top:0;z-index:10}
+.crumbs{display:flex;align-items:center;gap:8px;font-size:11px;color:hsl(var(--muted-foreground))}
+.crumbs .sep{width:1px;height:10px;background:hsl(var(--border))}
+.crumbs b{color:hsl(var(--foreground));font-weight:600}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:9px}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid hsl(var(--border));border-radius:5px;padding:4px 8px;font-size:10px;color:hsl(var(--muted-foreground))}
+.pill .dot{width:5px;height:5px;border-radius:50%;background:hsl(var(--positive))}
+.icon-btn{width:28px;height:28px;border:1px solid hsl(var(--border));border-radius:6px;background:transparent;display:inline-flex;align-items:center;justify-content:center;color:hsl(var(--muted-foreground));padding:0}
+.icon-btn svg{width:14px;height:14px}
+.content{padding:20px 24px 26px;max-width:1540px;margin:0 auto}
+.page-head{display:flex;align-items:flex-start;gap:16px;margin:0 0 14px}
+h1{font-size:20px;line-height:28px;font-weight:600;margin:0;letter-spacing:-.01em}
+.meta{margin:4px 0 0;color:hsl(var(--muted-foreground));font-size:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.meta .sep{width:1px;height:10px;background:hsl(var(--border))}
+.meta .badge{font-size:9px;border:1px solid hsl(var(--border));border-radius:4px;padding:1px 5px;color:hsl(var(--muted-foreground))}
+.page-tools{margin-left:auto;display:flex;gap:7px}
+.btn{height:29px;padding:0 10px;border:1px solid hsl(var(--border));border-radius:6px;background:transparent;font-size:11px;color:hsl(var(--muted-foreground));display:inline-flex;align-items:center;gap:5px}
+.btn svg{width:13px;height:13px}
+.btn.primary{background:hsl(var(--foreground));color:hsl(var(--background));border-color:transparent;font-weight:600}
+.filter-bar{border:1px solid hsl(var(--border));border-radius:7px;min-height:48px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:8px 12px;margin-bottom:14px;background:hsl(var(--card))}
+.filter-group{display:flex;align-items:center;gap:7px;font-size:10.5px;color:hsl(var(--muted-foreground));white-space:nowrap}
+.filter-group .flabel{color:hsl(var(--muted-foreground))}
+.seg{display:inline-flex;border:1px solid hsl(var(--border));border-radius:5px;overflow:hidden;height:27px}
+.seg button{border:0;background:transparent;padding:0 9px;font-size:10.5px;color:hsl(var(--muted-foreground));border-right:1px solid hsl(var(--border))}
+.seg button:last-child{border-right:0}
+.seg button.on{background:hsl(var(--muted));color:hsl(var(--foreground));font-weight:600}
+.select{height:27px;border:1px solid hsl(var(--border));border-radius:5px;background:transparent;color:hsl(var(--foreground));font-size:10.5px;padding:0 8px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.select .chev{width:10px;height:10px;color:hsl(var(--muted-foreground))}
+.filter-note{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px;color:hsl(var(--muted-foreground))}
+.mini-badge{font-size:8px;border:1px solid hsl(var(--border));border-radius:3px;padding:1px 4px;color:hsl(var(--muted-foreground))}
+.keyword-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:-2px 0 12px;min-height:31px}
+.keyword-label{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-foreground));font-weight:600;margin-right:2px}
+.kw{height:25px;border:1px solid hsl(var(--border));border-radius:4px;background:transparent;color:hsl(var(--muted-foreground));font-size:10px;padding:0 8px;display:inline-flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap}
+.kw b{font-weight:600;color:hsl(var(--foreground))}.kw.active{border-color:rgba(69,212,131,.35);background:rgba(69,212,131,.08);color:hsl(var(--foreground))}
+.kw .server-dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.keyword-hint{margin-left:auto;font-size:8.5px;color:hsl(var(--muted-foreground))}
+.skill-wrap{overflow:auto;border-top:1px solid hsl(var(--border));max-height:560px}
+.skill-table{width:100%;min-width:1120px;border-collapse:separate;border-spacing:0;font-size:9.5px;font-variant-numeric:tabular-nums}
+.skill-table th,.skill-table td{height:27px;padding:0 7px;border-bottom:1px solid hsl(var(--border));white-space:nowrap;text-align:right}
+.skill-table thead th{position:sticky;top:0;z-index:3;background:hsl(var(--card));font-size:9px;font-weight:500;color:hsl(var(--muted-foreground));text-align:center}
+.skill-table thead th:first-child{text-align:left;left:0;z-index:4}
+.skill-table tbody th{position:sticky;left:0;z-index:2;background:hsl(var(--card));text-align:left;font-weight:500}
+.skill-table td{text-align:center;color:hsl(var(--foreground))}
+.skill-table td.miss{color:hsl(var(--muted-foreground))}
+.skill-table .stone-col{color:#c084fc}
+.skill-table tr.sel td{background:rgba(255,255,255,.045)}
+.skill-table tr.sel th{box-shadow:inset 2px 0 0 hsl(var(--info))}
+.skill-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid hsl(var(--border));font-size:8.5px;color:hsl(var(--muted-foreground))}
+.skill-foot .sp{flex:1}
+.mobile-filter{display:none;align-items:center;gap:7px;height:38px;padding:0 10px;border:1px solid hsl(var(--border));border-radius:6px;margin-bottom:10px;font-size:11px;color:hsl(var(--foreground))}
+.mfilter-main{font-weight:600}.mfilter-sum{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9.5px;color:hsl(var(--muted-foreground))}
+.mobile-filter svg{width:13px;height:13px;color:hsl(var(--muted-foreground));flex:none}
+.filter-note .dot{width:4px;height:4px;border-radius:50%;background:hsl(var(--positive))}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.kpi{border:1px solid hsl(var(--border));background:hsl(var(--card));border-radius:7px;padding:11px 13px;min-height:76px}
+.kpi-label{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-foreground));display:flex;align-items:center;gap:4px}
+.kpi-value{font-size:24px;line-height:30px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:3px}
+.kpi-value small{font-size:11px;font-weight:500;color:hsl(var(--muted-foreground));margin-left:3px}
+.kpi-sub{display:flex;align-items:center;gap:4px;font-size:9.5px;color:hsl(var(--muted-foreground));margin-top:3px}
+.kpi-sub .pos{color:hsl(var(--positive))}.kpi-sub .neg{color:hsl(var(--danger))}
+.kpi-sub .dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.mini-bar{height:3px;border-radius:2px;background:hsl(var(--border));overflow:hidden;margin-top:6px;display:flex}
+.mini-bar i{display:block;height:100%}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px}
+.col-7{grid-column:span 7}.col-5{grid-column:span 5}.col-12{grid-column:span 12}
+.card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);min-width:0}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:13px 14px 10px}
+.card-title{font-size:13px;line-height:18px;font-weight:600;margin:0}
+.card-sub{font-size:9.5px;line-height:14px;color:hsl(var(--muted-foreground));margin:3px 0 0}
+.card-tools{margin-left:auto;display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.legend{display:flex;align-items:center;gap:8px;font-size:9px;color:hsl(var(--muted-foreground))}
+.legend .sw{width:7px;height:7px;border-radius:2px;display:inline-block}
+.heat-wrap{overflow:auto;border-top:1px solid hsl(var(--border));max-height:520px}
+.heat{width:100%;border-collapse:separate;border-spacing:0;font-size:10px;font-variant-numeric:tabular-nums}
+.heat th,.heat td{height:27px;padding:0 7px;border-bottom:1px solid hsl(var(--border));white-space:nowrap}
+.heat thead th{position:sticky;top:0;z-index:3;background:hsl(var(--card));font-size:9px;font-weight:500;color:hsl(var(--muted-foreground));text-align:right}
+.heat thead th:first-child{text-align:left;left:0;z-index:4}
+.heat tbody th{position:sticky;left:0;z-index:2;background:hsl(var(--card));text-align:left;font-weight:500}
+.heat td{text-align:right;color:hsl(var(--foreground))}
+.heat td.zero{color:hsl(var(--muted-foreground))}
+.server-cell{display:flex;align-items:center;gap:6px}
+.server-dot{width:5px;height:5px;border-radius:50%;flex:none}
+.server-name{font-size:10.5px}
+.server-region{font-size:8.5px;color:hsl(var(--muted-foreground));margin-left:2px}
+.low{font-size:8px;border:1px solid hsl(var(--border));border-radius:3px;padding:0 3px;color:hsl(var(--muted-foreground));margin-left:3px}
+.rank-wrap{overflow:auto;border-top:1px solid hsl(var(--border));max-height:520px}
+.rank{width:100%;border-collapse:separate;border-spacing:0;font-size:10px;font-variant-numeric:tabular-nums}
+.rank th,.rank td{height:27px;padding:0 8px;border-bottom:1px solid hsl(var(--border));white-space:nowrap}
+.rank thead th{position:sticky;top:0;z-index:2;background:hsl(var(--card));font-size:8.5px;font-weight:500;color:hsl(var(--muted-foreground));text-align:right}
+.rank thead th:first-child{text-align:left}
+.rank tbody td{text-align:right;color:hsl(var(--muted-foreground))}
+.rank tbody td:first-child{text-align:left;color:hsl(var(--foreground))}
+.rank tr.sel td{background:rgba(255,255,255,.045)}
+.rank tr.sel td:first-child{box-shadow:inset 2px 0 0 hsl(var(--info))}
+.pos{color:hsl(var(--positive))!important}.neg{color:hsl(var(--danger))!important}
+.coverage{display:inline-flex;align-items:center;gap:4px;justify-content:flex-end}
+.coverage .bar{width:30px;height:3px;border-radius:2px;background:hsl(var(--border));overflow:hidden;display:inline-block}
+.coverage .bar i{display:block;height:100%;background:hsl(var(--muted-foreground));border-radius:2px}
+.spark{width:38px;height:13px;display:block}
+.detail-body{padding:0 14px 13px;border-top:1px solid hsl(var(--border))}
+.detail-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0 7px}
+.tag{display:inline-flex;align-items:center;gap:4px;border:1px solid hsl(var(--border));border-radius:4px;padding:2px 6px;font-size:9px;color:hsl(var(--muted-foreground))}
+.tag.good{border-color:rgba(69,212,131,.25);color:hsl(var(--positive));background:rgba(69,212,131,.07)}
+.tag.bad{border-color:rgba(244,63,94,.25);color:hsl(var(--danger));background:rgba(244,63,94,.07)}
+.detail-link{margin-left:auto;font-size:9.5px;color:hsl(var(--muted-foreground));text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+.category-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 10px}
+.cat{border:1px solid hsl(var(--border));border-radius:5px;padding:7px 8px;background:rgba(255,255,255,.015)}
+.cat .k{font-size:8.5px;color:hsl(var(--muted-foreground));letter-spacing:.04em;text-transform:uppercase}
+.cat .v{font-size:13px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+.cat .t{font-size:8.5px;color:hsl(var(--muted-foreground));margin-top:1px}
+.movers{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.mover-h{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:600;margin:0 0 5px;color:hsl(var(--muted-foreground))}
+.mover-h .dot{width:5px;height:5px;border-radius:50%}
+.mover-row{display:flex;align-items:center;gap:7px;height:25px;border-bottom:1px solid hsl(var(--border));font-size:10px}
+.mover-row:last-child{border-bottom:0}
+.mover-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mover-change{width:47px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.mover-price{width:54px;text-align:right;color:hsl(var(--muted-foreground));font-variant-numeric:tabular-nums}
+.line-body{padding:4px 14px 10px;border-top:1px solid hsl(var(--border))}
+.line-body svg{width:100%;height:auto;display:block}
+.line-legend{display:flex;flex-wrap:wrap;gap:8px;padding:2px 2px 0;font-size:9px;color:hsl(var(--muted-foreground))}
+.line-legend span{display:inline-flex;align-items:center;gap:4px}
+.line-legend i{width:10px;height:2px;border-radius:1px;display:inline-block}
+.footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:hsl(var(--muted-foreground));font-size:9px;padding:12px 2px 0}
+.footer .sp{flex:1}
+.note{font-size:9px;color:hsl(var(--muted-foreground));border-left:2px solid hsl(var(--border));padding-left:7px}
+svg.icon{width:1em;height:1em;display:inline-block;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:900px){
+ .sidebar{display:none}.content{padding:14px 12px 22px}
+ .topbar{padding:0 12px}.top-right .pill{display:none}
+ h1{font-size:18px}.page-head{margin-bottom:12px}.page-tools{display:none}
+ .filter-bar{display:none}.mobile-filter{display:flex}
+ .kpis{grid-template-columns:1fr 1fr;gap:8px}.kpi{padding:9px 10px;min-height:70px}.kpi-value{font-size:21px}
+ .grid{grid-template-columns:1fr}.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-12{grid-column:span 1}
+ .heat-wrap,.rank-wrap{max-height:none}.heat{min-width:560px}.rank{min-width:520px}
+ .movers{grid-template-columns:1fr;gap:8px}.mover-row{height:27px}
+ .card-head{padding:11px 12px 9px}.detail-body,.line-body{padding-left:12px;padding-right:12px}
+ .keyword-bar{flex-wrap:nowrap;overflow:auto;padding-bottom:2px}.keyword-hint{display:none}.keyword-label{flex:none}
+ .skill-wrap{max-height:none}.skill-table{min-width:1040px}.skill-foot{padding-left:12px;padding-right:12px}
+ .footer{font-size:8.5px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="seal">账</span><div><b>剑网三物价助手</b><span>JX3 PRICE LEDGER</span></div></div>
+    <div class="side-scroll">
+      <div class="nav-group">工作台</div>
+      <div class="nav-item"><span class="ic">▦</span>总览</div>
+      <div class="nav-group">行情与配方</div>
+      <div class="nav-item"><span class="ic">⌁</span>生活技艺<span class="badge">8</span></div>
+      <div class="nav-item"><span class="ic">≡</span>价格库</div>
+      <div class="nav-item"><span class="ic">◇</span>五行石</div>
+      <div class="nav-group">分析</div>
+      <div class="nav-item"><span class="ic">↗</span>精力收益</div>
+      <div class="nav-item"><span class="ic">⌁</span>物价走势</div>
+      <div class="nav-item active"><span class="ic">◉</span>区服趋势</div>
+      <div class="nav-item"><span class="ic">↑</span>突破升级</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="crumbs"><span>剑网三物价助手</span><span class="sep"></span><b>区服趋势</b></div>
+      <div class="top-right">
+        <span class="pill"><span class="dot"></span>全服视角</span>
+        <span class="pill">行情 11-20 19:07</span>
+        <button class="icon-btn" title="下载当前视图" aria-label="下载当前视图"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button>
+        <button class="icon-btn" title="数据说明" aria-label="数据说明"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <h1>区服趋势</h1>
+          <div class="meta">
+            <span>全部物品 275</span><span class="sep"></span><span>17 个区服</span><span class="sep"></span><span>今日 10:07–19:07</span><span class="sep"></span><span class="badge">示意数据</span>
+          </div>
+        </div>
+        <div class="page-tools">
+          <button class="btn">数据说明</button>
+          <button class="btn primary"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>导出</button>
+        </div>
+      </div>
+
+      <div class="mobile-filter">
+        <span class="mfilter-main">筛选</span>
+        <span class="mfilter-sum">全部物品 275 · 全部技艺 · 全部 17 服 · 今日</span>
+        <svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <section class="filter-bar" aria-label="区服趋势筛选">
+        <div class="filter-group"><span class="flabel">时间</span><div class="seg"><button class="on">今日</button><button>近 3 日</button><button>近 7 日</button></div></div>
+        <div class="filter-group"><span class="flabel">范围</span><button class="select">全部物品 275 <svg class="chev icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+        <div class="filter-group"><span class="flabel">技艺</span><button class="select">全部技艺与五行石 <svg class="chev icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+        <div class="filter-group"><span class="flabel">指定产物</span><button class="select">未指定 <span class="mini-badge">可多选</span><svg class="chev icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+        <div class="filter-group"><span class="flabel">区服</span><button class="select">全部 17 服 <svg class="chev icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+        <span class="filter-note"><span class="dot"></span>缺失报价留空 · 不计入分母</span>
+      </section>
+
+      <section class="keyword-bar" aria-label="本期关键词">
+        <span class="keyword-label">本期关键词</span>
+        <button class="kw active">材料偏强 <b class="pos">+3.2%</b></button>
+        <button class="kw">产物分化</button>
+        <button class="kw">丹类活跃 <b>8 项</b></button>
+        <button class="kw">五行石承压 <b class="neg">−1.2%</b></button>
+        <button class="kw"><i class="server-dot" style="background:#5B8FF9"></i>蝶恋花领涨</button>
+        <button class="kw">骨头 <b class="pos">+24.3%</b></button>
+        <span class="keyword-hint">点击筛选</span>
+      </section>
+
+      <section class="kpis" aria-label="区服趋势概览">
+        <div class="kpi">
+          <div class="kpi-label">净广度为正 / 为负</div>
+          <div class="kpi-value"><span class="pos">6</span><small>/</small><span class="neg">11</span><small>服</small></div>
+          <div class="kpi-sub">全部 17 服 · 低覆盖 1 服</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">全服涨跌广度</div>
+          <div class="kpi-value">38<small>%</small></div>
+          <div class="mini-bar"><i style="width:38%;background:hsl(var(--positive))"></i><i style="width:62%;background:hsl(var(--danger))"></i></div>
+          <div class="kpi-sub">上涨 41 项 · 下跌 67 项</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">最强区服</div>
+          <div class="kpi-value"><span class="server-dot" style="background:#5B8FF9;display:inline-block;margin-right:5px"></span>蝶恋花</div>
+          <div class="kpi-sub"><span class="pos">+2.8%</span><span style="width:1px;height:9px;background:hsl(var(--border));display:inline-block"></span>覆盖 149 / 275</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">最弱区服</div>
+          <div class="kpi-value"><span class="server-dot" style="background:#E8684A;display:inline-block;margin-right:5px"></span>山海相逢</div>
+          <div class="kpi-sub"><span class="neg">−3.2%</span><span style="width:1px;height:9px;background:hsl(var(--border));display:inline-block"></span>覆盖 114 / 275</div>
+        </div>
+      </section>
+
+      <div class="grid">
+        <section class="card col-7">
+          <div class="card-head">
+            <div><h2 class="card-title">区服净广度热力图</h2><p class="card-sub">相对 10:07 的上涨/下跌净占比 · 行按末点排序</p></div>
+            <div class="card-tools">
+              <span class="legend"><span class="sw" style="background:hsl(var(--positive))"></span>涨<span class="sw" style="background:hsl(var(--danger))"></span>跌</span>
+              <button class="icon-btn" title="下载图片" aria-label="下载图片"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button>
+            </div>
+          </div>
+          <div class="heat-wrap"><table class="heat" id="heat"><thead><tr><th>区服</th><th>10:07</th><th>12:07</th><th>14:07</th><th>16:07</th><th>19:07</th></tr></thead><tbody></tbody></table></div>
+        </section>
+
+        <section class="card col-5">
+          <div class="card-head">
+            <div><h2 class="card-title">区服净广度榜</h2><p class="card-sub">17 服 · 中位涨跌 / 广度 / 覆盖率</p></div>
+            <div class="card-tools"><button class="icon-btn" title="下载表格" aria-label="下载表格"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button></div>
+          </div>
+          <div class="rank-wrap"><table class="rank" id="rank"><thead><tr><th>区服</th><th>净广度</th><th>广度</th><th>覆盖/275</th><th>主要上涨</th></tr></thead><tbody></tbody></table></div>
+        </section>
+
+        <section class="card col-12">
+          <div class="card-head">
+            <div><h2 class="card-title">技艺 × 区服净广度矩阵</h2><p class="card-sub">主要产物净广度 · 五行石独立为 6–8 级 · 无数据留空</p></div>
+            <div class="card-tools"><span class="legend"><span class="sw" style="background:hsl(var(--positive))"></span>涨<span class="sw" style="background:hsl(var(--danger))"></span>跌</span><button class="icon-btn" title="下载矩阵" aria-label="下载矩阵"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg></button></div>
+          </div>
+          <div class="skill-wrap"><table class="skill-table" id="skill"><thead><tr><th>区服</th><th>锻造</th><th>缝纫</th><th>制药</th><th>烹饪</th><th>梓匠</th><th>神农</th><th>采金</th><th>庖丁</th><th class="stone-col">五行石</th></tr></thead><tbody></tbody></table></div>
+          <div class="skill-foot"><span>制造技艺取产物 · 采集技艺取材料 · 五行石单独市场</span><span class="sp"></span><span>点击单元格聚焦该服 / 该技艺</span></div>
+        </section>
+
+        <section class="card col-12">
+          <div class="card-head">
+            <div><h2 class="card-title">蝶恋花 · 主要变动</h2><p class="card-sub">选中区服 · 按技艺/五行石 · 涨幅/跌幅前 5</p></div>
+            <div class="card-tools"><span class="tag good">覆盖 149 / 275</span><a class="detail-link" href="#">查看该服物价走势 <span>›</span></a></div>
+          </div>
+          <div class="detail-body">
+            <div class="category-row">
+              <div class="cat"><div class="k">材料</div><div class="v pos">+3.2%</div><div class="t">上涨 18 · 下跌 9</div></div>
+              <div class="cat"><div class="k">产物</div><div class="v neg">−0.6%</div><div class="t">上涨 7 · 下跌 12</div></div>
+              <div class="cat"><div class="k">五行石</div><div class="v">+0.1%</div><div class="t">独立市场 · 不混入广度</div></div>
+            </div>
+            <div class="movers">
+              <div>
+                <div class="mover-h"><span class="dot" style="background:hsl(var(--positive))"></span>涨幅前 5</div>
+                <div class="mover-row"><span class="mover-name">骨头</span><span class="mover-change pos">+24.3%</span><span class="mover-price">9.00 金</span></div>
+                <div class="mover-row"><span class="mover-name">精肉</span><span class="mover-change pos">+18.1%</span><span class="mover-price">12.40 金</span></div>
+                <div class="mover-row"><span class="mover-name">沉香木</span><span class="mover-change pos">+10.3%</span><span class="mover-price">48.20 金</span></div>
+                <div class="mover-row"><span class="mover-name">器物令</span><span class="mover-change pos">+7.8%</span><span class="mover-price">36.00 金</span></div>
+                <div class="mover-row"><span class="mover-name">紫苏</span><span class="mover-change pos">+5.4%</span><span class="mover-price">2.10 金</span></div>
+              </div>
+              <div>
+                <div class="mover-h"><span class="dot" style="background:hsl(var(--danger))"></span>跌幅前 5</div>
+                <div class="mover-row"><span class="mover-name">木板</span><span class="mover-change neg">−6.9%</span><span class="mover-price">22.88 金</span></div>
+                <div class="mover-row"><span class="mover-name">五味子</span><span class="mover-change neg">−5.5%</span><span class="mover-price">9.80 金</span></div>
+                <div class="mover-row"><span class="mover-name">紫苏</span><span class="mover-change neg">−4.6%</span><span class="mover-price">1.90 金</span></div>
+                <div class="mover-row"><span class="mover-name">宝石</span><span class="mover-change neg">−3.1%</span><span class="mover-price">28.00 金</span></div>
+                <div class="mover-row"><span class="mover-name">青铜钥匙</span><span class="mover-change neg">−2.4%</span><span class="mover-price">0.32 金</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="footer">
+        <span>数据来源：JX3BOX 拍卖样本 · 行情 2026-11-20 19:07</span><span class="sp"></span>
+        <span class="note">净广度为上涨减下跌的占比，不代表成交额加权指数；全部物品口径下缺失报价留空，不补 0，也不计入该服分母。</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const servers = [
+  {name:'蝶恋花',region:'电信一区',final:2.8,breadth:58,cov:149,top:'骨头 +24.3%',color:'#5B8FF9',cells:[0,0.8,1.5,2.1,2.8]},
+  {name:'九天',region:'双线一区',final:2.1,breadth:44,cov:117,top:'彼岸花 +18.4%',color:'#61DDAA',cells:[0,0.6,1.2,1.7,2.1]},
+  {name:'梦江南',region:'电信一区',final:1.4,breadth:42,cov:202,top:'青铜钥匙 +9.2%',color:'#F6BD16',cells:[0,0.4,0.8,1.1,1.4]},
+  {name:'破阵子',region:'双线一区',final:0.9,breadth:39,cov:145,top:'碎肉 +15.0%',color:'#7262FD',cells:[0,0.3,0.6,0.8,0.9]},
+  {name:'龙争虎斗',region:'电信一区',final:0.5,breadth:35,cov:171,top:'器物令 +11.9%',color:'#78D3F8',cells:[0,0.1,0.3,0.4,0.5]},
+  {name:'天鹅坪',region:'双线一区',final:0.2,breadth:31,cov:174,top:'五味子 +22.0%',color:'#9661BC',cells:[0,0.1,0.15,0.2,0.2]},
+  {name:'长安城',region:'电信一区',final:-0.1,breadth:31,cov:146,top:'篾条 +53.8%',color:'#F6903D',cells:[0,-0.1,-0.05,-0.1,-0.1]},
+  {name:'斗转星移',region:'双线一区',final:-0.4,breadth:29,cov:150,top:'银鳞 +22.4%',color:'#008685',cells:[0,-0.05,-0.2,-0.3,-0.4]},
+  {name:'剑胆琴心',region:'电信一区',final:-0.7,breadth:10,cov:148,top:'羊肉 +3.8%',color:'#F08BB4',cells:[0,-0.2,-0.4,-0.6,-0.7]},
+  {name:'幽月轮',region:'双线一区',final:-1.0,breadth:31,cov:165,top:'青铜钥匙 +15.5%',color:'#E8684A',cells:[0,-0.1,-0.4,-0.8,-1.0]},
+  {name:'乾坤一掷',region:'电信一区',final:-1.3,breadth:46,cov:164,top:'银鳞 +48.3%',color:'#6DC8EC',cells:[0,-0.2,-0.6,-1.0,-1.3]},
+  {name:'唯我独尊',region:'双线一区',final:-1.8,breadth:30,cov:194,top:'芍药 +10.9%',color:'#9270CA',cells:[0,-0.3,-0.8,-1.4,-1.8]},
+  {name:'绝代天骄',region:'电信一区',final:-2.2,breadth:21,cov:173,top:'羊皮 +6.9%',color:'#FF9D4D',cells:[0,-0.4,-1.0,-1.7,-2.2]},
+  {name:'飞龙在天',region:'双线一区',final:-2.5,breadth:31,cov:140,top:'卯榫 +26.8%',color:'#269A99',cells:[0,-0.5,-1.1,-1.8,-2.5]},
+  {name:'眉间雪',region:'电信一区',final:-2.9,breadth:26,cov:133,top:'骨头 +27.9%',color:'#FF99C3',cells:[0,-0.6,-1.3,-2.1,-2.9]},
+  {name:'山海相逢',region:'双线一区',final:-3.2,breadth:24,cov:114,top:'鱼胶 +45.7%',color:'#FF6E76',cells:[0,-0.7,-1.5,-2.4,-3.2]},
+  {name:'傲血戰意',region:'电信一区',final:-3.6,breadth:36,cov:73,top:'硼砂 +5.2%',color:'#5D7092',cells:[0,-0.8,-1.7,-2.6,-3.6],low:true}
+];
+const fmt=n=>{const x=Math.abs(n).toFixed(1);return (n>0?'+':n<0?'−':'')+x+'%'};
+const alpha=n=>Math.min(.52,.05+Math.abs(n)/6*.47);
+const color=n=>n>0?`rgba(69,212,131,${alpha(n)})`:n<0?`rgba(244,63,94,${alpha(n)})`:'transparent';
+const heatBody=document.querySelector('#heat tbody');
+servers.forEach(s=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<th><div class="server-cell"><span class="server-dot" style="background:${s.color}"></span><span class="server-name">${s.name}</span><span class="server-region">${s.region}</span>${s.low?'<span class="low">样本不足</span>':''}</div></th>`+
+    s.cells.map((v,i)=>`<td class="${v===0?'zero':''}" style="background:${color(v)}" title="${s.name} · ${['10:07','12:07','14:07','16:07','19:07'][i]} · ${fmt(v)}">${i===0?'—':fmt(v)}</td>`).join('');
+  heatBody.appendChild(tr);
+});
+const rankBody=document.querySelector('#rank tbody');
+servers.forEach((s,i)=>{
+  const tr=document.createElement('tr'); if(i===0)tr.className='sel';
+  tr.innerHTML=`<td><div class="server-cell"><span class="server-dot" style="background:${s.color}"></span><span class="server-name">${s.name}</span>${s.low?'<span class="low">低</span>':''}</div></td>`+
+    `<td class="${s.final>0?'pos':s.final<0?'neg':''}">${fmt(s.final)}</td>`+
+    `<td>${s.breadth}%</td>`+
+    `<td><span class="coverage"><span class="bar"><i style="width:${Math.round(s.cov/275*100)}%"></i></span>${s.cov}</span></td>`+
+    `<td class="${s.top.includes('+')?'pos':'neg'}">${s.top}</td>`;
+  rankBody.appendChild(tr);
+});
+// 技艺 × 区服矩阵（示意数据）
+const skillCols=['锻造','缝纫','制药','烹饪','梓匠','神农','采金','庖丁','五行石'];
+const offsets=[0.72,1.05,1.35,0.55,-0.18,0.55,0.35,0.18,0.02];
+const skillBody=document.querySelector('#skill tbody');
+servers.forEach((s,idx)=>{
+  s.skills=offsets.map((o,j)=>{
+    if(s.low && j>=5) return null;
+    return +(s.final*o + ((idx+j)%3-1)*0.22).toFixed(1);
+  });
+  const tr=document.createElement('tr'); if(idx===0)tr.className='sel';
+  tr.innerHTML=`<th><div class="server-cell"><span class="server-dot" style="background:${s.color}"></span><span class="server-name">${s.name}</span>${s.low?'<span class="low">低</span>':''}</div></th>`+
+    s.skills.map(v=>{
+      if(v===null) return '<td class="miss">—</td>';
+      return `<td style="background:${color(v)}">${fmt(v)}</td>`;
+    }).join('');
+  skillBody.appendChild(tr);
+});
+</script>
+</body>
+</html>
