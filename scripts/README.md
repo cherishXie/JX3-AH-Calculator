@@ -67,6 +67,31 @@ node scripts/price-history.mjs export --server 梦江南 --from 2026-11-20 --eff
 
 `--effective` 导出会用基准价补齐本服无报价物品，并标注价格来源，适合按时间点重算产出物收益。完整结构、字段和 `reindex` / `compact` 维护命令见 [`data/price-history/README.md`](../data/price-history/README.md)。
 
+## Web 物价走势
+
+分析模块的「物价走势」由 `assets/trends.js` 读取已发布的 `price-history/` JSON：
+
+- 按当前区服回放每天的 `base` + `samples`，得到每个历史节点的本服报价/基准价/有效价；
+- 支持按小时时间范围、材料/产物/五行石、技艺筛选；
+- 筛选栏支持全部技艺/全部类型、多选/全选与价格区间；物品搜索位于多选面板内；跨技艺材料按实际配方用途展示；
+- 所有物品平铺在同一张价格分布图和价格散点图中，不同物品独立配色；价格分布默认使用价格指数（首点 = 100）收敛 Y 轴范围，每个图表标题右侧可单独切换原始金币（对数）；
+- 分布图展示最低/最高、25–75% 箱体、中位线；点击物品可查看单独折线，并同步定位分布与散点；
+- 筛选栏默认全部技艺/全部类型并在滚动时固定，移动端可收起；提供涨跌红黑榜（前 10 + 全量）与区间涨跌热力图；各图表可下载 PNG；
+- 原始数据按节点折叠，展开后可查看每个节点报价，并导出原始/走势 CSV；行情条支持手动检查远程物价，dev 预览自动使用生产行情。
+
+该页面只存在于 Web 版；小红书离线小工具不加载历史 JSON。数据回归测试：
+
+```bash
+node scripts/test-trends.cjs
+```
+
+## Dev 预览
+
+- 默认开发分支：`dev`，推送到 `dev` 会运行 `Deploy dev preview`。
+- 线上地址：`https://cherishxie.github.io/JX3-AH-Calculator/dev/`，页面会显示 `DEV` 标识。
+- 预览工作流会同时构建 `main` 根站点和 `dev` 子目录，避免 dev 部署把生产站清空。
+- GitHub Pages 每个仓库只有一个站点；`Deploy site and minitool`（main）和 `Deploy dev preview`（dev）都会同时构建根站点与 `/dev/` 预览，因此主站部署不会清空 dev 预览。生产发布需用户明确同意后再执行 `BRANCH=main ./scripts/sync.sh`。
+
 ## 定时任务
 
 本机兜底由 launchd 运行 `scripts/local-price-cron.sh`（Asia/Shanghai，每天 08:09–22:09、每 2 小时）：

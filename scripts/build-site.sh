@@ -22,6 +22,7 @@ files = [
     'assets/breakthrough-data.js',
     'assets/stones.js',
     'assets/charts.js',
+    'assets/trends.js',
     'assets/app.js',
     'assets/pwa.js',
     'assets/install.js',
@@ -110,7 +111,9 @@ for rel in ('index.html', 'sw.js'):
     if '__APP_VERSION__' not in text:
         print(f'ERROR: {rel} is missing __APP_VERSION__', file=sys.stderr)
         sys.exit(1)
-    path.write_text(text.replace('__APP_VERSION__', version), encoding='utf-8')
+    text = text.replace('__APP_VERSION__', version)
+    text = text.replace('__BUILD_DATE__', build_date)
+    path.write_text(text, encoding='utf-8')
 
 data_text = (root / 'assets/data.js').read_text(encoding='utf-8')
 match = re.search(r'"priceUpdatedAt"\s*:\s*"([^"]+)"', data_text)

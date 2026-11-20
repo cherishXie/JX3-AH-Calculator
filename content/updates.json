@@ -1,21 +1,14 @@
 {
-  "sourceCommit": "6f3bb93ebc98de171403f4a9c7314dd45913d6b5",
+  "sourceCommit": "80ae140b8227e48f3ba904198f2f587c36817fbf",
   "date": "2026-11-20",
-  "title": "keep production service worker out of dev preview",
+  "title": "新增物价走势分析",
   "notes": [
-    "keep production service worker out of dev preview"
+    "分析模块新增「物价走势」：按历史节点回溯各区服原始物价，支持时间范围、全部技艺/全部类型、物品搜索/多选和价格区间",
+    "多物品价格分布默认使用价格指数，展示 25–75% 箱体与中位线；提供涨跌红黑榜（前 10/全量）、价格散点、单品折线和区间涨跌热力图",
+    "移动端筛选可收起并固定在顶部；原始数据按节点折叠，各图表支持 PNG 下载和 CSV 导出",
+    "行情条新增「检查物价」，dev 预览自动跟随生产行情；跨技艺材料按实际配方用途展示"
   ],
   "history": [
-    {
-      "version": "6f3bb93",
-      "date": "2026-11-20",
-      "title": "keep production service worker out of dev preview"
-    },
-    {
-      "version": "97c50b3",
-      "date": "2026-11-20",
-      "title": "preserve dev preview during main deployments"
-    },
     {
       "version": "80ae140",
       "date": "2026-11-20",
@@ -35,6 +28,16 @@
       "version": "3262074",
       "date": "2026-11-20",
       "title": "add Excel download menu to web"
+    },
+    {
+      "version": "51a3a49",
+      "date": "2026-11-20",
+      "title": "make price history scripts executable"
+    },
+    {
+      "version": "3c4d05c",
+      "date": "2026-11-20",
+      "title": "hint effective export for unquoted items"
     }
   ]
 }

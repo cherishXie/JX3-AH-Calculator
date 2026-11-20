@@ -12,11 +12,12 @@ cd "$(dirname "$0")/.."
 
 MSG="${1:-chore: sync web and minitool}"
 if [ "$#" -gt 0 ]; then shift; fi
-BRANCH="${BRANCH:-main}"
+BRANCH="${BRANCH:-dev}"
 REMOTE="${REMOTE:-origin}"
 
 node scripts/test-changelog.mjs
 node scripts/test-price-history.mjs
+node scripts/test-trends.cjs
 node scripts/sync-breakthrough-model.mjs
 node scripts/test-breakthrough.cjs
 ./scripts/build-minitool.sh
@@ -63,10 +64,11 @@ fi
 
 cat <<EOF
 
-已推送，GitHub Actions 正在执行：
-  Pages:    https://cherishxie.github.io/JX3-AH-Calculator/
-  小工具包: https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip
-  Actions:  https://github.com/cherishXie/JX3-AH-Calculator/actions
+已推送 ${BRANCH}，GitHub Actions 正在执行：
+  Dev 在线版: https://cherishxie.github.io/JX3-AH-Calculator/dev/
+  生产站:    https://cherishxie.github.io/JX3-AH-Calculator/
+  小工具包:  https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip
+  Actions:   https://github.com/cherishXie/JX3-AH-Calculator/actions
 
 小红书小工具（需手动提交审核）：
   1. 手机打开上面的「小工具包」下载 zip，或从 Actions artifact 下载
