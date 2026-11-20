@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-20 · 60d2f5c
+
+update JX3BOX prices
+
 ## 2026-11-20 · e7db24e
 
 release: 区服趋势与物品视角上线
@@ -562,11 +566,3 @@ stop tracking generated delivery zip
 ## 2026-11-18 · 2b981ad
 
 note workflow scope for gh
-
-## 2026-11-18 · 25fde8b
-
-make sync script portable across gh configs
-
-## 2026-11-18 · 589e508
-
-document redapp upload flow
