@@ -1,10 +1,7 @@
 name: Update JX3 prices
 
 on:
-  # 直接调度更新；price-schedule.yml 在 30 分钟后检查并补跑。
-  schedule:
-    # 北京时间 08:23–22:23，每 2 小时；避开整点高峰。
-    - cron: '23 0,2,4,6,8,10,12,14 * * *'
+  # 定时由 Cloudflare Worker 每小时 :31（北京时间）触发 workflow_dispatch。
   workflow_dispatch:
   push:
     branches: [main]
@@ -33,25 +30,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Check update window
-        id: window
-        run: |
-          hour=$(TZ=Asia/Shanghai date +%H)
-          hour=$((10#$hour))
-          if [ "$hour" -lt 8 ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "Outside 08:00-24:00 Asia/Shanghai (hour=$hour); skip."
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-            echo "Inside update window (hour=$hour)."
-          fi
-
       - name: Update prices and rebuild minitool zip
-        if: steps.window.outputs.skip != 'true'
         run: ./scripts/update-prices.sh
 
       - name: Commit changes
-        if: steps.window.outputs.skip != 'true'
         run: |
           git config user.name "jx3-price-bot"
           git config user.email "jx3-price-bot@users.noreply.github.com"
@@ -65,7 +47,6 @@ jobs:
           fi
 
       - name: Build and sync cloud prices
-        if: steps.window.outputs.skip != 'true'
         env:
           WX_APPID: ${{ secrets.WX_APPID }}
           WX_APPSECRET: ${{ secrets.WX_APPSECRET }}
@@ -79,7 +60,6 @@ jobs:
           node miniapp/scripts/sync-cloudbase-prices.mjs
 
       - name: Upload minitool artifact
-        if: steps.window.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: jx3-minitool

@@ -245,8 +245,6 @@
 
   function checkForDataUpdate(force) {
     if (dataSyncBusy) return;
-    var clock = shanghaiClock();
-    if (!force && (clock.hour < 8 || clock.hour >= 23)) return;
     if (!force && Date.now() - lastDataCheck < 60000) return;
     if (ui.drawer || ui.modal) return;
     var active = document.activeElement;
@@ -303,11 +301,9 @@
 
   function dataSyncTick() {
     var clock = shanghaiClock();
-    if (clock.hour >= 8 && clock.hour < 23) {
-      var slotWindow = (clock.hour % 2 === 0) && clock.minute < 20;
-      var gap = slotWindow ? 120000 : 600000;
-      if (Date.now() - lastDataCheck >= gap) checkForDataUpdate();
-    }
+    var postRun = clock.minute >= 31 && clock.minute <= 45;
+    var gap = postRun ? 120000 : 300000;
+    if (Date.now() - lastDataCheck >= gap) checkForDataUpdate();
     dataSyncTimer = setTimeout(dataSyncTick, 60000);
   }
 

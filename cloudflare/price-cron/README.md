@@ -1,6 +1,6 @@
 # Cloudflare Worker 定时触发价格更新
 
-不依赖 GitHub Actions 的 `schedule`，也不需要 Mac 开机。Cloudflare 每 2 小时触发一次
+不依赖 GitHub Actions 的 `schedule`，也不需要 Mac 开机。Cloudflare 全天每小时 :31 触发一次
 `update-jx3-prices.yml` 的 `workflow_dispatch`。
 
 ## 1. 创建 GitHub 细粒度 token
@@ -45,10 +45,10 @@ https://jx3-price-cron.<你的子域>.workers.dev
 Cron 已配置为 UTC：
 
 ```text
-7 0,2,4,6,8,10,12,14 * * *
+31 * * * *
 ```
 
-对应北京时间 **08:07、10:07、12:07、14:07、16:07、18:07、20:07、22:07**。
+对应北京时间 **全天每小时的第 31 分钟**：00:31、01:31、…、23:31。
 
 ## 4. 手动测试
 
@@ -66,7 +66,7 @@ npx wrangler@latest tail
 
 ## 5. 验证定时
 
-到下一个 08:07/10:07/... 后，Cloudflare 会发一次 dispatch；GitHub Actions 出现
+到下一个整点 :31 后，Cloudflare 会发一次 dispatch；GitHub Actions 出现
 `workflow_dispatch` 运行。Worker 日志会打印 `GitHub workflow_dispatch sent`。
 
 ## 安全说明

@@ -104,7 +104,6 @@ npm run build:weapp
 ## 日常更新流程
 
 ```
-price-schedule.yml
   → update-jx3-prices.yml
   → 更新 assets/data.js + miniapp/src/shared/catalog.json
   → build-remote-prices.mjs
