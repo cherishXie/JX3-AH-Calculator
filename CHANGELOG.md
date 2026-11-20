@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 835fc87
+
+update JX3BOX prices
+
 ## 2026-11-21 · 27e495d
 
 update JX3BOX prices
@@ -486,11 +490,3 @@ label the final ranked quest as the level-50 breakthrough and show the 50 endpoi
 ## 2026-11-19 · b9cf614
 
 update JX3BOX prices
-
-## 2026-11-19 · 7bc9462
-
-restore direct price schedule and add recovery checks
-
-## 2026-11-19 · 9200682
-
-profit-based breakthrough results and 1-30/30-50 stage summary
