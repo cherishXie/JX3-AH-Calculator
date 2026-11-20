@@ -1,6 +1,14 @@
-/* 物价走势小程序适配：读取打包进小程序的离线历史快照。 */
+/* 物价走势小程序适配：优先读微信云数据库历史，失败回退打包快照。 */
+import Taro from '@tarojs/taro';
 import catalog from './catalog.json';
-import TRENDS from './trends.json';
+import BUNDLED from './trends.json';
+import { CLOUD_ENV, isCloudConfigured } from './cloudConfig';
+
+const CACHE_KEY = 'jx3-trends-cloud-v1';
+const CACHE_TTL = 60 * 60 * 1000;
+let active = BUNDLED;
+let activeKind = 'bundled';
+let cloudInited = false;
 
 const skillMap = {};
 const skillOrder = {};
@@ -126,9 +134,9 @@ function makePoint(at, date, kind, quotes, stones, catalogPrices, stoneCatalogPr
 }
 
 /** 把某服的历史日文件还原成时间节点。 */
-export function buildPoints(serverId) {
+export function buildPoints(serverId, data) {
   const points = [];
-  (TRENDS.days || []).forEach(function (day) {
+  ((data || active).days || []).forEach(function (day) {
     if (!day || !day.base) return;
     const base = day.base;
     const quotes = clone((base.prices && base.prices[serverId]) || {});
@@ -275,13 +283,124 @@ export function trendDateText(at) {
   return String(at || '').slice(0, 10);
 }
 
-export const TREND_META = {
-  updatedAt: TRENDS.updatedAt || '',
-  generatedAt: TRENDS.generatedAt || '',
-  catalogVersion: TRENDS.catalogVersion || '',
-  days: (TRENDS.days || []).length,
-  points: (TRENDS.days || []).reduce(function (n, d) { return n + 1 + ((d.samples || []).length); }, 0),
-  serverIds: (TRENDS.servers || []).map(function (s) { return s.id; })
-};
+function metaOf(data, kind) {
+  const days = (data && data.days) || [];
+  return {
+    updatedAt: (data && data.updatedAt) || '',
+    generatedAt: (data && data.generatedAt) || '',
+    catalogVersion: (data && data.catalogVersion) || '',
+    days: days.length,
+    points: days.reduce(function (n, d) { return n + 1 + ((d.samples || []).length); }, 0),
+    serverIds: ((data && data.servers) || []).map(function (s) { return s.id; }),
+    kind: kind || 'bundled',
+    sourceLabel: kind === 'cloud' ? '云端历史' : '离线快照'
+  };
+}
+
+export const TREND_META = metaOf(BUNDLED, 'bundled');
+
+export function getTrendData() {
+  return active;
+}
+
+export function getTrendMeta() {
+  return metaOf(active, activeKind);
+}
+
+export function applyTrendData(data, kind) {
+  if (!data || !Array.isArray(data.days) || !data.days.length) return false;
+  const days = data.days.filter(function (day) { return day && day.base; }).slice().sort(function (a, b) {
+    return String(a.date || '').localeCompare(String(b.date || ''));
+  });
+  if (!days.length) return false;
+  active = {
+    schema: 1,
+    updatedAt: data.updatedAt || '',
+    generatedAt: data.generatedAt || '',
+    catalogVersion: data.catalogVersion || '',
+    servers: data.servers || [],
+    days: days
+  };
+  activeKind = kind === 'cloud' ? 'cloud' : 'bundled';
+  Object.assign(TREND_META, metaOf(active, activeKind));
+  return true;
+}
+
+function initCloud() {
+  if (cloudInited) return;
+  if (!Taro.cloud || typeof Taro.cloud.init !== 'function') throw new Error('当前环境不支持云开发');
+  Taro.cloud.init({ env: CLOUD_ENV, traceUser: false });
+  cloudInited = true;
+}
+
+function readCache() {
+  try {
+    const raw = Taro.getStorageSync(CACHE_KEY);
+    const cache = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    if (!cache || !cache.data || !Array.isArray(cache.data.days) || !cache.data.days.length) return null;
+    return cache;
+  } catch (e) {
+    return null;
+  }
+}
+
+function writeCache(data) {
+  try {
+    Taro.setStorageSync(CACHE_KEY, { fetchedAt: Date.now(), data: data });
+  } catch (e) { /* 缓存失败不影响页面 */ }
+}
+
+async function fetchCloudData() {
+  initCloud();
+  const db = Taro.cloud.database();
+  const metaRes = await db.collection('prices').doc('history_meta').get();
+  const meta = metaRes && metaRes.data;
+  if (!meta || Number(meta.schema) !== 1 || !Array.isArray(meta.days) || !meta.days.length) {
+    throw new Error('云端趋势索引不存在');
+  }
+  const picked = meta.days.slice(-7);
+  const docs = await Promise.all(picked.map(function (entry) {
+    return db.collection('prices').doc('history_' + entry.date).get()
+      .then(function (res) { return res.data; })
+      .catch(function () { return null; });
+  }));
+  const days = docs.filter(function (day) { return day && day.base; });
+  if (!days.length) throw new Error('云端趋势节点为空');
+  const data = {
+    schema: 1,
+    updatedAt: meta.updatedAt || '',
+    generatedAt: meta.generatedAt || '',
+    catalogVersion: meta.catalogVersion || '',
+    servers: meta.servers || [],
+    days: days
+  };
+  applyTrendData(data, 'cloud');
+  writeCache(data);
+  return { ok: true, source: 'cloud', meta: getTrendMeta(), data: data };
+}
+
+/**
+ * 载入趋势：云历史 > 本地缓存 > 打包快照。
+ * force=true 时跳过 1 小时 TTL，供页面刷新按钮使用。
+ */
+export async function loadTrendData(force) {
+  if (!isCloudConfigured()) {
+    return { ok: true, source: 'bundled', meta: getTrendMeta(), data: active };
+  }
+  const cache = readCache();
+  if (!force && cache && Date.now() - Number(cache.fetchedAt || 0) < CACHE_TTL) {
+    applyTrendData(cache.data, 'cloud');
+    return { ok: true, source: 'cache', meta: getTrendMeta(), data: active };
+  }
+  try {
+    return await fetchCloudData();
+  } catch (e) {
+    if (cache) {
+      applyTrendData(cache.data, 'cloud');
+      return { ok: false, source: 'cache', meta: getTrendMeta(), data: active, error: e.message };
+    }
+    return { ok: false, source: 'bundled', meta: getTrendMeta(), data: active, error: e.message };
+  }
+}
 
 export { items as TREND_ITEMS };

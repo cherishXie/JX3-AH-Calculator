@@ -9,8 +9,8 @@ import DataNote from '../../components/DataNote';
 import { useStore } from '../../store';
 import { DATA } from '../../shared/engine';
 import {
-  TREND_META, trendItems, buildPoints, filterPoints, seriesOf, summarize,
-  rankItems, priceOfPoint, trendAtText
+  getTrendData, getTrendMeta, loadTrendData, trendItems, buildPoints, filterPoints,
+  seriesOf, summarize, rankItems, priceOfPoint, trendAtText
 } from '../../shared/trends';
 import { fmt, fmtPct } from '../../shared/format';
 
@@ -145,6 +145,35 @@ export default function Trends() {
   const [type, setType] = useState('all');
   const [skillId, setSkillId] = useState('');
   const [focusKey, setFocusKey] = useState('');
+  const [trendData, setTrendData] = useState(getTrendData());
+  const [meta, setMeta] = useState(getTrendMeta());
+  const [loading, setLoading] = useState(false);
+
+  useEffect(function () {
+    let alive = true;
+    setLoading(true);
+    loadTrendData(false).then(function () {
+      if (!alive) return;
+      setTrendData(getTrendData());
+      setMeta(getTrendMeta());
+      setLoading(false);
+    });
+    return function () { alive = false; };
+  }, []);
+
+  async function refreshTrends() {
+    if (loading) return;
+    setLoading(true);
+    Taro.showLoading({ title: '同步历史...' });
+    const res = await loadTrendData(true);
+    Taro.hideLoading();
+    setTrendData(getTrendData());
+    setMeta(getTrendMeta());
+    setLoading(false);
+    if (res.ok && res.source === 'cloud') Taro.showToast({ title: '云端历史已更新', icon: 'none' });
+    else if (res.error) Taro.showToast({ title: '云端不可用，已用本地快照', icon: 'none' });
+    else Taro.showToast({ title: '已是最新', icon: 'none' });
+  }
 
   const skillOptions = ['全部技艺'].concat(DATA.skills.map(function (s) { return s.name; })).concat(['五行石']);
   const skillIdx = skillId === 'stone' ? skillOptions.length - 1 : (skillId ? DATA.skills.findIndex(function (s) { return s.id === skillId; }) + 1 : 0);
@@ -154,8 +183,8 @@ export default function Trends() {
   }, [type, skillId]);
 
   const points = useMemo(function () {
-    return buildPoints(state.serverId);
-  }, [state.serverId]);
+    return buildPoints(state.serverId, trendData);
+  }, [state.serverId, trendData]);
 
   const viewPoints = useMemo(function () {
     return filterPoints(points, range);
@@ -185,7 +214,7 @@ export default function Trends() {
     return summarize(focusSeries);
   }, [focusSeries]);
 
-  const isCustom = TREND_META.serverIds.indexOf(state.serverId) === -1;
+  const isCustom = meta.serverIds.indexOf(state.serverId) === -1;
   const serverName = (state.servers.find(function (s) { return s.id === state.serverId; }) || {}).name || '—';
   const focusIdx = Math.max(0, allItems.findIndex(function (i) { return focusItem && i.key === focusItem.key; }));
 
@@ -193,7 +222,7 @@ export default function Trends() {
     drawChart(focusSeries);
   }, [focusSeries, focusItem]);
 
-  if (!TREND_META.points) {
+  if (!meta.points) {
     return (
       <View className='page'>
         <TopBar title='物价走势' subtitle='本服历史报价 · 离线快照' />
@@ -211,12 +240,16 @@ export default function Trends() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>历史快照</Text>
-            <Text className='card-sub'>{TREND_META.days} 天 · {TREND_META.points} 个节点 · 数据 {TREND_META.catalogVersion}</Text>
+            <Text className='card-sub'>{meta.days} 天 · {meta.points} 个节点 · 数据 {meta.catalogVersion}</Text>
+          </View>
+          <View className='card-tool'>
+            <Text className={'badge ' + (meta.kind === 'cloud' ? 'badge-positive' : 'badge-neutral')} style={{ marginRight: '8rpx' }}>{meta.sourceLabel}</Text>
+            <View className='btn btn-ghost btn-sm' onClick={refreshTrends}>{loading ? '同步中' : '刷新'}</View>
           </View>
         </View>
         <View className='card-body'>
           <View className='kv'><Text className='k'>当前服务器</Text><Text className='v'>{serverName}</Text></View>
-          <View className='kv'><Text className='k'>快照时间</Text><Text className='v'>{TREND_META.updatedAt ? TREND_META.updatedAt.slice(0, 16).replace('T', ' ') : '—'}</Text></View>
+          <View className='kv'><Text className='k'>快照时间</Text><Text className='v'>{meta.updatedAt ? meta.updatedAt.slice(0, 16).replace('T', ' ') : '—'}</Text></View>
           <View className='kv'><Text className='k'>数据范围</Text><Text className='v'>{viewPoints.length} 个节点 · {allItems.length} 个物品</Text></View>
           <View className='trend-filter-block'>
             <Text className='form-label'>时间范围</Text>
@@ -328,7 +361,7 @@ export default function Trends() {
         </View>
       </View>
 
-      <DataNote extra='离线历史快照 · 随小程序版本更新' />
+      <DataNote extra={meta.kind === 'cloud' ? '云端历史 · 缓存 1 小时' : '离线历史快照 · 随小程序版本更新'} />
     </View>
   );
 }

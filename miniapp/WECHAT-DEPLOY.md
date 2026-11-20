@@ -249,7 +249,7 @@ wechatide -c DSH get_simulator_console --project "$(pwd)" --command "grep -i err
 是。改名、五行石页改的都是 `miniapp/src`，必须 `npm run build:weapp` 才会进入 `dist/weapp`。
 
 **Q：构建体积多大？**
-微信约 **1.24 MB**（10 页 / 5 Tab），小红书约 **1.02 MB**（7 页 / 4 Tab），都远低于 2 MB；头像 12 KB。
+微信约 **1.25 MB**（10 页 / 5 Tab），小红书约 **1.02 MB**（7 页 / 4 Tab），都远低于 2 MB；头像 12 KB。
 
 **Q：`sitemap.json` 要配吗？**
 官方全局配置文档已标注 `sitemap.json` 下线，当前不需要配置；开发者工具若提示可忽略。

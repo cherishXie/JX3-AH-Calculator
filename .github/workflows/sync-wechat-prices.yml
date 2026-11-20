@@ -36,3 +36,4 @@ jobs:
           fi
           node miniapp/scripts/build-remote-prices.mjs
           node miniapp/scripts/sync-cloudbase-prices.mjs
+          node miniapp/scripts/sync-cloudbase-history.mjs
