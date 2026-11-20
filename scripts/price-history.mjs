@@ -427,11 +427,17 @@ function seriesCommand(options, root, context) {
   if (!options.server) throw new Error('series 需要 --server');
   if (!options.item) throw new Error('series 需要 --item');
   const { rows } = changeRowsCommand(options, root, context, { requireScope: true });
+  if (!rows.length && !options.effective) {
+    console.error('[hint] 该范围没有本服报价变化；若要看基准价补齐后的有效价，请加 --effective。');
+  }
   printRows(rows, options.format || 'table', { out: options.out || '' });
 }
 
 function exportCommand(options, root, context) {
   const { rows } = changeRowsCommand(options, root, context, { requireScope: true });
+  if (!rows.length && !options.effective) {
+    console.error('[hint] 该范围没有本服报价变化；若要看基准价补齐后的有效价，请加 --effective。');
+  }
   printRows(rows, options.format || 'csv', { out: options.out || '' });
 }
 
