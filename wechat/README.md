@@ -24,7 +24,7 @@
 
 ## 微信端接入状态
 
-- 微信构建：**8 页 / 5 Tab**（总览、技艺、价格、分析、五行石；另有五行石公式编辑子页），主包约 **0.70 MB**。
+- 微信构建：**10 页 / 5 Tab**（总览、技艺、价格、分析、五行石；另有五行石公式、物价走势、突破升级、配方详情等子页），主包约 **1.24 MB**。
 - AppID 已写入 `miniapp/project.config.json`；头像用 `avatar-144.png`。
 - 静态验收：`cd miniapp && npm run verify:weapp`。
 - 官方 `wechatide` Skill 已跑通编译、模拟器截图、console 检查；完整流程见 [`../miniapp/WECHAT-DEPLOY.md`](../miniapp/WECHAT-DEPLOY.md)。

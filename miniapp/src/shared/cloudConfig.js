@@ -11,7 +11,7 @@
  *
  * 留空时小程序保持完全离线，使用包内示例价。
  */
-export const CLOUD_ENV = '';
+export const CLOUD_ENV = 'cloud1-d3g3bpdtmafb3abca';
 
 export const PRICE_COLLECTION = 'prices';
 export const PRICE_DOC_ID = 'current';
