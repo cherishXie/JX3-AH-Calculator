@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-20 · ad3b121
+
+update JX3BOX prices
+
 ## 2026-11-20 · 60d2f5c
 
 update JX3BOX prices
@@ -554,11 +558,3 @@ add branded boot loader with retry
 ## 2026-11-18 · 42f3459
 
 add PWA auto-update prompt with release notes
-
-## 2026-11-18 · 247ae53
-
-update JX3BOX prices
-
-## 2026-11-18 · db43a8f
-
-stop tracking generated delivery zip
