@@ -6,7 +6,7 @@
 
 > 在线版：<https://cherishxie.github.io/JX3-AH-Calculator/> · 开发预览：<https://cherishxie.github.io/JX3-AH-Calculator/dev/>（带 DEV 标识） · 小工具包：<https://cherishxie.github.io/JX3-AH-Calculator/downloads/jx3-minitool.zip>
 >
-> **当前发布（2026-11-20）**：新增「物价走势」，支持历史节点、物品/材料筛选、价格分布、涨跌红黑榜、热力图和图表图片导出。
+> **当前发布（2026-11-20）**：新增「物价走势」，支持历史节点、物品/材料筛选、价格分布、涨跌红黑榜、热力图和图表图片导出；同步修复行情自动更新与移动端更新检查。
 >
 > 部署与「Web + 小红书小工具」双端同步流程见 [DEPLOY.md](DEPLOY.md)。
 

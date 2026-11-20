@@ -113,24 +113,59 @@
   }
 
   function checkForUpdates() {
-    const api = window.__JX3_PWA__;
-    if (!api || typeof api.check !== 'function') {
-      toast('当前浏览器不支持更新检查', 'warn');
-      return;
-    }
     if (ui.updateChecking) return;
     ui.updateChecking = true;
     toast('正在检查更新…');
+
+    function finish(result) {
+      ui.updateChecking = false;
+      if (result && result.status === 'available') {
+        toast(result.fallback ? '发现新版本，请刷新页面完成更新' : '发现新版本，请查看底部更新提示');
+      } else if (result && result.status === 'latest') {
+        toast('已是最新版本');
+      } else if (result && result.status === 'pending') {
+        toast('发现新版本，正在准备，请稍后再试');
+      } else if (result && result.status === 'unsupported') {
+        toast('当前浏览器不支持更新检查', 'warn');
+      } else {
+        toast('检查更新失败，请稍后重试', 'error');
+      }
+    }
+
+    // 无 Service Worker（或移动端内嵌浏览器尚未注册成功）时，
+    // 仍用 updates.json 对比版本，避免直接提示“不支持更新检查”。
+    function fallbackCheck() {
+      if (typeof fetch !== 'function') {
+        finish({ status: 'unsupported' });
+        return;
+      }
+      fetch('./updates.json?t=' + Date.now(), { cache: 'no-store' })
+        .then(function (response) { return response.ok ? response.json() : null; })
+        .then(function (data) {
+          if (!data) { finish({ status: 'error' }); return; }
+          const build = document.querySelector('meta[name="app-build"]');
+          const buildDate = build ? (build.getAttribute('content') || '') : '';
+          const buildChanged = isDevDeployment() && buildDate && data.date && data.date !== buildDate;
+          const latest = data.appVersion || data.version;
+          if ((latest && latest !== appVersion()) || buildChanged) {
+            finish({ status: 'available', fallback: true });
+          } else {
+            finish({ status: 'latest' });
+          }
+        })
+        .catch(function () { finish({ status: 'error' }); });
+    }
+
+    const api = window.__JX3_PWA__;
+    if (!api || typeof api.check !== 'function') {
+      fallbackCheck();
+      return;
+    }
     api.check().then(function (result) {
-      ui.updateChecking = false;
-      if (result && result.status === 'available') toast('发现新版本，请查看底部更新提示');
-      else if (result && result.status === 'latest') toast('已是最新版本');
-      else if (result && result.status === 'pending') toast('发现新版本，正在准备，请稍后再试');
-      else if (result && result.status === 'unsupported') toast('当前浏览器不支持更新检查', 'warn');
-      else toast('检查更新失败，请稍后重试', 'error');
+      if (result && result.status === 'unsupported') fallbackCheck();
+      else finish(result);
     }).catch(function () {
-      ui.updateChecking = false;
-      toast('检查更新失败，请稍后重试', 'error');
+      finish({ status: 'error' });
     });
   }
   var dataSyncTimer = null;
@@ -305,8 +340,12 @@
           return;
         }
         setMarketChecked(Date.now());
-        if (version.dataUpdatedAt === DATA.meta.priceUpdatedAt) {
-          if (force) toast('行情已是最新 · ' + U.fmtTime(Date.parse(version.dataUpdatedAt)), 'success');
+        const remoteTs = Date.parse(version.dataUpdatedAt) || 0;
+        const localTs = Date.parse(DATA.meta.priceUpdatedAt) || 0;
+        // CDN 可能仍返回旧 version.json：远程时间不晚于本地时绝不做降级同步，
+        // 避免在“行情更新中”里反复循环。
+        if (!(remoteTs > localTs)) {
+          if (force) toast('行情已是最新 · ' + U.fmtTime(Math.max(remoteTs, localTs)), 'success');
           return;
         }
 
@@ -325,6 +364,12 @@
             var end = text.lastIndexOf('}');
             if (marker < 0 || start < 0 || end < 0) throw new Error('invalid data');
             var next = JSON.parse(text.slice(start, end + 1));
+            var nextTs = Date.parse(next.meta && next.meta.priceUpdatedAt) || 0;
+            var currentTs = Date.parse(DATA.meta.priceUpdatedAt) || 0;
+            if (nextTs && currentTs && nextTs <= currentTs) {
+              finishDataSync('done', '行情已是最新');
+              return;
+            }
 
             if (!mergePriceData(next)) {
               finishDataSync('error', '数据目录已变化，请刷新页面');
