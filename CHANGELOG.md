@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · ddb08bc
+
+update JX3BOX prices
+
 ## 2026-11-21 · 6d9d24f
 
 update JX3BOX prices
@@ -518,11 +522,3 @@ default to light theme
 ## 2026-11-19 · 63fc2e1
 
 adapt 11-19 life skill level changes
-
-## 2026-11-19 · fce4133
-
-update JX3BOX prices
-
-## 2026-11-19 · 872963e
-
-add horse grass gathering to Shennong
