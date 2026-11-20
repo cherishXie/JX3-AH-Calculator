@@ -301,7 +301,7 @@
 
   function dataSyncTick() {
     var clock = shanghaiClock();
-    var postRun = clock.minute >= 31 && clock.minute <= 45;
+    var postRun = (clock.minute >= 6 && clock.minute <= 20) || (clock.minute >= 36 && clock.minute <= 50);
     var gap = postRun ? 120000 : 300000;
     if (Date.now() - lastDataCheck >= gap) checkForDataUpdate();
     dataSyncTimer = setTimeout(dataSyncTick, 60000);

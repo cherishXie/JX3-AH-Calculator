@@ -45,10 +45,10 @@ https://jx3-price-cron.<你的子域>.workers.dev
 Cron 已配置为 UTC：
 
 ```text
-31 * * * *
+6,36 * * * *
 ```
 
-对应北京时间 **全天每小时的第 31 分钟**：00:31、01:31、…、23:31。
+对应北京时间 **全天每 30 分钟**：00:06、00:36、01:06、01:36、…、23:06、23:36。
 
 ## 4. 手动测试
 
@@ -66,7 +66,7 @@ npx wrangler@latest tail
 
 ## 5. 验证定时
 
-到下一个整点 :31 后，Cloudflare 会发一次 dispatch；GitHub Actions 出现
+到下一个 :06 或 :36 后，Cloudflare 会发一次 dispatch；GitHub Actions 出现
 `workflow_dispatch` 运行。Worker 日志会打印 `GitHub workflow_dispatch sent`。
 
 ## 安全说明

@@ -75,9 +75,9 @@ GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交
 
 ## GitHub Actions
 
-主工作流 `.github/workflows/update-jx3-prices.yml` 由 Cloudflare Worker 全天每小时 :31 触发，更新 17 个服务器数据并提交，同时上传小工具 ZIP；GitHub Actions 不再配置 `schedule`。
+主工作流 `.github/workflows/update-jx3-prices.yml` 由 Cloudflare Worker 全天每 30 分钟 :06 / :36 触发，更新 17 个服务器数据并提交，同时上传小工具 ZIP；GitHub Actions 不再配置 `schedule`。
 
-定时由 `cloudflare/price-cron` 的 Cloudflare Worker 全天每小时 :31 触发 `workflow_dispatch`；GitHub Actions 不再配置 `schedule`。主任务通过 concurrency 串行执行，防止同时写价格。
+定时由 `cloudflare/price-cron` 的 Cloudflare Worker 全天每 30 分钟 :06 / :36 触发 `workflow_dispatch`；GitHub Actions 不再配置 `schedule`。主任务通过 concurrency 串行执行，防止同时写价格。
 
 排查时先按 `event=schedule` 查看 Actions 记录：没有记录表示 GitHub 尚未派发定时事件；存在失败记录则检查日志。`active` 和手动执行成功不能证明定时调度已生效。GitHub 的 schedule 可能延迟或漏发，因此备用检查也不能替代独立的外部调度器；Cloudflare 方案见 `cloudflare/price-cron/README.md`，需另行部署并配置凭据。若仓库受保护分支限制，可把 push 改为创建 PR。
 

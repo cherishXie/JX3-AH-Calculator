@@ -103,7 +103,7 @@ git push --force-with-lease -u origin main
 - 只有 HTML/CSS/JS 等应用壳变化时才提示更新；点「立即更新」后更新卡会显示进度条和阶段文字，完成自动刷新；
 - 更新中会展示「准备 → 切换 → 应用 → 刷新」进度，避免点击后无反馈；
 - 360、Edge 等 Chromium 浏览器做了降级：宽度/安全区用回退值，按钮间距不用 flex gap，360 老内核也能正常显示提示卡。
-- 页面打开期间全天检查 `version.json`：每小时 :31 后 2 分钟窗口每 2 分钟检查一次，其余时间每 5 分钟；发现 `dataUpdatedAt` 变化后拉取最新 `data.js`，在内存中合并并重绘当前页面；
+- 页面打开期间全天检查 `version.json`：每小时 :06 和 :36 后各 15 分钟窗口每 2 分钟检查一次，其余时间每 5 分钟；发现 `dataUpdatedAt` 变化后拉取最新 `data.js`，在内存中合并并重绘当前页面；
 - 刷新时顶部显示 loading（「行情更新中…」），完成后显示「行情已更新 · 时间」；不整页刷新、不弹 PWA 提示；
 - 重绘会保留窗口滚动位置和表格横向滚动；抽屉/弹窗/输入框聚焦时自动延后，避免打断操作；
 - 每小时 :31 后的 15 分钟窗口每 2 分钟检查一次，其余时间每 5 分钟；标签页重新可见时也会检查。
@@ -154,7 +154,7 @@ cd _site && python3 -m http.server 8940
 
 ## 定时价格更新
 
-价格更新由 **Cloudflare Worker Cron** 全天每小时 :31（北京时间）触发 `update-jx3-prices.yml` 的 `workflow_dispatch`，不再依赖 GitHub 的 `schedule`，也不限制 00:00–08:00。更新 `assets/data.js`、`minitool/assets/data.js`、`miniapp/src/shared/catalog.json` 并提交；提交完成后通过 `workflow_run` 自动触发 `deploy.yml`，同步 Pages 和小工具 zip。Cloudflare Worker 的配置与部署见 `cloudflare/price-cron/README.md`。
+价格更新由 **Cloudflare Worker Cron** 全天每 30 分钟 :06 / :36（北京时间）触发 `update-jx3-prices.yml` 的 `workflow_dispatch`，不再依赖 GitHub 的 `schedule`，也不限制 00:00–08:00。更新 `assets/data.js`、`minitool/assets/data.js`、`miniapp/src/shared/catalog.json` 并提交；提交完成后通过 `workflow_run` 自动触发 `deploy.yml`，同步 Pages 和小工具 zip。Cloudflare Worker 的配置与部署见 `cloudflare/price-cron/README.md`。
 
 ## 常见问题
 
