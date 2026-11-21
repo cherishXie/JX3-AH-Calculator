@@ -547,7 +547,3 @@ update JX3BOX prices (local cron)
 ## 2026-11-20 · 664f0e6
 
 sync latest price data for theme build
-
-## 2026-11-20 · 5a872eb
-
-update JX3BOX prices
