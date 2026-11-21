@@ -16,6 +16,7 @@ import hashlib
 import pathlib
 
 files = [
+    'sw.js',
     'index.html',
     'assets/styles.css',
     'assets/pwa.css',

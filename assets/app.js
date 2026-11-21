@@ -16,6 +16,41 @@
   const $ = function (sel) { return document.querySelector(sel); };
   const $$ = function (sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); };
 
+  const scriptPromises = Object.create(null);
+  function loadScriptOnce(src) {
+    if (scriptPromises[src]) return scriptPromises[src];
+    scriptPromises[src] = new Promise(function (resolve, reject) {
+      const el = document.createElement('script');
+      el.src = src;
+      el.async = true;
+      el.onload = function () { resolve(); };
+      el.onerror = function () { reject(new Error('脚本加载失败：' + src)); };
+      document.head.appendChild(el);
+    });
+    return scriptPromises[src];
+  }
+
+  function ensureAudit() {
+    if (window.JX3Audit) return Promise.resolve();
+    return loadScriptOnce('assets/audit-data.js');
+  }
+
+  function ensureBreakthrough() {
+    if (window.JX3BT) return Promise.resolve();
+    return loadScriptOnce('assets/breakthrough-data.js')
+      .then(function () { return loadScriptOnce('assets/breakthrough-model.js'); })
+      .then(function () { return loadScriptOnce('assets/breakthrough.js'); });
+  }
+
+  function needsAudit(path) {
+    return path === '/prices' || path === '/analysis' || path.indexOf('/skills') === 0;
+  }
+
+  function lazyLoadFailed(err) {
+    if (window.console) console.error(err);
+    if (typeof window.bootLoaderFail === 'function') window.bootLoaderFail('加载失败，请刷新重试');
+  }
+
   const ui = {
     booted: false,
     theme: 'light',
@@ -6097,6 +6132,14 @@
       history.replaceState(null, '', Route.href('/skills/shennong'));
       return render();
     }
+    if (needsAudit(route.path) && !window.JX3Audit) {
+      ensureAudit().then(render).catch(lazyLoadFailed);
+      return;
+    }
+    if (route.path === '/breakthrough' && !window.JX3BT) {
+      ensureBreakthrough().then(render).catch(lazyLoadFailed);
+      return;
+    }
     const active = document.activeElement;
     const fkey = active && active.getAttribute ? active.getAttribute('data-fkey') : null;
     const selStart = active && typeof active.selectionStart === 'number' ? active.selectionStart : null;
@@ -6168,6 +6211,18 @@
     const pageEl = page.querySelector('.page');
     if (pageEl && pathChanged) pageEl.classList.add('page-enter');
     document.title = (isDevDeployment() ? '[DEV] ' : '') + title + ' · 剑网三物价助手 | JX3 生活技艺计算器';
+    if ((route.path === '/' || route.path === '/overview') && !window.JX3Audit) {
+      ensureAudit().then(function () {
+        const now = Route.parse().path;
+        if (now === '/' || now === '/overview') render();
+      }).catch(function () { /* 总览的报价覆盖是增强项，不阻塞页面 */ });
+    }
+    if ((route.path === '/' || route.path === '/overview') && !window.JX3BT) {
+      ensureBreakthrough().then(function () {
+        const now = Route.parse().path;
+        if (now === '/' || now === '/overview') render();
+      }).catch(function () { /* 总览的突破卡片是增强项，不阻塞页面 */ });
+    }
     const sb = document.getElementById('sidebar');
     if (sb) sb.classList.remove('open');
     if (window.innerWidth <= 768) {

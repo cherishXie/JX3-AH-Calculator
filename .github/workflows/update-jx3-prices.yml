@@ -1,8 +1,11 @@
 name: Update JX3 prices
 
 on:
-  # 定时由 Cloudflare Worker 每小时 :31（北京时间）触发 workflow_dispatch。
+  # 主定时：Cloudflare Worker 全天每 30 分钟 :06 / :36 触发 workflow_dispatch。
+  # 兜底：GitHub schedule 每 2 小时 :31（UTC）运行；外部调度失效时仍会执行。
   workflow_dispatch:
+  schedule:
+    - cron: '31 */2 * * *'
   push:
     branches: [main]
     paths:

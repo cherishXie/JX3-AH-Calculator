@@ -1,6 +1,6 @@
 # Cloudflare Worker 定时触发价格更新
 
-不依赖 GitHub Actions 的 `schedule`，也不需要 Mac 开机。Cloudflare 全天每小时 :31 触发一次
+Cloudflare 作为主调度，GitHub Actions 的 `schedule` 仅作兜底；不需要 Mac 开机。Cloudflare 全天每 30 分钟 :06 / :36 触发一次
 `update-jx3-prices.yml` 的 `workflow_dispatch`。
 
 ## 1. 创建 GitHub 细粒度 token
@@ -74,4 +74,4 @@ npx wrangler@latest tail
 - token 只存在 Cloudflare encrypted secret 中，不在仓库、不在前端；
 - 只有 `Actions: write`，泄露也只能触发这个仓库的工作流，不能改代码；
 - token 到期后 Worker 会返回 401，重新 `secret put GITHUB_TOKEN` 即可；
-- 不再需要本机 launchd，也不依赖 GitHub 的 `schedule`。
+- 本机 launchd 已取消；GitHub Actions `schedule` 每 2 小时作为外部调度失效时的兜底。
