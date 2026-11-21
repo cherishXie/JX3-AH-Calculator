@@ -6,6 +6,8 @@ cd "$(dirname "$0")/.."
 node scripts/sync-breakthrough-model.mjs
 node scripts/build-access-data.mjs
 node scripts/build-audit-data.mjs
+# 预计算浏览器走势数据（最近 7 天）；行情更新时也会生成一次。
+node scripts/build-price-trends.mjs
 
 # 应用壳版本 = 除 data.js 外的静态资源哈希。
 # 只更新价格时 data.js 变了但壳版本不变，SW 不升级，也就不会弹 PWA 更新提示。
@@ -57,6 +59,11 @@ cp -R assets _site/assets
 if [ -d data/price-history ]; then
   cp -R data/price-history _site/price-history
   find _site/price-history -name '.DS_Store' -delete
+fi
+# 预计算走势数据：物价走势 / 区服趋势只读取这里，原始 price-history 按需回查。
+if [ -d data/price-trends ]; then
+  cp -R data/price-trends _site/price-trends
+  find _site/price-trends -name '.DS_Store' -delete
 fi
 # Excel 物价订阅：prices.json / prices.csv / prices.html
 node scripts/build-excel-prices.mjs _site
@@ -157,6 +164,8 @@ required = [
 ]
 if (root / 'price-history').is_dir():
     required.append('price-history/index.json')
+if (root / 'price-trends').is_dir():
+    required.append('price-trends/index.json')
 for rel in required:
     if not (root / rel).exists():
         missing.append(rel)

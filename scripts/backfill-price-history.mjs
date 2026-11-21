@@ -19,6 +19,7 @@ import crypto from 'node:crypto';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { rebuildPriceHistoryIndex, priceHistoryDayPath } from './lib/price-history.mjs';
+import { buildPriceTrends } from './lib/price-trends.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DRY = process.argv.includes('--dry-run');
@@ -230,6 +231,8 @@ function main() {
   if (!DRY) {
     const index = rebuildPriceHistoryIndex(ROOT, data);
     console.log(`index: ${index.days.length} days, ${index.days.reduce((n, d) => n + d.points, 0)} points`);
+    const trends = buildPriceTrends(ROOT);
+    console.log(`price-trends: ${trends.report.days} days, ${trends.report.points} points`);
   }
 }
 main();

@@ -101,8 +101,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 物价历史是持续增长的数据，网络优先；离线时回退到上次缓存。
-  if (url.pathname.includes('/price-history/')) {
+  // 物价历史/预计算走势是持续增长的数据，网络优先；离线时回退到上次缓存。
+  if (url.pathname.includes('/price-history/') || url.pathname.includes('/price-trends/')) {
     event.respondWith(
       fetch(request, { cache: 'no-cache' })
         .then((response) => {

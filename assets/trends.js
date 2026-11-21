@@ -1,27 +1,43 @@
 /* =========================================================================
    剑网三物价助手 · 物价历史读取与走势数据
    -------------------------------------------------------------------------
-   - 从 Pages 的 price-history/index.json + days/*.json 读取历史
-   - 按区服回放 base + samples，得到每个节点的本服报价/基准价/有效价
-   - 提供蜡烛图、散点图、节点原始数据所需的纯数据函数
+   - 优先读取 Pages 上预计算好的 price-trends/ 数据：
+       price-trends/index.json
+       price-trends/days/YYYY-MM-DD.json          区服趋势（本服报价增量）
+       price-trends/servers/<id>/YYYY-MM-DD.json  物价走势（有效价增量）
+   - 浏览器按「区服 + 日期」把已加载的数据存入 IndexedDB（不可用时退化为内存），
+     行情更新后只补新增/变化的日期，未变化的历史不再重新下载，也不会清空重载。
+   - 浏览器最多保留最近 7 个自然日；原始 price-history/ 只在导出/查看节点原始
+     数据时按需拉取。
+   - 原始数据回放函数 buildPoints 仍保留，供价格历史 CLI、测试和按需回查使用。
    该文件只服务 Web 版；小红书离线小工具不加载它。
    ========================================================================= */
 (function () {
   'use strict';
 
   const DATA = window.JX3Data || {};
+  const MAX_DAYS = 7;
+  const DB_NAME = 'jx3-price-trends';
+  const DB_STORE = 'segments';
   const listeners = [];
   const state = {
-    index: null,
-    days: Object.create(null),
-    loadingIndex: null,
+    manifest: null,
+    manifestError: null,
+    loadingManifest: null,
+    manifestStale: false,
+    priceCache: Object.create(null),
+    serverCache: Object.create(null),
+    rawDays: Object.create(null),
+    rawViews: Object.create(null),
+    loading: Object.create(null),
     loadingDays: Object.create(null),
-    indexError: null,
     dayError: null,
     lastLoadedAt: 0,
     viewCache: Object.create(null),
     viewCacheOrder: [],
-    dataVersion: 0
+    dataVersion: 0,
+    memoryStore: Object.create(null),
+    storageReady: null
   };
 
   const skillMap = {};
@@ -147,20 +163,38 @@
       return Number.isFinite(ms) && ms >= fromMs && ms <= toMs;
     });
   }
+  function addDays(date, delta) {
+    const ms = Date.parse(date + 'T00:00:00+08:00');
+    if (!Number.isFinite(ms)) return date;
+    return new Date(ms + delta * 86400000 + 8 * 3600000).toISOString().slice(0, 10);
+  }
+  function dayDistance(from, to) {
+    const a = Date.parse(from + 'T00:00:00+08:00');
+    const b = Date.parse(to + 'T00:00:00+08:00');
+    if (!Number.isFinite(a) || !Number.isFinite(b)) return 0;
+    return Math.round((b - a) / 86400000);
+  }
   function baseUrl() {
     try { return document.baseURI || location.href; } catch (err) { return 'https://localhost/'; }
   }
   function historyUrl(path) {
-    let root = baseUrl();
-    try {
-      if (/\/dev(?:\/|$)/.test(location.pathname)) root = new URL('../', root).href;
-    } catch (err) { /* ignore */ }
-    return new URL('price-history/' + path, root).href;
+    return new URL('price-history/' + path, baseUrl()).href;
+  }
+  function trendUrl(path) {
+    return new URL('price-trends/' + path, baseUrl()).href;
   }
   function notify() {
     listeners.slice().forEach(function (fn) {
       try { fn(); } catch (err) { if (window.console) console.error(err); }
     });
+  }
+  let notifyTimer = null;
+  function scheduleNotify() {
+    if (notifyTimer) return;
+    notifyTimer = setTimeout(function () {
+      notifyTimer = null;
+      notify();
+    }, 30);
   }
   function fetchJson(url, cacheMode) {
     if (typeof fetch !== 'function') return Promise.reject(new Error('当前浏览器不支持 fetch'));
@@ -170,52 +204,302 @@
     });
   }
 
-  function loadIndex(force) {
-    if (state.index && !force) return Promise.resolve(state.index);
-    if (state.loadingIndex) return state.loadingIndex;
-    state.indexError = null;
-    state.loadingIndex = fetchJson(historyUrl('index.json')).then(function (index) {
-      state.index = index;
+  /* ------------------------------------------------------------------ */
+  /* 浏览器持久缓存：IndexedDB 优先，失败时退化为内存                    */
+  /* ------------------------------------------------------------------ */
+  function openStorage() {
+    if (state.storageReady) return state.storageReady;
+    state.storageReady = new Promise(function (resolve) {
+      let indexed = null;
+      try { indexed = typeof indexedDB !== 'undefined' ? indexedDB : null; } catch (err) { indexed = null; }
+      if (!indexed) { resolve(null); return; }
+      let request;
+      try { request = indexed.open(DB_NAME, 1); } catch (err) { resolve(null); return; }
+      let settled = false;
+      const finish = function (db) {
+        if (settled) return;
+        settled = true;
+        resolve(db || null);
+      };
+      request.onupgradeneeded = function () {
+        const db = request.result;
+        if (!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE);
+      };
+      request.onsuccess = function () { finish(request.result); };
+      request.onerror = function () { finish(null); };
+      request.onblocked = function () { finish(null); };
+      setTimeout(function () { finish(null); }, 4000);
+    });
+    return state.storageReady;
+  }
+
+  function storageGet(key) {
+    return openStorage().then(function (db) {
+      const memory = state.memoryStore[key];
+      if (!db) return memory || null;
+      return new Promise(function (resolve) {
+        try {
+          const request = db.transaction(DB_STORE, 'readonly').objectStore(DB_STORE).get(key);
+          request.onsuccess = function () { resolve(request.result || memory || null); };
+          request.onerror = function () { resolve(memory || null); };
+        } catch (err) {
+          resolve(memory || null);
+        }
+      });
+    });
+  }
+
+  function storageSet(key, value) {
+    state.memoryStore[key] = value;
+    return openStorage().then(function (db) {
+      if (!db) return;
+      return new Promise(function (resolve) {
+        try {
+          const tx = db.transaction(DB_STORE, 'readwrite');
+          tx.objectStore(DB_STORE).put(value, key);
+          tx.oncomplete = function () { resolve(); };
+          tx.onerror = function () { resolve(); };
+          tx.onabort = function () { resolve(); };
+        } catch (err) {
+          resolve();
+        }
+      });
+    }).catch(function () {});
+  }
+
+  function storageDelete(key) {
+    delete state.memoryStore[key];
+    return openStorage().then(function (db) {
+      if (!db) return;
+      return new Promise(function (resolve) {
+        try {
+          const tx = db.transaction(DB_STORE, 'readwrite');
+          tx.objectStore(DB_STORE).delete(key);
+          tx.oncomplete = function () { resolve(); };
+          tx.onerror = function () { resolve(); };
+        } catch (err) {
+          resolve();
+        }
+      });
+    }).catch(function () {});
+  }
+
+  function storageKeys() {
+    return openStorage().then(function (db) {
+      if (!db) return Object.keys(state.memoryStore);
+      return new Promise(function (resolve) {
+        try {
+          const request = db.transaction(DB_STORE, 'readonly').objectStore(DB_STORE).getAllKeys();
+          request.onsuccess = function () { resolve(request.result || []); };
+          request.onerror = function () { resolve(Object.keys(state.memoryStore)); };
+        } catch (err) {
+          resolve(Object.keys(state.memoryStore));
+        }
+      });
+    });
+  }
+
+  function storageClear() {
+    state.memoryStore = Object.create(null);
+    return openStorage().then(function (db) {
+      if (!db) return;
+      return new Promise(function (resolve) {
+        try {
+          const tx = db.transaction(DB_STORE, 'readwrite');
+          tx.objectStore(DB_STORE).clear();
+          tx.oncomplete = function () { resolve(); };
+          tx.onerror = function () { resolve(); };
+        } catch (err) {
+          resolve();
+        }
+      });
+    }).catch(function () {});
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 预计算数据加载                                                      */
+  /* ------------------------------------------------------------------ */
+  function normalizeManifest(manifest) {
+    const next = Object.assign({}, manifest || {});
+    next.days = Array.isArray(next.days) ? next.days.filter(function (entry) {
+      return entry && /^\d{4}-\d{2}-\d{2}$/.test(String(entry.date));
+    }).sort(function (a, b) {
+      return String(a.date).localeCompare(String(b.date));
+    }) : [];
+    next.maxDays = Math.min(MAX_DAYS, Math.max(1, Number(next.maxDays) || MAX_DAYS));
+    if (next.days.length) {
+      const latest = next.days[next.days.length - 1].date;
+      const earliest = addDays(latest, -(next.maxDays - 1));
+      next.days = next.days.filter(function (entry) {
+        return entry && entry.date >= earliest && entry.date <= latest;
+      });
+    }
+    return next;
+  }
+
+  function manifestDates(manifest) {
+    return normalizeManifest(manifest).days;
+  }
+
+  function isKnownServer(manifest, serverId) {
+    return !!(manifest && Array.isArray(manifest.servers) && manifest.servers.some(function (server) {
+      return server && server.id === serverId;
+    }));
+  }
+
+  function pruneCacheToManifest() {
+    if (!state.manifest) return;
+    const dates = new Set(manifestDates(state.manifest).map(function (entry) { return entry.date; }));
+    Object.keys(state.priceCache).forEach(function (serverId) {
+      const bucket = state.priceCache[serverId] || {};
+      Object.keys(bucket).forEach(function (date) {
+        if (!dates.has(date)) delete bucket[date];
+      });
+      if (!Object.keys(bucket).length) delete state.priceCache[serverId];
+    });
+    Object.keys(state.serverCache).forEach(function (date) {
+      if (!dates.has(date)) delete state.serverCache[date];
+    });
+    Object.keys(state.rawDays).forEach(function (date) {
+      if (!dates.has(date)) delete state.rawDays[date];
+    });
+    storageKeys().then(function (keys) {
+      (keys || []).forEach(function (key) {
+        const match = String(key).match(/^(?:p\|[^|]+\||[dr])\|?(\d{4}-\d{2}-\d{2})$/);
+        if (!match) return;
+        if (!dates.has(match[1])) storageDelete(key);
+      });
+    });
+  }
+
+  function loadManifest(force) {
+    if (state.manifest && !force) return Promise.resolve(state.manifest);
+    if (state.loadingManifest) return state.loadingManifest;
+    state.manifestError = null;
+    state.loadingManifest = fetchJson(trendUrl('index.json')).then(function (manifest) {
+      const previous = state.manifest;
+      state.manifest = normalizeManifest(manifest);
+      state.manifestStale = false;
       state.lastLoadedAt = Date.now();
-      state.loadingIndex = null;
-      clearViewCache();
+      state.loadingManifest = null;
+      pruneCacheToManifest();
+      const changed = !previous ||
+        previous.generatedAt !== state.manifest.generatedAt ||
+        previous.days.length !== state.manifest.days.length ||
+        previous.days.some(function (entry, index) {
+          const before = previous.days[index];
+          return !before || before.date !== entry.date || before.hash !== entry.hash;
+        });
+      if (changed) {
+        state.dataVersion++;
+        clearViewCache();
+      }
       notify();
-      return index;
+      return state.manifest;
     }).catch(function (err) {
-      state.indexError = err && err.message ? err.message : String(err);
-      state.loadingIndex = null;
+      state.manifestError = err && err.message ? err.message : String(err);
+      state.loadingManifest = null;
       notify();
       throw err;
     });
-    return state.loadingIndex;
+    return state.loadingManifest;
   }
 
-  function loadDays(dates) {
-    const allDates = state.index && state.index.days ? state.index.days.map(function (d) { return d.date; }).sort() : [];
-    const lastDate = allDates.length ? allDates[allDates.length - 1] : '';
-    const pending = [];
-    dates.forEach(function (date) {
-      if (state.days[date]) return;
-      if (state.loadingDays[date]) { pending.push(state.loadingDays[date]); return; }
-      const cacheMode = lastDate && date < lastDate ? 'force-cache' : 'no-cache';
-      const p = fetchJson(historyUrl('days/' + date + '.json'), cacheMode).then(function (day) {
-        state.days[date] = day;
-        delete state.loadingDays[date];
-        state.dayError = null;
-        state.dataVersion++;
+  function priceCacheEntry(serverId, date) {
+    const bucket = state.priceCache[serverId];
+    return bucket ? bucket[date] || null : null;
+  }
+  function setPriceCache(serverId, date, hash, points) {
+    const bucket = state.priceCache[serverId] || (state.priceCache[serverId] = Object.create(null));
+    bucket[date] = { hash: hash, points: points };
+  }
+  function serverCacheEntry(date) {
+    return state.serverCache[date] || null;
+  }
+  function setServerCache(date, hash, servers) {
+    state.serverCache[date] = { hash: hash, servers: servers || {} };
+  }
+
+  function cacheModeFor(meta) {
+    const days = state.manifest ? manifestDates(state.manifest) : [];
+    const lastDate = days.length ? days[days.length - 1].date : '';
+    return lastDate && meta.date < lastDate ? 'force-cache' : 'no-cache';
+  }
+
+  function loadPriceSegment(serverId, meta) {
+    const key = 'p|' + serverId + '|' + meta.date;
+    if (state.loading[key]) return state.loading[key];
+    state.dayError = null;
+    const promise = storageGet(key).then(function (hit) {
+      if (hit && hit.hash === meta.hash && Array.isArray(hit.points)) {
+        setPriceCache(serverId, meta.date, meta.hash, hit.points);
         clearViewCache();
-        notify();
-        return day;
-      }).catch(function (err) {
-        delete state.loadingDays[date];
-        state.dayError = '无法加载 ' + date + ' 的物价历史：' + (err && err.message ? err.message : String(err));
-        notify();
-        throw err;
-      });
-      state.loadingDays[date] = p;
-      pending.push(p);
+        scheduleNotify();
+        return hit.points;
+      }
+      return fetchJson(trendUrl('servers/' + serverId + '/' + meta.date + '.json'), cacheModeFor(meta))
+        .then(function (doc) {
+          const points = Array.isArray(doc && doc.points) ? doc.points : [];
+          setPriceCache(serverId, meta.date, meta.hash, points);
+          storageSet(key, { hash: meta.hash, points: points });
+          state.dataVersion++;
+          clearViewCache();
+          notify();
+          return points;
+        });
+    }).catch(function (err) {
+      state.dayError = '无法加载 ' + meta.date + ' 的走势数据：' + (err && err.message ? err.message : String(err));
+      notify();
+      throw err;
     });
-    return Promise.allSettled(pending);
+    state.loading[key] = promise.then(function (value) {
+      delete state.loading[key];
+      return value;
+    }, function (err) {
+      delete state.loading[key];
+      throw err;
+    });
+    return state.loading[key];
+  }
+
+  function loadServerDay(meta) {
+    const key = 'd|' + meta.date;
+    if (state.loading[key]) return state.loading[key];
+    state.dayError = null;
+    const promise = storageGet(key).then(function (hit) {
+      if (hit && hit.hash === meta.hash && hit.servers) {
+        setServerCache(meta.date, meta.hash, hit.servers);
+        clearViewCache();
+        scheduleNotify();
+        return hit.servers;
+      }
+      return fetchJson(trendUrl('days/' + meta.date + '.json'), cacheModeFor(meta))
+        .then(function (doc) {
+          const servers = (doc && doc.servers) || {};
+          setServerCache(meta.date, meta.hash, servers);
+          storageSet(key, { hash: meta.hash, servers: servers });
+          state.dataVersion++;
+          clearViewCache();
+          notify();
+          return servers;
+        });
+    }).catch(function (err) {
+      state.dayError = '无法加载 ' + meta.date + ' 的区服走势数据：' + (err && err.message ? err.message : String(err));
+      notify();
+      throw err;
+    });
+    state.loading[key] = promise.then(function (value) {
+      delete state.loading[key];
+      return value;
+    }, function (err) {
+      delete state.loading[key];
+      throw err;
+    });
+    return state.loading[key];
+  }
+
+  function loadMeta(meta, mode, serverId) {
+    return mode === 'server' ? loadServerDay(meta) : loadPriceSegment(serverId, meta);
   }
 
   function clearViewCache() {
@@ -238,23 +522,7 @@
     return value;
   }
 
-  function applyServerDelta(target, delta, serverId) {
-    const changes = delta && delta[serverId];
-    if (!changes) return 0;
-    let count = 0;
-    Object.keys(changes).forEach(function (key) {
-      const value = changes[key];
-      if (value === null) {
-        delete target[key];
-        count++;
-      } else if (isPrice(value)) {
-        target[key] = value;
-        count++;
-      }
-    });
-    return count;
-  }
-  function applyFlatDelta(target, delta) {
+  function applyDelta(target, delta) {
     if (!delta) return 0;
     let count = 0;
     Object.keys(delta).forEach(function (key) {
@@ -268,6 +536,11 @@
       }
     });
     return count;
+  }
+  function applyServerDelta(target, delta, serverId) {
+    const changes = delta && delta[serverId];
+    if (!changes) return 0;
+    return applyDelta(target, changes);
   }
   function effectiveMap(catalogPrices, quotes) {
     const out = {};
@@ -290,6 +563,9 @@
     return out;
   }
 
+  /* ------------------------------------------------------------------ */
+  /* 原始数据（按需）：price-history/ 回放                               */
+  /* ------------------------------------------------------------------ */
   function buildPoints(serverId, days) {
     const points = [];
     (days || []).forEach(function (day) {
@@ -303,25 +579,25 @@
       let requested = base.requested || [];
       let source = base.source || 'seed';
 
-      points.push(makePoint(base.at, day.date, 'base', quotes, stones, catalogPrices, stoneCatalogPrices, coverage, requested, 0, source, day));
+      points.push(makeRawPoint(base.at, day.date, 'base', quotes, stones, catalogPrices, stoneCatalogPrices, coverage, requested, 0, source, day));
 
       (day.samples || []).forEach(function (sample) {
         let changed = 0;
         changed += applyServerDelta(quotes, sample.prices, serverId);
         changed += applyServerDelta(stones, sample.stones, serverId);
-        changed += applyFlatDelta(catalogPrices, sample.catalogPrices);
-        changed += applyFlatDelta(stoneCatalogPrices, sample.stoneCatalogPrices);
+        changed += applyDelta(catalogPrices, sample.catalogPrices);
+        changed += applyDelta(stoneCatalogPrices, sample.stoneCatalogPrices);
         if (sample.coverage && sample.coverage[serverId]) coverage = sample.coverage[serverId];
         if (sample.requested) requested = sample.requested;
         source = sample.source || 'update';
-        points.push(makePoint(sample.at, day.date, 'update', quotes, stones, catalogPrices, stoneCatalogPrices, coverage, requested, changed, source, day));
+        points.push(makeRawPoint(sample.at, day.date, 'update', quotes, stones, catalogPrices, stoneCatalogPrices, coverage, requested, changed, source, day));
       });
     });
     points.sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
     return points;
   }
 
-  function makePoint(at, date, kind, quotes, stones, catalogPrices, stoneCatalogPrices, coverage, requested, changed, source, day) {
+  function makeRawPoint(at, date, kind, quotes, stones, catalogPrices, stoneCatalogPrices, coverage, requested, changed, source, day) {
     const prices = effectiveMap(catalogPrices, quotes);
     const stonePrices = effectiveStoneMap(stoneCatalogPrices, stones);
     return {
@@ -345,6 +621,320 @@
     };
   }
 
+  function loadDays(dates) {
+    const allDates = state.manifest ? manifestDates(state.manifest).map(function (d) { return d.date; }) : [];
+    const lastDate = allDates.length ? allDates[allDates.length - 1] : '';
+    const pending = [];
+    dates.forEach(function (date) {
+      if (state.rawDays[date]) return;
+      if (state.loadingDays[date]) { pending.push(state.loadingDays[date]); return; }
+      const cacheMode = lastDate && date < lastDate ? 'force-cache' : 'no-cache';
+      const p = fetchJson(historyUrl('days/' + date + '.json'), cacheMode).then(function (day) {
+        state.rawDays[date] = day;
+        delete state.loadingDays[date];
+        state.dayError = null;
+        state.dataVersion++;
+        clearViewCache();
+        notify();
+        return day;
+      }).catch(function (err) {
+        delete state.loadingDays[date];
+        state.dayError = '无法加载 ' + date + ' 的物价历史：' + (err && err.message ? err.message : String(err));
+        notify();
+        throw err;
+      });
+      state.loadingDays[date] = p;
+      pending.push(p);
+    });
+    return Promise.allSettled(pending);
+  }
+
+  function rawDatesFor(opts) {
+    if (!state.manifest) return [];
+    const days = manifestDates(state.manifest);
+    const allDates = days.map(function (entry) { return entry.date; });
+    if (!allDates.length) return [];
+    return clampDates(allDates, opts);
+  }
+
+  function rawView(serverId, opts) {
+    opts = opts || {};
+    if (!state.manifest) return { status: 'loading', index: null, points: [] };
+    const dates = rawDatesFor(opts);
+    const loaded = dates.filter(function (date) { return !!state.rawDays[date]; });
+    if (loaded.length !== dates.length) {
+      return {
+        status: dates.length ? 'loading' : 'ready', index: state.manifest,
+        points: [], dates: dates, loaded: loaded.length, total: dates.length
+      };
+    }
+    const key = 'raw|' + serverId + '|' + (opts.from || '') + '|' + (opts.to || '') + '|' + state.dataVersion;
+    if (state.rawViews[key]) return state.rawViews[key];
+    const allPoints = buildPoints(serverId, dates.map(function (date) { return state.rawDays[date]; }));
+    const fromMs = parseBound(opts.from, false);
+    const toMs = parseBound(opts.to, true);
+    const points = slicePoints(
+      allPoints,
+      fromMs == null ? Number.NEGATIVE_INFINITY : fromMs,
+      toMs == null ? Number.POSITIVE_INFINITY : toMs
+    );
+    const result = { status: 'ready', index: state.manifest, points: points, dates: dates };
+    state.rawViews[key] = result;
+    return result;
+  }
+
+  function loadRaw(serverId, opts) {
+    opts = opts || {};
+    return loadManifest().then(function () {
+      const dates = rawDatesFor(opts);
+      return loadDays(dates).then(function () {
+        return rawView(serverId, opts);
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 预计算数据回放                                                      */
+  /* ------------------------------------------------------------------ */
+  function replayPriceDay(serverId, meta, entry) {
+    const points = [];
+    let prices = Object.create(null);
+    let quotes = Object.create(null);
+    let stones = Object.create(null);
+    let stonePrices = Object.create(null);
+    const list = (entry && entry.points) || [];
+    list.forEach(function (point, index) {
+      if (!point) return;
+      if (index === 0) {
+        prices = clone(point.prices || {});
+        quotes = clone(point.quotes || {});
+        stones = clone(point.stones || {});
+        stonePrices = clone(point.stonePrices || {});
+      } else {
+        applyDelta(prices, point.prices);
+        applyDelta(quotes, point.quotes);
+        applyDelta(stones, point.stones);
+        applyDelta(stonePrices, point.stonePrices);
+      }
+      points.push({
+        at: point.at,
+        date: meta.date,
+        kind: index === 0 ? 'base' : 'update',
+        source: point.source || '',
+        quotes: clone(quotes),
+        stones: clone(stones),
+        prices: clone(prices),
+        stonePrices: clone(stonePrices),
+        coverage: point.coverage || null,
+        requested: [],
+        changed: Number(point.changed) || 0,
+        quoteCount: Object.keys(quotes).length,
+        stoneCount: Object.keys(stones).length,
+        pricedCount: Object.keys(prices).length,
+        itemCount: Number(state.manifest && state.manifest.itemCount) || ((DATA.items || []).length)
+      });
+    });
+    return points;
+  }
+
+  function replayServerDay(serverId, meta, entry) {
+    const points = [];
+    let quotes = Object.create(null);
+    let stones = Object.create(null);
+    const list = (entry && entry.servers && entry.servers[serverId]) || [];
+    list.forEach(function (point, index) {
+      if (!point) return;
+      if (index === 0) {
+        quotes = clone(point.quotes || {});
+        stones = clone(point.stones || {});
+      } else {
+        applyDelta(quotes, point.quotes);
+        applyDelta(stones, point.stones);
+      }
+      points.push({
+        at: point.at,
+        date: meta.date,
+        kind: index === 0 ? 'base' : 'update',
+        source: point.source || '',
+        quotes: clone(quotes),
+        stones: clone(stones),
+        prices: clone(quotes),
+        stonePrices: clone(stones),
+        coverage: point.coverage || null,
+        requested: [],
+        changed: 0,
+        quoteCount: Object.keys(quotes).length,
+        stoneCount: Object.keys(stones).length,
+        pricedCount: Object.keys(quotes).length,
+        itemCount: Number(state.manifest && state.manifest.itemCount) || ((DATA.items || []).length)
+      });
+    });
+    return points;
+  }
+
+  function clampDates(allDates, opts) {
+    if (!allDates.length) return [];
+    const firstDate = allDates[0];
+    const lastDate = allDates[allDates.length - 1];
+    const maxDays = Math.min(MAX_DAYS, Math.max(1, Number(state.manifest && state.manifest.maxDays) || MAX_DAYS));
+    const requestedFrom = parseBound(opts && opts.from, false);
+    const requestedTo = parseBound(opts && opts.to, true);
+    let dayFrom = requestedFrom != null ? beijingDateOf(requestedFrom) : firstDate;
+    let dayTo = requestedTo != null ? beijingDateOf(requestedTo) : lastDate;
+    if (dayFrom < firstDate) dayFrom = firstDate;
+    if (dayTo > lastDate) dayTo = lastDate;
+    if (dayFrom > dayTo) { const tmp = dayFrom; dayFrom = dayTo; dayTo = tmp; }
+    if (dayDistance(dayFrom, dayTo) + 1 > maxDays) dayFrom = addDays(dayTo, -(maxDays - 1));
+    if (dayFrom < firstDate) dayFrom = firstDate;
+    return allDates.filter(function (date) { return date >= dayFrom && date <= dayTo; });
+  }
+
+  function buildViewPoints(serverId, mode, metas) {
+    const allPoints = [];
+    metas.forEach(function (meta) {
+      const entry = mode === 'server' ? serverCacheEntry(meta.date) : priceCacheEntry(serverId, meta.date);
+      if (!entry) return;
+      const points = mode === 'server'
+        ? replayServerDay(serverId, meta, entry)
+        : replayPriceDay(serverId, meta, entry);
+      points.forEach(function (point) { allPoints.push(point); });
+    });
+    allPoints.sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
+    return allPoints;
+  }
+
+  function loadingBytes(metas, mode) {
+    return metas.reduce(function (sum, meta) {
+      return sum + (Number(mode === 'server' ? meta.bytes : (meta.serverBytes || meta.bytes)) || 0);
+    }, 0);
+  }
+
+  function view(serverId, opts) {
+    opts = opts || {};
+    const mode = opts.mode === 'server' ? 'server' : 'price';
+    if (state.manifestError && !state.manifest) {
+      return { status: 'error', error: state.manifestError, index: null, mode: mode };
+    }
+    if (!state.manifest) {
+      loadManifest().catch(function () {});
+      return { status: 'loading', index: null, mode: mode, maxDays: MAX_DAYS };
+    }
+    const days = manifestDates(state.manifest);
+    if (!days.length) {
+      return {
+        status: 'ready', index: state.manifest, mode: mode, maxDays: state.manifest.maxDays,
+        dates: [], points: [], from: '', to: '', allFrom: '', allTo: ''
+      };
+    }
+    const allDates = days.map(function (entry) { return entry.date; });
+    const selected = clampDates(allDates, opts);
+    if (!selected.length) {
+      return {
+        status: 'ready', index: state.manifest, mode: mode, maxDays: state.manifest.maxDays,
+        dates: [], points: [], from: '', to: '', allFrom: '', allTo: ''
+      };
+    }
+    const metaByDate = Object.create(null);
+    days.forEach(function (entry) { metaByDate[entry.date] = entry; });
+    const metas = selected.map(function (date) { return metaByDate[date]; }).filter(Boolean);
+    // 自定义区服不在内置 17 服里时，用 __catalog__ 的目录基准价序列兜底，
+    // 与旧版“自定义服务器按当日基准价展示”的行为一致。
+    const cacheServerId = mode === 'price' && !isKnownServer(state.manifest, serverId)
+      ? '__catalog__'
+      : serverId;
+    const missing = [];
+    const stale = [];
+    metas.forEach(function (meta) {
+      const entry = mode === 'server' ? serverCacheEntry(meta.date) : priceCacheEntry(cacheServerId, meta.date);
+      if (!entry) missing.push(meta);
+      else if (entry.hash !== meta.hash) stale.push(meta);
+    });
+    stale.forEach(function (meta) { loadMeta(meta, mode, cacheServerId).catch(function () {}); });
+
+    const firstDate = allDates[0];
+    const lastDate = allDates[allDates.length - 1];
+    const allFromDay = firstDate;
+    const allToDay = lastDate;
+    const requestedFrom = parseBound(opts.from, false);
+    const requestedTo = parseBound(opts.to, true);
+    const placeholderFrom = requestedFrom != null ? hourText(requestedFrom) : serverDateFrom(selected[0]);
+    const placeholderTo = requestedTo != null ? hourText(requestedTo) : serverDateTo(selected[selected.length - 1]);
+
+    if (missing.length) {
+      missing.forEach(function (meta) { loadMeta(meta, mode, cacheServerId).catch(function () {}); });
+    }
+    const available = metas.filter(function (meta) {
+      return mode === 'server' ? !!serverCacheEntry(meta.date) : !!priceCacheEntry(cacheServerId, meta.date);
+    });
+    // 首次打开或新增日期时没有旧数据才进入整页加载；已有旧数据时先展示，
+    // 新增/变化的日期在后台补拉，避免页面闪回加载态。
+    if (missing.length && !available.length) {
+      const loaded = metas.length - missing.length;
+      const bytesTotal = loadingBytes(metas, mode);
+      const bytesLoaded = loadingBytes(available, mode);
+      return {
+        status: 'loading', index: state.manifest, mode: mode, maxDays: state.manifest.maxDays,
+        dates: selected, from: placeholderFrom, to: placeholderTo,
+        allFrom: serverDateFrom(allFromDay), allTo: serverDateTo(allToDay),
+        loaded: loaded, total: metas.length,
+        daysLoaded: loaded, daysTotal: metas.length,
+        bytesLoaded: bytesLoaded, bytesTotal: bytesTotal
+      };
+    }
+    if (state.dayError && !available.length) {
+      return {
+        status: 'error', error: state.dayError, index: state.manifest, mode: mode,
+        dates: selected, from: placeholderFrom, to: placeholderTo,
+        allFrom: serverDateFrom(allFromDay), allTo: serverDateTo(allToDay)
+      };
+    }
+
+    const cacheKey = mode + '|' + cacheServerId + '|' + (opts.from || '') + '|' + (opts.to || '') + '|' + state.dataVersion;
+    if (state.viewCache[cacheKey]) return state.viewCache[cacheKey];
+
+    const allPoints = buildViewPoints(cacheServerId, mode, available.length ? available : metas);
+    let allFrom = serverDateFrom(allFromDay);
+    let allTo = serverDateTo(allToDay);
+    if (allPoints.length) {
+      allFrom = hourText(floorHourMs(Date.parse(allPoints[0].at)));
+      allTo = hourText(floorHourMs(Date.parse(allPoints[allPoints.length - 1].at)));
+    }
+    const allFromMs = parseBound(allFrom, false);
+    const allToMs = parseBound(allTo, true);
+    let fromMs;
+    let toMs;
+    if (allPoints.length) {
+      fromMs = requestedFrom != null ? requestedFrom : floorHourMs(Date.parse(allPoints[0].at));
+      toMs = requestedTo != null ? requestedTo : endOfHourMs(Date.parse(allPoints[allPoints.length - 1].at));
+    } else {
+      fromMs = requestedFrom != null ? requestedFrom : allFromMs;
+      toMs = requestedTo != null ? requestedTo : allToMs;
+    }
+    if (fromMs < allFromMs) fromMs = allFromMs;
+    if (toMs > allToMs) toMs = allToMs;
+    if (fromMs > toMs) { const tmp = fromMs; fromMs = toMs; toMs = tmp; }
+    const points = slicePoints(allPoints, fromMs, toMs);
+    const result = {
+      status: 'ready', index: state.manifest, mode: mode, maxDays: state.manifest.maxDays,
+      dates: selected, points: points,
+      from: hourText(fromMs), to: hourText(toMs),
+      allFrom: allFrom, allTo: allTo,
+      stale: stale.length > 0,
+      partial: missing.length > 0
+    };
+    return cacheView(cacheKey, result);
+  }
+
+  function serverDateFrom(date) {
+    return date + 'T00:00';
+  }
+  function serverDateTo(date) {
+    return date + 'T23:00';
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 目录与图表纯函数                                                    */
+  /* ------------------------------------------------------------------ */
   function items(type, skillId) {
     let list = catalog.slice();
     if (type === 'material' || type === 'product' || type === 'stone') {
@@ -544,110 +1134,41 @@
     };
   }
 
-  function view(serverId, opts) {
-    opts = opts || {};
-    if (state.indexError) {
-      return { status: 'error', error: state.indexError, index: state.index };
-    }
-    if (!state.index) {
-      loadIndex().catch(function () {});
-      return { status: 'loading', index: null };
-    }
-    const allDates = state.index.days.map(function (d) { return d.date; }).sort();
-    if (!allDates.length) {
-      return { status: 'ready', index: state.index, dates: [], points: [], from: '', to: '', allFrom: '', allTo: '' };
-    }
-    const firstDate = allDates[0];
-    const lastDate = allDates[allDates.length - 1];
-    let allFrom = firstDate + 'T00:00';
-    let allTo = lastDate + 'T23:00';
-    const requestedFrom = parseBound(opts.from, false);
-    const requestedTo = parseBound(opts.to, true);
-    const fromDay = requestedFrom != null ? beijingDateOf(requestedFrom) : firstDate;
-    const toDay = requestedTo != null ? beijingDateOf(requestedTo) : lastDate;
-    let dayFrom = fromDay < firstDate ? firstDate : fromDay;
-    let dayTo = toDay > lastDate ? lastDate : toDay;
-    if (dayFrom > dayTo) { const tmp = dayFrom; dayFrom = dayTo; dayTo = tmp; }
-    const dates = allDates.filter(function (date) { return date >= dayFrom && date <= dayTo; });
-    const placeholderFrom = requestedFrom != null ? hourText(requestedFrom) : dayFrom + 'T00:00';
-    const placeholderTo = requestedTo != null ? hourText(requestedTo) : dayTo + 'T23:00';
-    if (state.dayError) {
-      return {
-        status: 'error', error: state.dayError, index: state.index, dates: dates,
-        from: placeholderFrom, to: placeholderTo, allFrom: allFrom, allTo: allTo
-      };
-    }
-    const missing = dates.filter(function (date) { return !state.days[date]; });
-    const cacheKey = serverId + '|' + (opts.from || '') + '|' + (opts.to || '') + '|' + state.dataVersion;
-    if (!missing.length && state.viewCache[cacheKey]) return state.viewCache[cacheKey];
-    if (missing.length) {
-      loadDays(missing);
-      const meta = (state.index.days || []).filter(function (d) { return dates.indexOf(d.date) >= 0; });
-      const bytesTotal = meta.reduce(function (n, d) { return n + (Number(d.bytes) || 0); }, 0);
-      const bytesLoaded = meta.reduce(function (n, d) { return n + (state.days[d.date] ? (Number(d.bytes) || 0) : 0); }, 0);
-      return {
-        status: 'loading', index: state.index, dates: dates,
-        from: placeholderFrom, to: placeholderTo,
-        allFrom: allFrom, allTo: allTo,
-        loaded: dates.length - missing.length, total: dates.length,
-        daysLoaded: dates.length - missing.length, daysTotal: dates.length,
-        bytesLoaded: bytesLoaded, bytesTotal: bytesTotal
-      };
-    }
-    const allPoints = buildPoints(serverId, dates.map(function (date) { return state.days[date]; }));
-    if (allPoints.length) {
-      allFrom = hourText(floorHourMs(Date.parse(allPoints[0].at)));
-      allTo = hourText(floorHourMs(Date.parse(allPoints[allPoints.length - 1].at)));
-    }
-    const allFromMs = parseBound(allFrom, false);
-    const allToMs = parseBound(allTo, true);
-    let fromMs;
-    let toMs;
-    if (allPoints.length) {
-      fromMs = requestedFrom != null ? requestedFrom : floorHourMs(Date.parse(allPoints[0].at));
-      toMs = requestedTo != null ? requestedTo : endOfHourMs(Date.parse(allPoints[allPoints.length - 1].at));
-    } else {
-      fromMs = requestedFrom != null ? requestedFrom : allFromMs;
-      toMs = requestedTo != null ? requestedTo : allToMs;
-    }
-    if (fromMs < allFromMs) fromMs = allFromMs;
-    if (toMs > allToMs) toMs = allToMs;
-    if (fromMs > toMs) { const tmp = fromMs; fromMs = toMs; toMs = tmp; }
-    const points = slicePoints(allPoints, fromMs, toMs);
-    const result = {
-      status: 'ready', index: state.index, dates: dates, points: points,
-      from: hourText(fromMs), to: hourText(toMs),
-      allFrom: allFrom, allTo: allTo
-    };
-    return cacheView(cacheKey, result);
-  }
-
-  function prefetch(opts) {
-    opts = opts || {};
-    return loadIndex().then(function (index) {
-      let dates = (index.days || []).map(function (d) { return d.date; }).sort();
-      if (opts.lastOnly && dates.length) dates = [dates[dates.length - 1]];
-      return loadDays(dates);
-    }).catch(function () {});
-  }
-
   function reset() {
-    state.index = null;
-    state.days = Object.create(null);
-    state.loadingIndex = null;
+    state.manifest = null;
+    state.manifestError = null;
+    state.loadingManifest = null;
+    state.manifestStale = false;
+    state.priceCache = Object.create(null);
+    state.serverCache = Object.create(null);
+    state.rawDays = Object.create(null);
+    state.rawViews = Object.create(null);
+    state.loading = Object.create(null);
     state.loadingDays = Object.create(null);
-    state.indexError = null;
     state.dayError = null;
+    state.memoryStore = Object.create(null);
     state.dataVersion++;
     clearViewCache();
+    storageClear();
   }
   function refresh() {
     reset();
     notify();
   }
   function retry() {
-    state.indexError = null;
+    state.manifestError = null;
     state.dayError = null;
+    notify();
+  }
+  function invalidate() {
+    // 行情更新时只重新校验 manifest；已加载的日期继续可用，只对变化的日期
+    // 在后台补拉。这样不会清空当前页，也不会重新下载未变化的历史。
+    state.manifestStale = true;
+    if (!state.manifest) {
+      loadManifest().catch(function () {});
+    } else {
+      loadManifest(true).catch(function () {});
+    }
     notify();
   }
   function onUpdate(fn) {
@@ -659,8 +1180,23 @@
     };
   }
 
+  function prefetch(opts) {
+    opts = opts || {};
+    return loadManifest().then(function (manifest) {
+      let metas = manifestDates(manifest);
+      if (opts.lastOnly && metas.length) metas = [metas[metas.length - 1]];
+      if (!metas.length) return [];
+      if (opts.mode === 'server') return Promise.all(metas.map(loadServerDay));
+      if (!opts.serverId) return [];
+      const serverId = isKnownServer(manifest, opts.serverId) ? opts.serverId : '__catalog__';
+      return Promise.all(metas.map(function (meta) { return loadPriceSegment(serverId, meta); }));
+    }).catch(function () {});
+  }
+
   window.JX3Trends = {
     view: view,
+    rawView: rawView,
+    loadRaw: loadRaw,
     items: items,
     item: item,
     itemSeries: itemSeries,
@@ -670,11 +1206,16 @@
     onUpdate: onUpdate,
     reset: reset,
     refresh: refresh,
+    invalidate: invalidate,
     retry: retry,
     prefetch: prefetch,
     state: state,
+    maxDays: MAX_DAYS,
     _test: {
       buildPoints: buildPoints,
+      replayPriceDay: replayPriceDay,
+      replayServerDay: replayServerDay,
+      clampDates: clampDates,
       itemSeries: itemSeries,
       candles: candles,
       scatter: scatter,
@@ -686,7 +1227,8 @@
       hourText: hourText,
       floorHourMs: floorHourMs,
       endOfHourMs: endOfHourMs,
-      slicePoints: slicePoints
+      slicePoints: slicePoints,
+      MAX_DAYS: MAX_DAYS
     }
   };
 })();

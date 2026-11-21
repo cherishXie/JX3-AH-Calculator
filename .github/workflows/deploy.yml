@@ -48,7 +48,9 @@ jobs:
           node scripts/test-changelog.mjs
           node scripts/test-updates.mjs
           node scripts/test-price-history.mjs
+          node scripts/test-price-trends.mjs
           node scripts/test-trends.cjs
+          node scripts/test-trends-loader.cjs
           node scripts/sync-breakthrough-model.mjs
           node scripts/test-breakthrough.cjs
           ./scripts/build-minitool.sh

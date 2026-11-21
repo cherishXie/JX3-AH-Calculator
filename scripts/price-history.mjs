@@ -31,6 +31,7 @@ import {
   rebuildPriceHistoryIndex,
   seedPriceHistory,
 } from './lib/price-history.mjs';
+import { buildPriceTrends } from './lib/price-trends.mjs';
 
 const BOOLEAN_FLAGS = new Set(['all', 'help', 'json']);
 const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -443,14 +444,18 @@ function exportCommand(options, root, context) {
 
 function reindexCommand(root, data) {
   const index = rebuildPriceHistoryIndex(root, data);
+  const trends = buildPriceTrends(root);
   console.log(`已重建索引：${index.days.length} 天 · ${index.itemCount} 物品 · ${index.servers.length} 区服 · ${index.updatedAt || '无快照'}`);
+  console.log(`已同步走势：${trends.report.days} 天 / ${trends.report.points} 个节点`);
 }
 
 function compactCommand(options, root, data) {
   const before = options.before;
   if (!before || !DATE_ONLY_RE.test(String(before))) throw new Error('用法：node scripts/price-history.mjs compact --before YYYY-MM-DD');
   const count = compactPriceHistoryBefore(root, String(before), data);
+  const trends = buildPriceTrends(root);
   console.log(`已把 ${count} 天的日内变化折叠为当日最后快照（${before} 之前）。原始明细未删除时可从 git 历史找回。`);
+  console.log(`已同步走势：${trends.report.days} 天 / ${trends.report.points} 个节点`);
 }
 
 function seedCommand(options, root, data) {
@@ -464,6 +469,8 @@ function seedCommand(options, root, data) {
   } else {
     console.log(`未写入：${result.skipped || '当前价格已是最新'}（${result.file || ''}）`);
   }
+  const trends = buildPriceTrends(root);
+  console.log(`已同步走势：${trends.report.days} 天 / ${trends.report.points} 个节点`);
 }
 
 function help() {

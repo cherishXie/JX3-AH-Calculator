@@ -1763,6 +1763,9 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .trend-raw-details[open] .trend-raw-summary .chev { transform: rotate(180deg); }
 .trend-raw-body { padding: 0 18px 16px; }
 .trend-raw-tools { display: flex; align-items: center; gap: 6px; padding: 0 0 10px; }
+.trend-raw-note { padding: 10px 12px; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.trend-raw-note code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); }
+.server-range-note { margin-left: 8px; color: var(--muted); font-size: 11px; white-space: nowrap; }
 .trend-raw-body .table-wrap { border-top: 1px solid var(--border-soft); }
 .trend-node-item { border-top: 1px solid var(--border-soft); }
 .trend-node-item > summary { display: flex; align-items: center; gap: 8px; padding: 10px 0; cursor: pointer; list-style: none; font-size: 12px; }

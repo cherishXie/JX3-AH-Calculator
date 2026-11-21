@@ -10,6 +10,11 @@ data/price-history/
   days/2026-11-20.json    单日明细：完整 base + 后续变化增量
 ```
 
+> 网页走势页不直接读取这里的原始日文件。行情更新会同步生成
+> `data/price-trends/` 的最近 7 天增量数据，供浏览器按区服/日期缓存；
+> 只有展开「节点原始数据」或导出原始 CSV 时才回查本目录。见
+> [`data/price-trends/README.md`](../price-trends/README.md)。
+
 历史随日常价格更新自动写入：
 
 - `chore: update JX3BOX prices` 提交会带上 `data/price-history`；

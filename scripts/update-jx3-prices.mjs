@@ -17,6 +17,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { spawnSync } from 'node:child_process';
 import { recordPriceSnapshot, shanghaiTimestamp } from './lib/price-history.mjs';
+import { buildPriceTrends } from './lib/price-trends.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const args = process.argv.slice(2);
@@ -270,6 +271,18 @@ async function main() {
     }
   } catch (err) {
     console.error(`[error] 写入物价历史失败：${err.stack || err.message}`);
+    process.exitCode = 1;
+  }
+
+  // 每次行情更新同步把最近 7 天的走势数据预计算好，浏览器只拉增量。
+  try {
+    const trends = buildPriceTrends(ROOT);
+    console.log(
+      `已同步物价走势 ${trends.report.days} 天 / ${trends.report.points} 个节点` +
+      `（区服趋势 ${Math.round(trends.report.dayBytes / 1024)} KB · 单服走势日均 ${Math.round(trends.report.serverAverageBytes / 1024 * 10) / 10} KB）`
+    );
+  } catch (err) {
+    console.error(`[error] 生成物价走势数据失败：${err.stack || err.message}`);
     process.exitCode = 1;
   }
 

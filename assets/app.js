@@ -306,7 +306,9 @@
       apply(C.Store.state.items);
       C.Store.save();
     }
-    if (window.JX3Trends && window.JX3Trends.reset) window.JX3Trends.reset();
+    // 行情更新只让走势数据重新校验 manifest，已加载的日期留在浏览器里，
+    // 只补今天新增/变化的片段；不要 reset() 清空重载。
+    if (window.JX3Trends && window.JX3Trends.invalidate) window.JX3Trends.invalidate();
     return true;
   }
 
@@ -2368,9 +2370,12 @@
   function trendContext(p) {
     const T = window.JX3Trends;
     if (!T) return { view: { status: 'error', error: '走势模块未加载' } };
-    const view = T.view(Store.state.serverId, { from: p.tfrom, to: p.tto });
+    const view = T.view(Store.state.serverId, { from: p.tfrom, to: p.tto, mode: 'price' });
     if (view.status !== 'ready') return { view: view };
     const points = view.points;
+    const raw = T.rawView ? T.rawView(Store.state.serverId, { from: p.tfrom, to: p.tto }) : null;
+    const rawReady = !!(raw && raw.status === 'ready');
+    const rawPoints = rawReady ? raw.points : null;
     const allItems = T.items('all', '');
     const defaultKey = trendDefaultItem(T, allItems, points);
     const defaultItem = T.item(defaultKey);
@@ -2433,6 +2438,7 @@
     const focusSeries = seriesMap[focusKey] || [];
     return {
       T: T, view: view, points: points,
+      rawReady: rawReady, rawPoints: rawPoints,
       skillId: skillId, skill: skill || null,
       type: type, scopeItems: scopeItems, scopeKeys: scopeKeys,
       selectedKeys: selectedKeys, selectedItems: selectedItems,
@@ -2479,7 +2485,7 @@
       '<input class="input trend-date" type="date" value="' + U.esc(toDate) + '" min="' + U.esc(minDate) +
         '" max="' + U.esc(maxDate) + '" data-trend-range="to-date" aria-label="结束日期">' +
       '<select class="select trend-hour" data-trend-range="to-hour" aria-label="结束小时">' + trendHourOptions(toHour) + '</select>' +
-    '</div>';
+    '</div><span class="server-range-note">最多 7 天</span>';
     html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="tskill" aria-label="技艺筛选">' +
       trendSkillOptions(ctx.skillId || 'all') + '</select></label>';
     if (ctx.skillId === 'stone') {
@@ -2739,8 +2745,17 @@
   }
   function trendRawDetails(ctx) {
     const items = ctx.rankedItems;
+    if (!ctx.rawReady) {
+      return '<details class="card col-12 trend-raw-details"><summary class="trend-raw-summary">' +
+        '<span>节点原始数据</span><span class="badge badge-outline">按需加载</span><span class="chev">' + icon('chevronDown') + '</span></summary>' +
+        '<div class="trend-raw-body"><div class="trend-raw-tools">' +
+          '<button class="btn btn-sm" data-action="trend-export-series">' + icon('download') + '走势 CSV</button>' +
+          '<button class="btn btn-sm" data-action="trend-export-raw">' + icon('download') + '原始 CSV</button>' +
+          '<button class="btn btn-sm" data-action="trend-load-raw">' + icon('refresh') + '加载原始数据</button>' +
+        '</div><div class="trend-raw-note">走势图只加载预计算后的变化序列；查看基准价、原始报价或导出原始 CSV 时，才会按需读取 <code>price-history/</code> 原始日文件。</div></div></details>';
+    }
     const groups = [];
-    ctx.points.forEach(function (point) {
+    (ctx.rawPoints || []).forEach(function (point) {
       const rows = [];
       items.forEach(function (item) {
         let quote = null;
@@ -3123,8 +3138,18 @@
   function csvTrendRaw() {
     const ctx = trendExportContext();
     if (!ctx) return;
+    if (!ctx.rawReady) {
+      const T = window.JX3Trends;
+      if (!T || !T.loadRaw) { toast('走势模块未加载', 'error'); return; }
+      toast('正在读取原始数据…', 'info');
+      T.loadRaw(Store.state.serverId, { from: params().tfrom, to: params().tto }).then(function (raw) {
+        if (!raw || raw.status !== 'ready') { toast('原始数据尚未加载完成', 'warn'); return; }
+        csvTrendRaw();
+      }).catch(function () { toast('原始数据加载失败', 'error'); });
+      return;
+    }
     const rows = [['时间', '区服', '物品ID', '物品名称', '类别', '技艺', '本服报价', '基准价', '采用价', '来源']];
-    ctx.points.forEach(function (point) {
+    (ctx.rawPoints || []).forEach(function (point) {
       ctx.rankedItems.forEach(function (item) {
         let quote = null;
         let base = null;
@@ -3183,7 +3208,9 @@
     return now.toISOString().slice(0, 10);
   }
   function serverRange(p) {
-    const days = ({ today: 1, '3d': 3, '7d': 7, '30d': 30 })[p.srange] || 1;
+    // 走势历史只保留最近 7 个自然日，30 日选项已移除；旧链接里的 30d 也会
+    // 被夹到 7 日，避免请求不存在的数据。
+    const days = p.srange === '30d' ? 7 : Math.min(7, ({ today: 1, '3d': 3, '7d': 7 })[p.srange] || 1);
     const latest = serverLatestDate();
     const base = Date.parse(latest + 'T12:00:00+08:00');
     const start = new Date(base - (days - 1) * 86400000 + 8 * 3600000).toISOString().slice(0, 10);
@@ -3349,7 +3376,7 @@
     if (!servers.length || !selection.selected.length) {
       return { status: 'ready', range: range, selection: selection, servers: [], columns: [], rank: [], globalReturns: [], lowCount: 0, serverCount: servers.length };
     }
-    const views = servers.map(function (s) { return T.view(s.id, { from: range.from, to: range.to }); });
+    const views = servers.map(function (s) { return T.view(s.id, { from: range.from, to: range.to, mode: 'server' }); });
     const loading = views.filter(function (v) { return v.status === 'loading'; });
     if (loading.length) {
       const first = loading[0] || {};
@@ -3594,9 +3621,8 @@
     html += '<div class="seg seg-sm server-range">' +
       '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
       '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
-      '<button class="' + (p.srange === '7d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
-      '<button class="' + (p.srange === '30d' ? 'active' : '') + '" data-server-range="30d">近 30 日</button>' +
-    '</div>';
+      '<button class="' + (p.srange === '7d' || p.srange === '30d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
+    '</div><span class="server-range-note">最多保留 7 天</span>';
     html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + serverCount + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
         '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (serverAll ? ' checked' : '') + '>全选</label>' +
@@ -3846,9 +3872,8 @@
     html += '<div class="seg seg-sm server-range">' +
       '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
       '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
-      '<button class="' + (p.srange === '7d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
-      '<button class="' + (p.srange === '30d' ? 'active' : '') + '" data-server-range="30d">近 30 日</button>' +
-    '</div>';
+      '<button class="' + (p.srange === '7d' || p.srange === '30d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
+    '</div><span class="server-range-note">最多保留 7 天</span>';
     html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + selectedServers.length + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
         '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (allProductSelected ? ' checked' : '') + '>全选</label>' +
@@ -5166,6 +5191,18 @@
         break;
       }
       case 'trend-export-raw': csvTrendRaw(); break;
+      case 'trend-load-raw': {
+        const T = window.JX3Trends;
+        if (!T || !T.loadRaw) { toast('走势模块未加载', 'error'); break; }
+        toast('正在读取原始数据…', 'info');
+        const p = params();
+        T.loadRaw(Store.state.serverId, { from: p.tfrom, to: p.tto }).then(function (raw) {
+          if (raw && raw.status === 'ready') toast('原始数据已加载');
+          else toast('原始数据尚未加载完成', 'warn');
+          render();
+        }).catch(function () { toast('原始数据加载失败', 'error'); });
+        break;
+      }
       case 'trend-export-series': csvTrendSeries(); break;
       case 'check-prices':
         if (window.App && window.App.checkDataUpdate) window.App.checkDataUpdate(true);
@@ -6188,7 +6225,11 @@
       const now = Date.now();
       if (now - trendPrefetchAt < 3000) return;
       trendPrefetchAt = now;
-      window.JX3Trends.prefetch({ lastOnly: a.getAttribute('href').indexOf('/server-trends') >= 0 });
+      window.JX3Trends.prefetch({
+        lastOnly: true,
+        mode: a.getAttribute('href').indexOf('/server-trends') >= 0 ? 'server' : 'price',
+        serverId: Store.state.serverId
+      });
     };
     document.addEventListener('pointerover', prefetchTrends, { passive: true });
     document.addEventListener('pointerdown', prefetchTrends, { passive: true });

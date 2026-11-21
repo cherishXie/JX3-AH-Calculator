@@ -44,6 +44,7 @@ node scripts/update-jx3-prices.mjs --dry-run
   - `miniapp/src/shared/catalog.json`
   - `minitool/assets/data.js`
   - `data/price-history/`（价格有变化时）
+  - `data/price-trends/`（最近 7 天预计算走势，浏览器按区服/日期增量加载）
   - `剑网三物价助手-minitool.zip`
 - 价格更新不再修改 `seedVersion`；`seedVersion` 只随配方目录/结构变化，避免每次价格更新都触发本地数据迁移。
 - 价格与上次完全一致时：不写文件、不重打 zip、不产生提交，避免每日空提交和 PWA 更新提示；
@@ -69,20 +70,27 @@ node scripts/price-history.mjs export --server 梦江南 --from 2026-11-20 --eff
 
 ## Web 物价走势
 
-分析模块的「物价走势」由 `assets/trends.js` 读取已发布的 `price-history/` JSON：
+分析模块的「物价走势 / 区服趋势」由 `assets/trends.js` 读取已发布的 `price-trends/` 预计算 JSON：
 
-- 按当前区服回放每天的 `base` + `samples`，得到每个历史节点的本服报价/基准价/有效价；
+- 行情更新时会同步生成最近 7 个自然日的 `data/price-trends/`：
+  - `servers/<id>/YYYY-MM-DD.json`：单服有效价 + 本服报价 + 五行石增量，供「物价走势」；
+  - `days/YYYY-MM-DD.json`：所有区服的本服报价增量，供「区服趋势」；
+- 浏览器按「区服 + 日期」缓存到 IndexedDB，每次更新只补新增/变化的日期，不会清空重载；浏览器最多保留 7 天；
+- 原始 `data/price-history/` 只在展开「节点原始数据」或导出原始 CSV 时按需拉取；
+- 体积对比、字段和生成命令见 [`data/price-trends/README.md`](../data/price-trends/README.md)；
 - 支持按小时时间范围、材料/产物/五行石、技艺筛选；
 - 筛选栏支持全部技艺/全部类型、多选/全选与价格区间；物品搜索位于多选面板内；跨技艺材料按实际配方用途展示；
 - 所有物品平铺在同一张价格分布图和价格散点图中，不同物品独立配色；价格分布默认使用价格指数（首点 = 100）收敛 Y 轴范围，每个图表标题右侧可单独切换原始金币（对数）；
 - 分布图展示最低/最高、25–75% 箱体、中位线；点击物品可查看单独折线，并同步定位分布与散点；
 - 筛选栏默认全部技艺/全部类型并在滚动时固定，移动端可收起；提供涨跌红黑榜（前 10 + 全量）与区间涨跌热力图；各图表可下载 PNG；
-- 原始数据按节点折叠，展开后可查看每个节点报价，并导出原始/走势 CSV；行情条支持手动检查远程物价，dev 预览自动使用生产行情。
+- 原始数据按节点折叠；展开时才按需读取原始日文件，可查看每个节点报价并导出原始/走势 CSV；行情条支持手动检查远程物价，dev 预览自动使用生产行情。
 
 该页面只存在于 Web 版；小红书离线小工具不加载历史 JSON。数据回归测试：
 
 ```bash
+node scripts/test-price-trends.mjs
 node scripts/test-trends.cjs
+node scripts/test-trends-loader.cjs
 ```
 
 ## Dev 预览
