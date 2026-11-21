@@ -3092,6 +3092,7 @@
       '<div class="history-loading-main"><span class="history-spinner" aria-hidden="true"></span><div>' +
       '<h2 class="card-title">正在加载' + U.esc(title || '物价历史') + '</h2>' +
       '<p class="card-sub">' + U.esc(stepText) + '，首次约 ' + (bytesTotal ? kb(bytesTotal) : '数百 KB') + '；之后走浏览器缓存，不需要重复下载。</p>' +
+      (view && view.retry ? '<p class="card-sub history-loading-retry">连接不稳定，已自动重试 ' + view.retry + ' 次，正在继续加载…</p>' : '') +
       '</div></div>' +
       '<div class="history-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
       '<div class="history-loading-meta"><span>索引 ' + (indexReady ? '✓' : '…') + '</span><span>历史 ' + (total ? loaded + '/' + total + ' 天' : '…') + '</span><span>已读 ' + (bytesLoaded ? kb(bytesLoaded) : '0 KB') + '</span><span>' + pct + '%</span></div>' +

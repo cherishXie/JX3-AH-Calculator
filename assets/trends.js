@@ -39,7 +39,10 @@
     viewCacheOrder: [],
     dataVersion: 0,
     memoryStore: Object.create(null),
-    storageReady: null
+    storageReady: null,
+    // 连接挂住后的自动重试时间与次数，供加载卡片提示用。
+    retryAt: 0,
+    retryCount: 0
   };
 
   const skillMap = {};
@@ -200,12 +203,71 @@
       notify();
     }, 30);
   }
+  // 跨境线路有时会把整条连接挂住：既不报错也不返回，fetch 可以等几十秒以上，
+  // 页面就一直停在“正在加载”。这里按「连续 N 秒没有新字节」判定连接已死并重试，
+  // 而不是卡总时长——真正慢但在下载的请求不会被误杀（单日文件 gzip 约 64 KB）。
+  const NET_IDLE_MS = 12000;
+  const NET_ATTEMPTS = 2;
+
+  function fetchJsonOnce(url, cacheMode) {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    let timer = null;
+    const arm = function () {
+      if (!controller) return;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function () { controller.abort(); }, NET_IDLE_MS);
+    };
+    const disarm = function () {
+      if (timer) { clearTimeout(timer); timer = null; }
+    };
+    arm();
+    const init = { cache: cacheMode || 'no-cache' };
+    if (controller) init.signal = controller.signal;
+    return fetch(url, init).then(function (res) {
+      disarm();
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      // 没有流式读取能力的环境（很老的内核）只能整体解析，也就无法做空闲检测。
+      if (!res.body || typeof res.body.getReader !== 'function') return res.json();
+      const reader = res.body.getReader();
+      const decoder = typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8') : null;
+      let text = '';
+      const pump = function () {
+        return reader.read().then(function (chunk) {
+          if (chunk.done) return text + (decoder ? decoder.decode() : '');
+          arm();
+          text += decoder ? decoder.decode(chunk.value, { stream: true }) : '';
+          return pump();
+        });
+      };
+      return pump().then(function (full) {
+        disarm();
+        return JSON.parse(full);
+      });
+    }).catch(function (err) {
+      disarm();
+      if (err && err.name === 'AbortError') {
+        const timeout = new Error('连接超时');
+        timeout.timeout = true;
+        throw timeout;
+      }
+      throw err;
+    });
+  }
+
   function fetchJson(url, cacheMode) {
     if (typeof fetch !== 'function') return Promise.reject(new Error('当前浏览器不支持 fetch'));
-    return fetch(url, { cache: cacheMode || 'no-cache' }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    });
+    let attempt = 1;
+    const run = function () {
+      return fetchJsonOnce(url, cacheMode).catch(function (err) {
+        if (attempt >= NET_ATTEMPTS) throw err;
+        attempt += 1;
+        state.retryAt = Date.now();
+        state.retryCount = (state.retryCount || 0) + 1;
+        scheduleNotify();
+        return new Promise(function (resolve) { setTimeout(resolve, 600); }).then(run);
+      });
+    };
+    return run();
   }
 
   /* ------------------------------------------------------------------ */
@@ -917,7 +979,9 @@
         allFrom: serverDateFrom(allFromDay), allTo: serverDateTo(allToDay),
         loaded: loaded, total: metas.length,
         daysLoaded: loaded, daysTotal: metas.length,
-        bytesLoaded: bytesLoaded, bytesTotal: bytesTotal
+        bytesLoaded: bytesLoaded, bytesTotal: bytesTotal,
+        // 30 秒内发生过自动重试就在卡片上说明，避免“看起来卡死”。
+        retry: state.retryAt && Date.now() - state.retryAt < 30000 ? (state.retryCount || 1) : 0
       };
     }
     if (state.dayError && !available.length) {
