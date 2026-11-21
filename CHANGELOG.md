@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · f304e46
+
+update JX3BOX prices
+
 ## 2026-11-22 · 8f111d0
 
 update JX3BOX prices
@@ -547,7 +551,3 @@ sync latest price data for theme build
 ## 2026-11-20 · 5a872eb
 
 update JX3BOX prices
-
-## 2026-11-20 · 3e0723b
-
-小程序支持亮暗主题，默认亮色
