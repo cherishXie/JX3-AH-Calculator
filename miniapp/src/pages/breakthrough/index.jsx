@@ -87,7 +87,7 @@ function Breakthrough() {
             );
           })}
         </View>
-        {BT.meta.hints && BT.meta.hints[skillId] ? <Text className='bt-summary-hint'>刷经验：{BT.meta.hints[skillId]}</Text> : null}
+        {BT.meta.hints && BT.meta.hints[skillId] ? <Text className='bt-summary-hint'>{BT.meta.hints[skillId]}</Text> : null}
       </View>
 
       <View className='card'>

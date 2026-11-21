@@ -54,8 +54,9 @@ export function seedState() {
       basis: 'market',
       taxRate: 0.05,
       taxRateVersion: 1,
-      theme: 'light',
-      themeVersion: 1
+      theme: 'tech',
+      themeVersion: 1,
+      themePicked: true
     },
     seq: { item: 1, recipe: 1 }
   };
@@ -66,7 +67,8 @@ export function normalize(saved) {
   const state = Object.assign(base, saved || {});
   state.settings = Object.assign({}, base.settings, state.settings || {});
   if (!saved || !saved.settings || saved.settings.themeVersion !== 1) {
-    if (!(saved && saved.settings && saved.settings.themePicked)) state.settings.theme = 'light';
+    // 新用户默认科技风；已有用户保留他们主动选择的主题。
+    if (!(saved && saved.settings && saved.settings.themePicked)) state.settings.theme = 'tech';
     state.settings.themeVersion = 1;
   }
   if (!saved || !saved.settings || saved.settings.taxRateVersion !== 1) {
