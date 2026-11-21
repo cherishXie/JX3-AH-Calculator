@@ -2,11 +2,69 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · 397fc82
+
+神农采集点改用实测等级并补齐低阶点
+
+## 2026-11-22 · 498f6ad
+
+采金采集点改用实测等级（铜矿1/锡矿3/铅锌5/铁矿7/银矿9/青石30/金沙30）
+
+## 2026-11-22 · 882ad25
+
+恢复采集点等级门禁（庖丁秒刷点单独指定）
+
+## 2026-11-22 · 5fb14bd
+
+采集不按配方等级门禁、缺价给精力路线；庖丁按实测秒刷点分配路线
+
+## 2026-11-22 · 9bdfae6
+
+突破升级按实测精力经验比重算（采集 40 精力=128 经验，制造 1 精力=2 经验）
+
+## 2026-11-22 · d3a72f0
+
+修复我的黑屏并重组今日与行情
+
+- 今日/分析/五行石/我的 4 Tab；今日合并行情，优先展示收益排行，底部固定全部物品行情入口\\n- 全部物品行情改为二级页；完整收益排行拆为 pages/rank\\n- 分析 Tab 内嵌物价走势/区服趋势迷你卡，并保留突破升级入口\\n- 修复我的页 useEffect/router 未定义导致的黑屏；页面底色透明并由主题窗口接管，避免 Tab 切换露黑底；新增页面错误边界\\n- 12 个主包页面 + 0.19MB 行情分包；verify:weapp 通过，主包 1.54MB
+
+## 2026-11-22 · 5a17bcc
+
+突破经验表补充 40 精力/128 经验折算
+
+## 2026-11-22 · a70c17b
+
+突破升级经验门槛改用 1→30 逐级实测表，31 级起外推
+
+## 2026-11-21 · e6d7e63
+
+记录 4 Tab 上线与行情 Tab 变更
+
 ## 2026-11-21 · 621b5da
 
 将小程序核心目录与云端行情接入价格机器人
 
 - --web-only 同步 444 项核心目录与 672 项行情目录数据，不再跳过小程序\\n- build-remote-prices 从最新核心目录生成云端 payload\\n- 云端旧行情不覆盖新包内价，并增加核心目录校验\\n- 仅合入数据链路，不含 dev 的 4 Tab UI 重构
+
+## 2026-11-21 · 6ef5a20
+
+重构小程序 4 Tab 界面并将排行改为行情
+
+- 今日/行情/五行石/我的 4 Tab；收益排行改为二级页\\n- 行情移植网页版筛选、搜索、批量录入、跨服价差与分页，672 项行情目录独立分包\\n- 正文 30rpx、可点区域 ≥88rpx、主按钮 96rpx；重做今日/五行石/我的\\n- 主包 1.52MB + 行情目录分包 0.19MB，verify:weapp 通过
+
+## 2026-11-21 · 11c7c7c
+
+更新小程序行情目录交付状态
+
+## 2026-11-21 · 46fe78e
+
+小程序加入行情目录分包并同步最新物价
+
+- 672 项家园/强化/消耗品进微信 market 分包，只查价/记价，不参与收益\\n- 同步网页 23:08 行情：核心 444 项 / 3305 条本服报价\\n- 修复 web-only 跳过小程序目录、云端旧价覆盖新包内价\\n- 补网页模块移植审核与 8 屏设计稿
+
+## 2026-11-21 · d4dc76a
+
+update JX3BOX prices
 
 ## 2026-11-21 · 849bdcc
 
@@ -491,51 +549,3 @@ default all trend filters, mobile collapse and price check
 ## 2026-11-20 · 47f20a5
 
 update JX3BOX prices
-
-## 2026-11-20 · 41c0887
-
-update JX3BOX prices
-
-## 2026-11-20 · e5690f5
-
-align trend counts, sticky filters and node lists
-
-## 2026-11-20 · 4d318aa
-
-link trend charts, rank board and image export
-
-## 2026-11-20 · 873617e
-
-preserve trend chart scroll and explain index axis
-
-## 2026-11-20 · c0aaad3
-
-unify item filters and index price axis
-
-## 2026-11-20 · 74cd89a
-
-update JX3BOX prices
-
-## 2026-11-20 · 90d08d6
-
-price box plot, item colors and price range filter
-
-## 2026-11-20 · 02846ae
-
-multi-item trend charts and heatmap
-
-## 2026-11-20 · 9387559
-
-新增通用数据图规范（去行业术语）
-
-## 2026-11-20 · 12d96d5
-
-use actual data hour bounds
-
-## 2026-11-20 · 3fb0398
-
-style: balance trend chart and node panel
-
-## 2026-11-20 · 6f3bb93
-
-keep production service worker out of dev preview
