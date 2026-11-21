@@ -15,6 +15,8 @@ function createBreakthrough(BT, catalog, getState) {
   const num = function (v) { return Number(v) || 0; };
   // 精力→经验换算（用户实测）：采集 40 精力 = 128 经验；制造 1 精力 = 2 经验。
   // 数据里的单次经验（r.x / META.gatherExp）是旧估算，这里按比例统一覆盖。
+  // 指定采集路线（用户实测秒刷点），按等级区间固定采集动作。
+  const GATHER_PLANS = META.gatherPlans || {};
   const EXP_PER_ENERGY = META.expPerEnergy || {};
   const GATHER_EXP_PER_ENERGY = num(EXP_PER_ENERGY.gather) || 128 / 40;
   const CRAFT_EXP_PER_ENERGY = num(EXP_PER_ENERGY.craft) || 2;
@@ -166,9 +168,28 @@ function createBreakthrough(BT, catalog, getState) {
     });
     const levels = experienceRows().map(function (xp) {
       let pick = null;
-      const available = candidates.filter(function (c) { return (gather ? c.r.level : c.r.l) <= xp.from && c.e.exp > 0 && c.e.energy > 0 && (strategy !== 'gold' || !c.e.missing); });
-      const band = strategy === 'gold' ? profitBand(available, mode) : null;
-      (band ? band.pool : available).forEach(function (c) {
+      // 采集没有配方解锁等级（走地图采节点即可），所以不按等级门禁；
+      // 否则采金/庖丁这类最低配方 20/30 级的技艺，前 19 级直接无路线可算。
+      const levelOk = function (c) { return gather || c.r.l <= xp.from; };
+      const usable = candidates.filter(function (c) { return levelOk(c) && c.e.exp > 0 && c.e.energy > 0; });
+      let available = usable.filter(function (c) { return strategy !== 'gold' || !c.e.missing; });
+      // 采集：金币路线优先用有报价的采集动作；整级都没报价时仍给出精力路线（收益留空），
+      // 否则采金/庖丁这类缺报价的采集技艺会整条路线都算不出来。
+      // 制造保持原口径：没有报价就视为无法核算，避免把缺价当成 0 收益。
+      if (!available.length && gather) available = usable;
+      // 指定采集路线：例如庖丁 1–30 用西湖草龟/成都雌鹿的秒刷点，30 级后改黑山羊。
+      const plan = gather && GATHER_PLANS[skillId]
+        ? GATHER_PLANS[skillId].find(function (p) { return xp.from >= p.from && xp.from < p.to; })
+        : null;
+      const planPool = plan ? plan.points.map(function (pt) {
+        const hit = candidates.find(function (c) { return String((c.r && (c.r.n || c.r.name)) || '').indexOf(pt.name) !== -1; });
+        if (hit) return hit;
+        // 目录里没有这个采集点：按实测比例合成（经验 = 精力×3.2），收益标为缺价
+        const energy = num(pt.energy) || 40;
+        return { r: { n: pt.name, name: pt.name, energy: energy, level: 1 }, e: { exp: energy * GATHER_EXP_PER_ENERGY, energy: energy, matCost: 0, netValue: null, profit: null, missing: true, profitPerExp: null } };
+      }).filter(function (c) { return c.e.exp > 0 && c.e.energy > 0; }) : null;
+      const band = (!planPool && strategy === 'gold') ? profitBand(available, mode) : null;
+      (planPool || (band ? band.pool : available)).forEach(function (c) {
         function score(e) { const count = Math.ceil(xp.need / e.exp); if (strategy === 'effort') return count; if (strategy === 'energy') return count * e.energy; return -count * e.profit; }
         const tied = pick && Math.abs(score(c.e) - score(pick.e)) <= 1e-9;
         const tieBetter = pick && (strategy === 'gold' ? c.e.energy / c.e.exp < pick.e.energy / pick.e.exp : strategy === 'energy' ? Math.ceil(xp.need / c.e.exp) < Math.ceil(xp.need / pick.e.exp) : Math.ceil(xp.need / c.e.exp) * c.e.energy < Math.ceil(xp.need / pick.e.exp) * pick.e.energy);

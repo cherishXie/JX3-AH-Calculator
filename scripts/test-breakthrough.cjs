@@ -163,7 +163,7 @@ for (const server of catalog.servers) {
       for (const level of r.levels) {
         // 精力→经验按实测比例：采集 40 精力=128 经验（3.2/精力），制造 1 精力=2 经验
         const rate = skill.type === 'gather' ? 3.2 : 2;
-        const possible = pool.filter(x => (skill.type === 'gather' ? x.level : x.l) <= level.from).map(x => {
+        const possible = pool.filter(x => skill.type === 'gather' || x.l <= level.from).map(x => {
           const energy = skill.type === 'gather' ? x.energy : x.e;
           return Math.ceil(level.need / (energy * rate)) * energy;
         });
@@ -179,7 +179,8 @@ for (const server of catalog.servers) {
   const summary = model.summary('gold');
   let missingSeen = false;
   for (const row of summary) { if (!row.enough) missingSeen = true; else assert.equal(missingSeen, false); }
-  for (const skill of ['caijin', 'paoding']) assert.equal(model.analyze(skill, 'gold').totals.missingLevels, 19, 'higher-level nodes cannot fill levels 1–19');
+  // 采集没有配方解锁等级，1–19 级同样可以用当前采集动作冲级，不应留下空档
+  for (const skill of ['caijin', 'paoding']) assert.equal(model.analyze(skill, 'energy').totals.missingLevels, 0, 'gather skills must cover all levels');
 }
 // Both browser bundles must contain the exact same model and expose working adapters.
 const source = fs.readFileSync('miniapp/src/shared/breakthrough-model.js', 'utf8');
