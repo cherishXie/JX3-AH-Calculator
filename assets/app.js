@@ -800,17 +800,18 @@
     return Math.round((content - 11 * gap) / 12 * span + gap * (span - 1));
   }
 
-  // 日期档位切换：立即更新按钮选中态并给页面一个过渡，遮住重算/加载的空窗。
-  var rangeSwitchTimer = null;
-  function beginRangeSwitch(btn) {
+  // 重渲染过渡：先把页面压暗一帧，再做重算，避免“点了没反应”的卡顿感。
+  // 覆盖日期档位、物价/精力收益 Tab、侧边栏换模块三种入口。
+  var heavySwitchTimer = null;
+  function beginHeavySwitch(btn, activeSelector) {
     var page = document.getElementById('page');
     if (page) page.classList.add('is-range-switching');
-    if (btn && btn.parentNode) {
-      var sibs = btn.parentNode.querySelectorAll('button[data-filter="srange"]');
+    if (btn && activeSelector && btn.parentNode) {
+      var sibs = btn.parentNode.querySelectorAll(activeSelector);
       for (var i = 0; i < sibs.length; i++) sibs[i].classList.toggle('active', sibs[i] === btn);
     }
-    clearTimeout(rangeSwitchTimer);
-    rangeSwitchTimer = setTimeout(function () {
+    clearTimeout(heavySwitchTimer);
+    heavySwitchTimer = setTimeout(function () {
       if (page) page.classList.remove('is-range-switching');
     }, 1500);
   }
@@ -929,6 +930,12 @@
     $('#header').innerHTML =
       '<button class="icon-btn mobile-menu" data-action="toggle-mobile-nav" aria-label="打开导航">' + icon('menu') + '</button>' +
       '<div class="crumbs"><span class="home">剑网三物价助手</span><span class="sep"></span><span class="cur">' + U.esc(title) + '</span></div>' +
+      '<div id="market-status" class="market-status" role="status" aria-live="polite" title="行情更新时间来自 JX3BOX 报价；行情检查时间是本页最近一次成功检查的时间">' +
+        '<span class="market-status__item"><span class="market-status__label">行情更新</span><b data-market-updated>—</b></span>' +
+        '<span class="market-status__divider" aria-hidden="true"></span>' +
+        '<span class="market-status__item"><span class="market-status__label">行情检查</span><b data-market-checked>—</b></span>' +
+        '<button class="market-status__check" type="button" data-action="check-prices" title="检查远程行情是否更新">检查物价</button>' +
+      '</div>' +
       '<div class="header-right">' +
         (isDevDeployment() ? '<span class="badge badge-warning dev-badge" title="开发预览环境，非生产版本">DEV</span>' : '') +
         '<span class="header-version"><span class="dot"></span><span class="v">' + U.esc(DATA.meta.version) + '</span></span>' +
@@ -5682,7 +5689,7 @@
       // 今日/近 3 日/近 7 日会触发一次较重的重算 + 可能的日文件加载：
       // 先把按钮状态和“切换中”反馈画出来，再让出这一帧去做计算，避免点了没反应。
       if (key === 'srange') {
-        beginRangeSwitch(filterBtn);
+        beginHeavySwitch(filterBtn, 'button[data-filter="srange"]');
         window.requestAnimationFrame(function () { updateParams({ srange: value }); });
         return;
       }
@@ -5704,8 +5711,10 @@
     }
     const trendTab = e.target.closest('[data-trend-tab]');
     if (trendTab) {
-      ui.trendTab = trendTab.getAttribute('data-trend-tab') === 'profit' ? 'profit' : 'price';
-      render();
+      var nextTab = trendTab.getAttribute('data-trend-tab') === 'profit' ? 'profit' : 'price';
+      if (nextTab === ui.trendTab) return;
+      beginHeavySwitch(null);
+      window.requestAnimationFrame(function () { ui.trendTab = nextTab; render(); });
       return;
     }
     const serverItemTab = e.target.closest('[data-server-item-tab]');
@@ -6243,7 +6252,9 @@
       }
     });
     window.addEventListener('hashchange', function () {
-      if (ui.booted) render();
+      if (!ui.booted) return;
+      beginHeavySwitch(null);
+      window.requestAnimationFrame(function () { render(); });
     });
     window.addEventListener('resize', hideTip);
   }

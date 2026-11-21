@@ -1070,19 +1070,22 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
 }
 
 /* 行情更新时间 / 行情检查时间：独立状态条，不进入数据表格 */
+/* 状态条现在位于顶栏内，跟在面包屑后面，不再单独占一行 */
 .market-status {
-  width: 100%;
-  max-width: var(--content-max);
-  margin: 6px auto 0;
-  padding: 0 24px;
+  width: auto;
+  max-width: none;
+  margin: 0 0 0 14px;
+  padding: 0;
   box-sizing: border-box;
+  min-width: 0;
   display: -webkit-box;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 18px;
 }
 .market-status__item { display: -webkit-box; display: flex; align-items: center; }
@@ -1112,8 +1115,13 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
   cursor: pointer;
 }
 .market-status__check:hover { color: var(--text); border-color: var(--muted-2); }
+/* 中屏：只保留「检查物价」按钮，时间信息让位给区服选择与图标 */
+@media (max-width: 1180px) {
+  .market-status { margin-left: 8px; }
+  .market-status__item, .market-status__divider { display: none; }
+}
 @media (max-width: 768px) {
-  .market-status { margin-top: 9px; padding: 0 12px; font-size: 11.5px; }
+  .market-status { display: none; }
   .market-status__divider { margin: 0 8px; }
   .market-status__check { margin-left: 0; margin-top: 3px; }
 }
