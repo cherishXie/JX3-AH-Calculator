@@ -932,12 +932,10 @@
     if (state.viewCache[cacheKey]) return state.viewCache[cacheKey];
 
     const allPoints = buildViewPoints(cacheServerId, mode, available.length ? available : metas);
+    // 日期选择器必须展示 manifest 的完整历史范围，不能因为当前只缓存/加载
+    // 了当天数据就把可选日期收缩成今天。图表裁剪仍使用 allPoints 的实际首尾点。
     let allFrom = serverDateFrom(allFromDay);
     let allTo = serverDateTo(allToDay);
-    if (allPoints.length) {
-      allFrom = hourText(floorHourMs(Date.parse(allPoints[0].at)));
-      allTo = hourText(floorHourMs(Date.parse(allPoints[allPoints.length - 1].at)));
-    }
     const allFromMs = parseBound(allFrom, false);
     const allToMs = parseBound(allTo, true);
     let fromMs;
