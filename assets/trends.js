@@ -17,6 +17,7 @@
 
   const DATA = window.JX3Data || {};
   const MAX_DAYS = 7;
+  const CACHE_DAYS = 1;
   const DB_NAME = 'jx3-price-trends';
   const DB_STORE = 'segments';
   const listeners = [];
@@ -38,7 +39,10 @@
     viewCacheOrder: [],
     dataVersion: 0,
     memoryStore: Object.create(null),
-    storageReady: null
+    storageReady: null,
+    // 连接挂住后的自动重试时间与次数，供加载卡片提示用。
+    retryAt: 0,
+    retryCount: 0
   };
 
   const skillMap = {};
@@ -74,6 +78,8 @@
       skillNames: (used.length ? used : (item.skillId ? [item.skillId] : [])).map(skillName).join(' / '),
       color: skillColor(item.skillId),
       skillOrder: skillOrder[item.skillId] == null ? 99 : skillOrder[item.skillId],
+      category: item.category || (item.life ? 'life' : 'other'),
+      life: !!item.life,
       tier: Number(item.tier) || 0,
       tierName: (tierMap[item.tier] || {}).name || '其他',
       tierColor: (tierMap[item.tier] || {}).color || '#64748B'
@@ -197,12 +203,71 @@
       notify();
     }, 30);
   }
+  // 跨境线路有时会把整条连接挂住：既不报错也不返回，fetch 可以等几十秒以上，
+  // 页面就一直停在“正在加载”。这里按「连续 N 秒没有新字节」判定连接已死并重试，
+  // 而不是卡总时长——真正慢但在下载的请求不会被误杀（单日文件 gzip 约 64 KB）。
+  const NET_IDLE_MS = 12000;
+  const NET_ATTEMPTS = 2;
+
+  function fetchJsonOnce(url, cacheMode) {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    let timer = null;
+    const arm = function () {
+      if (!controller) return;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function () { controller.abort(); }, NET_IDLE_MS);
+    };
+    const disarm = function () {
+      if (timer) { clearTimeout(timer); timer = null; }
+    };
+    arm();
+    const init = { cache: cacheMode || 'no-cache' };
+    if (controller) init.signal = controller.signal;
+    return fetch(url, init).then(function (res) {
+      disarm();
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      // 没有流式读取能力的环境（很老的内核）只能整体解析，也就无法做空闲检测。
+      if (!res.body || typeof res.body.getReader !== 'function') return res.json();
+      const reader = res.body.getReader();
+      const decoder = typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8') : null;
+      let text = '';
+      const pump = function () {
+        return reader.read().then(function (chunk) {
+          if (chunk.done) return text + (decoder ? decoder.decode() : '');
+          arm();
+          text += decoder ? decoder.decode(chunk.value, { stream: true }) : '';
+          return pump();
+        });
+      };
+      return pump().then(function (full) {
+        disarm();
+        return JSON.parse(full);
+      });
+    }).catch(function (err) {
+      disarm();
+      if (err && err.name === 'AbortError') {
+        const timeout = new Error('连接超时');
+        timeout.timeout = true;
+        throw timeout;
+      }
+      throw err;
+    });
+  }
+
   function fetchJson(url, cacheMode) {
     if (typeof fetch !== 'function') return Promise.reject(new Error('当前浏览器不支持 fetch'));
-    return fetch(url, { cache: cacheMode || 'no-cache' }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    });
+    let attempt = 1;
+    const run = function () {
+      return fetchJsonOnce(url, cacheMode).catch(function (err) {
+        if (attempt >= NET_ATTEMPTS) throw err;
+        attempt += 1;
+        state.retryAt = Date.now();
+        state.retryCount = (state.retryCount || 0) + 1;
+        scheduleNotify();
+        return new Promise(function (resolve) { setTimeout(resolve, 600); }).then(run);
+      });
+    };
+    return run();
   }
 
   /* ------------------------------------------------------------------ */
@@ -252,6 +317,13 @@
 
   function storageSet(key, value) {
     state.memoryStore[key] = value;
+    const parts = String(key).split('|');
+    const keyDate = parts[parts.length - 1];
+    if (/^\d{4}-\d{2}-\d{2}$/.test(keyDate)) {
+      const days = state.manifest ? manifestDates(state.manifest) : [];
+      const latest = days.length ? days[days.length - 1].date : '';
+      if (latest && keyDate !== latest) return Promise.resolve();
+    }
     return openStorage().then(function (db) {
       if (!db) return;
       return new Promise(function (resolve) {
@@ -365,10 +437,14 @@
       if (!dates.has(date)) delete state.rawDays[date];
     });
     storageKeys().then(function (keys) {
+      const latest = state.manifest && state.manifest.days.length
+        ? state.manifest.days[state.manifest.days.length - 1].date
+        : '';
       (keys || []).forEach(function (key) {
-        const match = String(key).match(/^(?:p\|[^|]+\||[dr])\|?(\d{4}-\d{2}-\d{2})$/);
-        if (!match) return;
-        if (!dates.has(match[1])) storageDelete(key);
+        const parts = String(key).split('|');
+        const date = parts[parts.length - 1];
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+        if (!dates.has(date) || (latest && date !== latest)) storageDelete(key);
       });
     });
   }
@@ -792,7 +868,7 @@
     const maxDays = Math.min(MAX_DAYS, Math.max(1, Number(state.manifest && state.manifest.maxDays) || MAX_DAYS));
     const requestedFrom = parseBound(opts && opts.from, false);
     const requestedTo = parseBound(opts && opts.to, true);
-    let dayFrom = requestedFrom != null ? beijingDateOf(requestedFrom) : firstDate;
+    let dayFrom = requestedFrom != null ? beijingDateOf(requestedFrom) : lastDate;
     let dayTo = requestedTo != null ? beijingDateOf(requestedTo) : lastDate;
     if (dayFrom < firstDate) dayFrom = firstDate;
     if (dayTo > lastDate) dayTo = lastDate;
@@ -903,7 +979,9 @@
         allFrom: serverDateFrom(allFromDay), allTo: serverDateTo(allToDay),
         loaded: loaded, total: metas.length,
         daysLoaded: loaded, daysTotal: metas.length,
-        bytesLoaded: bytesLoaded, bytesTotal: bytesTotal
+        bytesLoaded: bytesLoaded, bytesTotal: bytesTotal,
+        // 30 秒内发生过自动重试就在卡片上说明，避免“看起来卡死”。
+        retry: state.retryAt && Date.now() - state.retryAt < 30000 ? (state.retryCount || 1) : 0
       };
     }
     if (state.dayError && !available.length) {
@@ -918,12 +996,10 @@
     if (state.viewCache[cacheKey]) return state.viewCache[cacheKey];
 
     const allPoints = buildViewPoints(cacheServerId, mode, available.length ? available : metas);
+    // 日期选择器必须展示 manifest 的完整历史范围，不能因为当前只缓存/加载
+    // 了当天数据就把可选日期收缩成今天。图表裁剪仍使用 allPoints 的实际首尾点。
     let allFrom = serverDateFrom(allFromDay);
     let allTo = serverDateTo(allToDay);
-    if (allPoints.length) {
-      allFrom = hourText(floorHourMs(Date.parse(allPoints[0].at)));
-      allTo = hourText(floorHourMs(Date.parse(allPoints[allPoints.length - 1].at)));
-    }
     const allFromMs = parseBound(allFrom, false);
     const allToMs = parseBound(allTo, true);
     let fromMs;
@@ -960,7 +1036,7 @@
   /* ------------------------------------------------------------------ */
   /* 目录与图表纯函数                                                    */
   /* ------------------------------------------------------------------ */
-  function items(type, skillId) {
+  function items(type, skillId, category) {
     let list = catalog.slice();
     if (type === 'material' || type === 'product' || type === 'stone') {
       list = list.filter(function (item) { return item.kind === type; });
@@ -971,6 +1047,11 @@
       list = list.filter(function (item) {
         return item.kind !== 'stone' && (item.skillIds || [item.skillId]).indexOf(skillId) !== -1;
       });
+    }
+    if (category === 'life') {
+      list = list.filter(function (item) { return item.life; });
+    } else if (category) {
+      list = list.filter(function (item) { return item.category === category; });
     }
     list.sort(function (a, b) {
       if (a.skillOrder !== b.skillOrder) return a.skillOrder - b.skillOrder;

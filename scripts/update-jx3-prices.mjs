@@ -33,6 +33,7 @@ function opt(name, fallback) {
 }
 const DRY = !!opt('dry-run', false);
 const NO_ZIP = !!opt('no-zip', false);
+const WEB_ONLY = !!opt('web-only', false);
 const ONE_SERVER = opt('server', '');
 const MIN_SAMPLE = Number(opt('min-sample', 5));
 const MAX_RATIO = Number(opt('max-ratio', 8));
@@ -51,12 +52,13 @@ function writeData(data) {
    剑网三物价助手 · 苍生铸世 50 级生活技艺数据
    数据版本：${data.meta.catalogVersion}（${data.meta.updatedAt}）
    价格修订：${stamp} · JX3BOX 全服拍卖
-   制造：JX3BOX 技艺助手 API · 154 条代表配方
-   采集：${data.recipes.filter((r) => r.kind === 'gather').length} 条按材料拆分；产值按掉率折算
+   配方：${data.recipes.filter((r) => r.kind !== 'gather').length} 条制造 + ${data.recipes.filter((r) => r.kind === 'gather').length} 条采集
+   行情：${data.items.length} 个物品 · 分类 ${(data.meta.categories || []).length} 个
    五行石：1-8 级拍卖价 + 快速/最优合成 + 7/8 爆率盈亏线
    ========================================================================= */
 `;
   fs.writeFileSync(path.join(ROOT, 'assets/data.js'), header + 'window.JX3Data = ' + json + ';\n');
+  if (WEB_ONLY) return;
   fs.writeFileSync(path.join(ROOT, 'miniapp/src/shared/catalog.json'), json + '\n');
   const mini = JSON.parse(json);
   mini.meta.sources = (mini.meta.sources || []).map((s) => Object.assign({}, s, { url: '' }));
@@ -137,18 +139,23 @@ async function main() {
   const map = loadMap();
   let mapChanges = 0;
   for (const item of data.items) {
-    if (Object.prototype.hasOwnProperty.call(map, item.name)) continue;
+    if (!item.gameKey && map[item.name]) item.gameKey = map[item.name];
+    if (item.gameKey) continue;
     try {
       const key = await resolveKey(item.name, map);
-      if (key) mapChanges++;
-      else console.warn(`[warn] 无法在 JX3BOX 找到物品：${item.name}`);
+      if (key) {
+        item.gameKey = key;
+        mapChanges++;
+      } else {
+        console.warn(`[warn] 无法在 JX3BOX 找到物品：${item.name}`);
+      }
     } catch (err) {
       console.warn(`[warn] 解析物品失败 ${item.name}：${err.message}`);
     }
   }
   if (mapChanges) saveMap(map);
 
-  const keys = [...new Set(data.items.map((i) => map[i.name]).filter(Boolean))];
+  const keys = [...new Set(data.items.map((i) => i.gameKey || map[i.name]).filter(Boolean))];
   const stoneKeys = (data.stones || []).map((s) => s.itemId).filter(Boolean);
   const servers = ONE_SERVER
     ? data.servers.filter((s) => s.name === ONE_SERVER || s.id === ONE_SERVER)
@@ -182,7 +189,7 @@ async function main() {
     const bucket = {};
     let updated = 0, filtered = 0, noQuote = 0;
     for (const item of data.items) {
-      const q = quotes[map[item.name]];
+      const q = quotes[item.gameKey || map[item.name]];
       if (!q) { noQuote++; continue; }
       const gold = q.copper / 10000;
       const old = Number(item.base) || 0;
@@ -250,7 +257,7 @@ async function main() {
   data.meta.disclaimer = '制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。';
 
   writeData(data);
-  console.log(`已写入 assets/data.js、miniapp/src/shared/catalog.json、minitool/assets/data.js（${priceStamp}）`);
+  console.log(WEB_ONLY ? `已写入 assets/data.js（Web-only，${priceStamp}）` : `已写入 assets/data.js、miniapp/src/shared/catalog.json、minitool/assets/data.js（${priceStamp}）`);
 
   try {
     const history = recordPriceSnapshot({
@@ -286,19 +293,21 @@ async function main() {
     process.exitCode = 1;
   }
 
-  // 小工具离线包只带最近 7 天历史；行情更新后同步重建，避免离线路价过期。
-  try {
-    const historyBuild = spawnSync(process.execPath, ['scripts/build-minitool-history.mjs'], { cwd: ROOT, stdio: 'inherit' });
-    if (historyBuild.status !== 0) {
-      console.error('[error] 生成小工具离线路价历史失败');
+  if (!WEB_ONLY) {
+    // 小工具离线包只带最近 7 天历史；行情更新后同步重建，避免离线路价过期。
+    try {
+      const historyBuild = spawnSync(process.execPath, ['scripts/build-minitool-history.mjs'], { cwd: ROOT, stdio: 'inherit' });
+      if (historyBuild.status !== 0) {
+        console.error('[error] 生成小工具离线路价历史失败');
+        process.exitCode = 1;
+      }
+    } catch (err) {
+      console.error(`[error] 生成小工具离线路价历史失败：${err.stack || err.message}`);
       process.exitCode = 1;
     }
-  } catch (err) {
-    console.error(`[error] 生成小工具离线路价历史失败：${err.stack || err.message}`);
-    process.exitCode = 1;
   }
 
-  if (!NO_ZIP) {
+  if (!WEB_ONLY && !NO_ZIP) {
     const zip = path.join(ROOT, '剑网三物价助手-minitool.zip');
     try { fs.rmSync(zip, { force: true }); } catch {}
     const r = spawnSync('zip', ['-r', '-q', zip, '.', '-x', '*.DS_Store'], { cwd: path.join(ROOT, 'minitool'), stdio: 'inherit' });

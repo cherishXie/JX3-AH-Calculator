@@ -81,6 +81,18 @@ git push --force-with-lease -u origin main
    - 部署 Web 版到 GitHub Pages；
    - 上传小工具 zip 为 artifact，并随 Pages 发布到 `/downloads/jx3-minitool.zip`。
 
+### 首屏资源合并（弱网优化）
+
+GitHub Pages 走跨境线路，国内访问时单个请求可能卡住十几秒，所以首屏请求数比字节数更关键。
+`scripts/build-site.sh` 在构建 `_site/` 时会做一层合并，源码结构不变：
+
+- 10 个首屏脚本（`core` / `stones` / `charts` / `access-data` / `profit` / `landability` / `trends` / `app` / `pwa` / `install`）拼成 `_site/assets/app.bundle.js`；
+- `styles.css` + `pwa.css` + `install.css` 拼成 `_site/assets/app.bundle.css`；
+- `_site/index.html` 的 3 个样式表 / 11 个脚本标签被改写成 2 个 `defer` 脚本，并加上 `preconnect` 和 `preload`。
+
+因此 **新增首屏脚本必须同时改两处**：`index.html` 与 `build-site.sh` 的 `BUNDLE_SCRIPTS`（以及 `site/sw.js` 的 `SHELL`）。
+`assets/data.js` 故意不合并——价格机器人只更新它，SW 对它单独走网络优先。
+
 ## iPhone 添加到主屏幕
 
 - 必须用 **Safari** 打开 `https://cherishxie.github.io/JX3-AH-Calculator/`，微信/小红书/Chrome 的 iOS 内置浏览器不会显示“添加到主屏幕”。
@@ -99,6 +111,7 @@ git push --force-with-lease -u origin main
 
 - `manifest.webmanifest` + `icons/`：可添加到主屏幕；
 - `sw.js`：构建时注入**应用壳版本**（不含 `data.js`），缓存应用壳，代码新版本安装后进入 waiting 状态；
+- 预缓存用 `cache: 'no-cache'`（只做条件请求，Pages 支持 ETag/304），不用 `reload`。`reload` 会把首屏刚下过的文件整包重下一次，实测每次首访多传 **1.65 MB（gzip 254 KB）**；`no-cache` 没变化时 0 字节确认，内容变了才真正下载，缓存里仍是当前版本；
 - `version.json` / `updates.json`：当前版本与本次更新说明；
 - 页面检测到 waiting SW 后弹出更新提示，展示 `updates.json` 的标题和 notes；
 - 点「立即更新」→ `skipWaiting` → `controllerchange` → 自动重载；`localStorage` 里的价格和配方保留；
@@ -116,7 +129,7 @@ git push --force-with-lease -u origin main
 
 更新内容来源：
 
-- `content/updates/web.json`：网页端手动维护 `title` / `notes` / `history`；
+- `content/updates/web.json`：网页端**默认不再手写文案**——`scripts/make-updates.mjs` 会从最近提交自动生成标题和最多 4 条说明（自动跳过价格机器人和 changelog 提交），避免每版都弹同一段；需要人工措辞时在文件里加 `"manual": true`，才会原样使用 `title` / `notes` / `history`；
 - `content/updates/miniapp.json`：小程序专用；
 - `content/updates/minitool.json`：小工具专用；
 - 每日价格机器人提交（`chore: update JX3BOX prices`）会自动换成“价格数据已更新”三条说明；

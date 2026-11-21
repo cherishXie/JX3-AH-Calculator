@@ -32,7 +32,7 @@ node scripts/update-jx3-prices.mjs --dry-run
 
 - 拉取地址：`https://next2.jx3box.com/api/auction/`，`aggregate_type=hourly`，逐服拉取。
 - 服务器：读取 `assets/data.js` 的 17 个服务器；数据写入 `data.serverPrices[serverId][itemId]`。
-- 物品映射：`scripts/jx3-item-map.json`（267 项；4 项马草暂无 JX3BOX 映射）；
+- 物品映射：`scripts/jx3-item-map.json`（408 个名称；444 个物品，4 项马草暂无 JX3BOX 映射）；
   新增物品会自动通过 JX3BOX 物品名接口解析并补入映射。
 - 默认规则：
   - 样本数 `< 5` 的低样本报价不采用；
@@ -103,19 +103,10 @@ node scripts/test-trends-loader.cjs
 
 ## 定时任务
 
-本机兜底由 launchd 运行 `scripts/local-price-cron.sh`（Asia/Shanghai，每天 08:09–22:09、每 2 小时）：
-
-```bash
-./scripts/install-local-price-cron.sh           # 安装 / 更新定时任务
-./scripts/install-local-price-cron.sh --status  # 查看 state / runs / 退出码
-launchctl kickstart -k gui/$(id -u)/com.cherish.jx3-price-cron  # 立刻跑一次
-tail -f /tmp/jx3-price-cron.log                 # 运行日志
-```
-
-- 每次在独立克隆 `~/.cache/jx3-price-cron` 里拉取最新 `main`、运行 `update-prices.sh`，价格有变化才提交并推送到 `main`；无变化时直接退出。
-- 推送使用 `.deploy-key/jx3_deploy`，走 `deploy.yml` 自动部署 Pages 与小工具包。
-- macOS 的 TCC 隐私保护会阻止 launchd 读取 `~/Documents`，plist 直接指向仓库里的脚本会以 `exit 126`（`Operation not permitted`）失败。因此安装脚本把 `local-price-cron.sh` 和 deploy key 复制到 `~/.local/share/jx3-price-cron`，plist 指向该副本。
-- 改完 `scripts/local-price-cron.sh` 要重新执行安装脚本，实际运行的副本才会同步。
+- 主定时：Cloudflare Worker 全天每 30 分钟 :06 / :36 触发 `workflow_dispatch`。
+- 兜底：GitHub Actions `schedule` 每 2 小时 :31（UTC）运行一次；外部调度失效时仍会执行。
+- 本机 launchd 兜底已取消，不再安装或维护本机定时任务。
+- 两种触发都执行 `./scripts/update-prices.sh --web-only`，只更新 Web 行情；小程序云目录完成前不覆盖本地 catalog，有变化才提交并推送 `main`。
 
 GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交变更/上传 artifact。
 
@@ -128,11 +119,11 @@ GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交
 
 ## GitHub Actions
 
-主工作流 `.github/workflows/update-jx3-prices.yml` 由 Cloudflare Worker 全天每 30 分钟 :06 / :36 触发，更新 17 个服务器数据并提交，同时上传小工具 ZIP；GitHub Actions 不再配置 `schedule`。
+主工作流 `.github/workflows/update-jx3-prices.yml` 由 Cloudflare Worker 全天每 30 分钟 :06 / :36 触发，GitHub Actions `schedule` 每 2 小时 :31（UTC）作为兜底；更新 17 个服务器数据并提交，同时上传小工具 ZIP。
 
-定时由 `cloudflare/price-cron` 的 Cloudflare Worker 全天每 30 分钟 :06 / :36 触发 `workflow_dispatch`；GitHub Actions 不再配置 `schedule`。主任务通过 concurrency 串行执行，防止同时写价格。
+定时由 `cloudflare/price-cron` 的 Cloudflare Worker 全天每 30 分钟 :06 / :36 触发 `workflow_dispatch`；GitHub Actions `schedule` 每 2 小时 :31（UTC）作为兜底。主任务通过 concurrency 串行执行，防止同时写价格。
 
-排查时先按 `event=schedule` 查看 Actions 记录：没有记录表示 GitHub 尚未派发定时事件；存在失败记录则检查日志。`active` 和手动执行成功不能证明定时调度已生效。GitHub 的 schedule 可能延迟或漏发，因此备用检查也不能替代独立的外部调度器；Cloudflare 方案见 `cloudflare/price-cron/README.md`，需另行部署并配置凭据。若仓库受保护分支限制，可把 push 改为创建 PR。
+排查时先按 `event=schedule` 查看兜底运行记录；主调度仍以 Cloudflare Worker 的 `workflow_dispatch` 为准。GitHub 的 schedule 可能延迟或漏发，Cloudflare 方案见 `cloudflare/price-cron/README.md`。若仓库受保护分支限制，可把 push 改为创建 PR。
 
 ---
 
