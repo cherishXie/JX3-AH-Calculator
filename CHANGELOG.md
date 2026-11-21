@@ -539,7 +539,3 @@ style: balance trend chart and node panel
 ## 2026-11-20 · 6f3bb93
 
 keep production service worker out of dev preview
-
-## 2026-11-20 · 82376b6
-
-style: show hour select affordance
