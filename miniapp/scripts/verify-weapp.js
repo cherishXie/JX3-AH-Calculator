@@ -8,7 +8,7 @@
  * - 主包 ≤2MB
  * - 页面 js/json/wxml 完整
  * - es6 / enhance 同开同关
- * - 本项目约定：9 页（含突破升级）、5 Tab、导航标题「精力做什么」、无网络请求 API
+ * - 本项目约定：12 个主包页面 + 1 个行情目录分包、4 Tab、无网络请求 API
  *
  * 用法：npm run verify:weapp
  */
@@ -95,10 +95,10 @@ if (app) {
   const tabs = (app.tabBar && app.tabBar.list) || [];
   if (tabs.length < 2 || tabs.length > 5) {
     fail('tabBar 数量必须为 2–5 个，当前 ' + tabs.length);
-  } else if (tabs.length !== 5) {
-    fail('本项目约定 5 个 Tab，当前 ' + tabs.length);
+  } else if (tabs.length !== 4) {
+    fail('本项目约定 4 个 Tab，当前 ' + tabs.length);
   } else {
-    pass('Tab 数量：5');
+    pass('Tab 数量：4');
   }
 
   const pageSet = new Set(app.pages || []);
@@ -126,7 +126,7 @@ if (app) {
       }
     }
   }
-  if (tabs.length) pass('Tab 图标：10 个，81×81，最大 ' + (maxIcon / 1024).toFixed(1) + ' KB（上限 40 KB）');
+  if (tabs.length) pass('Tab 图标：' + (tabs.length * 2) + ' 个，81×81，最大 ' + (maxIcon / 1024).toFixed(1) + ' KB（上限 40 KB）');
 
   for (const page of app.pages || []) {
     for (const ext of ['js', 'json', 'wxml']) {
@@ -135,6 +135,18 @@ if (app) {
     }
   }
   pass('页面文件：js / json / wxml 完整');
+
+  const subs = app.subPackages || app.subpackages || [];
+  for (const sub of subs) {
+    const root = String(sub.root || '').replace(/\/$/, '');
+    for (const page of sub.pages || []) {
+      const rel = root + '/' + page;
+      for (const ext of ['js', 'json', 'wxml']) {
+        const file = path.join(dist, rel + '.' + ext);
+        if (!fs.existsSync(file)) fail('分包页面缺失：' + rel + '.' + ext);
+      }
+    }
+  }
 
   const title = app.window && app.window.navigationBarTitleText;
   if (title !== '精力做什么') fail('导航栏标题不是「精力做什么」：' + title);
@@ -145,7 +157,23 @@ if (app) {
 }
 
 const files = walk(dist, []);
-const total = files.reduce((sum, file) => sum + fs.statSync(file).size, 0);
+const subs = (app && (app.subPackages || app.subpackages)) || [];
+const subRoots = subs.map(function (sub) { return String(sub.root || '').replace(/\/$/, '') + '/'; });
+function isSubFile(file) {
+  const rel = path.relative(dist, file).split(path.sep).join('/');
+  return subRoots.some(function (root) { return rel.indexOf(root) === 0; });
+}
+const mainFiles = files.filter(function (file) { return !isSubFile(file); });
+const total = mainFiles.reduce((sum, file) => sum + fs.statSync(file).size, 0);
+for (const sub of subs) {
+  const root = String(sub.root || '').replace(/\/$/, '');
+  const subFiles = files.filter(function (file) {
+    return path.relative(dist, file).split(path.sep).join('/').indexOf(root + '/') === 0;
+  });
+  const bytes = subFiles.reduce((sum, file) => sum + fs.statSync(file).size, 0);
+  if (bytes > 2 * 1024 * 1024) fail('分包 ' + root + ' 超过 2MB：' + mb(bytes));
+  else pass('分包 ' + root + '：' + mb(bytes) + '（上限 2 MB）');
+}
 // 开发者工具「代码质量」主包线：size/1024 > 1024*1.5（即 1,572,864 B）。
 // DevTools 的编译包会比 dist 文件合计少约 116 KB（生成 wxml/wxss/config 等），
 // 这里用 +120 KB 的代理预算做本地守卫，避免再次出现 1.61 MB 才被发现的情况。

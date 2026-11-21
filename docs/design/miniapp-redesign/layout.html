@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>精力做什么 · 微信小程序重构设计稿</title>
+<style>
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1724px;
+    background: #0A0D13;
+    color: #E8EDF5;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  }
+  .doc-head {
+    height: 132px;
+    padding: 30px 40px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .doc-title { font-size: 26px; font-weight: 700; letter-spacing: .5px; }
+  .doc-sub { font-size: 13px; color: #7C8AA3; margin-top: 8px; }
+  .doc-legend { display: flex; gap: 18px; font-size: 12px; color: #8A99B2; margin-top: 14px; }
+  .doc-legend b { color: #D7E1F0; font-weight: 600; }
+  .doc-badge { font-size: 12px; color: #5B9CFF; border: 1px solid rgba(91,156,255,.4); background: rgba(91,156,255,.1); padding: 6px 10px; border-radius: 8px; }
+
+  .grid {
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 390px);
+    column-gap: 28px;
+    row-gap: 28px;
+  }
+  figure { margin: 0; }
+  figcaption { height: 44px; padding-top: 12px; }
+  .cap-t { font-size: 13px; font-weight: 600; color: #D7E1F0; }
+  .cap-s { font-size: 11.5px; color: #728199; margin-top: 3px; }
+
+  /* ---------- phone frame ---------- */
+  .phone {
+    --bg: #0A0F1A;
+    --surface: #121A2A;
+    --surface-2: #1A2436;
+    --border: #263349;
+    --line: rgba(148,163,184,.12);
+    --text: #F5F7FB;
+    --text2: #D7DFEC;
+    --muted: #9AA9BF;
+    --muted2: #7D8CA3;
+    --accent: #5B9CFF;
+    --green: #3FD68C;
+    --amber: #F2B84B;
+    --red: #FF6B81;
+    --purple: #C79BFF;
+    --tabbg: #0F1624;
+    position: relative;
+    width: 390px;
+    height: 844px;
+    border-radius: 42px;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: 0 30px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.07);
+  }
+  .phone.light {
+    --bg: #F4F6FA;
+    --surface: #FFFFFF;
+    --surface-2: #EEF2F8;
+    --border: #DFE6F0;
+    --line: rgba(15,23,42,.07);
+    --text: #101828;
+    --text2: #26344B;
+    --muted: #5C6B82;
+    --muted2: #6B7A90;
+    --accent: #1D6FE0;
+    --green: #0B8A5C;
+    --amber: #A65B00;
+    --red: #C6283C;
+    --purple: #7C3AED;
+    --tabbg: #FFFFFF;
+    box-shadow: 0 30px 70px rgba(0,0,0,.18), 0 0 0 1px rgba(15,23,42,.1);
+  }
+  .statusbar {
+    height: 47px; padding: 6px 26px 0 30px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 14px; font-weight: 600; letter-spacing: .2px;
+  }
+  .status-icons { display: flex; align-items: center; gap: 5px; }
+  .status-icons svg { display: block; }
+  .navbar { height: 44px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .nav-title { font-size: 17px; font-weight: 600; }
+  .nav-back { position: absolute; left: 14px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text); }
+  .capsule {
+    position: absolute; right: 10px; top: 6px; width: 87px; height: 32px;
+    border: 1px solid rgba(255,255,255,.18); border-radius: 16px;
+    display: flex; align-items: center; justify-content: space-around;
+    background: rgba(0,0,0,.18); color: var(--text2); font-size: 12px;
+  }
+  .light .capsule { border-color: rgba(15,23,42,.15); background: rgba(255,255,255,.6); }
+  .capsule .sep { width: 1px; height: 18px; background: rgba(148,163,184,.3); }
+  .capsule .ring { width: 15px; height: 15px; border: 1.5px solid currentColor; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .capsule .ring i { width: 5px; height: 5px; background: currentColor; border-radius: 50%; display: block; }
+  .screen { height: 669px; overflow: hidden; padding: 2px 16px 0; }
+  .no-tab .screen { height: 719px; }
+  .tabbar {
+    height: 50px; display: flex; background: var(--tabbg);
+    border-top: 1px solid var(--line);
+  }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10.5px; color: var(--muted2); }
+  .tab.on { color: var(--accent); }
+  .tab svg { width: 24px; height: 24px; }
+  .homebar { height: 34px; display: flex; align-items: center; justify-content: center; background: var(--tabbg); }
+  .no-tab .homebar { background: var(--bg); }
+  .homebar i { width: 134px; height: 5px; border-radius: 3px; background: var(--text); opacity: .9; }
+
+  /* ---------- shared pieces ---------- */
+  .server-row { height: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .pill {
+    height: 40px; padding: 0 13px; border-radius: 12px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    display: inline-flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 600;
+  }
+  .pill svg { width: 15px; height: 15px; color: var(--muted2); }
+  .sync { font-size: 12px; color: var(--muted2); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .card-title { font-size: 16px; font-weight: 600; line-height: 1.35; }
+  .card-sub { font-size: 12px; color: var(--muted2); margin-top: 3px; line-height: 1.4; }
+  .link { font-size: 13px; color: var(--accent); white-space: nowrap; font-weight: 500; }
+  .green { color: var(--green); }
+  .amber { color: var(--amber); }
+  .red { color: var(--red); }
+  .purple { color: var(--purple); }
+  .chev { width: 18px; height: 18px; color: #5E6E88; flex: none; }
+
+  .tag { height: 24px; padding: 0 8px; border-radius: 6px; font-size: 12px; display: inline-flex; align-items: center; font-weight: 600; }
+  .tag-green { background: rgba(63,214,140,.14); color: var(--green); }
+  .tag-blue { background: rgba(91,156,255,.14); color: var(--accent); }
+  .tag-amber { background: rgba(242,184,75,.14); color: var(--amber); }
+
+  .btn-primary {
+    width: 100%; height: 48px; border-radius: 14px; border: 0;
+    background: var(--accent); color: #fff; font-size: 16px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-link { width: 100%; height: 44px; border: 0; background: none; color: var(--muted); font-size: 14px; margin-top: 2px; }
+
+  /* ---------- today ---------- */
+  .hero {
+    padding: 20px; border-radius: 18px; border: 1px solid #2A3A55;
+    background: linear-gradient(155deg, #17243B 0%, #121A2A 72%);
+    margin-bottom: 12px;
+  }
+  .light .hero { background: linear-gradient(155deg, #FFFFFF 0%, #F7FAFF 100%); border-color: #D8E3F2; }
+  .hero-top { display: flex; align-items: center; justify-content: space-between; }
+  .hero-tax { font-size: 12px; color: var(--muted2); }
+  .hero-name { font-size: 24px; font-weight: 700; margin-top: 10px; letter-spacing: .3px; }
+  .hero-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .hero-num { font-size: 42px; font-weight: 700; line-height: 1.05; margin-top: 12px; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+  .hero-num .unit { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 8px; letter-spacing: 0; }
+  .plan {
+    margin-top: 16px; padding: 12px 14px; border-radius: 12px;
+    background: rgba(255,255,255,.04); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .light .plan { background: #F2F6FC; }
+  .plan .k { font-size: 12px; color: var(--muted2); }
+  .plan .v { font-size: 16px; font-weight: 650; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .plan .right { text-align: right; }
+  .hero .btn-primary { margin-top: 14px; }
+
+  .mini-row { height: 64px; display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--line); }
+  .mini-row:first-of-type { border-top: 0; }
+  .mini-rank { width: 20px; text-align: center; font-size: 13px; color: var(--muted2); font-weight: 600; }
+  .mini-name { font-size: 15px; font-weight: 600; }
+  .mini-meta { font-size: 12.5px; color: var(--muted2); margin-top: 2px; }
+  .mini-val { margin-left: auto; text-align: right; }
+  .mini-val b { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .mini-val span { display: block; font-size: 11px; color: var(--muted2); margin-top: 1px; }
+
+  .stone-card { display: flex; align-items: center; gap: 12px; padding: 16px; }
+  .iconbox {
+    width: 44px; height: 44px; border-radius: 12px; flex: none;
+    background: rgba(199,155,255,.14); color: var(--purple);
+    display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700;
+  }
+  .stone-answer { font-size: 15px; font-weight: 600; }
+  .stone-answer em { font-style: normal; color: var(--green); }
+  .stone-meta { font-size: 12.5px; color: var(--muted2); margin-top: 3px; }
+
+  .status-strip {
+    display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+    border-radius: 12px; background: rgba(242,184,75,.08);
+    border: 1px solid rgba(242,184,75,.25); margin-bottom: 12px;
+  }
+  .status-strip .ic { width: 18px; height: 18px; color: var(--amber); flex: none; }
+  .status-strip .txt { flex: 1; font-size: 12.5px; color: var(--text2); line-height: 1.4; }
+  .strip-btn { height: 36px; padding: 0 12px; border-radius: 9px; border: 0; background: rgba(242,184,75,.18); color: var(--amber); font-size: 13px; font-weight: 600; flex: none; }
+
+  /* ---------- rank ---------- */
+  .search-row { display: flex; gap: 10px; margin-top: 2px; }
+  .search {
+    flex: 1; height: 44px; border-radius: 12px; background: var(--surface-2);
+    border: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
+    padding: 0 12px; font-size: 14px; color: var(--muted2);
+  }
+  .search svg { width: 17px; height: 17px; color: var(--muted2); }
+  .filter-btn {
+    width: 44px; height: 44px; border-radius: 12px; background: var(--surface-2);
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+    color: var(--text2); flex: none;
+  }
+  .filter-btn svg { width: 19px; height: 19px; }
+  .chips { display: flex; gap: 8px; overflow: hidden; margin: 12px 0 4px; -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent 100%); mask-image: linear-gradient(90deg, #000 88%, transparent 100%); }
+  .chip {
+    height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid var(--border);
+    background: var(--surface); font-size: 13px; display: flex; align-items: center;
+    flex: none; color: var(--muted);
+  }
+  .chip.on { background: rgba(91,156,255,.14); border-color: rgba(91,156,255,.5); color: var(--accent); font-weight: 600; }
+  .rank-summary { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted2); margin: 6px 2px 0; }
+  .rank-row { height: 68px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); }
+  .rank-no { width: 24px; text-align: center; font-size: 13px; color: var(--muted2); font-weight: 700; }
+  .rank-no.top { color: var(--purple); font-size: 15px; }
+  .rank-name { font-size: 15px; font-weight: 600; }
+  .rank-meta { font-size: 12.5px; color: var(--muted2); margin-top: 3px; }
+  .rank-val { margin-left: auto; text-align: right; }
+  .rank-val b { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .rank-val span { display: block; font-size: 11px; color: var(--muted2); margin-top: 1px; }
+
+  /* ---------- stones ---------- */
+  .seg { display: flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 3px; margin-bottom: 12px; }
+  .seg div { flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 9px; font-size: 13px; color: var(--muted); }
+  .seg div.on { background: var(--text); color: var(--bg); font-weight: 600; }
+  .level-row { display: flex; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .level-row:last-child { border-bottom: 0; }
+  .level-badge { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #08111F; flex: none; margin-right: 12px; }
+  .level-name { font-size: 15px; font-weight: 600; }
+  .level-meta { font-size: 12px; color: var(--muted2); margin-top: 3px; }
+  .level-val { margin-left: auto; text-align: right; }
+  .level-val b { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .level-val span { display: block; font-size: 11px; color: var(--muted2); margin-top: 1px; }
+  .link-row { height: 64px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--line); }
+  .link-row:first-of-type { border-top: 0; }
+  .link-row .l { flex: 1; }
+  .link-row .t { font-size: 15px; font-weight: 600; }
+  .link-row .s { font-size: 12.5px; color: var(--muted2); margin-top: 2px; }
+  .badge-amber { background: rgba(242,184,75,.12); color: var(--amber); font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+
+  /* ---------- recipe ---------- */
+  .recipe-hero { background: linear-gradient(155deg, #17243B, #121A2A); border: 1px solid #2A3A55; border-radius: 18px; padding: 18px; margin-bottom: 12px; }
+  .light .recipe-hero { background: linear-gradient(155deg, #FFFFFF, #F7FAFF); border-color: #D8E3F2; }
+  .recipe-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .recipe-name { font-size: 24px; font-weight: 700; }
+  .recipe-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .recipe-num { font-size: 40px; font-weight: 700; letter-spacing: -1px; margin-top: 12px; font-variant-numeric: tabular-nums; }
+  .recipe-num .unit { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 7px; letter-spacing: 0; }
+  .statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; margin-top: 16px; }
+  .stat { background: var(--surface); padding: 11px 13px; }
+  .stat .k { font-size: 12px; color: var(--muted2); }
+  .stat .v { font-size: 20px; font-weight: 700; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .stat .u { font-size: 11px; color: var(--muted2); margin-left: 3px; font-weight: 400; }
+  .recipe-hero .btn-primary { margin-top: 16px; }
+  .costbar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin: 12px 0 9px; }
+  .costbar i { display: block; height: 100%; }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted2); flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .legend em { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .mat-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .mat-row:last-child { border-bottom: 0; }
+  .mat-name { font-size: 14.5px; font-weight: 600; }
+  .mat-meta { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+  .mat-val { margin-left: auto; text-align: right; }
+  .mat-val b { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .src { font-size: 11px; display: flex; align-items: center; gap: 4px; justify-content: flex-end; margin-top: 2px; color: var(--muted2); }
+  .src i { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); display: inline-block; }
+  .src.blue i { background: var(--accent); }
+  .src.green i { background: var(--green); }
+  .collapse { height: 54px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+
+  /* ---------- prices ---------- */
+  .price-row { height: 64px; display: flex; align-items: center; border-bottom: 1px solid var(--line); }
+  .price-main { flex: 1; min-width: 0; }
+  .price-name { font-size: 15px; font-weight: 600; }
+  .price-meta { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+  .price-val { text-align: right; margin-left: 8px; }
+  .price-val b { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .more-btn { height: 44px; margin: 12px 0; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--muted); }
+
+  /* ---------- me ---------- */
+  .profile { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; background: linear-gradient(150deg, #17243B, #121A2A); border: 1px solid #2A3A55; margin-bottom: 8px; }
+  .light .profile { background: linear-gradient(150deg, #FFFFFF, #F7FAFF); border-color: #D8E3F2; }
+  .avatar { width: 48px; height: 48px; border-radius: 14px; background: rgba(91,156,255,.16); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 700; flex: none; }
+  .profile .n { font-size: 17px; font-weight: 600; }
+  .profile .s { font-size: 12.5px; color: var(--muted2); margin-top: 3px; }
+  .group-title { font-size: 12px; color: var(--muted2); margin: 8px 4px 5px; letter-spacing: .4px; }
+  .me-group { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .me-row { height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 14px; border-bottom: 1px solid var(--line); }
+  .me-row:last-child { border-bottom: 0; }
+  .me-row .ic { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex: none; }
+  .me-row .ic.blue { background: rgba(91,156,255,.14); color: var(--accent); }
+  .me-row .ic.green { background: rgba(63,214,140,.14); color: var(--green); }
+  .me-row .ic.purple { background: rgba(199,155,255,.14); color: var(--purple); }
+  .me-row .ic.amber { background: rgba(242,184,75,.14); color: var(--amber); }
+  .me-row .l { flex: 1; font-size: 15px; }
+  .me-row .r { font-size: 13px; color: var(--muted2); }
+  .me-row .chev { width: 16px; height: 16px; }
+
+  /* ---------- sheet ---------- */
+  .overlay { position: absolute; inset: 0; background: rgba(0,0,0,.55); display: flex; align-items: flex-end; z-index: 5; }
+  .sheet { width: 100%; background: var(--surface); border-radius: 24px 24px 0 0; border-top: 1px solid var(--border); padding: 8px 20px calc(16px + 34px); }
+  .handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border); margin: 0 auto 16px; }
+  .sheet-title { font-size: 20px; font-weight: 700; }
+  .sheet-sub { font-size: 12.5px; color: var(--muted2); margin-top: 4px; }
+  .sheet-now { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 11px 13px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+  .sheet-now b { color: var(--text); font-weight: 600; }
+  .sheet-input { height: 62px; border-radius: 14px; border: 1.5px solid var(--accent); background: rgba(91,156,255,.08); display: flex; align-items: center; padding: 0 16px; margin-top: 12px; font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .sheet-input .u { margin-left: auto; font-size: 14px; color: var(--muted2); font-weight: 500; }
+  .caret { display: inline-block; width: 1.5px; height: 30px; background: var(--accent); margin-left: 2px; animation: blink 1.1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .sheet-hint { font-size: 12px; color: var(--muted2); margin-top: 10px; line-height: 1.5; }
+  .quick { display: flex; gap: 8px; margin-top: 12px; }
+  .quick button { flex: 1; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text2); font-size: 13px; }
+  .sheet-actions { display: flex; gap: 10px; margin-top: 18px; }
+  .sheet-actions button { flex: 1; height: 48px; border-radius: 14px; font-size: 16px; font-weight: 600; border: 0; }
+  .btn-ghost { background: var(--surface-2); border: 1px solid var(--border) !important; color: var(--text); }
+
+  /* before image */
+  .before img { width: 390px; height: 844px; display: block; object-fit: cover; }
+  .before::after { content: "现状"; position: absolute; left: 16px; top: 56px; z-index: 3; font-size: 11px; font-weight: 600; color: #F2B84B; background: rgba(242,184,75,.12); border: 1px solid rgba(242,184,75,.35); padding: 4px 8px; border-radius: 6px; }
+
+  .fade-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(to top, var(--bg), rgba(10,15,26,0)); pointer-events: none; }
+  .light .fade-bottom { background: linear-gradient(to top, var(--bg), rgba(244,246,250,0)); }
+
+  /* 小屏浏览器自动缩放整版，避免只看到一列 */
+  @media (max-width: 1500px) { body { zoom: 0.8; } }
+  @media (max-width: 1200px) { body { zoom: 0.62; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-rank" viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-stone" viewBox="0 0 24 24"><path d="M12 3.5 20 9l-3 10.5H7L4 9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 9h16M12 3.5 9 19.5M12 3.5l3 16" fill="none" stroke="currentColor" stroke-width="1.3" opacity=".7"/></symbol>
+    <symbol id="i-me" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20c.8-3.6 3.8-5.6 7.5-5.6s6.7 2 7.5 5.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.6v5.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16.4" r="1.05" fill="currentColor"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.9" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-signal" viewBox="0 0 20 14"><rect x="0" y="9" width="3" height="5" rx="1" fill="currentColor"/><rect x="5" y="6.5" width="3" height="7.5" rx="1" fill="currentColor"/><rect x="10" y="3.5" width="3" height="10.5" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="14" rx="1" fill="currentColor"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 18 14"><path d="M1 4.5C5.5.8 12.5.8 17 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M3.8 7.5c3-2.5 7.4-2.5 10.4 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M6.8 10.4c1.3-1.1 3.1-1.1 4.4 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="9" cy="13" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-battery" viewBox="0 0 26 13"><rect x=".5" y="1.5" width="22" height="10" rx="3" fill="none" stroke="currentColor" opacity=".55"/><rect x="2.5" y="3.5" width="17" height="6" rx="1.5" fill="currentColor"/><path d="M24 4.5v4c1.2-.3 1.8-1 1.8-2s-.6-1.7-1.8-2z" fill="currentColor" opacity=".55"/></symbol>
+  </defs>
+</svg>
+
+<header class="doc-head">
+  <div>
+    <div class="doc-title">精力做什么 · 微信小程序重构设计</div>
+    <div class="doc-sub">从「高密度数据看板」改为「一眼给答案的工具」：4 Tab · 大字 · 大按钮 · 一屏一问　（整版宽 1724px，建议缩放 60–80% 查看）</div>
+    <div class="doc-legend">
+      <span><b>正文</b> 30rpx / 15px</span>
+      <span><b>最小字号</b> 24rpx / 12px</span>
+      <span><b>点击区</b> ≥88rpx / 44px</span>
+      <span><b>主按钮</b> 96rpx / 48px</span>
+      <span><b>数字格式</b> ≥1 万用「万」</span>
+    </div>
+  </div>
+  <div class="doc-badge">V1 设计稿 · 2026-11-21</div>
+</header>
+
+<div class="grid">
+
+  <!-- 1. BEFORE -->
+  <figure>
+    <div class="phone before">
+      <img src="../../../wechat/screenshots/wechat-real-overview.png" alt="现状总览页">
+    </div>
+    <figcaption>
+      <div class="cap-t">现状 · 总览</div>
+      <div class="cap-s">4 KPI + 4 卡 + 8 行技艺；字号 17–26rpx，按钮 52–62rpx</div>
+    </figcaption>
+  </figure>
+
+  <!-- 2. TODAY -->
+  <figure>
+    <div class="phone">
+      <div class="statusbar">
+        <span>14:32</span>
+        <div class="status-icons">
+          <svg width="17" height="12" style="color:var(--text)"><use href="#i-signal"/></svg>
+          <svg width="16" height="12" style="color:var(--text)"><use href="#i-wifi"/></svg>
+          <svg width="25" height="12" style="color:var(--text)"><use href="#i-battery"/></svg>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="nav-title">精力做什么</div>
+        <div class="capsule"><span>•••</span><span class="sep"></span><span class="ring"><i></i></span></div>
+      </div>
+      <div class="screen">
+        <div class="server-row">
+          <div class="pill">梦江南 <svg><use href="#i-down"/></svg></div>
+          <div class="sync">行情 14:32</div>
+        </div>
+
+        <section class="hero">
+          <div class="hero-top">
+            <span class="tag tag-green">今天最赚</span>
+            <span class="hero-tax">示例价 · 已扣 5% 税</span>
+          </div>
+          <div class="hero-name">归营旌</div>
+          <div class="hero-meta">梓匠 · 50 级 · 每次 200 精力</div>
+          <div class="hero-num">160.54<span class="unit">金 / 点精力</span></div>
+          <div class="plan">
+            <div>
+              <div class="k">3000 精力</div>
+              <div class="v">可做 15 次</div>
+            </div>
+            <div class="right">
+              <div class="k">预计收益</div>
+              <div class="v green">+48.16 万</div>
+            </div>
+          </div>
+          <button class="btn-primary">查看做法</button>
+        </section>
+
+        <div class="status-strip">
+          <svg class="ic"><use href="#i-warn"/></svg>
+          <div class="txt">价格仍是示例价，收益仅供比较</div>
+          <button class="strip-btn">校准</button>
+        </div>
+
+        <section class="card" style="padding-bottom:6px">
+          <div class="card-head">
+            <div>
+              <div class="card-title">还有 2 个也不差</div>
+              <div class="card-sub">按每点精力收益排序</div>
+            </div>
+            <div class="link">全部 108 个 ›</div>
+          </div>
+          <div class="mini-row">
+            <div class="mini-rank">2</div>
+            <div>
+              <div class="mini-name">朦然心动</div>
+              <div class="mini-meta">烹饪 · 50 级</div>
+            </div>
+            <div class="mini-val"><b>57.66</b><span>金 / 点精力</span></div>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+          <div class="mini-row">
+            <div class="mini-rank">3</div>
+            <div>
+              <div class="mini-name">定魂丹砂</div>
+              <div class="mini-meta">制药 · 50 级</div>
+            </div>
+            <div class="mini-val"><b>53.45</b><span>金 / 点精力</span></div>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+        </section>
+
+        <section class="card stone-card">
+          <div class="iconbox">石</div>
+          <div style="flex:1;min-width:0">
+            <div class="stone-answer">五行石合到 <em>3 级</em> 最赚</div>
+            <div class="stone-meta">0.33 金/点精力 · 七级爆率线 22.1%</div>
+          </div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </section>
+      </div>
+      <div class="tabbar">
+        <div class="tab on"><svg><use href="#i-home"/></svg><span>今日</span></div>
+        <div class="tab"><svg><use href="#i-rank"/></svg><span>排行</span></div>
+        <div class="tab"><svg><use href="#i-stone"/></svg><span>五行石</span></div>
+        <div class="tab"><svg><use href="#i-me"/></svg><span>我的</span></div>
+      </div>
+      <div class="homebar"><i></i></div>
+    </div>
+    <figcaption>
+      <div class="cap-t">重构 · 今日</div>
+      <div class="cap-s">首屏 1 个答案 + 1 个主按钮；解释折叠，价格状态单独一行</div>
+    </figcaption>
+  </figure>
+
+  <!-- 3. RANK -->
+  <figure>
+    <div class="phone">
+      <div class="statusbar">
+        <span>14:32</span>
+        <div class="status-icons">
+          <svg width="17" height="12" style="color:var(--text)"><use href="#i-signal"/></svg>
+          <svg width="16" height="12" style="color:var(--text)"><use href="#i-wifi"/></svg>
+          <svg width="25" height="12" style="color:var(--text)"><use href="#i-battery"/></svg>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="nav-title">收益排行</div>
+        <div class="capsule"><span>•••</span><span class="sep"></span><span class="ring"><i></i></span></div>
+      </div>
+      <div class="screen">
+        <div class="server-row">
+          <div class="pill">梦江南 <svg><use href="#i-down"/></svg></div>
+          <div class="sync">175 个配方</div>
+        </div>
+        <div class="search-row">
+          <div class="search"><svg><use href="#i-search"/></svg><span>搜配方 / 产物</span></div>
+          <div class="filter-btn"><svg><use href="#i-filter"/></svg></div>
+        </div>
+        <div class="chips">
+          <div class="chip on">全部</div>
+          <div class="chip">神农</div>
+          <div class="chip">采金</div>
+          <div class="chip">庖丁</div>
+          <div class="chip">锻造</div>
+          <div class="chip">缝纫</div>
+        </div>
+        <div class="rank-summary"><span>108 个盈利 · 67 个亏损</span><span>按每点精力</span></div>
+
+        <div class="rank-row">
+          <div class="rank-no top">1</div>
+          <div><div class="rank-name">归营旌</div><div class="rank-meta">梓匠 · 50 级 · 200 精力</div></div>
+          <div class="rank-val"><b class="green">160.54</b><span>金 / 点精力</span></div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="rank-row">
+          <div class="rank-no">2</div>
+          <div><div class="rank-name">朦然心动</div><div class="rank-meta">烹饪 · 50 级 · 150 精力</div></div>
+          <div class="rank-val"><b>57.66</b><span>金 / 点精力</span></div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="rank-row">
+          <div class="rank-no">3</div>
+          <div><div class="rank-name">定魂丹砂</div><div class="rank-meta">制药 · 50 级 · 80 精力</div></div>
+          <div class="rank-val"><b>53.45</b><span>金 / 点精力</span></div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="rank-row">
+          <div class="rank-no">4</div>
+          <div><div class="rank-name">璧·苍生</div><div class="rank-meta">缝纫 · 50 级 · 200 精力</div></div>
+          <div class="rank-val"><b>41.48</b><span>金 / 点精力</span></div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="rank-row">
+          <div class="rank-no">5</div>
+          <div><div class="rank-name">玄元松绿衫</div><div class="rank-meta">缝纫 · 50 级 · 200 精力</div></div>
+          <div class="rank-val"><b>35.59</b><span>金 / 点精力</span></div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="rank-row">
+          <div class="rank-no">6</div>
+          <div><div class="rank-name">百炼·玄铁锭</div><div class="rank-meta">锻造 · 50 级 · 100 精力</div></div>
+          <div class="rank-val"><b>28.10</b><span>金 / 点精力</span></div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="rank-row">
+          <div class="rank-no">7</div>
+          <div><div class="rank-name">宴·八珍玉食</div><div class="rank-meta">烹饪 · 50 级 · 120 精力</div></div>
+          <div class="rank-val"><b class="neg">-3.20</b><span>金 / 点精力</span></div>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><svg><use href="#i-home"/></svg><span>今日</span></div>
+        <div class="tab on"><svg><use href="#i-rank"/></svg><span>排行</span></div>
+        <div class="tab"><svg><use href="#i-stone"/></svg><span>五行石</span></div>
+        <div class="tab"><svg><use href="#i-me"/></svg><span>我的</span></div>
+      </div>
+      <div class="homebar"><i></i></div>
+    </div>
+    <figcaption>
+      <div class="cap-t">重构 · 排行</div>
+      <div class="cap-s">搜索 + 筛选收进弹层；首屏可见 7 条，行高 136rpx</div>
+    </figcaption>
+  </figure>
+
+  <!-- 4. STONES -->
+  <figure>
+    <div class="phone">
+      <div class="statusbar">
+        <span>14:32</span>
+        <div class="status-icons">
+          <svg width="17" height="12" style="color:var(--text)"><use href="#i-signal"/></svg>
+          <svg width="16" height="12" style="color:var(--text)"><use href="#i-wifi"/></svg>
+          <svg width="25" height="12" style="color:var(--text)"><use href="#i-battery"/></svg>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="nav-title">五行石</div>
+        <div class="capsule"><span>•••</span><span class="sep"></span><span class="ring"><i></i></span></div>
+      </div>
+      <div class="screen">
+        <div class="server-row">
+          <div class="pill">梦江南 <svg><use href="#i-down"/></svg></div>
+          <div class="sync">1–8 级行情</div>
+        </div>
+
+        <section class="hero" style="padding:18px">
+          <div class="hero-top">
+            <span class="tag tag-green">最赚精力</span>
+            <span class="hero-tax">示例价 · 已扣 5% 税</span>
+          </div>
+          <div class="hero-name" style="font-size:21px">合到 3 级</div>
+          <div class="hero-meta">最低金币路线 · 每次 4 颗 · 32 精力</div>
+          <div class="hero-num" style="font-size:38px;margin-top:10px">0.33<span class="unit">金 / 点精力</span></div>
+        </section>
+
+        <div class="status-strip">
+          <svg class="ic"><use href="#i-warn"/></svg>
+          <div class="txt">1–8 级还是示例价 · 已校准 0/8</div>
+          <button class="strip-btn">改价</button>
+        </div>
+
+        <div class="seg"><div>快速合成</div><div class="on">最赚精力</div><div>最低金币</div></div>
+
+        <section class="card" style="padding-top:6px;padding-bottom:6px">
+          <div class="level-row">
+            <div class="level-badge" style="background:#8FB8F0">3级</div>
+            <div><div class="level-name">3 级 · 快速合成</div><div class="level-meta">成本 11.4 金/颗 · 精力 8/颗</div></div>
+            <div class="level-val"><b class="green">+0.33</b><span>金 / 点精力</span></div>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+          <div class="level-row">
+            <div class="level-badge" style="background:#A9C7F5">4级</div>
+            <div><div class="level-name">4 级 · 快速合成</div><div class="level-meta">成本 35.7 金/颗 · 精力 48/颗</div></div>
+            <div class="level-val"><b class="green">+0.21</b><span>金 / 点精力</span></div>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+          <div class="level-row">
+            <div class="level-badge" style="background:#C4A8F0">5级</div>
+            <div><div class="level-name">5 级 · 最低金币</div><div class="level-meta">成本 136.1 金/颗 · 精力 180/颗</div></div>
+            <div class="level-val"><b class="green">+0.12</b><span>金 / 点精力</span></div>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+          <div class="level-row">
+            <div class="level-badge" style="background:#D8BEF7">6级</div>
+            <div><div class="level-name">6 级 · 最低金币</div><div class="level-meta">成本 486.8 金/颗 · 精力 739/颗</div></div>
+            <div class="level-val"><b class="green">+0.05</b><span>金 / 点精力</span></div>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+        </section>
+
+        <section class="card" style="padding-top:6px;padding-bottom:6px">
+          <div class="link-row">
+            <div class="l">
+              <div class="t">七级赌跳级</div>
+              <div class="s">爆率要 ≥ 22.1% 才不亏</div>
+            </div>
+            <span class="badge-amber">22.1%</span>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+          <div class="link-row">
+            <div class="l">
+              <div class="t">八级赌跳级</div>
+              <div class="s">爆率要 ≥ 30.0% 才不亏</div>
+            </div>
+            <span class="badge-amber">30.0%</span>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+        </section>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><svg><use href="#i-home"/></svg><span>今日</span></div>
+        <div class="tab"><svg><use href="#i-rank"/></svg><span>排行</span></div>
+        <div class="tab on"><svg><use href="#i-stone"/></svg><span>五行石</span></div>
+        <div class="tab"><svg><use href="#i-me"/></svg><span>我的</span></div>
+      </div>
+      <div class="homebar"><i></i></div>
+    </div>
+    <figcaption>
+      <div class="cap-t">重构 · 五行石</div>
+      <div class="cap-s">先给结论再给列表；剥七/剥八、口径说明移入二级</div>
+    </figcaption>
+  </figure>
+
+  <!-- 5. RECIPE -->
+  <figure>
+    <div class="phone no-tab">
+      <div class="statusbar">
+        <span>14:32</span>
+        <div class="status-icons">
+          <svg width="17" height="12" style="color:var(--text)"><use href="#i-signal"/></svg>
+          <svg width="16" height="12" style="color:var(--text)"><use href="#i-wifi"/></svg>
+          <svg width="25" height="12" style="color:var(--text)"><use href="#i-battery"/></svg>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="nav-back"><svg width="22" height="22"><use href="#i-back"/></svg></div>
+        <div class="nav-title">配方详情</div>
+        <div class="capsule"><span>•••</span><span class="sep"></span><span class="ring"><i></i></span></div>
+      </div>
+      <div class="screen">
+        <section class="recipe-hero">
+          <div class="recipe-top">
+            <div>
+              <div class="recipe-name">归营旌</div>
+              <div class="recipe-meta">梓匠 · 50 级 · 每次 200 精力</div>
+            </div>
+            <span class="tag tag-amber">示例价</span>
+          </div>
+          <div class="recipe-num">160.54<span class="unit">金 / 点精力</span></div>
+          <div class="statgrid">
+            <div class="stat"><div class="k">单次利润</div><div class="v green">+3.21<span class="u">万</span></div></div>
+            <div class="stat"><div class="k">单次成本</div><div class="v">2.98<span class="u">万</span></div></div>
+            <div class="stat"><div class="k">税后售价</div><div class="v">6.20<span class="u">万</span></div></div>
+            <div class="stat"><div class="k">满精力可做</div><div class="v">15<span class="u">次</span></div></div>
+          </div>
+          <button class="btn-primary">校准 4 项材料价</button>
+        </section>
+
+        <section class="card">
+          <div class="card-head" style="margin-bottom:2px">
+            <div>
+              <div class="card-title">成本构成</div>
+              <div class="card-sub">售价已扣 5% 交易税</div>
+            </div>
+            <div class="link">怎么算的</div>
+          </div>
+          <div class="costbar">
+            <i style="width:97.8%;background:#5B9CFF"></i>
+            <i style="width:2.2%;background:#F2B84B"></i>
+          </div>
+          <div class="legend">
+            <span><em style="background:#5B9CFF"></em>材料 29,186</span>
+            <span><em style="background:#F2B84B"></em>手续费 660</span>
+          </div>
+        </section>
+
+        <section class="card" style="padding-top:6px;padding-bottom:6px">
+          <div class="card-head" style="padding:8px 0 4px">
+            <div>
+              <div class="card-title">材料清单 · 5 项</div>
+              <div class="card-sub">点一行改本服价格</div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div><div class="mat-name">地脉玄元</div><div class="mat-meta">×1 · 交易行</div></div>
+            <div class="mat-val"><b>24,000</b><div class="src"><i></i>示例价</div></div>
+          </div>
+          <div class="mat-row">
+            <div><div class="mat-name">蜂王浆</div><div class="mat-meta">×10 · 交易行</div></div>
+            <div class="mat-val"><b>178.76</b><div class="src blue"><i></i>云端价</div></div>
+          </div>
+          <div class="mat-row">
+            <div><div class="mat-name">兽皮胶</div><div class="mat-meta">×20 · 交易行</div></div>
+            <div class="mat-val"><b>96.40</b><div class="src"><i></i>示例价</div></div>
+          </div>
+          <div class="mat-row">
+            <div><div class="mat-name">七彩线</div><div class="mat-meta">×20 · 交易行</div></div>
+            <div class="mat-val"><b>42.00</b><div class="src"><i></i>示例价</div></div>
+          </div>
+          <div class="mat-row">
+            <div><div class="mat-name">百染线</div><div class="mat-meta">×20 · 交易行</div></div>
+            <div class="mat-val"><b>31.50</b><div class="src"><i></i>示例价</div></div>
+          </div>
+        </section>
+
+        <section class="card collapse" style="padding:0 16px">
+          <span>产物与售价 · 归营旌 ×1</span>
+          <span class="sync">3.68 万 ›</span>
+        </section>
+      </div>
+      <div class="homebar"><i></i></div>
+    </div>
+    <figcaption>
+      <div class="cap-t">重构 · 配方详情</div>
+      <div class="cap-s">先给结论与 4 格关键数，再展开成本/材料；改价走弹层</div>
+    </figcaption>
+  </figure>
+
+  <!-- 6. PRICES -->
+  <figure>
+    <div class="phone no-tab">
+      <div class="statusbar">
+        <span>14:32</span>
+        <div class="status-icons">
+          <svg width="17" height="12" style="color:var(--text)"><use href="#i-signal"/></svg>
+          <svg width="16" height="12" style="color:var(--text)"><use href="#i-wifi"/></svg>
+          <svg width="25" height="12" style="color:var(--text)"><use href="#i-battery"/></svg>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="nav-back"><svg width="22" height="22"><use href="#i-back"/></svg></div>
+        <div class="nav-title">价格库</div>
+        <div class="capsule"><span>•••</span><span class="sep"></span><span class="ring"><i></i></span></div>
+      </div>
+      <div class="screen">
+        <div class="server-row">
+          <div class="pill">梦江南 <svg><use href="#i-down"/></svg></div>
+          <div class="sync">行情 14:32</div>
+        </div>
+        <div class="search-row">
+          <div class="search"><svg><use href="#i-search"/></svg><span>搜物品</span></div>
+          <div class="filter-btn"><svg><use href="#i-filter"/></svg></div>
+        </div>
+        <div class="chips">
+          <div class="chip on">全部</div>
+          <div class="chip">材料</div>
+          <div class="chip">成品</div>
+          <div class="chip">五行石</div>
+        </div>
+        <div class="rank-summary"><span>267 项 · 缺价 2 · 手动 0</span><span>缺价优先</span></div>
+
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">兽皮胶</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b class="amber">未填</b><div class="src"><i style="background:var(--red)"></i>缺价</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">七彩线</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b class="amber">未填</b><div class="src"><i style="background:var(--red)"></i>缺价</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">地脉玄元</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b>24,000</b><div class="src"><i></i>示例</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">蜂王浆</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b>178.76</b><div class="src blue"><i></i>云端</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">百染线</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b>31.50</b><div class="src"><i></i>示例</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">玄元星平衫</div><div class="price-meta">缝纫 · 成品 · 4 品</div></div>
+          <div class="price-val"><b>30,811</b><div class="src green"><i></i>已校准</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">玄元星平鞋</div><div class="price-meta">缝纫 · 成品 · 4 品</div></div>
+          <div class="price-val"><b>30,200</b><div class="src"><i></i>示例</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="more-btn">加载更多 · 30 / 267</div>
+      </div>
+      <div class="homebar"><i></i></div>
+    </div>
+    <figcaption>
+      <div class="cap-t">重构 · 价格库</div>
+      <div class="cap-s">缺价优先、来源用圆点编码；点行开大输入弹层</div>
+    </figcaption>
+  </figure>
+
+  <!-- 7. SHEET -->
+  <figure>
+    <div class="phone no-tab">
+      <div class="statusbar">
+        <span>14:32</span>
+        <div class="status-icons">
+          <svg width="17" height="12" style="color:var(--text)"><use href="#i-signal"/></svg>
+          <svg width="16" height="12" style="color:var(--text)"><use href="#i-wifi"/></svg>
+          <svg width="25" height="12" style="color:var(--text)"><use href="#i-battery"/></svg>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="nav-back"><svg width="22" height="22"><use href="#i-back"/></svg></div>
+        <div class="nav-title">价格库</div>
+        <div class="capsule"><span>•••</span><span class="sep"></span><span class="ring"><i></i></span></div>
+      </div>
+      <div class="screen">
+        <div class="server-row">
+          <div class="pill">梦江南 <svg><use href="#i-down"/></svg></div>
+          <div class="sync">行情 14:32</div>
+        </div>
+        <div class="search-row">
+          <div class="search"><svg><use href="#i-search"/></svg><span>搜物品</span></div>
+          <div class="filter-btn"><svg><use href="#i-filter"/></svg></div>
+        </div>
+        <div class="chips">
+          <div class="chip on">只看缺价</div>
+          <div class="chip">材料</div>
+          <div class="chip">成品</div>
+        </div>
+        <div class="rank-summary"><span>267 项 · 缺价 0 · 手动 0</span><span>点行改价</span></div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">地脉玄元</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b>24,000</b><div class="src"><i></i>示例</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row">
+          <div class="price-main"><div class="price-name">蜂王浆</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b>178.76</b><div class="src blue"><i></i>云端</div></div>
+          <svg class="chev" style="margin-left:10px"><use href="#i-chev"/></svg>
+        </div>
+        <div class="price-row" style="opacity:.5">
+          <div class="price-main"><div class="price-name">兽皮胶</div><div class="price-meta">缝纫 · 材料 · 4 品</div></div>
+          <div class="price-val"><b>96.40</b><div class="src"><i></i>示例</div></div>
+        </div>
+      </div>
+      <div class="overlay">
+        <div class="sheet">
+          <div class="handle"></div>
+          <div class="sheet-title">地脉玄元</div>
+          <div class="sheet-sub">缝纫 · 材料 · 交易行成交价</div>
+          <div class="sheet-now"><span>当前价格</span><span><b>24,000</b> 金 · 示例</span></div>
+          <div class="sheet-input">24000<i class="caret"></i><span class="u">金 / 个</span></div>
+          <div class="sheet-hint">填你所在服务器交易行的成交价。留空则继续用云端行情或示例价。</div>
+          <div class="quick">
+            <button>用云端价 24,010</button>
+            <button>清空</button>
+          </div>
+          <div class="sheet-actions">
+            <button class="btn-ghost">取消</button>
+            <button style="background:var(--accent);color:#fff">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <div class="cap-t">重构 · 改价弹层</div>
+      <div class="cap-s">输入框 124rpx、按钮 96rpx；带来源与「用云端价」快捷项</div>
+    </figcaption>
+  </figure>
+
+  <!-- 8. ME -->
+  <figure>
+    <div class="phone">
+      <div class="statusbar">
+        <span>14:32</span>
+        <div class="status-icons">
+          <svg width="17" height="12" style="color:var(--text)"><use href="#i-signal"/></svg>
+          <svg width="16" height="12" style="color:var(--text)"><use href="#i-wifi"/></svg>
+          <svg width="25" height="12" style="color:var(--text)"><use href="#i-battery"/></svg>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="nav-title">我的</div>
+        <div class="capsule"><span>•••</span><span class="sep"></span><span class="ring"><i></i></span></div>
+      </div>
+      <div class="screen">
+        <section class="profile" style="margin-top:6px">
+          <div class="avatar">梦</div>
+          <div style="flex:1">
+            <div class="n">梦江南</div>
+            <div class="s">电信五区 · 最近同步 14:32</div>
+          </div>
+          <span class="link">切换</span>
+        </section>
+
+        <div class="group-title">价格与行情</div>
+        <div class="me-group">
+          <div class="me-row"><span class="ic blue">价</span><span class="l">价格库</span><span class="r">267 项 · 缺 2</span><svg class="chev"><use href="#i-chev"/></svg></div>
+          <div class="me-row"><span class="ic blue">走</span><span class="l">物价走势</span><span class="r">本服历史</span><svg class="chev"><use href="#i-chev"/></svg></div>
+          <div class="me-row"><span class="ic purple">区</span><span class="l">区服趋势</span><span class="r">17 服</span><svg class="chev"><use href="#i-chev"/></svg></div>
+        </div>
+
+        <div class="group-title">成长与计算</div>
+        <div class="me-group">
+          <div class="me-row"><span class="ic green">升</span><span class="l">突破升级 1→50</span><span class="r">最优路线</span><svg class="chev"><use href="#i-chev"/></svg></div>
+        </div>
+
+        <div class="group-title">偏好</div>
+        <div class="me-group">
+          <div class="me-row"><span class="ic blue">精</span><span class="l">精力与口径</span><span class="r">3000 点 · 税 5%</span><svg class="chev"><use href="#i-chev"/></svg></div>
+          <div class="me-row"><span class="ic green">亮</span><span class="l">主题</span><span class="r">跟随系统</span><svg class="chev"><use href="#i-chev"/></svg></div>
+        </div>
+
+        <div class="group-title">数据</div>
+        <div class="me-group">
+          <div class="me-row"><span class="ic amber">备</span><span class="l">备份与恢复</span><span class="r">仅本机</span><svg class="chev"><use href="#i-chev"/></svg></div>
+          <div class="me-row"><span class="ic amber">明</span><span class="l">数据说明与版本</span><span class="r">v2026-11-21.5</span><svg class="chev"><use href="#i-chev"/></svg></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><svg><use href="#i-home"/></svg><span>今日</span></div>
+        <div class="tab"><svg><use href="#i-rank"/></svg><span>排行</span></div>
+        <div class="tab"><svg><use href="#i-stone"/></svg><span>五行石</span></div>
+        <div class="tab on"><svg><use href="#i-me"/></svg><span>我的</span></div>
+      </div>
+      <div class="homebar"><i></i></div>
+    </div>
+    <figcaption>
+      <div class="cap-t">重构 · 我的</div>
+      <div class="cap-s">低频模块统一收纳；每行 112rpx，替代原来的 6 张设置卡</div>
+    </figcaption>
+  </figure>
+
+</div>
+<script>
+  if (location.hash === '#light') {
+    document.querySelectorAll('.phone:not(.before)').forEach(function (p) { p.classList.add('light'); });
+  }
+</script>
+</body>
+</html>

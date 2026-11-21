@@ -1,62 +1,78 @@
 import withTheme from '../../components/withTheme';
-import { useMemo, useState } from 'react';
-import { View, Text, Input, Picker, Textarea } from '@tarojs/components';
+import { useEffect, useMemo, useState } from 'react';
+import { View, Text, Input, Picker, Textarea, ScrollView } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
-import TopBar from '../../components/TopBar';
-import Kpi from '../../components/Kpi';
+import ServerBar from '../../components/ServerBar';
 import PriceInput from '../../components/PriceInput';
+import Seg from '../../components/Seg';
 import Toggle from '../../components/Toggle';
 import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
 import { useStore, getState } from '../../store';
-import { DATA, priceOf, statsOf, serverSpreads, skillOf, tierOf } from '../../shared/engine';
-import StonePriceCard from '../../components/StonePriceCard';
+import { DATA, priceOf, statsOf, serverSpreads, skillOf, tierOf, isMarketFresh } from '../../shared/engine';
 import { syncRemotePrices } from '../../shared/remotePrices';
 import { isCloudConfigured } from '../../shared/cloudConfig';
 import { fmt, fmtPct, fmtTime } from '../../shared/format';
 
+const PAGE_SIZE = 30;
+const IS_WEAPP = process.env.TARO_ENV === 'weapp';
+
 function Prices() {
   const [state, actions] = useStore();
   const [q, setQ] = useState('');
-  const [skillId, setSkillId] = useState('');
+  const [category, setCategory] = useState('');
   const [kind, setKind] = useState('');
+  const [skillId, setSkillId] = useState('');
   const [onlyMissing, setOnlyMissing] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [limit, setLimit] = useState(PAGE_SIZE);
   const [showBulk, setShowBulk] = useState(false);
   const [bulk, setBulk] = useState('');
   const [syncing, setSyncing] = useState(false);
+
   const stats = statsOf(state, state.serverId);
   const allSpreads = serverSpreads(state);
-  const spreads = allSpreads.slice(0, 5);
-  const marketStamp = state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+  const spreads = allSpreads.slice(0, 3);
+  const marketFresh = isMarketFresh(state);
+  const marketStamp = marketFresh ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
   const seedStamp = Date.parse(DATA.meta.priceUpdatedAt || '');
   const priceStamp = Number.isFinite(marketStamp) ? marketStamp : seedStamp;
-  const priceSource = state.marketMeta ? '云端行情' : '包内示例';
+  const priceSource = marketFresh ? '云端行情' : (stats.quote ? '包内本服报价' : '包内示例');
+  const categories = [{ id: '', name: '全部' }].concat(DATA.meta.categories || []);
+  const skillNames = ['全部技艺'].concat(DATA.skills.map(function (s) { return s.name; }));
+  const skillIdx = skillId ? DATA.skills.findIndex(function (s) { return s.id === skillId; }) + 1 : 0;
 
   useDidShow(function () {
     if (isCloudConfigured()) syncRemotePrices(actions, true, getState());
   });
 
+  useEffect(function () { setLimit(PAGE_SIZE); }, [q, category, kind, skillId, onlyMissing]);
+
   const items = useMemo(function () {
     const list = state.items.map(function (it) {
       return { it: it, p: priceOf(state, it.id, state.serverId) };
     }).filter(function (x) {
-      if (skillId && x.it.skillId !== skillId) return false;
+      if (category && x.it.category !== category) return false;
       if (kind && x.it.kind !== kind) return false;
+      if (skillId && x.it.skillId !== skillId) return false;
       if (onlyMissing && !x.p.missing) return false;
       if (q && (x.it.name + ' ' + skillOf(x.it.skillId).name).toLowerCase().indexOf(q.toLowerCase()) === -1) return false;
       return true;
     });
     list.sort(function (a, b) {
-      if (a.p.missing !== b.p.missing) return a.p.missing ? -1 : 1;
+      // 先看有价物品；缺价项通过「仅缺价」筛选集中处理，避免第一屏全是未定价。
+      if (a.p.missing !== b.p.missing) return a.p.missing ? 1 : -1;
       return a.it.name.localeCompare(b.it.name, 'zh-CN');
     });
     return list;
-  }, [state, q, skillId, kind, onlyMissing]);
+  }, [state, q, category, kind, skillId, onlyMissing]);
 
-  const skillNames = ['全部技艺'].concat(DATA.skills.map(function (s) { return s.name; }));
-  const skillIdx = skillId ? DATA.skills.findIndex(function (s) { return s.id === skillId; }) + 1 : 0;
-  const kindNames = ['全部类型', '材料', '成品'];
-  const kindIdx = kind === 'material' ? 1 : kind === 'product' ? 2 : 0;
+  const visible = items.slice(0, limit);
+
+  function categoryName(id) {
+    const hit = (DATA.meta.categories || []).find(function (c) { return c.id === id; });
+    return hit ? hit.name : '其他';
+  }
 
   async function syncNow() {
     if (syncing) return;
@@ -69,23 +85,16 @@ function Prices() {
     const res = await syncRemotePrices(actions, true, getState());
     Taro.hideLoading();
     setSyncing(false);
-    if (res.ok) {
-      Taro.showToast({ title: res.updatedAt ? '行情已更新' : '已是最新', icon: 'none' });
-    } else if (res.skipped) {
-      Taro.showToast({ title: '未配置云环境', icon: 'none' });
-    } else {
-      Taro.showToast({ title: res.error || '同步失败', icon: 'none' });
-    }
+    if (res.ok && res.stale) Taro.showToast({ title: '云端较旧，已用包内价', icon: 'none' });
+    else if (res.ok) Taro.showToast({ title: res.updatedAt ? '行情已更新' : '已是最新', icon: 'none' });
+    else if (res.skipped) Taro.showToast({ title: '未配置云环境', icon: 'none' });
+    else Taro.showToast({ title: res.error || '同步失败', icon: 'none' });
   }
 
   function savePrice(itemId, val) {
-    if (!actions.setPrice(itemId, val)) {
-      Taro.showToast({ title: '价格需为非负数字', icon: 'none' });
-    } else {
-      Taro.showToast({ title: '已保存本服价格', icon: 'none' });
-    }
+    if (!actions.setPrice(itemId, val)) Taro.showToast({ title: '价格需为非负数字', icon: 'none' });
+    else Taro.showToast({ title: '已保存本服价格', icon: 'none' });
   }
-
 
   function applyBulk() {
     const res = actions.importPrices(bulk, state.serverId);
@@ -102,49 +111,63 @@ function Prices() {
 
   return (
     <View className='page'>
-      <TopBar title='价格库' subtitle='为本服填写材料与成品价格 · 示例价可直接计算' />
+      <ServerBar />
 
-      <View className='kpi-grid'>
-        <Kpi label='已校准' value={String(stats.user)} unit={'/ ' + stats.total + ' 项'} progress={stats.calibrated * 100} progressTone='green' meta='手动填入的本服价格' />
-        <Kpi label='行情/示例' value={String(stats.market + stats.seed)} unit='项' meta={'行情 ' + stats.market + ' · 示例 ' + stats.seed} />
-        <Kpi label='缺价' value={String(stats.missing)} unit='项' meta='缺价按 0 计' tone={stats.missing ? 'warn' : ''} />
-        <Kpi label='跨服价差' value={String(allSpreads.length)} unit='项' meta='最高/最低价差 ≥ 12%' />
+      <View className='rank-summary' style={{ margin: '4rpx 0 16rpx' }}>
+        <Text>{stats.total} 项参与收益 · 已校准 {stats.user} · 缺价 {stats.missing}</Text>
+        <Text onClick={function () { Taro.navigateTo({ url: '/pages/rank/index' }); }}>看收益排行 ›</Text>
       </View>
 
-      <StonePriceCard />
-
-      <View className='card'>
-        <View className='card-head'>
-          <View className='flex1'>
-            <Text className='card-title'>本服物品价格</Text>
-            <Text className='card-sub'>失焦或回车即保存 · {items.length} 项 · 行情 {fmtTime(priceStamp)} · {priceSource}</Text>
-          </View>
-          <View className='card-tool'>
-            {isCloudConfigured() ? (
-              <View className='btn btn-ghost btn-sm' style={{ marginRight: '8rpx' }} onClick={syncNow}>{syncing ? '同步中' : '同步行情'}</View>
-            ) : null}
-            <View className='btn btn-ghost btn-sm' onClick={function () { setShowBulk(!showBulk); }}>{showBulk ? '收起' : '批量'}</View>
+      {IS_WEAPP ? (
+        <View className='card' onClick={function () { Taro.navigateTo({ url: '/market/pages/directory/index' }); }}>
+          <View className='card-head'>
+            <View className='flex1'>
+              <Text className='card-title'>行情目录 · 672 项</Text>
+              <Text className='card-sub'>家园 / 强化 / 消耗品 · 只查价/记价，不参与配方收益</Text>
+            </View>
+            <View className='card-tool'><Text className='badge badge-info'>打开 ›</Text></View>
           </View>
         </View>
-        <View className='card-body' style={{ paddingBottom: '8rpx' }}>
-          <Input className='input input-sm' value={q} placeholder='搜索物品 / 技艺' placeholderStyle='color:#475569'
-            onInput={function (e) { setQ(e.detail.value); }} />
-          <View className='filter-row mt'>
+      ) : null}
+
+      <View className='rank-search'>
+        <Input className='input' value={q} placeholder='搜索物品 / 技艺 / 分类' placeholderStyle='color:var(--muted-2)'
+          onInput={function (e) { setQ(e.detail.value); }} />
+        <View className={'rank-filter' + (showFilter ? ' active' : '')} onClick={function () { setShowFilter(!showFilter); }}>筛</View>
+      </View>
+
+      <ScrollView scrollX className='chips-scroll'>
+        <View className='chips-inner'>
+          {categories.map(function (c) {
+            return (
+              <View key={c.id || 'all'} className={'chip' + (category === c.id ? ' active' : '')}
+                onClick={function () { setCategory(c.id); }}>
+                {c.name}
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+
+      {showFilter ? (
+        <View className='card' style={{ paddingTop: '20rpx', paddingBottom: '16rpx' }}>
+          <Seg value={kind} options={[{ value: '', label: '全部类型' }, { value: 'material', label: '材料' }, { value: 'product', label: '成品' }]} onChange={setKind} />
+          <View className='filter-row' style={{ marginTop: '20rpx' }}>
             <Picker mode='selector' range={skillNames} value={skillIdx}
               onChange={function (e) { const i = Number(e.detail.value); setSkillId(i ? DATA.skills[i - 1].id : ''); }}>
-              <View className='picker picker-sm'><Text>{skillIdx ? DATA.skills[skillIdx - 1].name : '全部技艺'}</Text><Text className='arrow'>⌄</Text></View>
-            </Picker>
-            <Picker mode='selector' range={kindNames} value={kindIdx}
-              onChange={function (e) { const i = Number(e.detail.value); setKind(i === 1 ? 'material' : i === 2 ? 'product' : ''); }}>
-              <View className='picker picker-sm'><Text>{kindNames[kindIdx]}</Text><Text className='arrow'>⌄</Text></View>
+              <View className='picker'><Text>{skillIdx ? DATA.skills[skillIdx - 1].name : '全部技艺'}</Text><Text className='arrow'>⌄</Text></View>
             </Picker>
             <Toggle label='仅缺价' value={onlyMissing} onChange={setOnlyMissing} />
           </View>
-
+          <View className='btn-row' style={{ marginTop: '20rpx' }}>
+            {isCloudConfigured() ? <View className='btn btn-ghost btn-sm' onClick={syncNow}>{syncing ? '同步中' : '同步行情'}</View> : null}
+            <View className='btn btn-ghost btn-sm' onClick={function () { setShowBulk(!showBulk); }}>{showBulk ? '收起批量' : '批量录入'}</View>
+            {IS_WEAPP ? <View className='btn btn-ghost btn-sm' onClick={function () { Taro.switchTab({ url: '/pages/stones/index' }); }}>五行石行情</View> : null}
+          </View>
           {showBulk ? (
             <View className='mt'>
               <Textarea className='textarea' value={bulk} placeholder={'每行：物品名,价格\n地脉玄元,21.22\n蜂王浆,205.10'}
-                placeholderStyle='color:#475569' maxlength={20000}
+                placeholderStyle='color:var(--muted-2)' maxlength={20000}
                 onInput={function (e) { setBulk(e.detail.value); }} />
               <View className='btn-row mt'>
                 <View className='btn btn-primary btn-sm' onClick={applyBulk}>导入价格</View>
@@ -153,40 +176,46 @@ function Prices() {
             </View>
           ) : null}
         </View>
+      ) : null}
 
-        <View style={{ padding: '0 24rpx 8rpx' }}>
-          {items.length ? items.map(function (x) {
-            const it = x.it;
-            const p = x.p;
-            return (
-              <View className='price-line' key={it.id}>
-                <View className='main'>
-                  <View className='row'>
-                    <Text className='nm'>{it.name}</Text>
-                    {it.custom ? <Text className='badge badge-custom' style={{ marginLeft: '8rpx' }}>自定义</Text> : null}
-                  </View>
-                  <Text className='ds'>{skillOf(it.skillId).name} · {it.kind === 'product' ? '成品' : '材料'} · {tierOf(it.tier).name} · {it.source}</Text>
+      <View className='rank-list'>
+        {visible.length ? visible.map(function (x) {
+          const it = x.it;
+          const p = x.p;
+          return (
+            <View className='price-line' key={it.id}>
+              <View className='main'>
+                <View className='row'>
+                  <Text className='nm'>{it.name}</Text>
+                  {it.custom ? <Text className='badge badge-custom' style={{ marginLeft: '8rpx' }}>自定义</Text> : null}
                 </View>
-                <View style={{ textAlign: 'right' }}>
-                  <PriceInput value={p.missing ? '' : p.v} onSave={function (v) { savePrice(it.id, v); }} />
-                  <Text className={'price-state ' + (p.missing ? 'missing' : p.user ? 'user' : p.market ? 'market' : '')}>
-                    {p.missing ? '缺价' : p.user ? '已校准' : p.market ? '行情' : '示例'}
-                  </Text>
-                </View>
+                <Text className='ds'>{categoryName(it.category)} · {skillOf(it.skillId).name} · {it.kind === 'product' ? '成品' : '材料'} · {it.source}</Text>
               </View>
-            );
-          }) : <Empty title='没有匹配的物品' desc='调整搜索或筛选条件，或去生活技艺新增物品。' />}
-        </View>
-        <View className='card-foot'>行情时间 {fmtTime(priceStamp)} · {priceSource} · 手动校准优先，自动同步不覆盖</View>
+              <View style={{ textAlign: 'right' }}>
+                <PriceInput value={p.missing ? '' : p.v} onSave={function (v) { savePrice(it.id, v); }} />
+                <Text className={'price-state ' + (p.missing ? 'missing' : p.user ? 'user' : p.market ? 'market' : p.quote ? 'quote' : '')}>
+                  {p.missing ? '缺价' : p.user ? '已校准' : p.market ? '云端' : p.quote ? '本服报价' : '示例'}
+                </Text>
+              </View>
+            </View>
+          );
+        }) : <Empty title='没有匹配的物品' desc='调整搜索或筛选条件，或去生活技艺新增物品。' />}
       </View>
 
+      {items.length > visible.length ? (
+        <View className='btn btn-ghost btn-block rank-more' onClick={function () { setLimit(limit + PAGE_SIZE); }}>
+          加载更多 · {visible.length} / {items.length}
+        </View>
+      ) : null}
+
+      <Text className='data-note'>行情 {fmtTime(priceStamp)} · {priceSource} · 手动校准优先，自动同步不覆盖</Text>
 
       {spreads.length ? (
         <View className='card'>
           <View className='card-head'>
             <View className='flex1'>
-              <Text className='card-title'>跨服价差参考</Text>
-              <Text className='card-sub'>最高 / 最低价差 ≥ 12%，用于换服采购与上架</Text>
+              <Text className='card-title'>跨服价差</Text>
+              <Text className='card-sub'>最高 / 最低价差 ≥ 12%，用于换服采购</Text>
             </View>
           </View>
           <View className='card-body' style={{ paddingTop: '4rpx' }}>
@@ -197,10 +226,7 @@ function Prices() {
                     <Text className='nm'>{s.item.name}</Text>
                     <Text className='ds'>{s.min.server.name} {fmt(s.min.price, 2)} → {s.max.server.name} {fmt(s.max.price, 2)}</Text>
                   </View>
-                  <View className='val'>
-                    <Text className='v pos'>{fmtPct(s.ratio, 1)}</Text>
-                    <Text className='u'> 价差</Text>
-                  </View>
+                  <View className='val'><Text className='v pos'>{fmtPct(s.ratio, 1)}</Text><Text className='u'> 价差</Text></View>
                 </View>
               );
             })}

@@ -1,0 +1,247 @@
+/* =========================================================================
+   精力做什么 · 小程序重构设计变量（V1 提案）
+   仅作为设计/实现参考，当前未被 miniapp 引用。
+   实现时建议拆进 src/styles/tokens.css 并在 app.jsx 引入。
+   ========================================================================= */
+
+.ds-root {
+  /* ---------- 表面 · 暗色（默认） ---------- */
+  --bg: #0A0F1A;
+  --surface: #121A2A;
+  --surface-2: #1A2436;
+  --border: #263349;
+  --line: rgba(148, 163, 184, 0.12);
+
+  /* ---------- 文字 ---------- */
+  --text: #F5F7FB;        /* 16.2:1 on surface */
+  --text-2: #D7DFEC;      /* 13.0:1 */
+  --muted: #9AA9BF;       /* 7.3:1 */
+  --muted-2: #7D8CA3;     /* 5.1:1，仅 ≥24rpx 使用 */
+
+  /* ---------- 语义色 ---------- */
+  --accent: #5B9CFF;      /* 主按钮/链接 */
+  --positive: #3FD68C;    /* 正收益/手动价 */
+  --warning: #F2B84B;     /* 缺价/示例价 */
+  --danger: #FF6B81;      /* 亏损/删除 */
+  --peak: #C79BFF;        /* 第一名/强调 */
+
+  /* ---------- 字号（750rpx 设计稿） ---------- */
+  --fs-display: 48rpx;
+  --fs-h1: 48rpx;
+  --fs-section: 36rpx;
+  --fs-card: 32rpx;
+  --fs-body: 30rpx;
+  --fs-caption: 26rpx;
+  --fs-micro: 24rpx;      /* 下限：只用于脚注/单位 */
+  --fs-num-xl: 80rpx;
+  --fs-num-lg: 40rpx;
+  --fs-num-md: 36rpx;
+  --fs-btn: 32rpx;
+
+  --lh-tight: 1.25;
+  --lh-title: 1.35;
+  --lh-body: 1.5;
+
+  /* ---------- 触控 ---------- */
+  --tap-min: 88rpx;       /* 44px */
+  --row: 128rpx;          /* 64px 主列表行 */
+  --row-sm: 112rpx;       /* 56px 设置行 */
+  --btn-primary: 96rpx;   /* 48px */
+  --btn-secondary: 88rpx;
+  --input: 96rpx;
+  --input-lg: 124rpx;
+  --icon-btn: 88rpx;
+  --chip-h: 72rpx;        /* 视觉 36px，上下留 8rpx 透明命中区 */
+
+  /* ---------- 间距 / 圆角 ---------- */
+  --page-x: 32rpx;
+  --card-pad: 32rpx;
+  --card-gap: 24rpx;
+  --section-gap: 48rpx;
+  --radius-card: 24rpx;
+  --radius-btn: 20rpx;
+  --radius-sheet: 32rpx;
+  --radius-pill: 999rpx;
+
+  /* ---------- 动效 ---------- */
+  --ease-out: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-press: 80ms;
+  --dur-enter: 120ms;
+  --dur-sheet: 240ms;
+
+  /* ---------- 弹层 ---------- */
+  --mask: rgba(0, 0, 0, 0.55);
+}
+
+/* 亮色：同一套 token 反相，数据色保持语义不变 */
+.ds-root.theme-light {
+  --bg: #F4F6FA;
+  --surface: #FFFFFF;
+  --surface-2: #EEF2F8;
+  --border: #DFE6F0;
+  --line: rgba(15, 23, 42, 0.07);
+
+  --text: #101828;        /* 16.4:1 on bg */
+  --text-2: #26344B;
+  --muted: #5C6B82;       /* 5.0:1 */
+  --muted-2: #5F6F86;     /* 4.7:1 */
+
+  --accent: #1D6FE0;      /* 4.8:1 on white */
+  --positive: #0A7D54;    /* 4.8:1 */
+  --warning: #A65B00;     /* 5.1:1 */
+  --danger: #C6283C;      /* 5.6:1 */
+  --peak: #6D28D9;
+}
+
+/* =========================================================================
+   基类：只做"一屏一问"的骨架，不携带业务语义
+   ========================================================================= */
+
+.ds-page {
+  min-height: 100vh;
+  padding: 0 var(--page-x);
+  padding-bottom: calc(var(--section-gap) + env(safe-area-inset-bottom));
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.ds-card {
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  margin-bottom: var(--card-gap);
+}
+
+.ds-h1 {
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  line-height: var(--lh-title);
+}
+
+.ds-section {
+  font-size: var(--fs-section);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+.ds-card-title {
+  font-size: var(--fs-card);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+.ds-body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.ds-caption {
+  font-size: var(--fs-caption);
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* 24rpx 只用于脚注/单位，不承载关键信息 */
+.ds-micro {
+  font-size: var(--fs-micro);
+  color: var(--muted-2);
+  line-height: 1.35;
+}
+
+.ds-num-xl,
+.ds-num-lg,
+.ds-num-md {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: var(--lh-tight);
+}
+.ds-num-xl { font-size: var(--fs-num-xl); }
+.ds-num-lg { font-size: var(--fs-num-lg); }
+.ds-num-md { font-size: var(--fs-num-md); }
+
+.ds-btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--btn-primary);
+  border: 0;
+  border-radius: var(--radius-btn);
+  background: var(--accent);
+  color: #FFFFFF;
+  font-size: var(--fs-btn);
+  font-weight: 600;
+}
+
+.ds-btn-primary:active {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+/* 行本身 ≥128rpx；右侧数值与 chevron 不单独缩小命中区 */
+.ds-row {
+  display: flex;
+  align-items: center;
+  min-height: var(--row);
+  gap: 24rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+.ds-row:last-child { border-bottom: 0; }
+
+.ds-tap {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  height: var(--chip-h);
+  padding: 0 28rpx;
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: var(--fs-caption);
+}
+.ds-chip.is-on {
+  background: rgba(91, 156, 255, 0.14);
+  border-color: rgba(91, 156, 255, 0.5);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ds-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: var(--fs-micro);
+  color: var(--muted-2);
+}
+.ds-source::before {
+  content: "";
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: currentColor;
+}
+.ds-source.is-cloud { color: var(--accent); }
+.ds-source.is-seed { color: var(--warning); }
+.ds-source.is-manual { color: var(--positive); }
+
+/* 通用文本色，避免页面里再写死 #475569 */
+.ds-pos { color: var(--positive); }
+.ds-neg { color: var(--danger); }
+.ds-warn { color: var(--warning); }
+.ds-dim { color: var(--muted); }
+
+/* 底部安全区（有 TabBar 时由页面自己留出 50px 系统高度） */
+.ds-safe-bottom {
+  padding-bottom: calc(48rpx + env(safe-area-inset-bottom));
+}

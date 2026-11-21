@@ -13,6 +13,22 @@ function createBreakthrough(BT, catalog, getState) {
   items.forEach(function (i, idx) { indexByName[i.n] = idx; });
   recipes.forEach(function (r) { (r.o || []).forEach(function (o) { (producers[o[0]] = producers[o[0]] || []).push(r); }); });
   const num = function (v) { return Number(v) || 0; };
+  // 精力→经验换算（用户实测）：采集 40 精力 = 128 经验；制造 1 精力 = 2 经验。
+  // 数据里的单次经验（r.x / META.gatherExp）是旧估算，这里按比例统一覆盖。
+  // 指定采集路线（用户实测秒刷点），按等级区间固定采集动作。
+  const GATHER_PLANS = META.gatherPlans || {};
+  // 采集点等级（用户实测，覆盖目录里的旧值）；键为采集点短名。
+  const GATHER_LEVELS = META.gatherLevels || {};
+  const GATHER_EXTRAS = META.gatherExtras || {};
+  const gatherLevelOf = function (r) {
+    const name = String((r && (r.n || r.name)) || '');
+    const keys = Object.keys(GATHER_LEVELS);
+    for (var i = 0; i < keys.length; i++) { if (name.indexOf(keys[i]) !== -1) return num(GATHER_LEVELS[keys[i]]); }
+    return num(r && r.level);
+  };
+  const EXP_PER_ENERGY = META.expPerEnergy || {};
+  const GATHER_EXP_PER_ENERGY = num(EXP_PER_ENERGY.gather) || 128 / 40;
+  const CRAFT_EXP_PER_ENERGY = num(EXP_PER_ENERGY.craft) || 2;
   const itemOf = function (idx) { return items[idx] || { n: '未知物品' }; };
   const skillMeta = function (id) { return (catalog.skills || []).find(function (s) { return s.id === id; }) || { id: id, name: id }; };
   const chanceOf = function (v) { return v == null ? 1 : Math.max(0, Math.min(1, num(v))); };
@@ -63,7 +79,9 @@ function createBreakthrough(BT, catalog, getState) {
     const gross = outs.some(function (o) { return o.missing; }) ? null : outs.reduce(function (s, o) { return s + o.sub; }, 0);
     const netValue = gross == null ? null : gross * (1 - taxRate);
     const profit = matCost == null || netValue == null ? null : netValue - matCost;
-    return { mats: mats, outs: outs, matCost: matCost, gross: gross, netValue: netValue, profit: profit, exp: num(r.x), energy: num(r.e), missing: profit == null, profitPerExp: profit == null || !(r.x > 0) ? null : profit / r.x };
+    const energy = num(r.e);
+    const exp = energy > 0 ? energy * CRAFT_EXP_PER_ENERGY : 0;
+    return { mats: mats, outs: outs, matCost: matCost, gross: gross, netValue: netValue, profit: profit, exp: exp, energy: energy, missing: profit == null, profitPerExp: profit == null || !(exp > 0) ? null : profit / exp };
   }
   const expModel = META.expModel || { base: 500, step: 25 };
   const observations = (expModel.observations || []).slice().sort(function (a, b) { return a.level - b.level; });
@@ -151,16 +169,47 @@ function createBreakthrough(BT, catalog, getState) {
       if (gather) {
         const outs = gatherOutputs(r, serverId), missing = outs.some(function (o) { return o.missing; });
         const value = missing ? null : outs.reduce(function (s, o) { return s + o.sub; }, 0);
-        e = { exp: num(META.gatherExp) || 80, energy: num(r.energy), matCost: 0, netValue: value, profit: value, missing: missing };
+        const gEnergy = num(r.energy);
+        e = { exp: gEnergy > 0 ? gEnergy * GATHER_EXP_PER_ENERGY : 0, energy: gEnergy, matCost: 0, netValue: value, profit: value, missing: missing };
         e.profitPerExp = value == null ? null : value / e.exp;
       } else e = recipeEcon(r, serverId, table, taxRate, 'mid');
       return { r: r, e: e };
     });
+    // 目录缺失的采集点（例如采金·银矿）按实测等级与 40 精力合成，只用于算精力
+    if (gather) {
+      (GATHER_EXTRAS[skillId] || []).forEach(function (pt) {
+        const energy = num(pt.energy) || 40;
+        candidates.push({
+          r: { n: pt.name, name: pt.name, energy: energy, level: num(pt.level) || 1 },
+          e: { exp: energy * GATHER_EXP_PER_ENERGY, energy: energy, matCost: 0, netValue: null, profit: null, missing: true, profitPerExp: null }
+        });
+      });
+    }
     const levels = experienceRows().map(function (xp) {
       let pick = null;
-      const available = candidates.filter(function (c) { return (gather ? c.r.level : c.r.l) <= xp.from && c.e.exp > 0 && c.e.energy > 0 && (strategy !== 'gold' || !c.e.missing); });
-      const band = strategy === 'gold' ? profitBand(available, mode) : null;
-      (band ? band.pool : available).forEach(function (c) {
+      // 采集点也有等级限制：只有当前等级已解锁的矿/草/兽才能采。
+      // 目录里采金最低 20 级、庖丁最低 20 级，所以 1–19 级确实无点可采（数据缺口），
+      // 庖丁的秒刷点由 GATHER_PLANS 单独指定，不走这个门禁。
+      const levelOk = function (c) { return gather ? gatherLevelOf(c.r) <= xp.from : c.r.l <= xp.from; };
+      const usable = candidates.filter(function (c) { return levelOk(c) && c.e.exp > 0 && c.e.energy > 0; });
+      let available = usable.filter(function (c) { return strategy !== 'gold' || !c.e.missing; });
+      // 采集：金币路线优先用有报价的采集动作；整级都没报价时仍给出精力路线（收益留空），
+      // 否则采金/庖丁这类缺报价的采集技艺会整条路线都算不出来。
+      // 制造保持原口径：没有报价就视为无法核算，避免把缺价当成 0 收益。
+      if (!available.length && gather) available = usable;
+      // 指定采集路线：例如庖丁 1–30 用西湖草龟/成都雌鹿的秒刷点，30 级后改黑山羊。
+      const plan = gather && GATHER_PLANS[skillId]
+        ? GATHER_PLANS[skillId].find(function (p) { return xp.from >= p.from && xp.from < p.to; })
+        : null;
+      const planPool = plan ? plan.points.map(function (pt) {
+        const hit = candidates.find(function (c) { return String((c.r && (c.r.n || c.r.name)) || '').indexOf(pt.name) !== -1; });
+        if (hit) return hit;
+        // 目录里没有这个采集点：按实测比例合成（经验 = 精力×3.2），收益标为缺价
+        const energy = num(pt.energy) || 40;
+        return { r: { n: pt.name, name: pt.name, energy: energy, level: 1 }, e: { exp: energy * GATHER_EXP_PER_ENERGY, energy: energy, matCost: 0, netValue: null, profit: null, missing: true, profitPerExp: null } };
+      }).filter(function (c) { return c.e.exp > 0 && c.e.energy > 0; }) : null;
+      const band = (!planPool && strategy === 'gold') ? profitBand(available, mode) : null;
+      (planPool || (band ? band.pool : available)).forEach(function (c) {
         function score(e) { const count = Math.ceil(xp.need / e.exp); if (strategy === 'effort') return count; if (strategy === 'energy') return count * e.energy; return -count * e.profit; }
         const tied = pick && Math.abs(score(c.e) - score(pick.e)) <= 1e-9;
         const tieBetter = pick && (strategy === 'gold' ? c.e.energy / c.e.exp < pick.e.energy / pick.e.exp : strategy === 'energy' ? Math.ceil(xp.need / c.e.exp) < Math.ceil(xp.need / pick.e.exp) : Math.ceil(xp.need / c.e.exp) * c.e.energy < Math.ceil(xp.need / pick.e.exp) * pick.e.energy);

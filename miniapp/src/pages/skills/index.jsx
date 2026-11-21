@@ -190,7 +190,7 @@ function Skills() {
             );
           })}
         </View>
-        <View className='card-foot' onClick={function () { Taro.switchTab({ url: '/pages/prices/index' }); }}>打开完整价格库 ›</View>
+        <View className='card-foot' onClick={function () { Taro.navigateTo({ url: '/pages/prices/index' }); }}>打开完整价格库 ›</View>
       </View>
 
       <DataNote />

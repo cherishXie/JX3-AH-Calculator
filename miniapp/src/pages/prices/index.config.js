@@ -1,1 +1,1 @@
-export default { navigationBarTitleText: '精力做什么' };
+export default { navigationBarTitleText: '全部行情' };
