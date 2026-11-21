@@ -2549,6 +2549,8 @@
       rawReady: rawReady, rawPoints: rawPoints,
       skillId: skillId, skill: skill || null,
       category: category, type: type, scopeItems: scopeItems, scopeKeys: scopeKeys,
+      // 目录总数（含当前区间无报价的物品），用于「有数据 / 全部」的统一口径。
+      catalogCount: allScope.length,
       selectedKeys: selectedKeys, selectedItems: selectedItems,
       rankedItems: rankedItems, focusKey: focusKey, focusItem: focusItemColored, focusSeries: focusSeries,
       seriesMap: seriesMap, priceRange: priceRange,
@@ -2569,6 +2571,10 @@
     const maxDate = view.allTo ? view.allTo.slice(0, 10) : '';
     const selectedCount = ctx.selectedKeys.length;
     const total = ctx.scopeItems.length;
+    // 统一口径：分母用完整目录，分子是当前区间有报价、能进走势的物品数。
+    const catalogTotal = Math.max(Number(ctx.catalogCount) || 0, total);
+    const noQuote = catalogTotal - total;
+    const allSelected = total > 0 && selectedCount === total;
     const pickerOpen = ui.trendPickerOpen ? ' open' : '';
     const skill = ctx.skill;
     const skillLabel = ctx.skillId === 'stone' ? '五行石' : (skill ? skill.name : '全部技艺');
@@ -2580,7 +2586,7 @@
     let html = '<section class="card trend-filter-card"><div class="card-body tight">' +
       '<button class="trend-filter-toggle" data-action="toggle-trend-filter" aria-expanded="' + (filterOpen ? 'true' : 'false') + '">' +
         '<span class="trend-filter-toggle-main">' + icon('filter') + '筛选</span>' +
-        '<span class="trend-filter-toggle-sum">' + U.esc(skillLabel + ' · ' + typeLabel + ' · ' + selectedCount + '/' + total + ' · ' + timeLabel) + '</span>' +
+        '<span class="trend-filter-toggle-sum">' + U.esc(skillLabel + ' · ' + typeLabel + ' · ' + (allSelected ? '全部 ' + total : '已选 ' + selectedCount) + ' / ' + catalogTotal + ' 项 · ' + timeLabel) + '</span>' +
         icon('chevronDown') +
       '</button>' +
       '<div class="trend-filter-body' + (filterOpen ? ' open' : '') + '"><div class="trend-filter">';
@@ -2594,15 +2600,14 @@
     }
     html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="tskill" aria-label="技艺筛选">' +
       trendSkillOptions(ctx.skillId || 'all') + '</select></label>';
-    const allSelected = total > 0 && selectedCount === total;
     // 价格区间控件已并入统一筛选栏（保留 URL 里的 tmin/tmax 以兼容旧链接）。
     html += '<details class="trend-picker"' + pickerOpen + '>' +
-      '<summary class="trend-picker-summary" title="可多选物品，支持全选/清空"><span>物品 <em>多选</em></span><b>' + selectedCount + ' / ' + total + '</b>' + icon('chevronDown') + '</summary>' +
+      '<summary class="trend-picker-summary" title="可多选物品，支持全选/清空"><span>物品 <em>多选</em></span><b>' + (allSelected ? '全部 ' + total : '已选 ' + selectedCount) + ' / ' + catalogTotal + ' 项</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel">' +
         '<div class="trend-picker-actions">' +
           '<label class="trend-check trend-check-all"><input type="checkbox" data-trend-toggle-all' + (allSelected ? ' checked' : '') + '>全选</label>' +
           '<button class="btn btn-sm" data-action="trend-select-none">清空</button>' +
-          '<span class="tiny dim">已选 ' + selectedCount + ' / ' + total + '</span>' +
+          '<span class="tiny dim">已选 ' + selectedCount + ' / ' + total + (noQuote > 0 ? ' · 另有 ' + noQuote + ' 项在当前区间无报价，不参与走势' : '') + '</span>' +
         '</div>' +
         '<div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品" value="' + U.esc(ui.trendPickerQuery || '') + '" data-trend-picker-search data-fkey="trend-picker-search" aria-label="搜索物品"></div>' +
         '<div class="trend-picker-list">' +
