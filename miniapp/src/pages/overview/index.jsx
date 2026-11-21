@@ -30,7 +30,7 @@ function Overview() {
     .filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; })
     .sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; });
   const best = valid[0] || null;
-  const alternatives = valid.slice(1, 3);
+  const ranking = valid.slice(0, 6);
   const sim = simulate(rows, budget);
   const planCount = best
     ? (sim.allocations[0] && sim.allocations[0].row.recipe.id === best.recipe.id
@@ -55,11 +55,11 @@ function Overview() {
   }
 
   function openPrices() {
-    Taro.switchTab({ url: '/pages/prices/index' });
+    Taro.navigateTo({ url: '/pages/prices/index' });
   }
 
   return (
-    <View className='page'>
+    <View className='page has-fab'>
       <ServerBar />
 
       {best ? (
@@ -100,26 +100,26 @@ function Overview() {
         <View className='btn btn-sm btn-ghost' onClick={openPrices}>{stats.missing ? '去补价' : '校准'}</View>
       </View>
 
-      {alternatives.length ? (
+      {ranking.length ? (
         <View className='card'>
           <View className='card-head'>
             <View className='flex1'>
-              <Text className='card-title'>还有 {alternatives.length} 个也不差</Text>
+              <Text className='card-title'>收益排行</Text>
               <Text className='card-sub'>按每点精力收益排序</Text>
             </View>
-            <Text className='small dim' onClick={function () { Taro.navigateTo({ url: '/pages/analysis/index' }); }}>全部 ›</Text>
+            <Text className='small dim' onClick={function () { Taro.navigateTo({ url: '/pages/rank/index' }); }}>完整 ›</Text>
           </View>
           <View className='card-body' style={{ paddingTop: '6rpx' }}>
-            {alternatives.map(function (r, i) {
+            {ranking.map(function (r, i) {
               return (
                 <View className='alt-row' key={r.recipe.id} onClick={function () { openRecipe(r.recipe.id); }}>
-                  <View className='rank'>{i + 2}</View>
+                  <View className={'rank' + (i === 0 ? ' top' : '')}>{i + 1}</View>
                   <View className='main'>
                     <Text className='nm'>{r.recipe.name}</Text>
                     <Text className='ds'>{r.skill.name} · {r.tier.name} · {fmtInt(r.calc.energy)} 精力</Text>
                   </View>
                   <View className='val'>
-                    <Text className='v'>{fmt(r.calc.perEnergy, 2)}</Text>
+                    <Text className={'v ' + (r.calc.perEnergy >= 0 ? 'pos' : 'neg')}>{fmt(r.calc.perEnergy, 2)}</Text>
                     <Text className='u'>金 / 点精力</Text>
                   </View>
                 </View>
@@ -128,6 +128,7 @@ function Overview() {
           </View>
         </View>
       ) : null}
+
 
       {IS_WEAPP && bestStone ? (
         <View className='card stone-quick' onClick={function () { Taro.switchTab({ url: '/pages/stones/index' }); }}>
@@ -141,6 +142,14 @@ function Overview() {
       ) : null}
 
       <DataNote />
+
+      <View className={'market-fab' + (process.env.TARO_ENV === 'h5' ? ' h5' : '')} onClick={openPrices}>
+        <View className='main'>
+          <Text className='label'>全部物品行情</Text>
+          <Text className='count'>{stats.total} 项 · 改价 / 搜索 / 分类</Text>
+        </View>
+        <Text className='arrow'>›</Text>
+      </View>
     </View>
   );
 }

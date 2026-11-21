@@ -115,7 +115,7 @@ function Prices() {
 
       <View className='rank-summary' style={{ margin: '4rpx 0 16rpx' }}>
         <Text>{stats.total} 项参与收益 · 已校准 {stats.user} · 缺价 {stats.missing}</Text>
-        <Text onClick={function () { Taro.navigateTo({ url: '/pages/analysis/index' }); }}>看收益排行 ›</Text>
+        <Text onClick={function () { Taro.navigateTo({ url: '/pages/rank/index' }); }}>看收益排行 ›</Text>
       </View>
 
       {IS_WEAPP ? (

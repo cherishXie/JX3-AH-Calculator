@@ -1,4 +1,4 @@
-/* 微信端额外提供五行石/公式编辑；小红书端保持原有 4 Tab，避免影响现有工具布局 */
+/* 微信端额外提供五行石/公式编辑；小红书端为今日 / 分析 / 我的 3 Tab */
 const IS_WEAPP = process.env.TARO_ENV === 'weapp';
 
 const PAGES = [];
@@ -6,7 +6,8 @@ if (IS_WEAPP) PAGES.push('pages/guide/index');
 PAGES.push(
   'pages/overview/index',
   'pages/prices/index',
-  'pages/analysis/index'
+  'pages/analysis/index',
+  'pages/rank/index'
 );
 
 if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index', 'pages/trends/index', 'pages/server-trends/index');
@@ -20,7 +21,7 @@ PAGES.push('pages/breakthrough/index', 'pages/recipe/index', 'pages/settings/ind
 
 const TAB_LIST = [
   { pagePath: 'pages/overview/index', text: '今日', iconPath: 'assets/tabs/home-light.png', selectedIconPath: 'assets/tabs/home-on-light.png' },
-  { pagePath: 'pages/prices/index', text: '行情', iconPath: 'assets/tabs/prices-light.png', selectedIconPath: 'assets/tabs/prices-on-light.png' }
+  { pagePath: 'pages/analysis/index', text: '分析', iconPath: 'assets/tabs/analysis-light.png', selectedIconPath: 'assets/tabs/analysis-on-light.png' }
 ];
 
 if (IS_WEAPP) {

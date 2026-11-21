@@ -5,8 +5,9 @@
 page {
   font-size: 30rpx;
   line-height: 1.5;
-  background: var(--bg);
-  color: var(--text);
+  /* 页面本身保持透明：底色由主题窗口 + .theme-root 接管，
+     避免亮色主题下切换 Tab 时露出 page 的默认暗色底。 */
+  background: transparent;
 }
 .page {
   padding: 0 32rpx;
@@ -358,3 +359,63 @@ page {
 .server-row .nm { font-size: 30rpx; font-weight: 600; }
 .server-row .rg { font-size: 24rpx; }
 .server-row .ops .btn { margin-left: 12rpx; }
+
+/* 今日页：全部物品行情入口 */
+.btn-market {
+  display: flex; align-items: center; gap: 16rpx;
+  min-height: 104rpx; padding: 18rpx 24rpx; margin: 4rpx 0 24rpx;
+  border-radius: 20rpx; background: var(--accent-blue); color: #fff;
+}
+.btn-market .label { font-size: 32rpx; font-weight: 600; flex-shrink: 0; }
+.btn-market .count { font-size: 22rpx; opacity: 0.78; flex: 1; text-align: right; }
+.btn-market .arrow { font-size: 36rpx; line-height: 1; opacity: 0.9; }
+
+/* 分析 Tab */
+.analysis-intro { padding: 12rpx 4rpx 24rpx; }
+.analysis-intro .t { display: block; font-size: 40rpx; font-weight: 700; line-height: 56rpx; }
+.analysis-intro .s { display: block; font-size: 26rpx; color: var(--muted); line-height: 38rpx; margin-top: 8rpx; }
+.analysis-card { display: flex; align-items: center; gap: 20rpx; min-height: 184rpx; }
+.analysis-ic {
+  width: 88rpx; height: 88rpx; border-radius: 20rpx; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; font-weight: 700;
+}
+.analysis-ic.blue { background: rgba(122, 184, 255, 0.14); color: var(--info); }
+.analysis-ic.purple { background: rgba(199, 155, 255, 0.14); color: var(--peak); }
+.analysis-ic.green { background: rgba(69, 212, 131, 0.14); color: var(--positive); }
+.analysis-card .main { flex: 1; min-width: 0; }
+.analysis-card .t { display: block; font-size: 32rpx; font-weight: 600; line-height: 44rpx; }
+.analysis-card .s { display: block; font-size: 24rpx; color: var(--muted); line-height: 34rpx; margin-top: 4rpx; }
+.analysis-card .meta { display: block; font-size: 22rpx; color: var(--muted-2); line-height: 32rpx; margin-top: 8rpx; }
+.analysis-card .chev { font-size: 36rpx; }
+
+/* 今日页：固定「全部物品行情」入口，始终在 TabBar 上方 */
+.page.has-fab { padding-bottom: calc(280rpx + env(safe-area-inset-bottom)); }
+.market-fab {
+  position: fixed; left: 32rpx; right: 32rpx; bottom: 24rpx; z-index: 50;
+  display: flex; align-items: center; gap: 16rpx;
+  min-height: 104rpx; padding: 16rpx 24rpx;
+  border-radius: 20rpx; background: var(--accent-blue); color: #fff;
+  box-shadow: 0 16rpx 40rpx rgba(29, 111, 224, 0.28);
+}
+.market-fab.h5 { bottom: calc(120rpx + env(safe-area-inset-bottom)); }
+.market-fab .main { flex: 1; min-width: 0; }
+.market-fab .label { display: block; font-size: 32rpx; font-weight: 600; line-height: 42rpx; }
+.market-fab .count { display: block; font-size: 22rpx; opacity: 0.78; line-height: 30rpx; }
+.market-fab .arrow { font-size: 40rpx; line-height: 1; }
+
+/* 分析 Tab 内嵌趋势卡：把旧版 17–22rpx 的迷你字放大到可读 */
+.mini-kpi .k { font-size: 24rpx; line-height: 34rpx; }
+.mini-kpi .v { font-size: 40rpx; line-height: 50rpx; }
+.mini-kpi .s { font-size: 24rpx; line-height: 34rpx; }
+.tm-movers-title, .tm-spark-axis { font-size: 24rpx; }
+.tm-mover { padding: 14rpx 0; }
+.tm-mover .nm { font-size: 28rpx; line-height: 38rpx; }
+.tm-mover .ds { font-size: 24rpx; line-height: 34rpx; }
+.tm-mover-val { font-size: 28rpx; line-height: 38rpx; }
+.stm-rank-row { padding: 14rpx 0; }
+.stm-rank-index { width: 36rpx; font-size: 24rpx; line-height: 36rpx; }
+.stm-rank-row .nm { font-size: 28rpx; line-height: 38rpx; }
+.stm-rank-val { font-size: 28rpx; line-height: 38rpx; }
+.stm-rank-meta { font-size: 24rpx; line-height: 34rpx; }
+.stm-bar-track { height: 14rpx; }

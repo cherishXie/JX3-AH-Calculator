@@ -8,7 +8,7 @@
  * - 主包 ≤2MB
  * - 页面 js/json/wxml 完整
  * - es6 / enhance 同开同关
- * - 本项目约定：11 个主包页面 + 1 个行情目录分包、4 Tab、无网络请求 API
+ * - 本项目约定：12 个主包页面 + 1 个行情目录分包、4 Tab、无网络请求 API
  *
  * 用法：npm run verify:weapp
  */
@@ -86,10 +86,10 @@ if (project) {
 }
 
 if (app) {
-  if (!Array.isArray(app.pages) || app.pages.length !== 11) {
-    fail('app.json pages 应为 11 个，当前 ' + (app.pages ? app.pages.length : 0));
+  if (!Array.isArray(app.pages) || app.pages.length !== 12) {
+    fail('app.json pages 应为 12 个，当前 ' + (app.pages ? app.pages.length : 0));
   } else {
-    pass('页面数量：11');
+    pass('页面数量：12');
   }
 
   const tabs = (app.tabBar && app.tabBar.list) || [];

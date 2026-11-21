@@ -1,1 +1,1 @@
-export default { navigationBarTitleText: '收益排行' };
+export default { navigationBarTitleText: '分析' };

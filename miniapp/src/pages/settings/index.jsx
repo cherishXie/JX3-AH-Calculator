@@ -28,14 +28,12 @@ function Settings() {
   const [showPanel, setShowPanel] = useState(false);
 
   const servers = state.servers || [];
+  const notes = (release && release.notes) || [];
+  const sources = (DATA.meta && DATA.meta.sources) || [];
   const server = servers.find(function (s) { return s.id === state.serverId; }) || servers[0] || { name: '—', region: '' };
   const serverIdx = Math.max(0, servers.findIndex(function (s) { return s.id === state.serverId; }));
   const serverRange = servers.map(function (s) { return s.name + ' · ' + (s.region || '自定义'); });
   const updateText = state.marketMeta ? fmtTime(Date.parse(state.marketMeta.priceUpdatedAt)) : fmtTime(Date.parse(DATA.meta.priceUpdatedAt));
-
-  useEffect(function () {
-    if (router.params && router.params.section === 'data') setShowPanel(true);
-  }, []);
 
   function changeTheme(value) {
     actions.setTheme(value);
@@ -217,7 +215,7 @@ function Settings() {
             <View className='ic purple'>目</View><Text className='l'>行情目录</Text><Text className='r'>672 项</Text><Text className='chev'>›</Text>
           </View>
         ) : null}
-        <View className='me-row' onClick={function () { Taro.switchTab({ url: '/pages/prices/index' }); }}>
+        <View className='me-row' onClick={function () { Taro.navigateTo({ url: '/pages/prices/index' }); }}>
           <View className='ic blue'>价</View><Text className='l'>价格库</Text><Text className='r'>{state.items.length} 项</Text><Text className='chev'>›</Text>
         </View>
         <View className='me-row' onClick={function () { go('/pages/trends/index'); }}>
@@ -326,8 +324,8 @@ function Settings() {
           <View className='card' id='data-section'>
             <View className='card-head'><View className='flex1'><Text className='card-title'>数据与备份</Text><Text className='card-sub'>{isCloudConfigured() ? '本地存储 · 可选云端行情' : '本地存储 · 不联网'}</Text></View></View>
             <View className='card-body'>
-              <View className='kv'><Text className='k'>数据版本</Text><Text className='v'>{DATA.meta.catalogVersion}</Text></View>
-              <View className='kv'><Text className='k'>物品 / 配方</Text><Text className='v'>{state.items.length} / {state.recipes.length}</Text></View>
+              <View className='kv'><Text className='k'>数据版本</Text><Text className='v'>{DATA.meta && DATA.meta.catalogVersion}</Text></View>
+              <View className='kv'><Text className='k'>物品 / 配方</Text><Text className='v'>{(state.items || []).length} / {(state.recipes || []).length}</Text></View>
               <View className='kv'><Text className='k'>云端行情</Text><Text className='v'>{!isCloudConfigured() ? '未配置' : state.marketMeta ? fmtTime(Date.parse(state.marketMeta.priceUpdatedAt)) : '未同步'}</Text></View>
               <View className='btn-row mt'>
                 {isCloudConfigured() ? <View className='btn btn-ghost btn-sm' onClick={syncCloud}>{syncing ? '同步中' : '同步行情'}</View> : null}
@@ -359,11 +357,11 @@ function Settings() {
             <View className='card-head'><View className='flex1'><Text className='card-title'>更新与数据说明</Text><Text className='card-sub'>{release.version} · {release.date}</Text></View></View>
             <View className='card-body'>
               <Text className='card-title' style={{ display: 'block', fontSize: '30rpx' }}>{release.title}</Text>
-              {release.notes.map(function (note, i) {
+              {notes.map(function (note, i) {
                 return <Text key={i} className='settings-note' style={{ display: 'block', marginTop: '8rpx' }}>· {note}</Text>;
               })}
               <View className='divider' />
-              {DATA.meta.sources.map(function (s, i) {
+              {sources.map(function (s, i) {
                 return (
                   <View className='server-row' key={i}>
                     <View className='flex1'>
