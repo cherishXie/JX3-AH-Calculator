@@ -17,6 +17,15 @@ function createBreakthrough(BT, catalog, getState) {
   // 数据里的单次经验（r.x / META.gatherExp）是旧估算，这里按比例统一覆盖。
   // 指定采集路线（用户实测秒刷点），按等级区间固定采集动作。
   const GATHER_PLANS = META.gatherPlans || {};
+  // 采集点等级（用户实测，覆盖目录里的旧值）；键为采集点短名。
+  const GATHER_LEVELS = META.gatherLevels || {};
+  const GATHER_EXTRAS = META.gatherExtras || {};
+  const gatherLevelOf = function (r) {
+    const name = String((r && (r.n || r.name)) || '');
+    const keys = Object.keys(GATHER_LEVELS);
+    for (var i = 0; i < keys.length; i++) { if (name.indexOf(keys[i]) !== -1) return num(GATHER_LEVELS[keys[i]]); }
+    return num(r && r.level);
+  };
   const EXP_PER_ENERGY = META.expPerEnergy || {};
   const GATHER_EXP_PER_ENERGY = num(EXP_PER_ENERGY.gather) || 128 / 40;
   const CRAFT_EXP_PER_ENERGY = num(EXP_PER_ENERGY.craft) || 2;
@@ -166,12 +175,22 @@ function createBreakthrough(BT, catalog, getState) {
       } else e = recipeEcon(r, serverId, table, taxRate, 'mid');
       return { r: r, e: e };
     });
+    // 目录缺失的采集点（例如采金·银矿）按实测等级与 40 精力合成，只用于算精力
+    if (gather) {
+      (GATHER_EXTRAS[skillId] || []).forEach(function (pt) {
+        const energy = num(pt.energy) || 40;
+        candidates.push({
+          r: { n: pt.name, name: pt.name, energy: energy, level: num(pt.level) || 1 },
+          e: { exp: energy * GATHER_EXP_PER_ENERGY, energy: energy, matCost: 0, netValue: null, profit: null, missing: true, profitPerExp: null }
+        });
+      });
+    }
     const levels = experienceRows().map(function (xp) {
       let pick = null;
       // 采集点也有等级限制：只有当前等级已解锁的矿/草/兽才能采。
       // 目录里采金最低 20 级、庖丁最低 20 级，所以 1–19 级确实无点可采（数据缺口），
       // 庖丁的秒刷点由 GATHER_PLANS 单独指定，不走这个门禁。
-      const levelOk = function (c) { return gather ? num(c.r.level) <= xp.from : c.r.l <= xp.from; };
+      const levelOk = function (c) { return gather ? gatherLevelOf(c.r) <= xp.from : c.r.l <= xp.from; };
       const usable = candidates.filter(function (c) { return levelOk(c) && c.e.exp > 0 && c.e.energy > 0; });
       let available = usable.filter(function (c) { return strategy !== 'gold' || !c.e.missing; });
       // 采集：金币路线优先用有报价的采集动作；整级都没报价时仍给出精力路线（收益留空），

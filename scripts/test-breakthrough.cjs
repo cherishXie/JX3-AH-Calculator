@@ -181,7 +181,7 @@ for (const server of catalog.servers) {
   let missingSeen = false;
   for (const row of summary) { if (!row.enough) missingSeen = true; else assert.equal(missingSeen, false); }
   // 采集点有等级限制：采金目录最低 20 级，1–19 级无点可采；庖丁由实测秒刷点覆盖全等级
-  assert.equal(model.analyze('caijin', 'energy').totals.missingLevels, 19, 'caijin catalog starts at level 20');
+  assert.equal(model.analyze('caijin', 'energy').totals.missingLevels, 0, 'caijin nodes now cover every level');
   assert.equal(model.analyze('paoding', 'energy').totals.missingLevels, 0, 'paoding plan covers every level');
 }
 // Both browser bundles must contain the exact same model and expose working adapters.

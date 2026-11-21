@@ -20,6 +20,9 @@ for (const file of ['miniapp/src/shared/breakthrough.json', 'assets/breakthrough
   data.meta.expModel = expModel;
   // 精力→经验换算：采集 40 精力 = 128 经验，制造 1 精力 = 2 经验。
   data.meta.expPerEnergy = { gather: 3.2, craft: 2 };
+  // 采金采集点等级（用户实测，覆盖目录旧值）；银矿目录里没有，单独补一条
+  data.meta.gatherLevels = { 铜矿: 1, 锡矿: 3, 铅锌矿: 5, 铁矿: 7, 银矿: 9, 青石: 30, 金沙: 30 };
+  data.meta.gatherExtras = { caijin: [{ name: '银矿', energy: 40, level: 9 }] };
   // 庖丁实测秒刷点：1–30 用西湖草龟/成都雌鹿，30–50 用黑山羊
   data.meta.gatherPlans = {
     paoding: [
