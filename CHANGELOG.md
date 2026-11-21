@@ -559,7 +559,3 @@ rebuild mini program bundles for cloud trends
 ## 2026-11-20 · ad802b1
 
 include mini program trends build
-
-## 2026-11-20 · bc9ba3e
-
-update JX3BOX prices
