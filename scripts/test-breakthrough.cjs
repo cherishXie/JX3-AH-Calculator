@@ -14,6 +14,7 @@ const named = catalog.items.filter(i => mapping[i.name]).slice(0, 3);
 function fixture() {
   const cat = { meta: {}, items: named, skills: [{ id: 'duanzao', name: '锻造', type: 'craft' }], serverPrices: { test: { [named[0].id]: 5, [named[1].id]: 10, [named[2].id]: 7 } } };
   const bt = { meta: { levelCap: 50, expModel: { base: 500, step: 25 } }, items: named.map(i => ({ n: i.name, k: mapping[i.name] })), recipes: [
+    // 制造固定 1 精力 = 2 经验：e=10 → 单次 20 经验（x 字段已不参与计算）。
     { i: 1, s: 'duanzao', n: '低收益配方', l: 1, x: 500, e: 10, m: [[0, 1]], o: [[1, 1, 1, 1]] },
     { i: 2, s: 'duanzao', n: '中收益配方', l: 1, x: 500, e: 10, m: [[0, 1]], o: [[1, 5, 5, 1]] },
     { i: 3, s: 'duanzao', n: '高收益配方', l: 1, x: 500, e: 10, m: [[0, 1]], o: [[1, 8, 12, 1]] },
@@ -31,14 +32,14 @@ function fixture() {
   const high = model.analyze('duanzao', 'gold', 'high');
   assert.equal(low.levels[0].recipe.i, 4);
   assert.equal(mid.levels[0].recipe.i, 2);
-  near(low.levels[0].profit, 28);
+  near(low.levels[0].profit, 350);
   near(low.levels[0].band.mean, .925);
-  near(mid.levels[0].profit, 42.5);
+  near(mid.levels[0].profit, 1062.5);
   near(mid.levels[0].band.mean, 4.25);
-  assert.equal(high.levels[0].recipe.i, 5);
-  near(high.levels[0].profit, 850);
+  assert.equal(high.levels[0].recipe.i, 3);
+  near(high.levels[0].profit, 2250);
   near(high.levels[0].band.mean, 8.75);
-  near(high.levels[0].econ.outs[0].qty, 180 / 19, 'all bands use midpoint output, never min/max production');
+  near(high.levels[0].econ.outs[0].qty, 10, 'all bands use midpoint output (8..12 → 10), never min/max');
   assert.equal(mid.gates.length, 4);
   assert.equal(mid.experience.length, 49);
   assert.equal(model.expToNext(50), null);
@@ -102,7 +103,8 @@ function fixture() {
   bt.recipes[0].o[0] = [1, 1, 5, .5];
   bt.recipes.splice(1);
   near(model.analyze('duanzao', 'gold', 'mid').levels[0].econ.outs[0].qty, 1.5);
-  near(model.analyze('duanzao', 'gold', 'mid').levels[0].profit, 9.25);
+  // 单次经验 = 2×精力 = 20，所以 1→30 阶段要 25 次，总利润是单次的 25 倍
+  near(model.analyze('duanzao', 'gold', 'mid').levels[0].profit, 231.25);
 }
 
 // All servers, skills, strategies and yield scenarios: no hidden unknown totals,
@@ -159,7 +161,12 @@ for (const server of catalog.servers) {
     if (strategy === 'energy' && mode === 'mid') {
       const pool = skill.type === 'gather' ? catalog.recipes.filter(x => x.kind === 'gather' && x.skillId === skill.id) : data.recipes.filter(x => x.s === skill.id);
       for (const level of r.levels) {
-        const possible = pool.filter(x => (skill.type === 'gather' ? x.level : x.l) <= level.from).map(x => Math.ceil(level.need / (skill.type === 'gather' ? data.meta.gatherExp : x.x)) * (skill.type === 'gather' ? x.energy : x.e));
+        // 精力→经验按实测比例：采集 40 精力=128 经验（3.2/精力），制造 1 精力=2 经验
+        const rate = skill.type === 'gather' ? 3.2 : 2;
+        const possible = pool.filter(x => (skill.type === 'gather' ? x.level : x.l) <= level.from).map(x => {
+          const energy = skill.type === 'gather' ? x.energy : x.e;
+          return Math.ceil(level.need / (energy * rate)) * energy;
+        });
         if (possible.length) assert.equal(level.totalEnergy, Math.min(...possible), 'minimum-energy choice must be absolute, independent of any quote or income ratio');
       }
     }

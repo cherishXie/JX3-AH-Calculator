@@ -13,6 +13,11 @@ function createBreakthrough(BT, catalog, getState) {
   items.forEach(function (i, idx) { indexByName[i.n] = idx; });
   recipes.forEach(function (r) { (r.o || []).forEach(function (o) { (producers[o[0]] = producers[o[0]] || []).push(r); }); });
   const num = function (v) { return Number(v) || 0; };
+  // 精力→经验换算（用户实测）：采集 40 精力 = 128 经验；制造 1 精力 = 2 经验。
+  // 数据里的单次经验（r.x / META.gatherExp）是旧估算，这里按比例统一覆盖。
+  const EXP_PER_ENERGY = META.expPerEnergy || {};
+  const GATHER_EXP_PER_ENERGY = num(EXP_PER_ENERGY.gather) || 128 / 40;
+  const CRAFT_EXP_PER_ENERGY = num(EXP_PER_ENERGY.craft) || 2;
   const itemOf = function (idx) { return items[idx] || { n: '未知物品' }; };
   const skillMeta = function (id) { return (catalog.skills || []).find(function (s) { return s.id === id; }) || { id: id, name: id }; };
   const chanceOf = function (v) { return v == null ? 1 : Math.max(0, Math.min(1, num(v))); };
@@ -63,7 +68,9 @@ function createBreakthrough(BT, catalog, getState) {
     const gross = outs.some(function (o) { return o.missing; }) ? null : outs.reduce(function (s, o) { return s + o.sub; }, 0);
     const netValue = gross == null ? null : gross * (1 - taxRate);
     const profit = matCost == null || netValue == null ? null : netValue - matCost;
-    return { mats: mats, outs: outs, matCost: matCost, gross: gross, netValue: netValue, profit: profit, exp: num(r.x), energy: num(r.e), missing: profit == null, profitPerExp: profit == null || !(r.x > 0) ? null : profit / r.x };
+    const energy = num(r.e);
+    const exp = energy > 0 ? energy * CRAFT_EXP_PER_ENERGY : 0;
+    return { mats: mats, outs: outs, matCost: matCost, gross: gross, netValue: netValue, profit: profit, exp: exp, energy: energy, missing: profit == null, profitPerExp: profit == null || !(exp > 0) ? null : profit / exp };
   }
   const expModel = META.expModel || { base: 500, step: 25 };
   const observations = (expModel.observations || []).slice().sort(function (a, b) { return a.level - b.level; });
@@ -151,7 +158,8 @@ function createBreakthrough(BT, catalog, getState) {
       if (gather) {
         const outs = gatherOutputs(r, serverId), missing = outs.some(function (o) { return o.missing; });
         const value = missing ? null : outs.reduce(function (s, o) { return s + o.sub; }, 0);
-        e = { exp: num(META.gatherExp) || 80, energy: num(r.energy), matCost: 0, netValue: value, profit: value, missing: missing };
+        const gEnergy = num(r.energy);
+        e = { exp: gEnergy > 0 ? gEnergy * GATHER_EXP_PER_ENERGY : 0, energy: gEnergy, matCost: 0, netValue: value, profit: value, missing: missing };
         e.profitPerExp = value == null ? null : value / e.exp;
       } else e = recipeEcon(r, serverId, table, taxRate, 'mid');
       return { r: r, e: e };
