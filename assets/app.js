@@ -1676,8 +1676,11 @@
           const profitCls = c.missing ? 'dim' : c.profit >= 0 ? 'pos' : 'neg';
           return '<tr class="clickable" data-recipe-id="' + U.esc(r.recipe.id) + '" tabindex="0">' +
             '<td class="sticky"><div class="cell-main">' + skillIcon(r.skill, 'sm') + '<div class="txt"><div class="t1">' + U.esc(r.recipe.name) + ' ' +
-              (r.recipe.custom ? '<span class="badge badge-custom">自定义</span>' : !r.recipe.verified ? '<span class="badge badge-neutral">示例</span>' : '') + '</div>' +
-              '<div class="t2">' + (sk.type === 'gather' ? 'Lv.' + r.recipe.level + ' · 单次 ' + r.recipe.energy + ' 精力 · 掉率已折算' : U.esc(r.outputNames) + ' · ' + r.recipe.materials.length + ' 种材料') + '</div></div></div></td>' +
+              (r.recipe.custom ? '<span class="badge badge-custom">自定义</span>' : !r.recipe.verified ? '<span class="badge badge-neutral">示例</span>' : '') +
+              // 副标题（产出拆分 / 材料数）改为图标，点开才看：原来这一整行说明
+              // 会把首列撑到 800px 以上，把数值列挤出屏幕。
+              '<span class="info tip-inline" tabindex="0" role="img" aria-label="配方明细" data-tip="' + U.esc(sk.type === 'gather' ? 'Lv.' + r.recipe.level + ' · 单次 ' + r.recipe.energy + ' 精力 · 掉率已折算' : r.outputNames + ' · ' + r.recipe.materials.length + ' 种材料') + '">' + icon('info') + '</span>' +
+              '</div></div></div></td>' +
             '<td>' + tierBadge(r.tier) + '</td>' +
             '<td>' + (function () { const a = auditRecipe(Store.state.serverId, r.recipe.id); return a ? gradeBadge(a.gl, { title: a.sc ? '条件可做：含自产' : '仅看本服报价' }) : '<span class="badge badge-neutral">—</span>'; })() + '</td>' +
             '<td class="num">' + (sk.type === 'gather' ? U.esc(r.outputNames) : U.fmt(c.totalCost, 2)) + '</td>' +
