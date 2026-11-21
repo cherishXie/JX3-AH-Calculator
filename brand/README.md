@@ -1,55 +1,53 @@
-# 剑网三物价助手 · 小工具品牌素材
+# 剑网三品牌素材（小程序 + 小工具）
 
-## 用户提供的 Q 版账房角色（当前头像 / 启动图）
+本目录同时存放两个产品的视觉物料：
 
-> 2026-11-21 起，小程序头像与启动引导页改用用户提供的 Q 版账房角色插画；下面的自绘「苍生铸世」向量封面保留为备选与横版/5:4 物料。
+- **精力做什么**（微信小程序，`miniapp/`）：科技风 v1，见下；
+- **剑网三物价助手**（小红书小工具，`minitool/`）：图标与 3:4 / 16:9 封面，见「小工具文件」。
 
-| 源文件 | 用途 |
-| --- | --- |
-| `jingli-chibi-v1/icon-girl-1254.png` | Q 版角色方形母版，导出 `wechat/avatar-144/512/1024/96.png` |
-| `jingli-chibi-v1/launch-girl-941x1672.png` | 竖版启动图母版，导出 `wechat/launch-9x16.jpg` 与 `miniapp/src/assets/launch-default.jpg` |
+## 精力做什么 · 科技风 v1（当前，2026-11-22）
 
-- 小程序内启动引导页（`pages/guide/index`）按 `aspectFit` 完整展示，不裁标题/角色；底部浮层放「进入小程序 + 倒计时」。打包版为 600×1066 / 约 94 KB，用于压到主包 1.5MB 质量线以内。
-- 微信原生启动屏不可自定义；该图用于小程序内引导页、资料页/分享卡片与外部宣传。
-- 版权口径：角色插画由用户提供并授权在本项目使用；不含官方 Logo、官方角色、游戏截图或官方字体。声明统一写「非官方玩家工具 · 示例价可校准 · 数据仅存本机」。
+按 `tech-xhs-image` 的视觉 DNA 重做：深蓝→紫→洋红→青的流体渐变底 + 一层暖橘光，白色超大「精」字 + 橘色强调，数据口径写在玻璃卡里。头像、启动图、分享卡共用一套底，与小程序内的科技风主题同源。
 
-## 小程序封面 / 启动图（v1，2026-11-21）
-
-这一组图专供 **「精力做什么」微信小程序** 使用，与上面「剑网三物价助手」小工具封面分开，避免两个产品串味。
-
-| 文件 | 用途 | 规格 |
+| 源文件 | 用途 | 规格 |
 | --- | --- | --- |
-| `miniapp-cover-16x9-1200x675.png` | 社群 / 公众号 / 横版分享卡片 | 1200×675，16:9 |
-| `miniapp-cover-5x4-1080x864.png` | 小程序分享卡片 / 资料页 5:4 | 1080×864，5:4 |
-| `miniapp-launch-9x16-1080x1920.png` | 竖版启动图 / 手机全屏 | 1080×1920，9:16 |
-| `miniapp-guide-hero.png` / `.jpg` | 启动引导页顶部横幅（小程序内使用） | 1080×720，3:2 |
-| `miniapp-*.svg` | 以上图片的矢量源文件 | 全部为本项目自绘 |
-| `make-miniapp-covers.py` | 一次性生成全部 SVG 的脚本 | Python 3，无第三方依赖 |
+| `tech-v1/icon-1024x1024.png` | 头像母版 | 1024×1024 |
+| `tech-v1/launch-1080x1920.png` | 启动图母版 | 1080×1920，9:16 |
+| `tech-v1/cover-5x4-1080x864.png` | 分享卡 / 资料页 | 1080×864，5:4 |
+| `tech-v1/cover-16x9-1200x675.png` | 横版分享 / 公众号 | 1200×675，16:9 |
+| `tech-v1/preview.png` | 96/144 圆形裁切 + 三张封面自查 | — |
+| `make-miniapp-tech.py` | 生成 + 导出脚本 | Python 3 / Playwright |
+
+脚本同时写回线上使用的文件：
+
+- `wechat/avatar-{1024,512,144,96}.png`（后台上传用 144，备用 512/1024，96 只做小尺寸自查）
+- `wechat/launch-9x16.jpg`（941×1672）
+- `miniapp/src/assets/launch-default.jpg`（600×1066，≤110 KB，用于主包 1.5 MB 质量线）
+- `brand/miniapp-cover-5x4.png` / `miniapp-cover-16x9.png` / `miniapp-launch-9x16.png`
+
+```bash
+python3 brand/make-miniapp-tech.py                 # 生成 master + 导出
+python3 brand/make-miniapp-tech.py --no-export     # 只生成 brand/tech-v1
+python3 brand/make-miniapp-tech.py --skill-dir DIR # 指定 tech-xhs-image 路径
+```
+
+字体默认取 `~/.dsh/skills/tech-xhs-image/assets/fonts`（Noto Sans SC Variable）；换机器时用 `--skill-dir` 指定，找不到技能目录会退回系统中文字体。依赖：Python 3.9+、playwright、Pillow、Chromium。
 
 设计口径：
 
-- **只取意象，不取素材**：画面只保留「苍生铸世」的抽象意象——层叠山峦、无名碑、长夜灯盏、破晓光河、飞鸟与 K 线星图；没有任何官方 Logo、角色、截图、UI 或字体文件。
-- **文字即产品**：主标题「今天精力 / 做什么？」直接复用小程序的决策问题；三枚胶囊「物价走势 / 区服趋势 / 突破升级」对应分析页的三个模块。
-- **数据感**：天空里的金色折线与发光节点是「行情走势」的抽象转译；灯盏代表「本服可做」，无名碑代表版本「苍生铸世」的叙事，不复制官方海报构图。
-- **可读性**：16:9 与 5:4 都留了左侧/底部暗色遮罩，缩到 240px 宽仍能读出标题；9:16 底部 200px 只放声明与细线，避开平台按钮。
-- **版权**：所有路径、渐变、纹理、印章与文字均为本项目原创绘制；中文使用系统字体 `Songti SC / PingFang SC`，仅在栅格化时使用，不随包分发字体文件。声明统一写「非官方玩家工具 · 示例价可校准 · 数据仅存本机」。
+- **头像**：白「精」+ 橘色下划线 + 三根上涨柱，无玻璃外框，圆形裁切不丢信息；96px 列表尺寸下仍可读出字标。
+- **启动图**：上半部只回答一个问题「今天精力做什么？」；玻璃看板给 `251 配方 / 444 物品 / 17 区服` 三个可校验口径；底部 15% 留空，给「进入小程序 + 倒计时」浮层。
+- **分享卡**：标题沿用同一句判断；5:4 用底部横条数据，16:9 用右侧看板，缩到 240px 宽仍能读出标题。
+- **声明**：非官方玩家工具 · 示例价可校准 · 数据仅存本机。
+- **口径**：数字与 `miniapp/README.md` 的计算内核一致（444 物品 / 251 配方 / 17 服务器）；改数据时同步改脚本顶部常量再重跑。
 
-重新生成：
+### 归档：Q 版账房角色（2026-11-21）
 
-```bash
-python3 brand/make-miniapp-covers.py
-cd brand
-rsvg-convert -w 1200 -h 675  miniapp-cover-16x9.svg  -o miniapp-cover-16x9.png
-rsvg-convert -w 1080 -h 864  miniapp-cover-5x4.svg    -o miniapp-cover-5x4.png
-rsvg-convert -w 1080 -h 1920 miniapp-launch-9x16.svg  -o miniapp-launch-9x16.png
-rsvg-convert -w 1080 -h 720  miniapp-guide-hero.svg   -o miniapp-guide-hero.png
-# 小程序内只打包压缩后的 JPEG 横幅：
-python3 - <<'PY'
-from PIL import Image
-Image.open('miniapp-guide-hero.png').convert('RGB').save(
-    '../miniapp/src/assets/guide-hero.jpg', 'JPEG', quality=84, optimize=True, progressive=True)
-PY
-```
+`jingli-chibi-v1/` 里保留用户提供的 Q 版角色母版（`icon-girl-1254.png`、`launch-girl-941x1672.png`）与另一版男角色素材，仅作对比，不再被打包或上传。
+
+### 归档：墨色向量封面（v1，2026-11-21）
+
+`miniapp-*.svg` 与 `make-miniapp-covers.py` 仍保留，用于对比与横版物料；对应的 `miniapp-*.png` 已被上面的科技风版本替换。
 
 ## 小工具文件
 
