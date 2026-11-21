@@ -500,6 +500,28 @@
         '<button class="icon-btn" data-action="toggle-theme" aria-label="切换明暗主题">' + icon(ui.theme === 'light' ? 'moon' : 'sun') + '</button>' +
         '<button class="icon-btn" data-action="open-data" aria-label="数据说明">' + icon('info') + '</button>' +
       '</div>';
+
+    const tabRoot = document.getElementById('tabbar-root');
+    if (tabRoot) {
+      if (isMobileLayout()) {
+        const settingsOpen = !!(ui.modal && ui.modal.type === 'settings');
+        const tabs = [
+          { href: Route.href('/overview'), path: '/overview', label: '今日', icon: 'grid' },
+          { href: Route.href('/analysis'), path: '/analysis', label: '分析', icon: 'chart' },
+          { href: Route.href('/stones'), path: '/stones', label: '五行石', icon: 'gem' }
+        ];
+        let tabHtml = '<nav class="tabbar" aria-label="主导航">';
+        tabs.forEach(function (t) {
+          const active = path === t.path || (t.path === '/overview' && path === '/') || path.indexOf(t.path + '/') === 0;
+          tabHtml += '<a class="tabbar-item' + (active ? ' active' : '') + '" href="' + t.href + '"' + (active ? ' aria-current="page"' : '') + '>' + icon(t.icon) + '<span>' + t.label + '</span></a>';
+        });
+        tabHtml += '<button class="tabbar-item' + (settingsOpen ? ' active' : '') + '" data-action="open-settings">' + icon('settings') + '<span>我的</span></button>';
+        tabHtml += '</nav>';
+        tabRoot.innerHTML = tabHtml;
+      } else {
+        tabRoot.innerHTML = '';
+      }
+    }
   }
 
   /* ------------------------------------------------------------------ */
@@ -5189,6 +5211,11 @@
       go('/breakthrough', { skill: btRow.getAttribute('data-bt-skill'), strategy: params().strategy, yield: params().yield });
       return;
     }
+    const mrow = e.target.closest('[data-mobile-recipe]');
+    if (mrow && !e.target.closest('input, select, button, a, label')) {
+      openRecipe(mrow.getAttribute('data-mobile-recipe'));
+      return;
+    }
     const row = e.target.closest('tr[data-recipe-id]');
     if (row && !e.target.closest('input, select, button, a, label')) {
       openRecipe(row.getAttribute('data-recipe-id'));
@@ -5715,6 +5742,164 @@
     }
   }
 
+  /* ------------------------------------------------------------------ */
+  /* 移动端（参考小程序：今日 / 分析 / 五行石 / 我的）                    */
+  /* ------------------------------------------------------------------ */
+  function isMobileLayout() {
+    try { return !!(window.matchMedia && window.matchMedia('(max-width: 768px)').matches); }
+    catch (err) { return (window.innerWidth || 0) <= 768; }
+  }
+
+  function mobilePriceState(rows, stats) {
+    const missing = stats.missing;
+    return {
+      missing: missing,
+      text: missing ? ('缺价 ' + missing + ' 项') : ('本服有价 ' + (stats.total - missing) + ' 项')
+    };
+  }
+
+  function todayRankRow(r, i) {
+    const tierName = r.tier ? r.tier.name : '';
+    return '<div class="today-row" data-mobile-recipe="' + U.esc(r.recipe.id) + '" role="button" tabindex="0">' +
+      '<span class="today-rank' + (i === 0 ? ' top' : '') + '">' + (i + 1) + '</span>' +
+      '<span class="today-main"><strong>' + U.esc(r.recipe.name) + '</strong>' +
+        '<small>' + U.esc(tierName) + (tierName ? ' · ' : '') + U.fmtInt(r.calc.energy) + ' 精力 · 单次 ' + U.fmt(r.calc.profit, 2) + ' 金</small></span>' +
+      '<span class="today-val"><strong>' + U.fmt(r.calc.perEnergy, 2) + '</strong><small>金/精力</small></span>' +
+    '</div>';
+  }
+
+  function renderTodayMobile(p) {
+    const rows = currentRows(p);
+    const valid = rows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
+    const stats = Calc.stats(Store.state.serverId);
+    const state = mobilePriceState(rows, stats);
+    const best = valid.slice().sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; })[0] || null;
+    const sim = Calc.simulate(rows, settings().energyBudget);
+    const skills = (DATA.skills || []);
+    const wanted = p.skill && skills.some(function (s) { return s.id === p.skill; })
+      ? p.skill : (best ? best.recipe.skillId : (skills[0] || {}).id);
+    const skill = C.skillOf(wanted) || skills[0] || { name: '技艺', id: '' };
+    const list = valid.filter(function (r) { return r.recipe.skillId === wanted; })
+      .sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; });
+    const top = list.slice(0, 12);
+
+    let html = '<div class="page today-page">';
+    html += '<div class="today-head"><h1 class="today-title">今天做什么最赚</h1>' +
+      '<p class="today-sub">' + U.esc(server().name) + ' · ' + (best ? '最高 ' + U.fmt(best.calc.perEnergy, 2) + ' 金/精力' : '补齐价格后自动计算') + '</p></div>';
+
+    html += '<a class="today-price" href="' + Route.href('/prices') + '">' +
+      '<span>' + U.esc(state.text) + '</span><span class="act">' + (state.missing ? '去补价 ›' : '校准 ›') + '</span></a>';
+
+    html += '<div class="today-chips">' + skills.map(function (s) {
+      return '<a class="chip' + (s.id === wanted ? ' active' : '') + '" href="' + Route.href('/overview', { skill: s.id }) + '">' + U.esc(s.name) + '</a>';
+    }).join('') + '</div>';
+
+    html += '<section class="card today-card"><div class="card-head"><div><h2 class="card-title">' + U.esc(skill.name) + ' · 收益排行</h2>' +
+      '<p class="card-sub">' + list.length + ' 个配方 · 金/精力</p></div>' +
+      '<a class="today-more" href="' + Route.href('/analysis') + '">完整 ›</a></div>';
+    if (top.length) {
+      html += '<div class="today-list">' + top.map(todayRankRow).join('') + '</div>';
+      if (list.length > top.length) {
+        html += '<a class="today-foot" href="' + Route.href('/analysis') + '">还有 ' + (list.length - top.length) + ' 个 · 看完整排行 ›</a>';
+      }
+    } else {
+      html += '<div class="today-empty"><p>这个技艺暂时没有可算配方</p><a class="btn btn-sm" href="' + Route.href('/prices') + '">去补价格</a></div>';
+    }
+    html += '</section>';
+
+    html += '<div class="today-kpis">' +
+      '<div class="today-kpi"><span>满精力预估</span><strong>' + U.fmt(sim.profit, 0) + '<i>金</i></strong><small>预算 ' + U.fmtInt(settings().energyBudget) + ' 精力</small></div>' +
+      '<div class="today-kpi"><span>可做配方</span><strong>' + valid.length + '<i>/ ' + rows.length + '</i></strong><small>缺价 ' + state.missing + ' 项</small></div>' +
+    '</div>';
+
+    html += '<a class="today-stone" href="' + Route.href('/stones') + '">' +
+      '<span class="today-stone-ic">石</span>' +
+      '<span class="today-main"><strong>五行石合成</strong><small>1–8 级行情 · 快速 / 最优路线</small></span>' +
+      '<span class="chev">›</span></a>';
+
+    html += '<div class="today-grid">' +
+      '<a class="today-tile" href="' + Route.href('/prices') + '"><b>价格库</b><span>校准本服物价</span></a>' +
+      '<a class="today-tile" href="' + Route.href('/breakthrough') + '"><b>突破升级</b><span>1→50 路线</span></a>' +
+      '<a class="today-tile" href="' + Route.href('/trends') + '"><b>物价走势</b><span>历史涨跌</span></a>' +
+      '<a class="today-tile" href="' + Route.href('/server-trends') + '"><b>区服趋势</b><span>跨服行情</span></a>' +
+    '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function renderAnalysisMobile(p) {
+    const auditByRecipe = Object.create(null);
+    auditRowsFor(Store.state.serverId, { crossServer: false }).forEach(function (a) { auditByRecipe[a.id] = a; });
+    const rows0 = currentRows(p).map(function (r) {
+      const isGather = r.type === 'gather';
+      const a = isGather ? null : (auditByRecipe[r.recipe.id] || null);
+      const calc = Object.assign({}, r.calc);
+      if (a) { calc.perEnergy = a.perE; calc.profit = a.profit; calc.energy = a.energy; calc.missing = a.perE == null; }
+      return Object.assign({}, r, {
+        calc: calc, land: a,
+        landGrade: isGather ? 'G' : (a ? a.grade : 'C')
+      });
+    });
+    const craftRows = rows0.filter(function (r) { return r.type !== 'gather'; });
+    const abRows = craftRows.filter(function (r) { return r.landGrade === 'A' || r.landGrade === 'B'; });
+    const gatherRows = rows0.filter(function (r) { return r.landGrade === 'G'; });
+    const cRows = craftRows.filter(function (r) { return r.landGrade === 'C'; });
+    const valid = abRows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
+    const best = valid.slice().sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; })[0] || null;
+    const median = Calc.median(valid.map(function (r) { return r.calc.perEnergy; }));
+    const planRows = abRows.map(function (r) {
+      return { id: r.recipe.id, name: r.recipe.name, skill: r.recipe.skillId, grade: r.landGrade,
+        perE: r.calc.perEnergy, medianPerE: r.land ? r.land.medianPerE : null,
+        profit: r.calc.profit, energy: r.calc.energy, outCov: r.land ? r.land.outCov : 0,
+        selfCraft: r.land ? r.land.selfCraft : false, blocked: r.land ? r.land.blocked : [], thin: r.land ? r.land.thin : [] };
+    });
+    const plan = window.JX3Landability && window.JX3Landability.plan
+      ? window.JX3Landability.plan(planRows, settings().energyBudget, { includeSelfCraft: false, localOnly: true })
+      : { profit: 0, energyUsed: 0, allocations: [] };
+    const list = valid.slice().sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; });
+
+    let html = '<div class="page analysis-mobile">';
+    html += '<div class="today-head"><h1 class="today-title">精力收益分析</h1><p class="today-sub">按' + U.esc(server().name) + '报价 · 默认只看可做</p></div>';
+    html += '<div class="kpi-grid mobile-kpis">' +
+      '<div class="kpi"><div class="kpi-label">本服最高可做</div><div class="kpi-value">' + (best ? U.fmt(best.calc.perEnergy, 2) : '—') + '<span class="kpi-unit">金/精力</span></div>' +
+        '<div class="kpi-meta"><span class="strong">' + (best ? U.esc(best.recipe.name) : '暂无') + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">可做中位</div><div class="kpi-value">' + (median == null ? '—' : U.fmt(median, 2)) + '<span class="kpi-unit">金/精力</span></div>' +
+        '<div class="kpi-meta"><span>' + valid.length + ' 个可做配方</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">可做组合</div><div class="kpi-value">' + U.fmt(plan.profit, 0) + '<span class="kpi-unit">金</span></div>' +
+        '<div class="kpi-meta"><span>用尽 ' + U.fmtInt(plan.energyUsed) + ' 精力</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">暂不可做</div><div class="kpi-value">' + cRows.length + '<span class="kpi-unit">/ ' + craftRows.length + '</span></div>' +
+        '<div class="kpi-meta"><span>缺价或亏损 · 不进榜</span></div></div>' +
+    '</div>';
+
+    html += '<section class="card today-card"><div class="card-head"><div><h2 class="card-title">可做排行</h2>' +
+      '<p class="card-sub">严格购买口径 · 采集单列</p></div>' +
+      '<a class="today-more" href="' + Route.href('/analysis', { full: '1' }) + '">完整 ›</a></div>';
+    const rankRows = list.slice(0, 15).concat(gatherRows.filter(function (r) { return !r.calc.missing; }).slice(0, 5));
+    if (rankRows.length) {
+      html += '<div class="today-list">' + rankRows.map(function (r, i) {
+        const grade = r.type === 'gather' ? 'G' : (r.landGrade || 'C');
+        return '<div class="today-row" data-mobile-recipe="' + U.esc(r.recipe.id) + '" role="button" tabindex="0">' +
+          '<span class="today-rank' + (i === 0 ? ' top' : '') + '">' + (i + 1) + '</span>' +
+          '<span class="today-main"><strong>' + U.esc(r.recipe.name) + '</strong>' +
+            '<small>' + U.esc(r.skill ? r.skill.name : '') + ' · ' + U.fmtInt(r.calc.energy) + ' 精力' + (r.type === 'gather' ? ' · 采集' : '') + '</small></span>' +
+          '<span class="today-val"><strong>' + U.fmt(r.calc.perEnergy, 2) + '</strong><small>金/精力</small></span>' +
+        '</div>';
+      }).join('') + '</div>';
+    } else {
+      html += '<div class="today-empty"><p>当前没有可做配方</p><a class="btn btn-sm" href="' + Route.href('/prices') + '">去补价格</a></div>';
+    }
+    html += '</section>';
+
+    html += '<div class="today-grid">' +
+      '<a class="today-tile" href="' + Route.href('/breakthrough') + '"><b>突破升级</b><span>1→50 路线</span></a>' +
+      '<a class="today-tile" href="' + Route.href('/trends') + '"><b>物价走势</b><span>历史涨跌</span></a>' +
+      '<a class="today-tile" href="' + Route.href('/server-trends') + '"><b>区服趋势</b><span>跨服行情</span></a>' +
+      '<a class="today-tile" href="' + Route.href('/prices') + '"><b>价格库</b><span>校准本服物价</span></a>' +
+    '</div>';
+    html += '</div>';
+    return html;
+  }
+
   function render() {
     const route = Route.parse();
     const p = route.params;
@@ -5764,7 +5949,12 @@
 
     let html = '';
     let title = '总览';
-    if (route.path === '/' || route.path === '/overview') {
+    const mobile = isMobileLayout();
+    if ((route.path === '/' || route.path === '/overview') && mobile) {
+      html = renderTodayMobile(p); title = '今日';
+    } else if (route.path === '/analysis' && mobile && p.full !== '1') {
+      html = renderAnalysisMobile(p); title = '分析';
+    } else if (route.path === '/' || route.path === '/overview') {
       html = renderOverview(p); title = '总览';
     } else if (route.path.indexOf('/skills') === 0) {
       html = renderSkills(route.path, p);
@@ -5791,6 +5981,10 @@
     if (!page) return;
     const previousScroll = window.scrollY;
     page.innerHTML = html;
+    try {
+      const activeChip = page.querySelector('.today-chips .chip.active');
+      if (activeChip && activeChip.scrollIntoView) activeChip.scrollIntoView({ block: 'nearest', inline: 'center' });
+    } catch (err) { /* ignore */ }
     const pageEl = page.querySelector('.page');
     if (pageEl && pathChanged) pageEl.classList.add('page-enter');
     document.title = (isDevDeployment() ? '[DEV] ' : '') + title + ' · 剑网三物价助手 | JX3 生活技艺计算器';
@@ -5846,6 +6040,14 @@
         });
       }
       bindEvents();
+      try {
+        if (window.matchMedia) {
+          var mq = window.matchMedia('(max-width: 768px)');
+          var onMq = function () { if (ui.booted) render(); };
+          if (mq.addEventListener) mq.addEventListener('change', onMq);
+          else if (mq.addListener) mq.addListener(onMq);
+        }
+      } catch (err) { /* ignore */ }
       renderSkeleton();
 
       setTimeout(function () {
