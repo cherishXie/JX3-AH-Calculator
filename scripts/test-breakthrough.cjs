@@ -27,19 +27,15 @@ function fixture() {
 {
   const { model } = fixture();
   assert.equal(model.priceOfIndex(0).v, 5, 'script quote precedes user/base/snapshot prices');
-  const low = model.analyze('duanzao', 'gold', 'low');
-  const mid = model.analyze('duanzao', 'gold', 'mid');
-  const high = model.analyze('duanzao', 'gold', 'high');
-  assert.equal(low.levels[0].recipe.i, 4);
-  assert.equal(mid.levels[0].recipe.i, 2);
-  near(low.levels[0].profit, 350);
-  near(low.levels[0].band.mean, .925);
-  near(mid.levels[0].profit, 1062.5);
-  near(mid.levels[0].band.mean, 4.25);
-  assert.equal(high.levels[0].recipe.i, 3);
-  near(high.levels[0].profit, 2250);
-  near(high.levels[0].band.mean, 8.75);
-  near(high.levels[0].econ.outs[0].qty, 10, 'all bands use midpoint output (8..12 → 10), never min/max');
+  // 金币最优不再分三档：任一 mode 都在全部可用配方里取净花费最少的路线
+  const gold = model.analyze('duanzao', 'gold', 'mid');
+  const goldLow = model.analyze('duanzao', 'gold', 'low');
+  assert.equal(gold.levels[0].recipe.i, 3);
+  assert.equal(goldLow.levels[0].recipe.i, 3, 'mode no longer changes the gold route');
+  near(gold.levels[0].profit, 2250);
+  assert.equal(gold.levels[0].band, null, '金幣路線不再產出收益比檔位');
+  near(gold.levels[0].econ.outs[0].qty, 10, 'route uses midpoint output (8..12 → 10)');
+  const mid = gold;
   assert.equal(mid.gates.length, 4);
   assert.equal(mid.experience.length, 49);
   assert.equal(model.expToNext(50), null);
@@ -53,13 +49,12 @@ function fixture() {
   }
 }
 {
+  // 不再有收益比档位：只要还有一个有报价的配方，金币最优就能选出路线
   const { cat, bt } = fixture();
   bt.recipes = bt.recipes.filter(r => r.i !== 2);
   const model = createModel(bt, cat, () => ({ serverId: 'test', settings: { basis: 'market', taxRate: .05 } }));
-  const middle = model.analyze('duanzao', 'gold', 'mid');
-  assert.equal(middle.levels[0].band.count, 0);
-  assert.equal(middle.levels[0].recipe, null, 'empty ROI bands must not borrow another band or fabricate an average');
-  assert.equal(middle.totals.netCost, null);
+  const gold = model.analyze('duanzao', 'gold', 'mid');
+  assert.ok(gold.levels[0].recipe, 'gold route still resolves without the former mid-band recipe');
   assert.equal(model.analyze('duanzao', 'energy').enough, true);
 }
 {
@@ -169,11 +164,16 @@ for (const server of catalog.servers) {
       for (const level of r.levels) {
         // 精力→经验按实测比例：采集 40 精力=128 经验（3.2/精力），制造 1 精力=2 经验
         const rate = skill.type === 'gather' ? 3.2 : 2;
-        const possible = pool.filter(x => skill.type === 'gather' ? gatherLevelOf(x) <= level.from : x.l <= level.from).map(x => {
-          const energy = skill.type === 'gather' ? x.energy : x.e;
-          return Math.ceil(level.need / (energy * rate)) * energy;
-        });
-        if (possible.length) assert.equal(level.totalEnergy, Math.min(...possible), 'minimum-energy choice must be absolute, independent of any quote or income ratio');
+        const usable = pool.filter(x => skill.type === 'gather' ? gatherLevelOf(x) <= level.from : x.l <= level.from);
+        if (!usable.length) continue;
+        if (skill.type === 'gather') {
+          // 采集按「当前最高可用采集点」走，不是最小精力
+          const node = usable.slice().sort((a, b) => gatherLevelOf(b) - gatherLevelOf(a))[0];
+          assert.equal(level.totalEnergy, Math.ceil(level.need / (node.energy * rate)) * node.energy, 'gather route uses the highest unlocked node');
+        } else {
+          const possible = usable.map(x => Math.ceil(level.need / (x.e * rate)) * x.e);
+          assert.equal(level.totalEnergy, Math.min(...possible), 'minimum-energy choice must be absolute, independent of any quote or income ratio');
+        }
       }
     }
     for (const row of r.routes.filter(x => x.kind === 'level')) assert.ok(!model.GATE_LEVELS.some(g => row.from < g && row.to > g));

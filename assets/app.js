@@ -1997,11 +1997,10 @@
   /* 突破升级                                                           */
   /* ------------------------------------------------------------------ */
   const BT_STRATS = [
-    { key: 'gold', label: '金币优先' },
-    { key: 'energy', label: '精力优先' },
-    { key: 'effort', label: '省心' }
+    { key: 'gold', label: '金币最优' },
+    { key: 'energy', label: '精力最优' }
   ];
-  const BT_STRAT_LABEL = { gold: '金币优先', energy: '精力优先', effort: '省心' };
+  const BT_STRAT_LABEL = { gold: '金币最优', energy: '精力最优' };
 
   function bt() { return window.JX3BT; }
 
@@ -2037,7 +2036,7 @@
     const B = bt();
     const econ = row.econ;
     if (!econ) return '';
-    if (energyOnly) return '<div class="bt-detail">本段需要 ' + U.fmtInt(row.need) + ' 经验；每次 ' + U.fmtInt(row.exp) + ' 经验 / ' + U.fmtInt(row.energy) + ' 精力，共 ' + U.fmtInt(row.count) + ' 次、' + U.fmtInt(row.totalEnergy) + ' 精力。选择仅依据精力（省心策略依据次数），不按收益筛选。</div>';
+    if (energyOnly) return '<div class="bt-detail">本段需要 ' + U.fmtInt(row.need) + ' 经验；每次 ' + U.fmtInt(row.exp) + ' 经验 / ' + U.fmtInt(row.energy) + ' 精力，共 ' + U.fmtInt(row.count) + ' 次、' + U.fmtInt(row.totalEnergy) + ' 精力。选择仅依据精力，不按收益筛选。</div>';
     let body;
     if (row.recipe && row.recipe.kind === 'gather') {
       const outs = B.gatherOutputs(row.recipe);
@@ -2109,8 +2108,8 @@
     const skillId = p.skill && C.skillOf(p.skill) ? p.skill : 'duanzao';
     const strategy = p.strategy === 'energy' || p.strategy === 'effort' ? p.strategy : 'gold';
     const mode = strategy !== 'gold' ? 'mid' : ['low', 'mid'].indexOf(p.yield) !== -1 ? p.yield : 'high';
-    const scenarios = B.MODES.filter(function (m) { return strategy === 'gold' || m.key === 'mid'; }).map(function (m) { return { mode: m, result: B.analyze(skillId, strategy, m.key) }; });
-    const r = scenarios.find(function (s) { return s.mode.key === mode; }).result;
+    // 已取消三档：任何策略只算一条路线
+    const r = B.analyze(skillId, strategy, 'mid');
     const sum = B.summary(strategy, mode);
     const t = r.totals;
     const isGather = r.meta.type === 'gather';
@@ -2129,15 +2128,12 @@
       '<div class="card-body">' + btSkillLinks(skillId, strategy, mode) +
       '<div class="bt-stratrow">' + btStratLinks(skillId, strategy, mode) +
       '<span class="tiny dim">' + (isGather
-        ? '精力优先只取最少精力；金币优先在收益比档位内取收益最高路线。'
-        : '精力优先不按价格筛选，只取最少精力；金币优先按收益最高选择。') + '</span></div>' +
+        ? '精力最优只取最少精力；金币最优按总净花费最低选路线。'
+        : '精力最优不按价格筛选，只取最少精力；金币最优按总净花费（材料+手续费+突破材料−税后产值）最低选择。') + '</span></div>' +
       '</div></section></div>';
 
-    if (strategy === 'gold') html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main"><h2 class="card-title">' + U.esc(r.meta.name) + ' · 金币路线三档</h2><p class="card-sub">按每级已解锁、报价完整配方的金/精力数值范围三等分，各档计算算术均值，再选择本档收益最高的实际配方。</p></div></div><div class="bt-scenarios card-body">' + scenarios.map(function (sc) {
-      const st = sc.result.totals;
-      return '<a class="bt-scenario' + (sc.mode.key === mode ? ' active' : '') + '" href="' + Route.href('/breakthrough', { skill: skillId, strategy: strategy, yield: sc.mode.key }) + '"' + (sc.mode.key === mode ? ' aria-current="true"' : '') + '><span class="tiny dim">合计收益 · ' + sc.mode.label + (sc.mode.key === mode ? ' · 当前路线' : ' · 查看路线') + '</span><strong class="' + (st.total > 0 ? 'pos' : st.total < 0 ? 'neg' : st.total == null ? 'bt-scenario-empty' : '') + '">' + (st.total == null ? '无法完整核算' : U.fmtSigned(st.total, 0) + '<small>金</small>') + '</strong><span class="tiny dim">逐级档均值（按精力加权） ' + U.fmt(st.bandMean, 2) + ' 金/精力</span><span class="tiny dim">突破材料 ' + U.fmt(st.gateCost, 0) + ' 金' + (st.total == null ? ' · 点击查看缺失项' : '') + '</span></a>';
-    }).join('') + '</div><div class="card-foot">收益 = 税后产出价值 − 材料成本 − 突破材料；赚钱显示绿色 +，亏损显示红色 −。各档均值供参考，产量统一按区间中点乘产出概率；空档不跨档补位。经验门槛 1→2 至 30→31 为用户实测，31 级起为外推；未计未核实奖励。价格：目录脚本快照优先，突破脚本快照补充；全局手动价格不参与本模块。材料成本口径：' + (settings().basis === 'min' ? '市场与自制成本取低（不计中间产物精力）；任务材料缺市价仍提示缺价' : '市场价') + '。</div></section></div>';
-    if (!r.enough) html += '<div class="section-gap">' + notice('无法完整核算：' + (t.missingLevels ? t.missingLevels + ' 个等级缺少可用配方，或所选收益比档无样本。' : '') + r.gates.filter(function (g) { return g.missing; }).map(function (g) { return g.level + ' 级任务缺价：' + g.missingItems.map(function (i) { return i.name + '×' + i.qty; }).join('、'); }).join('；') + ' 缺失费用不按 0 计算，总收益暂不提供。', 'warn') + '</div>';
+
+    if (!r.enough) html += '<div class="section-gap">' + notice('无法完整核算：' + (t.missingLevels ? t.missingLevels + ' 个等级缺少可用配方。' : '') + r.gates.filter(function (g) { return g.missing; }).map(function (g) { return g.level + ' 级任务缺价：' + g.missingItems.map(function (i) { return i.name + '×' + i.qty; }).join('、'); }).join('；') + ' 缺失费用不按 0 计算，总收益暂不提供。', 'warn') + '</div>';
     html += '<div class="grid section-gap"><section class="card col-12"><details class="bt-experience"><summary class="card-head"><div class="card-head-main"><h2 class="card-title">' + U.esc(r.meta.name) + ' · 逐级所需经验</h2><p class="card-sub">1→2 至 30→31 用户实测 · 31 级起外推 · 展开查看 49 级门槛。</p></div><span class="badge badge-outline">30 级实测</span></summary><div class="table-wrap bt-exp-table"><table class="data compact"><thead><tr><th>升级</th><th class="num">所需经验</th><th class="num">累计经验（模拟）</th><th>来源</th></tr></thead><tbody>' + r.experience.map(function (xp) { return '<tr><td>' + xp.from + '→' + xp.to + '</td><td class="num">' + U.fmtInt(xp.need) + '</td><td class="num">' + U.fmtInt(xp.cumulative) + '</td><td><span class="badge ' + (xp.source === 'observed' ? 'badge-positive' : xp.source === 'extrapolated' ? 'badge-warning' : 'badge-outline') + '">' + ({ observed: '用户观测', interpolated: '插值', extrapolated: '外推' }[xp.source] || '估算') + '</span></td></tr>'; }).join('') + '</tbody></table></div><div class="card-foot">1→2 至 30→31 为用户逐级实测（共 30 个点，1→30 累计 36,830，30→31 为 1,650）；31 级起按末段每级 +10 外推、取整到 10。精力→经验按实测换算：采集 40 精力 = 128 经验、制造 1 精力 = 2 经验，路线中的次数与精力已按此重算。暂按八技艺共用门槛模拟，尚未核实技艺间差异。</div></details></section></div>';
 
     if (meta.hints && meta.hints[skillId]) {
@@ -2173,7 +2169,7 @@
       ((r.gates || []).length ? r.gates.map(function (g) { return btGateRow(g); }).join('') : emptyState('该技艺无突破数据', '请检查数据版本。', '', 'info')) +
       '</div><div class="card-foot"><span>晋秩·学徒 30 级 / 晋秩·巧匠 35 级 / 晋秩·名师 40 级 / 晋秩·宗师 45 级；完成后才能继续升级至 50。</span></div></section></div>';
 
-    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div><h2 class="card-title">八技艺横评</h2><p class="card-sub">' + (strategy === 'gold' ? '同一收益比档位，按合计收益从高到低排序' : '仅按总精力（省心策略按次数）从少到多排序') + '</p></div></div><div class="table-wrap"><table class="data compact"><thead><tr><th>#</th><th>技艺</th><th class="num">总精力</th><th class="num">次数</th>' + (strategy === 'gold' ? '<th class="num">突破材料</th><th class="num">合计收益</th>' : '') + '</tr></thead><tbody>' + sum.map(function (x, i) { return '<tr class="clickable" data-bt-skill="' + U.esc(x.skillId) + '" tabindex="0"><td>' + (x.enough ? i + 1 : '待补全') + '</td><td>' + U.esc(x.name) + '</td><td class="num">' + U.fmtInt(x.energy) + '</td><td class="num">' + U.fmtInt(x.crafts) + '</td>' + (strategy === 'gold' ? '<td class="num">' + U.fmt(x.gateCost, 0) + '</td><td class="num">' + btProfit(x.total) + '</td>' : '') + '</tr>'; }).join('') + '</tbody></table></div></section></div>';
+    html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div><h2 class="card-title">八技艺横评</h2><p class="card-sub">' + (strategy === 'gold' ? '按合计收益（净花费）从高到低排序' : '按总精力从少到多排序') + '</p></div></div><div class="table-wrap"><table class="data compact"><thead><tr><th>#</th><th>技艺</th><th class="num">总精力</th><th class="num">次数</th>' + (strategy === 'gold' ? '<th class="num">突破材料</th><th class="num">合计收益</th>' : '') + '</tr></thead><tbody>' + sum.map(function (x, i) { return '<tr class="clickable" data-bt-skill="' + U.esc(x.skillId) + '" tabindex="0"><td>' + (x.enough ? i + 1 : '待补全') + '</td><td>' + U.esc(x.name) + '</td><td class="num">' + U.fmtInt(x.energy) + '</td><td class="num">' + U.fmtInt(x.crafts) + '</td>' + (strategy === 'gold' ? '<td class="num">' + U.fmt(x.gateCost, 0) + '</td><td class="num">' + btProfit(x.total) + '</td>' : '') + '</tr>'; }).join('') + '</tbody></table></div></section></div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
       notice('经验模型：' + U.esc(meta.expModel.description) + '。暂按八技艺共用门槛，非观测等级及技艺间差异尚未核实，可能影响制作次数、路线及收益；采集经验按 ' + U.fmtInt(meta.gatherExp) + ' 估算。突破材料与门槛来自 JX3BOX 攻略与成就库，配方数据来自技艺接口，优先使用本服脚本 JX3BOX 报价，无报价不使用手动价、示例价或跨服回退；产出按拍卖价成交估算，未计市场深度与暴击，量产会压低实际成交价。', 'info') +
