@@ -566,6 +566,7 @@ button::after { border: none; }
 .st-filter-head { display: flex; align-items: center; justify-content: space-between; margin-top: 16rpx; }
 .st-filter-actions { display: flex; align-items: center; }
 .st-link { font-size: 20rpx; color: var(--info); margin-left: 18rpx; }
+.st-link.disabled { opacity: 0.5; }
 .st-server-scroll { width: 100%; white-space: nowrap; margin-top: 10rpx; }
 .st-server-chips { display: inline-flex; align-items: center; padding-bottom: 4rpx; }
 .st-server-chip {

@@ -5,7 +5,8 @@ import BUNDLED from './trends.json';
 import { CLOUD_ENV, isCloudConfigured } from './cloudConfig';
 
 const CACHE_KEY = 'jx3-trends-cloud-v1';
-const CACHE_TTL = 60 * 60 * 1000;
+// 行情每 30 分钟更新；趋势缓存 5 分钟，配合页面刷新按钮兼顾及时性与云读次数。
+const CACHE_TTL = 5 * 60 * 1000;
 let active = BUNDLED;
 let activeKind = 'bundled';
 let cloudInited = false;

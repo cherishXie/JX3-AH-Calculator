@@ -75,6 +75,20 @@ function ServerTrends() {
     return function () { alive = false; };
   }, []);
 
+  async function refreshTrends() {
+    if (loading) return;
+    setLoading(true);
+    Taro.showLoading({ title: '同步历史...' });
+    const res = await loadTrendData(true);
+    Taro.hideLoading();
+    setTrendData(getTrendData());
+    setMeta(getTrendMeta());
+    setLoading(false);
+    if (res && res.ok && res.source === 'cloud') Taro.showToast({ title: '云端历史已更新', icon: 'none' });
+    else if (res && res.error) Taro.showToast({ title: '云端不可用，已用本地快照', icon: 'none' });
+    else Taro.showToast({ title: '已是最新', icon: 'none' });
+  }
+
   const selectedSet = useMemo(function () {
     const map = {};
     selectedIds.forEach(function (id) { map[id] = true; });
@@ -160,6 +174,7 @@ function ServerTrends() {
           <View className='st-filter-head'>
             <Text className='tiny dim'>区服 {selectedIds.length}/{state.servers.length}</Text>
             <View className='st-filter-actions'>
+              <Text className={'st-link' + (loading ? ' disabled' : '')} onClick={refreshTrends}>{loading ? '同步中…' : '刷新'}</Text>
               <Text className='st-link' onClick={function () { setSelectedIds(state.servers.map(function (s) { return s.id; })); }}>全选</Text>
               <Text className='st-link' onClick={function () { setSelectedIds([]); }}>清空</Text>
             </View>
