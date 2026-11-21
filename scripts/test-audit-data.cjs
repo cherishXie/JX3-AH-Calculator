@@ -28,12 +28,12 @@ const SID = 's_mengjiangnan';
 const server = A.servers[SID];
 const recipeByName = (name) => (D.recipes || []).find((r) => r.name === name);
 
-assert.equal(A.meta.snapshots, 43, '快照数应为 43');
-assert.equal(JSON.stringify(server.counts), JSON.stringify({ A: 30, B: 18, C: 106, feasible: 107, positive: 55 }));
-assert.equal(JSON.stringify(server.countsLocal), JSON.stringify({ A: 41, B: 8, C: 105, feasible: 108, positive: 56 }));
-assert.equal(A.servers.s_mengjiangnan.items.quote, 207);
-assert.equal(A.servers.s_mengjiangnan.items.vendor, 10);
-assert.equal(A.servers.s_mengjiangnan.items.base, 50);
+assert.equal(A.meta.snapshots, 44, '快照数应为 44');
+assert.equal(JSON.stringify(server.counts), JSON.stringify({ A: 30, B: 18, C: 106, feasible: 106, positive: 55 }));
+assert.equal(JSON.stringify(server.countsLocal), JSON.stringify({ A: 41, B: 8, C: 105, feasible: 107, positive: 56 }));
+assert.equal(A.servers.s_mengjiangnan.items.quote, 205);
+assert.equal(A.servers.s_mengjiangnan.items.vendor, 11);
+assert.equal(A.servers.s_mengjiangnan.items.base, 51);
 
 const gradeOf = (name) => {
   const r = recipeByName(name);
