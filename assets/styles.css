@@ -973,6 +973,8 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
   .sidebar { width: 56px; }
   .brand { padding: 0; justify-content: center; }
   .brand-text, .nav-item .label, .nav-item .nav-badge, .nav-group-title, .side-foot .label { display: none; }
+.nav-item .nav-ext { margin-left: auto; display: inline-flex; color: var(--muted-2); font-size: 13px; }
+.nav-item:hover .nav-ext { color: var(--muted); }
   .side-scroll { padding: 8px 6px; }
   .nav-item { justify-content: center; padding: 0; }
   .nav-item.active::before { left: 2px; }
