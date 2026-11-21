@@ -3624,7 +3624,22 @@
     const trendPartial = views.some(function (v) { return v.partial || v.stale; });
     const columns = ((views.filter(function (v) { return v.points && v.points.length; })[0] || { points: [] }).points || []).map(function (point) { return point.at; });
     const items = selection.selected;
-    const itemDenom = items.length;
+    // 分母只算「区间首末两端都有报价」的物品：没有价格的物品本来就产不出涨跌，
+    // 用完整目录（1124）当分母会把每服覆盖率压到 10% 左右，所有区服都被判低覆盖、
+    // 最强/最弱区服直接变成「样本不足」。这里先扫一遍得到真正可统计的清单。
+    const observedKeys = new Set();
+    views.forEach(function (view) {
+      const pts = (view && view.points) || [];
+      if (pts.length < 2) return;
+      const first = pts[0];
+      const last = pts[pts.length - 1];
+      items.forEach(function (item) {
+        const p0 = serverQuote(first, item);
+        const p1 = serverQuote(last, item);
+        if (p0 > 0 && p1 > 0) observedKeys.add(item.key);
+      });
+    });
+    const itemDenom = observedKeys.size || items.length;
     const groups = serverSkillGroups();
     const dataServers = [];
     const allReturns = [];
@@ -3708,6 +3723,7 @@
     const ctx = {
       status: 'ready', range: range, selection: selection, servers: dataServers,
       columns: columns, rank: dataServers, globalReturns: allReturns,
+      observedCount: itemDenom,
       globalUp: globalUp, globalDown: globalDown, lowCount: lowCount,
       selectedServer: selectedServer, selectedSkill: selectedSkill,
       detailReturns: detailReturns, skillGroups: groups,
@@ -3804,7 +3820,9 @@
       const stoneNote = total === serverCatalog().length ? '（含五行石）' : '';
       const scope = ready && !selected ? '未选物品' : (selected !== total ? '所选 ' + selected + ' 项物品' : '全部物品 ' + total + ' 项' + stoneNote);
       const serverTotal = ctx.serverCount != null ? ctx.serverCount : (DATA.servers || []).length;
-      meta = '<p class="page-sub server-page-sub">' + (viewLabel ? viewLabel + ' · ' : '') + scope + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + (ctx.partial ? ' · 更新中' : '') + ' · 缺失报价留空</p>';
+      const observed = Number(ctx.observedCount) || 0;
+      const obsNote = observed && observed < total ? ' · 可统计 ' + observed + ' 项' : '';
+      meta = '<p class="page-sub server-page-sub">' + (viewLabel ? viewLabel + ' · ' : '') + scope + obsNote + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + (ctx.partial ? ' · 更新中' : '') + ' · 缺失报价留空</p>';
     }
     return '<div class="page-head"><div><h1 class="page-title">区服趋势</h1>' + meta + '</div></div>';
   }
@@ -3908,8 +3926,8 @@
     return '<div class="kpi-grid server-kpis">' +
       '<div class="kpi"><div class="kpi-label">净广度为正 / 为负</div><div class="kpi-value"><span class="pos">' + up + '</span><small>/</small><span class="neg">' + down + '</span><small>服</small></div><div class="kpi-meta"><span>全部 ' + ctx.rank.length + ' 服 · 低覆盖 ' + ctx.lowCount + ' 服</span></div></div>' +
       '<div class="kpi"><div class="kpi-label">全服涨跌广度</div><div class="kpi-value">' + U.fmt(breadth * 100, 0) + '<span class="kpi-unit">%</span></div><div class="mini-bar"><i style="width:' + Math.round(breadth * 100) + '%;background:var(--positive)"></i><i style="width:' + Math.round((1 - breadth) * 100) + '%;background:var(--danger)"></i></div><div class="kpi-meta"><span>上涨 ' + ctx.globalUp + ' · 下跌 ' + ctx.globalDown + '</span></div></div>' +
-      '<div class="kpi"><div class="kpi-label">最强区服</div><div class="kpi-value">' + (strongest ? '<span class="server-dot" style="--c:' + U.esc(strongest.color) + ';display:inline-block;margin-right:6px"></span>' + U.esc(strongest.name) : '—') + '</div><div class="kpi-meta">' + (strongest ? '<span class="pos">' + serverBreadth(strongest.score) + '</span><span class="sep"></span><span>覆盖 ' + strongest.comparable + ' / ' + (ctx.selection.selected.length) + '</span>' : '样本不足') + '</div></div>' +
-      '<div class="kpi"><div class="kpi-label">最弱区服</div><div class="kpi-value">' + (weakest ? '<span class="server-dot" style="--c:' + U.esc(weakest.color) + ';display:inline-block;margin-right:6px"></span>' + U.esc(weakest.name) : '—') + '</div><div class="kpi-meta">' + (weakest ? '<span class="neg">' + serverBreadth(weakest.score) + '</span><span class="sep"></span><span>覆盖 ' + weakest.comparable + ' / ' + (ctx.selection.selected.length) + '</span>' : '样本不足') + '</div></div>' +
+      '<div class="kpi"><div class="kpi-label">最强区服</div><div class="kpi-value">' + (strongest ? '<span class="server-dot" style="--c:' + U.esc(strongest.color) + ';display:inline-block;margin-right:6px"></span>' + U.esc(strongest.name) : '—') + '</div><div class="kpi-meta">' + (strongest ? '<span class="pos">' + serverBreadth(strongest.score) + '</span><span class="sep"></span><span>覆盖 ' + strongest.comparable + ' / ' + ctx.observedCount + '</span>' : '样本不足') + '</div></div>' +
+      '<div class="kpi"><div class="kpi-label">最弱区服</div><div class="kpi-value">' + (weakest ? '<span class="server-dot" style="--c:' + U.esc(weakest.color) + ';display:inline-block;margin-right:6px"></span>' + U.esc(weakest.name) : '—') + '</div><div class="kpi-meta">' + (weakest ? '<span class="neg">' + serverBreadth(weakest.score) + '</span><span class="sep"></span><span>覆盖 ' + weakest.comparable + ' / ' + ctx.observedCount + '</span>' : '样本不足') + '</div></div>' +
     '</div>';
   }
   function serverHeatCard(ctx) {
@@ -3932,7 +3950,7 @@
   }
   function serverRankCard(ctx) {
     const selected = ctx.selectedServer;
-    let html = '<section class="card col-5 server-rank-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">区服净广度榜</h2><p class="card-sub">' + ctx.rank.length + ' 服 · 全部物品 / 所选范围</p></div></div>' +
+    let html = '<section class="card col-5 server-rank-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">区服净广度榜</h2><p class="card-sub">' + ctx.rank.length + ' 服 · 覆盖 = 可比 / 可统计 ' + (ctx.observedCount || 0) + ' 项（首末都有报价）</p></div></div>' +
       '<div class="server-rank-wrap"><table class="data compact server-rank"><thead><tr><th>区服</th><th class="num">净广度</th><th class="num">涨/跌/平</th><th class="num">覆盖</th><th>主要上涨</th></tr></thead><tbody>';
     ctx.rank.forEach(function (s) {
       const top = s.topUp[0];
