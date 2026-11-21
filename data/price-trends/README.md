@@ -32,10 +32,11 @@ node scripts/build-price-trends.mjs
 node scripts/build-price-trends.mjs --dry-run
 ```
 
-## 7 天窗口
+## 7 天窗口（服务端）与 1 天缓存（浏览器）
 
 - `index.json` 的 `maxDays` 固定为 7，生成时只保留最近 7 个自然日；
-- 浏览器加载器再按 7 天硬限制一次，旧日期会从 IndexedDB 中清理；
+- 服务端仍生成最近 7 天预计算文件；浏览器默认只加载当天，持久缓存只保留 1 天；
+- 用户选择历史范围时，按日期单独拉取，不自动预取；
 - 「区服趋势」的 30 日选项已移除，旧链接里的 `srange=30d` 会按 7 天处理；
 - 原始 `data/price-history` 不受 7 天限制，仍可查更早日期。
 

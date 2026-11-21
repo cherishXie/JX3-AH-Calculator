@@ -888,6 +888,14 @@
     const stats = Calc.stats(Store.state.serverId);
     const audit = auditServer(Store.state.serverId);
     const ac = audit && audit.items;
+    let localQuote = 0, localVendor = 0, localBase = 0;
+    (Store.state.items || []).forEach(function (it) {
+      const price = Store.price(Store.state.serverId, it.id);
+      if (price.user) return;
+      if (price.quote) localQuote++;
+      else if ((accessOf(it.id) || {}).t === 'vendor' || (accessOf(it.id) || {}).v) localVendor++;
+      else if (price.v > 0) localBase++;
+    });
     const catCounts = categoryCounts();
     const categoryBadges = (DATA.meta.categories || []).map(function (c) {
       return '<span class="badge badge-outline">' + U.esc(c.name) + ' ' + (catCounts[c.id] || 0) + '</span>';
@@ -936,7 +944,7 @@
       '</div>' +
       '<div class="kpi"><div class="kpi-label">本服行情校准 <span class="info" data-tip="已手动填入的价格占全部物品的比例；未校准项使用示例/昨日均价">' + icon('info') + '</span></div>' +
         '<div class="kpi-value">' + Math.round(stats.calibrated * 100) + '<span class="kpi-unit">% 已校准</span></div>' +
-        '<div class="kpi-meta"><span>' + stats.user + ' 项已校准</span><span class="sep"></span><span>拍卖实价 ' + (ac ? ac.quote : '—') + '</span><span class="sep"></span><span>商店 ' + (ac ? ac.vendor : '—') + '</span><span class="sep"></span><span class="warn">示例 ' + (ac ? ac.base : stats.seed) + '</span></div>' +
+        '<div class="kpi-meta"><span>' + stats.user + ' 项已校准</span><span class="sep"></span><span>拍卖实价 ' + (ac ? ac.quote : localQuote) + '</span><span class="sep"></span><span>商店 ' + (ac ? ac.vendor : localVendor) + '</span><span class="sep"></span><span class="warn">示例 ' + (ac ? ac.base : localBase) + '</span></div>' +
         '<div class="progress is-warn"><i style="width:' + Math.round(stats.calibrated * 100) + '%"></i></div>' +
       '</div>' +
       '<div class="kpi"><div class="kpi-label">满精力预估 <span class="info" data-tip="按做最赚的配方、可重复制作、贪心分配当前精力预算">' + icon('info') + '</span></div>' +
@@ -1743,9 +1751,9 @@
     const stats = Calc.stats(Store.state.serverId);
     const audit = auditServer(Store.state.serverId);
     const ac = audit && audit.items;
-    const quoteCount = ac ? ac.quote : stats.seed;
-    const vendorCount = ac ? ac.vendor : 0;
-    const baseCount = ac ? ac.base : stats.seed;
+    const quoteCount = ac ? ac.quote : localQuote;
+    const vendorCount = ac ? ac.vendor : localVendor;
+    const baseCount = ac ? ac.base : localBase;
     const missingCount = ac ? ac.missing : stats.missing;
     const allItems = filteredItems(p);
     const pageSize = 100;
@@ -6265,18 +6273,6 @@
     const pageEl = page.querySelector('.page');
     if (pageEl && pathChanged) pageEl.classList.add('page-enter');
     document.title = (isDevDeployment() ? '[DEV] ' : '') + title + ' · 剑网三物价助手 | JX3 生活技艺计算器';
-    if ((route.path === '/' || route.path === '/overview') && !window.JX3Audit) {
-      ensureAudit().then(function () {
-        const now = Route.parse().path;
-        if (now === '/' || now === '/overview') render();
-      }).catch(function () { /* 总览的报价覆盖是增强项，不阻塞页面 */ });
-    }
-    if ((route.path === '/' || route.path === '/overview') && !window.JX3BT) {
-      ensureBreakthrough().then(function () {
-        const now = Route.parse().path;
-        if (now === '/' || now === '/overview') render();
-      }).catch(function () { /* 总览的突破卡片是增强项，不阻塞页面 */ });
-    }
     const sb = document.getElementById('sidebar');
     if (sb) sb.classList.remove('open');
     if (window.innerWidth <= 768) {
