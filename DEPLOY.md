@@ -129,7 +129,7 @@ GitHub Pages 走跨境线路，国内访问时单个请求可能卡住十几秒�
 
 更新内容来源：
 
-- `content/updates/web.json`：网页端手动维护 `title` / `notes` / `history`；
+- `content/updates/web.json`：网页端**默认不再手写文案**——`scripts/make-updates.mjs` 会从最近提交自动生成标题和最多 4 条说明（自动跳过价格机器人和 changelog 提交），避免每版都弹同一段；需要人工措辞时在文件里加 `"manual": true`，才会原样使用 `title` / `notes` / `history`；
 - `content/updates/miniapp.json`：小程序专用；
 - `content/updates/minitool.json`：小工具专用；
 - 每日价格机器人提交（`chore: update JX3BOX prices`）会自动换成“价格数据已更新”三条说明；
