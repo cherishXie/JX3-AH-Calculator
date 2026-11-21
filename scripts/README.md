@@ -32,7 +32,7 @@ node scripts/update-jx3-prices.mjs --dry-run
 
 - 拉取地址：`https://next2.jx3box.com/api/auction/`，`aggregate_type=hourly`，逐服拉取。
 - 服务器：读取 `assets/data.js` 的 17 个服务器；数据写入 `data.serverPrices[serverId][itemId]`。
-- 物品映射：`scripts/jx3-item-map.json`（267 项；4 项马草暂无 JX3BOX 映射）；
+- 物品映射：`scripts/jx3-item-map.json`（394 个名称；414 个物品，4 项马草暂无 JX3BOX 映射）；
   新增物品会自动通过 JX3BOX 物品名接口解析并补入映射。
 - 默认规则：
   - 样本数 `< 5` 的低样本报价不采用；

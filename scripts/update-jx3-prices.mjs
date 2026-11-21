@@ -137,18 +137,23 @@ async function main() {
   const map = loadMap();
   let mapChanges = 0;
   for (const item of data.items) {
-    if (Object.prototype.hasOwnProperty.call(map, item.name)) continue;
+    if (!item.gameKey && map[item.name]) item.gameKey = map[item.name];
+    if (item.gameKey) continue;
     try {
       const key = await resolveKey(item.name, map);
-      if (key) mapChanges++;
-      else console.warn(`[warn] 无法在 JX3BOX 找到物品：${item.name}`);
+      if (key) {
+        item.gameKey = key;
+        mapChanges++;
+      } else {
+        console.warn(`[warn] 无法在 JX3BOX 找到物品：${item.name}`);
+      }
     } catch (err) {
       console.warn(`[warn] 解析物品失败 ${item.name}：${err.message}`);
     }
   }
   if (mapChanges) saveMap(map);
 
-  const keys = [...new Set(data.items.map((i) => map[i.name]).filter(Boolean))];
+  const keys = [...new Set(data.items.map((i) => i.gameKey || map[i.name]).filter(Boolean))];
   const stoneKeys = (data.stones || []).map((s) => s.itemId).filter(Boolean);
   const servers = ONE_SERVER
     ? data.servers.filter((s) => s.name === ONE_SERVER || s.id === ONE_SERVER)
@@ -182,7 +187,7 @@ async function main() {
     const bucket = {};
     let updated = 0, filtered = 0, noQuote = 0;
     for (const item of data.items) {
-      const q = quotes[map[item.name]];
+      const q = quotes[item.gameKey || map[item.name]];
       if (!q) { noQuote++; continue; }
       const gold = q.copper / 10000;
       const old = Number(item.base) || 0;

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "timezone": "Asia/Shanghai",
-  "generatedAt": "2026-11-21T12:07:20+08:00",
-  "sourceUpdatedAt": "2026-11-21T12:07:20+08:00",
-  "catalogVersion": "v3.6",
-  "itemCount": 267,
+  "generatedAt": "2026-11-21T17:05:09+08:00",
+  "sourceUpdatedAt": "2026-11-21T17:05:09+08:00",
+  "catalogVersion": "v3.7",
+  "itemCount": 414,
   "maxDays": 7,
   "servers": [
     {
@@ -129,12 +129,12 @@
     },
     {
       "date": "2026-11-21",
-      "points": 13,
+      "points": 14,
       "baseAt": "2026-11-21T00:07:18+08:00",
-      "lastAt": "2026-11-21T12:07:20+08:00",
-      "hash": "04de57529fa8a2de",
-      "bytes": 126745,
-      "serverBytes": 16815,
+      "lastAt": "2026-11-21T17:05:09+08:00",
+      "hash": "2acd5f3496195ebc",
+      "bytes": 165422,
+      "serverBytes": 22331,
       "dayFile": "days/2026-11-21.json",
       "serverFile": "servers/{server}/2026-11-21.json"
     }

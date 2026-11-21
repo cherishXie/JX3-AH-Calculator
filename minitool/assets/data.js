@@ -5,10 +5,10 @@ window.JX3Data = {
     "expansion": "苍生铸世",
     "levelCap": 50,
     "version": "苍生铸世 · 50 级",
-    "catalogVersion": "v3.6",
-    "seedVersion": "cs50-v3.6",
-    "updatedAt": "2026-11-19",
-    "verifiedAt": "2026-11-19",
+    "catalogVersion": "v3.7",
+    "seedVersion": "v3.7-core-b-2026-11-21",
+    "updatedAt": "2026-11-21",
+    "verifiedAt": "2026-11-21",
     "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
     "sources": [
       {
@@ -105,122 +105,127 @@ window.JX3Data = {
         "label": "JX3BOX 物品百科 · 马草/百脉根等",
         "url": "",
         "note": "百脉根/紫花苜蓿/甜象草/皇竹草为神农采集马草；当前缺少可对应的拍卖样本，价格按示例价处理。"
+      },
+      {
+        "label": "JX3BOX · 当前赛季 50 级与等级空缺配方",
+        "url": "",
+        "note": "2026-11-21 扩容：当前赛季 50 级全部制造配方 + 1–50 级空缺等级代表配方"
       }
     ],
     "scope": "收录 154 条当前版本制造配方 + 21 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
-    "priceUpdatedAt": "2026-11-21T12:07:20+08:00",
+    "priceUpdatedAt": "2026-11-21T17:05:09+08:00",
     "priceCoverage": {
-      "updated": 205,
-      "total": 267,
+      "updated": 277,
+      "total": 414,
       "source": "JX3BOX 拍卖 · 17 个服务器",
-      "filtered": 15,
-      "noQuote": 62
+      "filtered": 21,
+      "noQuote": 137
     },
     "serverCoverage": {
       "s_mengjiangnan": {
-        "updated": 205,
-        "total": 267,
-        "filtered": 15,
-        "noQuote": 62
+        "updated": 277,
+        "total": 414,
+        "filtered": 21,
+        "noQuote": 137
       },
       "s_pozhenzi": {
-        "updated": 145,
-        "total": 267,
+        "updated": 185,
+        "total": 414,
         "filtered": 32,
-        "noQuote": 122
+        "noQuote": 229
       },
       "s_dielianhua": {
-        "updated": 151,
-        "total": 267,
-        "filtered": 22,
-        "noQuote": 116
+        "updated": 175,
+        "total": 414,
+        "filtered": 23,
+        "noQuote": 239
       },
       "s_jiandan": {
-        "updated": 150,
-        "total": 267,
-        "filtered": 31,
-        "noQuote": 117
+        "updated": 178,
+        "total": 414,
+        "filtered": 32,
+        "noQuote": 236
       },
       "s_youyuelun": {
-        "updated": 167,
-        "total": 267,
-        "filtered": 26,
-        "noQuote": 100
+        "updated": 211,
+        "total": 414,
+        "filtered": 28,
+        "noQuote": 203
       },
       "s_longzheng": {
-        "updated": 174,
-        "total": 267,
-        "filtered": 22,
-        "noQuote": 93
+        "updated": 234,
+        "total": 414,
+        "filtered": 27,
+        "noQuote": 180
       },
       "s_changancheng": {
-        "updated": 146,
-        "total": 267,
-        "filtered": 22,
-        "noQuote": 121
+        "updated": 173,
+        "total": 414,
+        "filtered": 27,
+        "noQuote": 241
       },
       "s_douzhuang": {
-        "updated": 151,
-        "total": 267,
-        "filtered": 32,
-        "noQuote": 116
+        "updated": 188,
+        "total": 414,
+        "filtered": 34,
+        "noQuote": 226
       },
       "s_qiankun": {
-        "updated": 170,
-        "total": 267,
-        "filtered": 31,
-        "noQuote": 97
+        "updated": 230,
+        "total": 414,
+        "filtered": 35,
+        "noQuote": 184
       },
       "s_weiwo": {
-        "updated": 190,
-        "total": 267,
-        "filtered": 21,
-        "noQuote": 77
+        "updated": 247,
+        "total": 414,
+        "filtered": 24,
+        "noQuote": 167
       },
       "s_juedai": {
-        "updated": 170,
-        "total": 267,
-        "filtered": 27,
-        "noQuote": 97
+        "updated": 219,
+        "total": 414,
+        "filtered": 31,
+        "noQuote": 195
       },
       "s_tianeping": {
-        "updated": 175,
-        "total": 267,
-        "filtered": 27,
-        "noQuote": 92
+        "updated": 216,
+        "total": 414,
+        "filtered": 33,
+        "noQuote": 198
       },
       "s_feilong": {
-        "updated": 136,
-        "total": 267,
-        "filtered": 38,
-        "noQuote": 131
+        "updated": 162,
+        "total": 414,
+        "filtered": 41,
+        "noQuote": 252
       },
       "s_jiutian": {
-        "updated": 123,
-        "total": 267,
-        "filtered": 32,
-        "noQuote": 144
+        "updated": 139,
+        "total": 414,
+        "filtered": 34,
+        "noQuote": 275
       },
       "s_meijianxue": {
-        "updated": 127,
-        "total": 267,
-        "filtered": 24,
-        "noQuote": 140
+        "updated": 148,
+        "total": 414,
+        "filtered": 26,
+        "noQuote": 266
       },
       "s_shanhai": {
-        "updated": 114,
-        "total": 267,
-        "filtered": 21,
-        "noQuote": 153
+        "updated": 134,
+        "total": 414,
+        "filtered": 25,
+        "noQuote": 280
       },
       "s_aoxue": {
         "updated": 77,
-        "total": 267,
-        "filtered": 15,
-        "noQuote": 190
+        "total": 414,
+        "filtered": 19,
+        "noQuote": 337
       }
     },
-    "stonePriceUpdatedAt": "2026-11-21T12:07:20+08:00",
+    "stonePriceUpdatedAt": "2026-11-21T17:05:09+08:00",
     "stoneVerifiedAt": "2026-11-19"
   },
   "tiers": [
@@ -341,7 +346,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112590"
     },
     {
       "id": "dimai",
@@ -354,7 +360,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89566"
     },
     {
       "id": "fengwangjiang",
@@ -363,12 +370,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 4,
       "source": "交易行",
-      "base": 175.35,
+      "base": 178.76,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010327
+      "priceAt": 1795010327,
+      "gameKey": "5_30854"
     },
     {
       "id": "shoupijiao",
@@ -377,12 +385,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 58.39,
+      "base": 59.97,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010278
+      "priceAt": 1795010278,
+      "gameKey": "5_30851"
     },
     {
       "id": "qicaixian",
@@ -391,12 +400,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 128,
+      "base": 120,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010280
+      "priceAt": 1795010280,
+      "gameKey": "5_89960"
     },
     {
       "id": "bairanxian",
@@ -410,7 +420,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795006664
+      "priceAt": 1795006664,
+      "gameKey": "5_10175"
     },
     {
       "id": "xuan_yuan_xie",
@@ -423,7 +434,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112572"
     },
     {
       "id": "xuan_yuan_wan",
@@ -436,7 +448,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112560"
     },
     {
       "id": "fengyu_yi",
@@ -450,7 +463,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794927575
+      "priceAt": 1794927575,
+      "gameKey": "5_71208"
     },
     {
       "id": "m_m_5_30852",
@@ -459,12 +473,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 4,
       "source": "交易行",
-      "base": 16.09,
+      "base": 16.45,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010379
+      "priceAt": 1795010379,
+      "gameKey": "5_30852"
     },
     {
       "id": "m_m_5_30853",
@@ -478,7 +493,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010341
+      "priceAt": 1795010341,
+      "gameKey": "5_30853"
     },
     {
       "id": "m_m_5_30828",
@@ -487,12 +503,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 5.07,
+      "base": 5.99,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010050
+      "priceAt": 1795010050,
+      "gameKey": "5_30828"
     },
     {
       "id": "m_m_5_89165",
@@ -506,7 +523,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794990866
+      "priceAt": 1794990866,
+      "gameKey": "5_89165"
     },
     {
       "id": "m_m_5_32000",
@@ -520,7 +538,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795002219
+      "priceAt": 1795002219,
+      "gameKey": "5_32000"
     },
     {
       "id": "guajian_bei",
@@ -529,12 +548,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 54.27,
+      "base": 54.25,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009827
+      "priceAt": 1795009827,
+      "gameKey": "5_7165"
     },
     {
       "id": "baihua_bu",
@@ -543,12 +563,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 70.51,
+      "base": 60.9,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010253
+      "priceAt": 1795010253,
+      "gameKey": "5_89956"
     },
     {
       "id": "guajian_yao",
@@ -562,7 +583,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009836
+      "priceAt": 1795009836,
+      "gameKey": "5_7166"
     },
     {
       "id": "shuran_bu",
@@ -576,7 +598,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009947
+      "priceAt": 1795009947,
+      "gameKey": "5_89957"
     },
     {
       "id": "m_m_5_32001",
@@ -590,7 +613,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794992985
+      "priceAt": 1794992985,
+      "gameKey": "5_32001"
     },
     {
       "id": "shuran_bag",
@@ -604,7 +628,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794993159
+      "priceAt": 1794993159,
+      "gameKey": "8_53"
     },
     {
       "id": "m_m_5_10173",
@@ -618,7 +643,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795002227
+      "priceAt": 1795002227,
+      "gameKey": "5_10173"
     },
     {
       "id": "jinfeng_bag",
@@ -632,7 +658,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794876994
+      "priceAt": 1794876994,
+      "gameKey": "8_36275"
     },
     {
       "id": "wuseshi",
@@ -641,12 +668,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 99,
+      "base": 172.81,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795000705
+      "priceAt": 1795000705,
+      "gameKey": "5_89958"
     },
     {
       "id": "m_m_5_30856",
@@ -655,12 +683,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 4,
       "source": "采集",
-      "base": 21.7,
+      "base": 20,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010398
+      "priceAt": 1795010398,
+      "gameKey": "5_30856"
     },
     {
       "id": "m_m_5_30855",
@@ -669,12 +698,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 4,
       "source": "交易行",
-      "base": 176.15,
+      "base": 168.24,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010337
+      "priceAt": 1795010337,
+      "gameKey": "5_30855"
     },
     {
       "id": "geyin_zhang",
@@ -683,12 +713,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 150,
+      "base": 145.11,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009564
+      "priceAt": 1795009564,
+      "gameKey": "5_71422"
     },
     {
       "id": "m_m_5_89298",
@@ -697,12 +728,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 34.54,
+      "base": 34.9,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010392
+      "priceAt": 1795010392,
+      "gameKey": "5_89298"
     },
     {
       "id": "m_m_5_30679",
@@ -711,12 +743,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 15.15,
+      "base": 19.21,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010303
+      "priceAt": 1795010303,
+      "gameKey": "5_30679"
     },
     {
       "id": "m_m_5_32004",
@@ -730,7 +763,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794991076
+      "priceAt": 1794991076,
+      "gameKey": "5_32004"
     },
     {
       "id": "m_m_5_30847",
@@ -739,12 +773,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 10.08,
+      "base": 9.55,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010372
+      "priceAt": 1795010372,
+      "gameKey": "5_30847"
     },
     {
       "id": "m_m_5_30846",
@@ -753,12 +788,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 1.59,
+      "base": 1.65,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010364
+      "priceAt": 1795010364,
+      "gameKey": "5_30846"
     },
     {
       "id": "yinsi_duan",
@@ -767,12 +803,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 104.9,
+      "base": 144.98,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010131
+      "priceAt": 1795010131,
+      "gameKey": "5_89959"
     },
     {
       "id": "m_m_5_32003",
@@ -781,12 +818,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 1,
       "source": "交易行",
-      "base": 0.65,
+      "base": 0.64,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794928908
+      "priceAt": 1794928908,
+      "gameKey": "5_32003"
     },
     {
       "id": "m_m_5_30848",
@@ -795,12 +833,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 18.84,
+      "base": 19.94,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010254
+      "priceAt": 1795010254,
+      "gameKey": "5_30848"
     },
     {
       "id": "m_m_5_32002",
@@ -814,7 +853,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794992989
+      "priceAt": 1794992989,
+      "gameKey": "5_32002"
     },
     {
       "id": "m_m_7_112589",
@@ -827,7 +867,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112589"
     },
     {
       "id": "m_m_5_30850",
@@ -836,12 +877,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "采集",
-      "base": 106.99,
+      "base": 105.42,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010355
+      "priceAt": 1795010355,
+      "gameKey": "5_30850"
     },
     {
       "id": "m_m_7_112588",
@@ -854,7 +896,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112588"
     },
     {
       "id": "m_m_5_30845",
@@ -863,12 +906,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "采集",
-      "base": 147.25,
+      "base": 146.82,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010399
+      "priceAt": 1795010399,
+      "gameKey": "5_30845"
     },
     {
       "id": "m_m_5_31231",
@@ -881,7 +925,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_31231"
     },
     {
       "id": "m_m_5_31397",
@@ -895,7 +940,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008398
+      "priceAt": 1795008398,
+      "gameKey": "5_31397"
     },
     {
       "id": "m_m_5_89433",
@@ -904,12 +950,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 5986.25,
+      "base": 5399,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794928812
+      "priceAt": 1794928812,
+      "gameKey": "5_89433"
     },
     {
       "id": "m_m_5_89435",
@@ -918,12 +965,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 5888,
+      "base": 5488.83,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010291
+      "priceAt": 1795010291,
+      "gameKey": "5_89435"
     },
     {
       "id": "m_m_5_31253",
@@ -937,7 +985,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795001071
+      "priceAt": 1795001071,
+      "gameKey": "5_31253"
     },
     {
       "id": "tongpao_fan",
@@ -950,7 +999,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_90033"
     },
     {
       "id": "m_m_5_30844",
@@ -959,12 +1009,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 1.94,
+      "base": 1,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010373
+      "priceAt": 1795010373,
+      "gameKey": "5_30844"
     },
     {
       "id": "m_m_5_89166",
@@ -977,7 +1028,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89166"
     },
     {
       "id": "m_m_5_89568",
@@ -990,7 +1042,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89568"
     },
     {
       "id": "m_m_7_112569",
@@ -1003,7 +1056,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112569"
     },
     {
       "id": "m_m_5_90338",
@@ -1017,7 +1071,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1795006138
+      "priceAt": 1795006138,
+      "gameKey": "5_90338"
     },
     {
       "id": "m_m_7_112568",
@@ -1030,7 +1085,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112568"
     },
     {
       "id": "m_m_5_31239",
@@ -1043,7 +1099,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_31239"
     },
     {
       "id": "m_m_7_112556",
@@ -1056,7 +1113,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112556"
     },
     {
       "id": "m_m_7_112557",
@@ -1069,7 +1127,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112557"
     },
     {
       "id": "m_m_5_31235",
@@ -1082,7 +1141,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_31235"
     },
     {
       "id": "m_m_5_90210",
@@ -1095,7 +1155,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_90210"
     },
     {
       "id": "m_m_5_35718",
@@ -1109,7 +1170,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794991184
+      "priceAt": 1794991184,
+      "gameKey": "5_35718"
     },
     {
       "id": "m_m_5_35719",
@@ -1123,7 +1185,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794991189
+      "priceAt": 1794991189,
+      "gameKey": "5_35719"
     },
     {
       "id": "m_m_5_30873",
@@ -1132,12 +1195,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 24.36,
+      "base": 29.36,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010327
+      "priceAt": 1795010327,
+      "gameKey": "5_30873"
     },
     {
       "id": "m_m_5_90205",
@@ -1151,7 +1215,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794998574
+      "priceAt": 1794998574,
+      "gameKey": "5_90205"
     },
     {
       "id": "m_m_8_614",
@@ -1165,7 +1230,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794978879
+      "priceAt": 1794978879,
+      "gameKey": "8_614"
     },
     {
       "id": "shanshui_juan",
@@ -1179,7 +1245,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794992074
+      "priceAt": 1794992074,
+      "gameKey": "5_2466"
     },
     {
       "id": "m_m_5_3819",
@@ -1188,12 +1255,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 2,
       "source": "制造",
-      "base": 200,
+      "base": 100.59,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794996894
+      "priceAt": 1794996894,
+      "gameKey": "5_3819"
     },
     {
       "id": "m_m_5_3779",
@@ -1207,7 +1275,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794930555
+      "priceAt": 1794930555,
+      "gameKey": "5_3779"
     },
     {
       "id": "m_m_8_36148",
@@ -1221,7 +1290,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010198
+      "priceAt": 1795010198,
+      "gameKey": "8_36148"
     },
     {
       "id": "m_m_8_19",
@@ -1235,7 +1305,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794994263
+      "priceAt": 1794994263,
+      "gameKey": "8_19"
     },
     {
       "id": "m_m_5_89475",
@@ -1248,7 +1319,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89475"
     },
     {
       "id": "m_m_5_89474",
@@ -1257,12 +1329,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 1500,
+      "base": 950,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007088
+      "priceAt": 1795007088,
+      "gameKey": "5_89474"
     },
     {
       "id": "m_m_5_3820",
@@ -1276,7 +1349,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794916585
+      "priceAt": 1794916585,
+      "gameKey": "5_3820"
     },
     {
       "id": "shuizhuyu",
@@ -1289,7 +1363,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89321"
     },
     {
       "id": "m_m_5_30827",
@@ -1298,12 +1373,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 1.28,
+      "base": 1.24,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010386
+      "priceAt": 1795010386,
+      "gameKey": "5_30827"
     },
     {
       "id": "m_m_5_89970",
@@ -1312,12 +1388,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 150,
+      "base": 173.88,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010261
+      "priceAt": 1795010261,
+      "gameKey": "5_89970"
     },
     {
       "id": "m_m_5_32014",
@@ -1331,7 +1408,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794893373
+      "priceAt": 1794893373,
+      "gameKey": "5_32014"
     },
     {
       "id": "m_m_5_31978",
@@ -1345,7 +1423,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794962296
+      "priceAt": 1794962296,
+      "gameKey": "5_31978"
     },
     {
       "id": "m_m_5_31985",
@@ -1359,7 +1438,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795006788
+      "priceAt": 1795006788,
+      "gameKey": "5_31985"
     },
     {
       "id": "lucai",
@@ -1368,12 +1448,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 17.22,
+      "base": 17.99,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010396
+      "priceAt": 1795010396,
+      "gameKey": "5_76622"
     },
     {
       "id": "m_m_5_1831",
@@ -1382,12 +1463,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 14.04,
+      "base": 14.03,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009469
+      "priceAt": 1795009469,
+      "gameKey": "5_1831"
     },
     {
       "id": "m_m_5_31973",
@@ -1401,7 +1483,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009297
+      "priceAt": 1795009297,
+      "gameKey": "5_31973"
     },
     {
       "id": "m_m_5_30849",
@@ -1410,12 +1493,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "交易行",
-      "base": 5.91,
+      "base": 5.95,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010399
+      "priceAt": 1795010399,
+      "gameKey": "5_30849"
     },
     {
       "id": "m_m_5_71293",
@@ -1429,7 +1513,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007613
+      "priceAt": 1795007613,
+      "gameKey": "5_71293"
     },
     {
       "id": "m_m_5_30826",
@@ -1438,12 +1523,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 0.95,
+      "base": 0.88,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009904
+      "priceAt": 1795009904,
+      "gameKey": "5_30826"
     },
     {
       "id": "m_m_5_30825",
@@ -1457,7 +1543,8 @@ window.JX3Data = {
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010366
+      "priceAt": 1795010366,
+      "gameKey": "5_30825"
     },
     {
       "id": "m_m_5_89171",
@@ -1471,7 +1558,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794941188
+      "priceAt": 1794941188,
+      "gameKey": "5_89171"
     },
     {
       "id": "m_m_5_31974",
@@ -1485,7 +1573,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008321
+      "priceAt": 1795008321,
+      "gameKey": "5_31974"
     },
     {
       "id": "m_m_5_31968",
@@ -1499,7 +1588,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794752373
+      "priceAt": 1794752373,
+      "gameKey": "5_31968"
     },
     {
       "id": "m_m_5_71292",
@@ -1508,12 +1598,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 42,
+      "base": 34.6,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795003150
+      "priceAt": 1795003150,
+      "gameKey": "5_71292"
     },
     {
       "id": "m_m_5_30824",
@@ -1522,12 +1613,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 0.46,
+      "base": 0.4,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010246
+      "priceAt": 1795010246,
+      "gameKey": "5_30824"
     },
     {
       "id": "m_m_5_31967",
@@ -1541,7 +1633,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794843040
+      "priceAt": 1794843040,
+      "gameKey": "5_31967"
     },
     {
       "id": "m_m_5_71281",
@@ -1555,7 +1648,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007591
+      "priceAt": 1795007591,
+      "gameKey": "5_71281"
     },
     {
       "id": "m_m_5_30823",
@@ -1564,12 +1658,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 0.64,
+      "base": 0.56,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009941
+      "priceAt": 1795009941,
+      "gameKey": "5_30823"
     },
     {
       "id": "m_m_5_31969",
@@ -1583,7 +1678,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794919677
+      "priceAt": 1794919677,
+      "gameKey": "5_31969"
     },
     {
       "id": "m_m_5_71277",
@@ -1597,7 +1693,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794973471
+      "priceAt": 1794973471,
+      "gameKey": "5_71277"
     },
     {
       "id": "m_m_5_89315",
@@ -1606,12 +1703,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 1100,
+      "base": 1099.71,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010165
+      "priceAt": 1795010165,
+      "gameKey": "5_89315"
     },
     {
       "id": "m_m_5_1829",
@@ -1625,7 +1723,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794939525
+      "priceAt": 1794939525,
+      "gameKey": "5_1829"
     },
     {
       "id": "m_m_5_89969",
@@ -1634,12 +1733,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 118.42,
+      "base": 116.26,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010197
+      "priceAt": 1795010197,
+      "gameKey": "5_89969"
     },
     {
       "id": "m_m_5_31976",
@@ -1653,7 +1753,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008253
+      "priceAt": 1795008253,
+      "gameKey": "5_31976"
     },
     {
       "id": "m_m_5_89303",
@@ -1662,12 +1763,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 3077.29,
+      "base": 2988,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795006911
+      "priceAt": 1795006911,
+      "gameKey": "5_89303"
     },
     {
       "id": "m_m_5_89971",
@@ -1676,12 +1778,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 181.97,
+      "base": 174,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009602
+      "priceAt": 1795009602,
+      "gameKey": "5_89971"
     },
     {
       "id": "lushui",
@@ -1690,12 +1793,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 3,
       "source": "采集",
-      "base": 13.45,
+      "base": 12.98,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009938
+      "priceAt": 1795009938,
+      "gameKey": "5_30840"
     },
     {
       "id": "m_m_5_30875",
@@ -1704,12 +1808,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 2,
+      "base": 1.84,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010322
+      "priceAt": 1795010322,
+      "gameKey": "5_30875"
     },
     {
       "id": "m_m_5_30829",
@@ -1718,12 +1823,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 1,
       "source": "交易行",
-      "base": 3.61,
+      "base": 0.66,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794941224
+      "priceAt": 1794941224,
+      "gameKey": "5_30829"
     },
     {
       "id": "m_m_5_30843",
@@ -1732,12 +1838,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 1.98,
+      "base": 1.07,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010388
+      "priceAt": 1795010388,
+      "gameKey": "5_30843"
     },
     {
       "id": "m_m_5_30874",
@@ -1746,12 +1853,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 32,
+      "base": 30,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010392
+      "priceAt": 1795010392,
+      "gameKey": "5_30874"
     },
     {
       "id": "m_m_5_30842",
@@ -1760,12 +1868,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 1.02,
+      "base": 0.78,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010395
+      "priceAt": 1795010395,
+      "gameKey": "5_30842"
     },
     {
       "id": "m_m_5_5270",
@@ -1774,12 +1883,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 1,
       "source": "制造",
-      "base": 0.85,
+      "base": 0.83,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010139
+      "priceAt": 1795010139,
+      "gameKey": "5_5270"
     },
     {
       "id": "m_m_5_31970",
@@ -1793,7 +1903,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795000652
+      "priceAt": 1795000652,
+      "gameKey": "5_31970"
     },
     {
       "id": "m_m_5_5269",
@@ -1807,7 +1918,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009216
+      "priceAt": 1795009216,
+      "gameKey": "5_5269"
     },
     {
       "id": "m_m_5_31977",
@@ -1821,7 +1933,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794931002
+      "priceAt": 1794931002,
+      "gameKey": "5_31977"
     },
     {
       "id": "m_m_5_31013",
@@ -1830,12 +1943,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 148.36,
+      "base": 157.55,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010220
+      "priceAt": 1795010220,
+      "gameKey": "5_31013"
     },
     {
       "id": "gancao",
@@ -1844,12 +1958,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 3,
+      "base": 2.93,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010071
+      "priceAt": 1795010071,
+      "gameKey": "5_30830"
     },
     {
       "id": "m_m_5_31012",
@@ -1858,12 +1973,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 289.9,
+      "base": 288.37,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010087
+      "priceAt": 1795010087,
+      "gameKey": "5_31012"
     },
     {
       "id": "m_m_5_90034",
@@ -1876,7 +1992,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_90034"
     },
     {
       "id": "m_m_5_89172",
@@ -1890,7 +2007,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794917851
+      "priceAt": 1794917851,
+      "gameKey": "5_89172"
     },
     {
       "id": "m_m_5_89304",
@@ -1899,12 +2017,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 3644,
+      "base": 3599.93,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010288
+      "priceAt": 1795010288,
+      "gameKey": "5_89304"
     },
     {
       "id": "m_m_5_24212",
@@ -1917,7 +2036,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_24212"
     },
     {
       "id": "m_m_5_26057",
@@ -1931,7 +2051,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795002356
+      "priceAt": 1795002356,
+      "gameKey": "5_26057"
     },
     {
       "id": "m_m_5_26231",
@@ -1945,7 +2066,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794993063
+      "priceAt": 1794993063,
+      "gameKey": "5_26231"
     },
     {
       "id": "m_m_5_89352",
@@ -1954,12 +2076,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 626.86,
+      "base": 588,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010165
+      "priceAt": 1795010165,
+      "gameKey": "5_89352"
     },
     {
       "id": "m_m_5_89350",
@@ -1968,12 +2091,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 542.93,
+      "base": 535.53,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009691
+      "priceAt": 1795009691,
+      "gameKey": "5_89350"
     },
     {
       "id": "m_m_5_71269",
@@ -1982,12 +2106,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 100.21,
+      "base": 99.64,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009712
+      "priceAt": 1795009712,
+      "gameKey": "5_71269"
     },
     {
       "id": "m_m_5_89346",
@@ -1996,12 +2121,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 615.8,
+      "base": 602.4,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010261
+      "priceAt": 1795010261,
+      "gameKey": "5_89346"
     },
     {
       "id": "m_m_5_89167",
@@ -2015,7 +2141,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795006909
+      "priceAt": 1795006909,
+      "gameKey": "5_89167"
     },
     {
       "id": "m_m_5_31984",
@@ -2029,7 +2156,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794962976
+      "priceAt": 1794962976,
+      "gameKey": "5_31984"
     },
     {
       "id": "m_m_5_89348",
@@ -2043,7 +2171,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010162
+      "priceAt": 1795010162,
+      "gameKey": "5_89348"
     },
     {
       "id": "m_m_5_71285",
@@ -2052,12 +2181,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 140.41,
+      "base": 136.28,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010381
+      "priceAt": 1795010381,
+      "gameKey": "5_71285"
     },
     {
       "id": "jieyuan_dan",
@@ -2071,7 +2201,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008464
+      "priceAt": 1795008464,
+      "gameKey": "5_31101"
     },
     {
       "id": "m_m_5_30836",
@@ -2080,12 +2211,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 0.87,
+      "base": 0.59,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010398
+      "priceAt": 1795010398,
+      "gameKey": "5_30836"
     },
     {
       "id": "m_m_5_30832",
@@ -2094,12 +2226,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 1.19,
+      "base": 2.99,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010309
+      "priceAt": 1795010309,
+      "gameKey": "5_30832"
     },
     {
       "id": "m_m_5_30833",
@@ -2108,12 +2241,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 1.26,
+      "base": 1.33,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010330
+      "priceAt": 1795010330,
+      "gameKey": "5_30833"
     },
     {
       "id": "m_m_5_31997",
@@ -2127,7 +2261,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009842
+      "priceAt": 1795009842,
+      "gameKey": "5_31997"
     },
     {
       "id": "m_m_5_89324",
@@ -2141,7 +2276,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010233
+      "priceAt": 1795010233,
+      "gameKey": "5_89324"
     },
     {
       "id": "m_m_5_30831",
@@ -2150,12 +2286,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 0.7,
+      "base": 0.86,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010262
+      "priceAt": 1795010262,
+      "gameKey": "5_30831"
     },
     {
       "id": "m_m_5_89973",
@@ -2169,7 +2306,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009958
+      "priceAt": 1795009958,
+      "gameKey": "5_89973"
     },
     {
       "id": "m_m_5_31996",
@@ -2183,7 +2321,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010161
+      "priceAt": 1795010161,
+      "gameKey": "5_31996"
     },
     {
       "id": "m_m_5_71241",
@@ -2197,7 +2336,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794740009
+      "priceAt": 1794740009,
+      "gameKey": "5_71241"
     },
     {
       "id": "m_m_5_71240",
@@ -2206,12 +2346,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 39.59,
+      "base": 40,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010194
+      "priceAt": 1795010194,
+      "gameKey": "5_71240"
     },
     {
       "id": "m_m_5_31995",
@@ -2220,12 +2361,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 1,
       "source": "交易行",
-      "base": 0.66,
+      "base": 0.69,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010188
+      "priceAt": 1795010188,
+      "gameKey": "5_31995"
     },
     {
       "id": "m_m_5_71266",
@@ -2239,7 +2381,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795003166
+      "priceAt": 1795003166,
+      "gameKey": "5_71266"
     },
     {
       "id": "m_m_5_30838",
@@ -2248,12 +2391,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 1.08,
+      "base": 0.93,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008734
+      "priceAt": 1795008734,
+      "gameKey": "5_30838"
     },
     {
       "id": "shanhu",
@@ -2262,12 +2406,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 3.07,
+      "base": 3.6,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010296
+      "priceAt": 1795010296,
+      "gameKey": "5_30839"
     },
     {
       "id": "m_m_5_6646",
@@ -2281,7 +2426,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794990998
+      "priceAt": 1794990998,
+      "gameKey": "5_6646"
     },
     {
       "id": "m_m_5_89333",
@@ -2294,7 +2440,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "auction"
+      "priceSource": "auction",
+      "gameKey": "5_89333"
     },
     {
       "id": "m_m_5_30835",
@@ -2303,12 +2450,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 2.94,
+      "base": 2.5,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010369
+      "priceAt": 1795010369,
+      "gameKey": "5_30835"
     },
     {
       "id": "m_m_5_89974",
@@ -2317,12 +2465,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 78.17,
+      "base": 78.1,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794997034
+      "priceAt": 1794997034,
+      "gameKey": "5_89974"
     },
     {
       "id": "m_m_5_6648",
@@ -2336,7 +2485,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010386
+      "priceAt": 1795010386,
+      "gameKey": "5_6648"
     },
     {
       "id": "m_m_5_71267",
@@ -2345,12 +2495,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 59.53,
+      "base": 68.42,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008563
+      "priceAt": 1795008563,
+      "gameKey": "5_71267"
     },
     {
       "id": "m_m_5_90029",
@@ -2363,7 +2514,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_90029"
     },
     {
       "id": "m_m_5_89168",
@@ -2377,7 +2529,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794927368
+      "priceAt": 1794927368,
+      "gameKey": "5_89168"
     },
     {
       "id": "yaoyin",
@@ -2386,12 +2539,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 129.94,
+      "base": 128.41,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010315
+      "priceAt": 1795010315,
+      "gameKey": "5_89972"
     },
     {
       "id": "m_m_5_31100",
@@ -2400,12 +2554,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 230,
+      "base": 49.62,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795005591
+      "priceAt": 1795005591,
+      "gameKey": "5_31100"
     },
     {
       "id": "m_m_5_89322",
@@ -2419,7 +2574,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007496
+      "priceAt": 1795007496,
+      "gameKey": "5_89322"
     },
     {
       "id": "shaoyao",
@@ -2428,12 +2584,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 1.8,
+      "base": 2.04,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010229
+      "priceAt": 1795010229,
+      "gameKey": "5_30837"
     },
     {
       "id": "m_m_5_90206",
@@ -2447,7 +2604,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007570
+      "priceAt": 1795007570,
+      "gameKey": "5_90206"
     },
     {
       "id": "m_m_5_31102",
@@ -2456,12 +2614,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 0.28,
+      "base": 0.07,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007742
+      "priceAt": 1795007742,
+      "gameKey": "5_31102"
     },
     {
       "id": "m_m_5_30834",
@@ -2470,12 +2629,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 1.91,
+      "base": 1.96,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010273
+      "priceAt": 1795010273,
+      "gameKey": "5_30834"
     },
     {
       "id": "m_m_5_31998",
@@ -2489,7 +2649,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794903393
+      "priceAt": 1794903393,
+      "gameKey": "5_31998"
     },
     {
       "id": "m_m_5_90035",
@@ -2503,7 +2664,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010272
+      "priceAt": 1795010272,
+      "gameKey": "5_90035"
     },
     {
       "id": "m_m_5_89328",
@@ -2512,12 +2674,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 786.76,
+      "base": 776.89,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008257
+      "priceAt": 1795008257,
+      "gameKey": "5_89328"
     },
     {
       "id": "m_m_5_89332",
@@ -2531,7 +2694,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795002008
+      "priceAt": 1795002008,
+      "gameKey": "5_89332"
     },
     {
       "id": "m_m_5_89340",
@@ -2540,12 +2704,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 95.67,
+      "base": 94.64,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010228
+      "priceAt": 1795010228,
+      "gameKey": "5_89340"
     },
     {
       "id": "m_m_5_89325",
@@ -2554,12 +2719,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 613.4,
+      "base": 601.24,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010334
+      "priceAt": 1795010334,
+      "gameKey": "5_89325"
     },
     {
       "id": "m_m_5_71258",
@@ -2568,12 +2734,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 72.66,
+      "base": 71.62,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010331
+      "priceAt": 1795010331,
+      "gameKey": "5_71258"
     },
     {
       "id": "m_m_5_31999",
@@ -2587,7 +2754,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794987490
+      "priceAt": 1794987490,
+      "gameKey": "5_31999"
     },
     {
       "id": "m_m_5_89327",
@@ -2596,12 +2764,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 70.98,
+      "base": 280.48,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010166
+      "priceAt": 1795010166,
+      "gameKey": "5_89327"
     },
     {
       "id": "juling_chou",
@@ -2614,7 +2783,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89378"
     },
     {
       "id": "m_m_5_89966",
@@ -2623,12 +2793,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 75.18,
+      "base": 78.95,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795005670
+      "priceAt": 1795005670,
+      "gameKey": "5_89966"
     },
     {
       "id": "m_m_5_10176",
@@ -2642,7 +2813,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794929644
+      "priceAt": 1794929644,
+      "gameKey": "5_10176"
     },
     {
       "id": "m_m_5_31991",
@@ -2656,7 +2828,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794934155
+      "priceAt": 1794934155,
+      "gameKey": "5_31991"
     },
     {
       "id": "m_m_5_89377",
@@ -2670,7 +2843,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007041
+      "priceAt": 1795007041,
+      "gameKey": "5_89377"
     },
     {
       "id": "m_m_5_89968",
@@ -2679,12 +2853,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 67.23,
+      "base": 70.2,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008858
+      "priceAt": 1795008858,
+      "gameKey": "5_89968"
     },
     {
       "id": "m_m_5_31993",
@@ -2698,7 +2873,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794941608
+      "priceAt": 1794941608,
+      "gameKey": "5_31993"
     },
     {
       "id": "m_m_5_89376",
@@ -2707,12 +2883,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 118.74,
+      "base": 149.37,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008362
+      "priceAt": 1795008362,
+      "gameKey": "5_89376"
     },
     {
       "id": "m_m_5_89965",
@@ -2726,7 +2903,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010396
+      "priceAt": 1795010396,
+      "gameKey": "5_89965"
     },
     {
       "id": "m_m_5_31992",
@@ -2740,7 +2918,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794993574
+      "priceAt": 1794993574,
+      "gameKey": "5_31992"
     },
     {
       "id": "m_m_5_89375",
@@ -2754,7 +2933,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795004468
+      "priceAt": 1795004468,
+      "gameKey": "5_89375"
     },
     {
       "id": "m_m_5_89963",
@@ -2763,12 +2943,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 53.25,
+      "base": 52.99,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008513
+      "priceAt": 1795008513,
+      "gameKey": "5_89963"
     },
     {
       "id": "m_m_5_89370",
@@ -2781,7 +2962,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89370"
     },
     {
       "id": "m_m_5_71192",
@@ -2794,7 +2976,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "auction"
+      "priceSource": "auction",
+      "gameKey": "5_71192"
     },
     {
       "id": "m_m_5_89169",
@@ -2808,7 +2991,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794979874
+      "priceAt": 1794979874,
+      "gameKey": "5_89169"
     },
     {
       "id": "m_m_5_71188",
@@ -2822,7 +3006,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794830387
+      "priceAt": 1794830387,
+      "gameKey": "5_71188"
     },
     {
       "id": "m_m_5_31994",
@@ -2831,12 +3016,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 1,
       "source": "交易行",
-      "base": 3.66,
+      "base": 0.69,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794935740
+      "priceAt": 1794935740,
+      "gameKey": "5_31994"
     },
     {
       "id": "m_m_7_112584",
@@ -2849,7 +3035,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112584"
     },
     {
       "id": "m_m_5_89962",
@@ -2858,12 +3045,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 106,
+      "base": 88,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008938
+      "priceAt": 1795008938,
+      "gameKey": "5_89962"
     },
     {
       "id": "m_m_7_112566",
@@ -2876,7 +3064,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112566"
     },
     {
       "id": "m_m_7_112578",
@@ -2889,7 +3078,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112578"
     },
     {
       "id": "m_m_5_31139",
@@ -2898,12 +3088,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 3188.68,
+      "base": 3188.61,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009997
+      "priceAt": 1795009997,
+      "gameKey": "5_31139"
     },
     {
       "id": "m_m_5_89964",
@@ -2912,12 +3103,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 55,
+      "base": 45,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009262
+      "priceAt": 1795009262,
+      "gameKey": "5_89964"
     },
     {
       "id": "m_m_5_10027",
@@ -2926,12 +3118,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 2,
       "source": "制造",
-      "base": 79.88,
+      "base": 68,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795002501
+      "priceAt": 1795002501,
+      "gameKey": "5_10027"
     },
     {
       "id": "m_m_5_89961",
@@ -2940,12 +3133,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 84.08,
+      "base": 78.87,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010275
+      "priceAt": 1795010275,
+      "gameKey": "5_89961"
     },
     {
       "id": "m_m_5_10029",
@@ -2959,7 +3153,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794882612
+      "priceAt": 1794882612,
+      "gameKey": "5_10029"
     },
     {
       "id": "tiekuang",
@@ -2968,12 +3163,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 3,
+      "base": 2.78,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009930
+      "priceAt": 1795009930,
+      "gameKey": "5_30677"
     },
     {
       "id": "m_m_5_30676",
@@ -2982,12 +3178,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 1.99,
+      "base": 1.92,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010258
+      "priceAt": 1795010258,
+      "gameKey": "5_30676"
     },
     {
       "id": "m_m_5_30678",
@@ -2996,12 +3193,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 1.67,
+      "base": 2.06,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795006870
+      "priceAt": 1795006870,
+      "gameKey": "5_30678"
     },
     {
       "id": "m_m_5_30674",
@@ -3010,12 +3208,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 3.19,
+      "base": 2.68,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009999
+      "priceAt": 1795009999,
+      "gameKey": "5_30674"
     },
     {
       "id": "m_m_5_30675",
@@ -3024,12 +3223,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 3.99,
+      "base": 3.76,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009734
+      "priceAt": 1795009734,
+      "gameKey": "5_30675"
     },
     {
       "id": "m_m_5_89967",
@@ -3043,7 +3243,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795001626
+      "priceAt": 1795001626,
+      "gameKey": "5_89967"
     },
     {
       "id": "m_m_5_89367",
@@ -3057,7 +3258,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795007070
+      "priceAt": 1795007070,
+      "gameKey": "5_89367"
     },
     {
       "id": "m_m_5_6246",
@@ -3066,12 +3268,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 2,
       "source": "制造",
-      "base": 0.2,
+      "base": 0.17,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009751
+      "priceAt": 1795009751,
+      "gameKey": "5_6246"
     },
     {
       "id": "m_m_5_6249",
@@ -3085,7 +3288,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794928656
+      "priceAt": 1794928656,
+      "gameKey": "5_6249"
     },
     {
       "id": "m_m_7_112575",
@@ -3098,7 +3302,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112575"
     },
     {
       "id": "m_m_7_112573",
@@ -3111,7 +3316,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112573"
     },
     {
       "id": "m_m_5_31209",
@@ -3124,7 +3330,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_31209"
     },
     {
       "id": "m_m_5_32787",
@@ -3138,7 +3345,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794930400
+      "priceAt": 1794930400,
+      "gameKey": "5_32787"
     },
     {
       "id": "m_m_7_112564",
@@ -3151,7 +3359,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112564"
     },
     {
       "id": "m_m_7_112561",
@@ -3164,7 +3373,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112561"
     },
     {
       "id": "m_m_5_31211",
@@ -3177,7 +3387,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_31211"
     },
     {
       "id": "m_m_8_25762",
@@ -3191,7 +3402,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795005989
+      "priceAt": 1795005989,
+      "gameKey": "8_25762"
     },
     {
       "id": "m_m_5_30841",
@@ -3200,12 +3412,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 4,
       "source": "交易行",
-      "base": 3.72,
+      "base": 4.56,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010368
+      "priceAt": 1795010368,
+      "gameKey": "5_30841"
     },
     {
       "id": "m_m_5_10172",
@@ -3219,7 +3432,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794858087
+      "priceAt": 1794858087,
+      "gameKey": "5_10172"
     },
     {
       "id": "m_m_5_35708",
@@ -3233,7 +3447,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794999418
+      "priceAt": 1794999418,
+      "gameKey": "5_35708"
     },
     {
       "id": "m_m_8_17541",
@@ -3246,7 +3461,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "8_17541"
     },
     {
       "id": "m_m_8_17538",
@@ -3260,7 +3476,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794420741
+      "priceAt": 1794420741,
+      "gameKey": "8_17538"
     },
     {
       "id": "m_m_7_112582",
@@ -3273,7 +3490,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112582"
     },
     {
       "id": "m_m_7_112583",
@@ -3286,7 +3504,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "7_112583"
     },
     {
       "id": "m_m_5_31210",
@@ -3299,7 +3518,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_31210"
     },
     {
       "id": "m_m_5_90032",
@@ -3312,7 +3532,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_90032"
     },
     {
       "id": "m_m_5_89170",
@@ -3325,7 +3546,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89170"
     },
     {
       "id": "m_m_5_89567",
@@ -3338,7 +3560,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_89567"
     },
     {
       "id": "m_m_8_632",
@@ -3352,7 +3575,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794937799
+      "priceAt": 1794937799,
+      "gameKey": "8_632"
     },
     {
       "id": "m_m_8_634",
@@ -3366,7 +3590,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794837554
+      "priceAt": 1794837554,
+      "gameKey": "8_634"
     },
     {
       "id": "m_m_8_636",
@@ -3380,7 +3605,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794910021
+      "priceAt": 1794910021,
+      "gameKey": "8_636"
     },
     {
       "id": "m_m_5_90353",
@@ -3393,7 +3619,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_90353"
     },
     {
       "id": "m_m_5_90257",
@@ -3406,7 +3633,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "5_90257"
     },
     {
       "id": "m_m_5_2578",
@@ -3420,7 +3648,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794751102
+      "priceAt": 1794751102,
+      "gameKey": "5_2578"
     },
     {
       "id": "m_m_5_6072",
@@ -3434,7 +3663,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794970538
+      "priceAt": 1794970538,
+      "gameKey": "5_6072"
     },
     {
       "id": "m_m_5_6068",
@@ -3448,7 +3678,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794970526
+      "priceAt": 1794970526,
+      "gameKey": "5_6068"
     },
     {
       "id": "m_m_5_6066",
@@ -3462,7 +3693,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794965005
+      "priceAt": 1794965005,
+      "gameKey": "5_6066"
     },
     {
       "id": "muban",
@@ -3471,12 +3703,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 25,
+      "base": 24.99,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010248
+      "priceAt": 1795010248,
+      "gameKey": "5_35712"
     },
     {
       "id": "muliao",
@@ -3485,12 +3718,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 2.93,
+      "base": 3.59,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010283
+      "priceAt": 1795010283,
+      "gameKey": "5_35566"
     },
     {
       "id": "m_m_5_35707",
@@ -3504,7 +3738,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008984
+      "priceAt": 1795008984,
+      "gameKey": "5_35707"
     },
     {
       "id": "m_m_5_35703",
@@ -3518,7 +3753,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008979
+      "priceAt": 1795008979,
+      "gameKey": "5_35703"
     },
     {
       "id": "qiwuling",
@@ -3527,12 +3763,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 30.84,
+      "base": 27.86,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010390
+      "priceAt": 1795010390,
+      "gameKey": "5_38831"
     },
     {
       "id": "m_m_5_35716",
@@ -3541,12 +3778,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 16.93,
+      "base": 11.11,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009057
+      "priceAt": 1795009057,
+      "gameKey": "5_35716"
     },
     {
       "id": "m_m_5_35702",
@@ -3560,7 +3798,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794843051
+      "priceAt": 1794843051,
+      "gameKey": "5_35702"
     },
     {
       "id": "m_m_5_35715",
@@ -3569,12 +3808,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 13.66,
+      "base": 19.99,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008878
+      "priceAt": 1795008878,
+      "gameKey": "5_35715"
     },
     {
       "id": "zhuzi",
@@ -3583,12 +3823,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 1.97,
+      "base": 2.09,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010270
+      "priceAt": 1795010270,
+      "gameKey": "5_35568"
     },
     {
       "id": "m_m_5_35567",
@@ -3597,12 +3838,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "交易行",
-      "base": 2.05,
+      "base": 1.81,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010369
+      "priceAt": 1795010369,
+      "gameKey": "5_35567"
     },
     {
       "id": "m_m_5_35704",
@@ -3616,7 +3858,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794999655
+      "priceAt": 1794999655,
+      "gameKey": "5_35704"
     },
     {
       "id": "m_m_5_35714",
@@ -3630,7 +3873,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794997916
+      "priceAt": 1794997916,
+      "gameKey": "5_35714"
     },
     {
       "id": "m_m_5_35701",
@@ -3644,7 +3888,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008270
+      "priceAt": 1795008270,
+      "gameKey": "5_35701"
     },
     {
       "id": "m_m_5_35713",
@@ -3653,12 +3898,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 3,
       "source": "制造",
-      "base": 23.77,
+      "base": 21.47,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010206
+      "priceAt": 1795010206,
+      "gameKey": "5_35713"
     },
     {
       "id": "m_m_5_35705",
@@ -3672,7 +3918,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794998817
+      "priceAt": 1794998817,
+      "gameKey": "5_35705"
     },
     {
       "id": "m_m_10_1778",
@@ -3686,7 +3933,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794663425
+      "priceAt": 1794663425,
+      "gameKey": "10_1778"
     },
     {
       "id": "m_m_10_948",
@@ -3700,7 +3948,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795002116
+      "priceAt": 1795002116,
+      "gameKey": "10_948"
     },
     {
       "id": "m_m_5_89260",
@@ -3714,7 +3963,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794847820
+      "priceAt": 1794847820,
+      "gameKey": "5_89260"
     },
     {
       "id": "m_m_10_1779",
@@ -3728,7 +3978,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794663430
+      "priceAt": 1794663430,
+      "gameKey": "10_1779"
     },
     {
       "id": "m_m_10_1880",
@@ -3742,7 +3993,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794607481
+      "priceAt": 1794607481,
+      "gameKey": "10_1880"
     },
     {
       "id": "m_m_10_2034",
@@ -3756,7 +4008,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794607436
+      "priceAt": 1794607436,
+      "gameKey": "10_2034"
     },
     {
       "id": "m_m_10_93",
@@ -3770,7 +4023,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794948186
+      "priceAt": 1794948186,
+      "gameKey": "10_93"
     },
     {
       "id": "m_m_10_1882",
@@ -3784,7 +4038,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794607513
+      "priceAt": 1794607513,
+      "gameKey": "10_1882"
     },
     {
       "id": "m_m_5_35717",
@@ -3793,12 +4048,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 4,
       "source": "交易行",
-      "base": 2,
+      "base": 2.22,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010380
+      "priceAt": 1795010380,
+      "gameKey": "5_35717"
     },
     {
       "id": "m_m_10_2037",
@@ -3812,7 +4068,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794607450
+      "priceAt": 1794607450,
+      "gameKey": "10_2037"
     },
     {
       "id": "m_m_10_164",
@@ -3826,7 +4083,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1794756888
+      "priceAt": 1794756888,
+      "gameKey": "10_164"
     },
     {
       "id": "m_m_5_52337",
@@ -3835,12 +4093,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 1500,
+      "base": 1587.51,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009015
+      "priceAt": 1795009015,
+      "gameKey": "5_52337"
     },
     {
       "id": "m_m_5_40232",
@@ -3854,7 +4113,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009638
+      "priceAt": 1795009638,
+      "gameKey": "5_40232"
     },
     {
       "id": "m_m_5_35772",
@@ -3863,12 +4123,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 1799,
+      "base": 1498,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009762
+      "priceAt": 1795009762,
+      "gameKey": "5_35772"
     },
     {
       "id": "m_m_5_90211",
@@ -3882,7 +4143,8 @@ window.JX3Data = {
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "seed",
-      "priceAt": 1794853525
+      "priceAt": 1794853525,
+      "gameKey": "5_90211"
     },
     {
       "id": "m_m_5_87917",
@@ -3891,12 +4153,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 268.86,
+      "base": 268.23,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795009082
+      "priceAt": 1795009082,
+      "gameKey": "5_87917"
     },
     {
       "id": "m_m_5_45721",
@@ -3909,7 +4172,8 @@ window.JX3Data = {
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本材料",
       "custom": false,
-      "priceSource": "seed"
+      "priceSource": "seed",
+      "gameKey": "10_1167"
     },
     {
       "id": "m_m_5_87881",
@@ -3918,12 +4182,13 @@ window.JX3Data = {
       "kind": "product",
       "tier": 4,
       "source": "制造",
-      "base": 8299,
+      "base": 8000,
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 当前版本配方",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795008033
+      "priceAt": 1795008033,
+      "gameKey": "5_87881"
     },
     {
       "id": "zasui",
@@ -3932,12 +4197,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 0.52,
+      "base": 0.48,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010384
+      "priceAt": 1795010384,
+      "gameKey": "5_30682"
     },
     {
       "id": "g_5_30681",
@@ -3946,12 +4212,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 5.55,
+      "base": 1.7,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010393
+      "priceAt": 1795010393,
+      "gameKey": "5_30681"
     },
     {
       "id": "g_5_30680",
@@ -3960,12 +4227,13 @@ window.JX3Data = {
       "kind": "material",
       "tier": 2,
       "source": "采集",
-      "base": 4.54,
+      "base": 1.74,
       "verified": true,
       "origin": "JX3BOX 物品百科 · 当前版本采集产出",
       "custom": false,
       "priceSource": "auction",
-      "priceAt": 1795010362
+      "priceAt": 1795010362,
+      "gameKey": "5_30680"
     },
     {
       "id": "g_ma_baimaigen",
@@ -4018,6 +4286,1994 @@ window.JX3Data = {
       "origin": "神农采集 · 马草",
       "custom": false,
       "priceSource": "seed"
+    },
+    {
+      "id": "m_x_5_89353",
+      "gameKey": "5_89353",
+      "name": "酥油烧饼",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 550,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89359",
+      "gameKey": "5_89359",
+      "name": "酥油烧饼·精",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 888.29,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89354",
+      "gameKey": "5_89354",
+      "name": "菹菜拌腱肉",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89360",
+      "gameKey": "5_89360",
+      "name": "菹菜拌腱肉·精",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89305",
+      "gameKey": "5_89305",
+      "name": "嘉陵月夜宴（内攻）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2755.75,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89311",
+      "gameKey": "5_89311",
+      "name": "未央宫庭宴（内攻）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89306",
+      "gameKey": "5_89306",
+      "name": "椒香暖玉宴（治疗）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89312",
+      "gameKey": "5_89312",
+      "name": "渭水清和宴（治疗）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89307",
+      "gameKey": "5_89307",
+      "name": "红汤沸鼎宴（仇恨）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89313",
+      "gameKey": "5_89313",
+      "name": "秦川鼎烹宴（仇恨）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89308",
+      "gameKey": "5_89308",
+      "name": "朝天门宴（防御）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5088.16,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89314",
+      "gameKey": "5_89314",
+      "name": "函谷关宴（防御）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89349",
+      "gameKey": "5_89349",
+      "name": "渝州小面",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 714.73,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89355",
+      "gameKey": "5_89355",
+      "name": "渝州小面·精",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1199,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89351",
+      "gameKey": "5_89351",
+      "name": "藤椒鱼片",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 581,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89357",
+      "gameKey": "5_89357",
+      "name": "藤椒鱼片·精",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2505.02,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89434",
+      "gameKey": "5_89434",
+      "name": "蜀锦绣·腕（元气）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4689.99,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89448",
+      "gameKey": "5_89448",
+      "name": "云锦绣·腕（元气）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 23000,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89436",
+      "gameKey": "5_89436",
+      "name": "蜀锦绣·腕（根骨）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5090.09,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89450",
+      "gameKey": "5_89450",
+      "name": "云锦绣·腕（根骨）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 32000,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89437",
+      "gameKey": "5_89437",
+      "name": "蜀锦绣·腕（仇恨）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89451",
+      "gameKey": "5_89451",
+      "name": "云锦绣·腕（仇恨）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89438",
+      "gameKey": "5_89438",
+      "name": "蜀锦绣·腕（破防）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5090.42,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89452",
+      "gameKey": "5_89452",
+      "name": "云锦绣·腕（破防）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 19999,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89439",
+      "gameKey": "5_89439",
+      "name": "蜀锦绣·腕（会心）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3995.95,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89453",
+      "gameKey": "5_89453",
+      "name": "云锦绣·腕（会心）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 20000.02,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89440",
+      "gameKey": "5_89440",
+      "name": "蜀锦绣·腕（无双）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2999.94,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89454",
+      "gameKey": "5_89454",
+      "name": "云锦绣·腕（无双）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 8888.8,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89441",
+      "gameKey": "5_89441",
+      "name": "蜀锦绣·鞋（攻击）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4088.99,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89455",
+      "gameKey": "5_89455",
+      "name": "云锦绣·鞋（攻击）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 19999,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89442",
+      "gameKey": "5_89442",
+      "name": "蜀锦绣·鞋（治疗）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89456",
+      "gameKey": "5_89456",
+      "name": "云锦绣·鞋（治疗）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 25555.55,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89443",
+      "gameKey": "5_89443",
+      "name": "蜀锦绣·鞋（加速）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4999.38,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89457",
+      "gameKey": "5_89457",
+      "name": "云锦绣·鞋（加速）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89444",
+      "gameKey": "5_89444",
+      "name": "蜀锦绣·衣（体质）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4950.2,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89458",
+      "gameKey": "5_89458",
+      "name": "云锦绣·衣（体质）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 19998.8,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89445",
+      "gameKey": "5_89445",
+      "name": "蜀锦绣·衣（化劲）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4500.25,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89459",
+      "gameKey": "5_89459",
+      "name": "云锦绣·衣（化劲）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 19999,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89446",
+      "gameKey": "5_89446",
+      "name": "蜀锦绣·衣（御劲）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 7777.37,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89460",
+      "gameKey": "5_89460",
+      "name": "云锦绣·衣（御劲）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 39999,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_7_112586",
+      "gameKey": "7_112586",
+      "name": "玄元赤地衫",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112587",
+      "gameKey": "7_112587",
+      "name": "玄元烽火衫",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112585",
+      "gameKey": "7_112585",
+      "name": "玄元风鹤衫",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112567",
+      "gameKey": "7_112567",
+      "name": "玄元风鹤鞋",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112789",
+      "gameKey": "7_112789",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112790",
+      "gameKey": "7_112790",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112791",
+      "gameKey": "7_112791",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114859",
+      "gameKey": "7_114859",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114860",
+      "gameKey": "7_114860",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114861",
+      "gameKey": "7_114861",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112571",
+      "gameKey": "7_112571",
+      "name": "玄元木声鞋",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112570",
+      "gameKey": "7_112570",
+      "name": "玄元松绿鞋",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112792",
+      "gameKey": "7_112792",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112793",
+      "gameKey": "7_112793",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112794",
+      "gameKey": "7_112794",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114862",
+      "gameKey": "7_114862",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114863",
+      "gameKey": "7_114863",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114864",
+      "gameKey": "7_114864",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112555",
+      "gameKey": "7_112555",
+      "name": "玄元风鹤护腕",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112559",
+      "gameKey": "7_112559",
+      "name": "玄元木声护腕",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112558",
+      "gameKey": "7_112558",
+      "name": "玄元松绿护腕",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89329",
+      "gameKey": "5_89329",
+      "name": "渝州摧锋丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 805,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89335",
+      "gameKey": "5_89335",
+      "name": "渝州摧锋丹·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1998,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89330",
+      "gameKey": "5_89330",
+      "name": "函谷疾咏丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89336",
+      "gameKey": "5_89336",
+      "name": "函谷疾咏丹·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2519.17,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89331",
+      "gameKey": "5_89331",
+      "name": "中原破阵丹",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 603.64,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89337",
+      "gameKey": "5_89337",
+      "name": "中原破阵丹·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 983.69,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89368",
+      "gameKey": "5_89368",
+      "name": "苍生·坠宵熔锭（攻击）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 710.18,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89372",
+      "gameKey": "5_89372",
+      "name": "苍生·坠宵焠晶（攻击）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1366.38,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89369",
+      "gameKey": "5_89369",
+      "name": "苍生·絮泊熔锭（疗伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 799,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89373",
+      "gameKey": "5_89373",
+      "name": "苍生·絮泊焠晶（疗伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3299.4,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_90436",
+      "gameKey": "5_90436",
+      "name": "青石锭",
+      "skillId": "",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 75.16,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89379",
+      "gameKey": "5_89379",
+      "name": "峡金铸·兵（攻击）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3763.97,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89397",
+      "gameKey": "5_89397",
+      "name": "峡金焠·兵（攻击）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 21800,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89380",
+      "gameKey": "5_89380",
+      "name": "峡金铸·兵（疗伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4978,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89398",
+      "gameKey": "5_89398",
+      "name": "峡金焠·兵（疗伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_90437",
+      "gameKey": "5_90437",
+      "name": "镀金锭",
+      "skillId": "",
+      "kind": "material",
+      "tier": 3,
+      "source": "交易行",
+      "base": 74,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89381",
+      "gameKey": "5_89381",
+      "name": "峡金铸·兵（武伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5881,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89399",
+      "gameKey": "5_89399",
+      "name": "峡金焠·兵（武伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 45530,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89382",
+      "gameKey": "5_89382",
+      "name": "峡金铸·兵（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89400",
+      "gameKey": "5_89400",
+      "name": "峡金焠·兵（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89383",
+      "gameKey": "5_89383",
+      "name": "峡金铸·裤（身法）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3999,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89401",
+      "gameKey": "5_89401",
+      "name": "峡金焠·裤（身法）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89384",
+      "gameKey": "5_89384",
+      "name": "峡金铸·裤（元气）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4500,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89402",
+      "gameKey": "5_89402",
+      "name": "峡金焠·裤（元气）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89385",
+      "gameKey": "5_89385",
+      "name": "峡金铸·裤（力道）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5450.65,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89403",
+      "gameKey": "5_89403",
+      "name": "峡金焠·裤（力道）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 40000.89,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89386",
+      "gameKey": "5_89386",
+      "name": "峡金铸·裤（根骨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5584,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89404",
+      "gameKey": "5_89404",
+      "name": "峡金焠·裤（根骨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 29999.87,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89387",
+      "gameKey": "5_89387",
+      "name": "峡金铸·裤（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89405",
+      "gameKey": "5_89405",
+      "name": "峡金焠·裤（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89388",
+      "gameKey": "5_89388",
+      "name": "峡金铸·裤（破防）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4480.59,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89406",
+      "gameKey": "5_89406",
+      "name": "峡金焠·裤（破防）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 21999,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89389",
+      "gameKey": "5_89389",
+      "name": "峡金铸·裤（会心）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4599,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89407",
+      "gameKey": "5_89407",
+      "name": "峡金焠·裤（会心）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 30000,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89390",
+      "gameKey": "5_89390",
+      "name": "峡金铸·裤（无双）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3688.96,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89408",
+      "gameKey": "5_89408",
+      "name": "峡金焠·裤（无双）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 12000,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89391",
+      "gameKey": "5_89391",
+      "name": "峡金铸·头（攻击）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 4758.99,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89409",
+      "gameKey": "5_89409",
+      "name": "峡金焠·头（攻击）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 25000.85,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89392",
+      "gameKey": "5_89392",
+      "name": "峡金铸·头（治疗）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3499.52,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89410",
+      "gameKey": "5_89410",
+      "name": "峡金焠·头（治疗）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89393",
+      "gameKey": "5_89393",
+      "name": "峡金铸·头（加速）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5190,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89411",
+      "gameKey": "5_89411",
+      "name": "峡金焠·头（加速）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 28995.52,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89394",
+      "gameKey": "5_89394",
+      "name": "峡金铸·腰（体质）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5400,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89412",
+      "gameKey": "5_89412",
+      "name": "峡金焠·腰（体质）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 22000,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89395",
+      "gameKey": "5_89395",
+      "name": "峡金铸·腰（御劲）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 10000,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89413",
+      "gameKey": "5_89413",
+      "name": "峡金焠·腰（御劲）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 35000.33,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89396",
+      "gameKey": "5_89396",
+      "name": "峡金铸·腰（化劲）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 3699.6,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89414",
+      "gameKey": "5_89414",
+      "name": "峡金焠·腰（化劲）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89432",
+      "gameKey": "5_89432",
+      "name": "云冈石·兵（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 1608.38,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_7_112580",
+      "gameKey": "7_112580",
+      "name": "玄元赤地帽",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112783",
+      "gameKey": "7_112783",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112784",
+      "gameKey": "7_112784",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112785",
+      "gameKey": "7_112785",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114853",
+      "gameKey": "7_114853",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114854",
+      "gameKey": "7_114854",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114855",
+      "gameKey": "7_114855",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112581",
+      "gameKey": "7_112581",
+      "name": "玄元烽火帽",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112786",
+      "gameKey": "7_112786",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112787",
+      "gameKey": "7_112787",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112788",
+      "gameKey": "7_112788",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114856",
+      "gameKey": "7_114856",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114857",
+      "gameKey": "7_114857",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114858",
+      "gameKey": "7_114858",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112579",
+      "gameKey": "7_112579",
+      "name": "玄元风鹤帽",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112562",
+      "gameKey": "7_112562",
+      "name": "玄元赤地护腰",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112563",
+      "gameKey": "7_112563",
+      "name": "玄元烽火护腰",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112565",
+      "gameKey": "7_112565",
+      "name": "玄元木声护腰",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112574",
+      "gameKey": "7_112574",
+      "name": "玄元赤地裤",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112577",
+      "gameKey": "7_112577",
+      "name": "玄元木声裤",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112576",
+      "gameKey": "7_112576",
+      "name": "玄元松绿裤",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_10_157",
+      "gameKey": "10_157",
+      "name": "邢窑白瓷罗合",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_20971",
+      "gameKey": "5_20971",
+      "name": "咸鱼",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 173,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_38122",
+      "gameKey": "5_38122",
+      "name": "积木·木质标准弧料包",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_10_1281",
+      "gameKey": "10_1281",
+      "name": "匾额·布坊",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_35026",
+      "gameKey": "5_35026",
+      "name": "紫色绣球花",
+      "skillId": "",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_10_1894",
+      "gameKey": "10_1894",
+      "name": "槿花茵·一",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 79.83,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_35025",
+      "gameKey": "5_35025",
+      "name": "红色绣球花",
+      "skillId": "",
+      "kind": "material",
+      "tier": 2,
+      "source": "交易行",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_10_2229",
+      "gameKey": "10_2229",
+      "name": "暮春落花·一",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 299.19,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89317",
+      "gameKey": "5_89317",
+      "name": "胡笳月夜宴（内攻）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 659.11,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_10_2028",
+      "gameKey": "10_2028",
+      "name": "鹰鳐纸鸢",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 979.92,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_10_2241",
+      "gameKey": "10_2241",
+      "name": "须弥座方柱",
+      "skillId": "zijiang",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1087.9,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89319",
+      "gameKey": "5_89319",
+      "name": "黄云牧火宴（仇恨）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89320",
+      "gameKey": "5_89320",
+      "name": "云中关宴（防御）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 443.51,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89426",
+      "gameKey": "5_89426",
+      "name": "云冈石·腰（体质）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 2100,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89427",
+      "gameKey": "5_89427",
+      "name": "云冈石·腰（御劲）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 1688.75,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89428",
+      "gameKey": "5_89428",
+      "name": "云冈石·腰（化劲）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 3,
+      "source": "制造",
+      "base": 2700,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
     }
   ],
   "recipes": [
@@ -10972,6 +13228,3837 @@ window.JX3Data = {
       ],
       "verified": true,
       "note": "马草"
+    },
+    {
+      "id": "m_cooking_442",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "酥油烧饼",
+      "level": 50,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89353",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89359",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89969",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_89172",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_443",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "菹菜拌腱肉",
+      "level": 50,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89354",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89360",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_30843",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_421",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "嘉陵月夜宴（内攻）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89305",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89311",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_422",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "椒香暖玉宴（治疗）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89306",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89312",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 15
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_423",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "红汤沸鼎宴（仇恨）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89307",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89313",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30875",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_424",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "朝天门宴（防御）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89308",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89314",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_438",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "渝州小面",
+      "level": 50,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89349",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89355",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_440",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "藤椒鱼片",
+      "level": 50,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89351",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89357",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1447",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（元气）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89434",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89448",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "baihua_bu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1449",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（根骨）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89436",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89450",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "qicaixian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32004",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1450",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（仇恨）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89437",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89451",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 10
+        },
+        {
+          "item": "wuseshi",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32002",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1451",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（破防）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89438",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89452",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1452",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（会心）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89439",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89453",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 10
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1453",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·腕（无双）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89440",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89454",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 10
+        },
+        {
+          "item": "baihua_bu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1454",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·鞋（攻击）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89441",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89455",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 10
+        },
+        {
+          "item": "qicaixian",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32004",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1455",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·鞋（治疗）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89442",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89456",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "baihua_bu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1456",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·鞋（急速）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89443",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89457",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1457",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·衣（体质）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89444",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89458",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "baihua_bu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32000",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1458",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·衣（化劲）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89445",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89459",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 10
+        },
+        {
+          "item": "shuran_bu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32001",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1459",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "蜀锦绣·衣（御劲）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89446",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89460",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 10
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_32003",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1475",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元赤地衫",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112586",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "wuseshi",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1476",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元烽火衫",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112587",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1477",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元风鹤衫",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112585",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1483",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元风鹤鞋",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112567",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_112789",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112790",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112791",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114859",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114860",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114861",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1484",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元木声鞋",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112571",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "wuseshi",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1485",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元松绿鞋",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112570",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_112792",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112793",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112794",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114862",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114863",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114864",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1489",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元风鹤护腕",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112555",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "qicaixian",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1490",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元木声护腕",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112559",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "wuseshi",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_tailoring_1491",
+      "kind": "craft",
+      "skillId": "fengren",
+      "name": "玄元松绿护腕",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112558",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "yinsi_duan",
+          "qty": 20
+        },
+        {
+          "item": "bairanxian",
+          "qty": 20
+        }
+      ],
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_396",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "渝州摧锋丹",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89329",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89335",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_397",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "函谷疾咏丹",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89330",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89336",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89974",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_398",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "中原破阵丹",
+      "level": 50,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89331",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89337",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 4
+        },
+        {
+          "item": "yaoyin",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1276",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·坠宵熔锭（攻击）",
+      "level": 50,
+      "tier": 4,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89368",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89372",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 10
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1277",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "苍生·絮泊熔锭（疗伤）",
+      "level": 50,
+      "tier": 4,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89369",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89373",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 10
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1283",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·兵（攻击）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89379",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89397",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_90436",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1284",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·兵（疗伤）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89380",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89398",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89961",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1285",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·兵（武伤）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89381",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89399",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_90437",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1286",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·兵（仇恨）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89382",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89400",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1287",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（身法）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89383",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89401",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89961",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1288",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（元气）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89384",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89402",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89962",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1289",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（力道）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89385",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89403",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_90436",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1290",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（根骨）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89386",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89404",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1291",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（仇恨）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89387",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89405",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_90437",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1292",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（破防）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89388",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89406",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1293",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（会心）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89389",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89407",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1294",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·裤（无双）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89390",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89408",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 5
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1295",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·头（攻击）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89391",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89409",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_90436",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1296",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·头（治疗）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89392",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89410",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 6
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 5
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1297",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·头（急速）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89393",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89411",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30855",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_90437",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1298",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·腰（体质）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89394",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89412",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89966",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1299",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·腰（御劲）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89395",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89413",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30856",
+          "qty": 6
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 5
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89964",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1300",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "峡金铸·腰（化劲）",
+      "level": 50,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89396",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89414",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 6
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 5
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89967",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1318",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "云冈石·兵（仇恨）",
+      "level": 50,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89432",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "shoupijiao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31991",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1319",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元赤地帽",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112580",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_112783",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112784",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112785",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114853",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114854",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114855",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1320",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元烽火帽",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112581",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_112786",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112787",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112788",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114856",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114857",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114858",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1321",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元风鹤帽",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112579",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_112783",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112784",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112785",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114853",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114854",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114855",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "fengwangjiang",
+          "qty": 10
+        },
+        {
+          "item": "shoupijiao",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89968",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_90338",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1325",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元赤地护腰",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112562",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1326",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元烽火护腰",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112563",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89965",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1328",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元木声护腰",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112565",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89966",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1331",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元赤地裤",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112574",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89963",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1334",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元木声裤",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112577",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30856",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30850",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89966",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1335",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "玄元松绿裤",
+      "level": 50,
+      "tier": 4,
+      "energy": 200,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_7_112576",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "dimai",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_89967",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_127",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "邢窑白瓷罗合",
+      "level": 12,
+      "tier": 3,
+      "energy": 126,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_10_157",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "wuseshi",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35707",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_35702",
+          "qty": 20
+        }
+      ],
+      "note": "梓匠 · 12级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_356",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "咸鱼",
+      "level": 13,
+      "tier": 4,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_20971",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30827",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 13级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_198",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "积木·木质标准弧料包",
+      "level": 17,
+      "tier": 4,
+      "energy": 400,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_38122",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35717",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_35713",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_35716",
+          "qty": 6
+        },
+        {
+          "item": "muban",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30679",
+          "qty": 10
+        }
+      ],
+      "note": "梓匠 · 17级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_261",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "匾额·布坊",
+      "level": 19,
+      "tier": 4,
+      "energy": 69,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_10_1281",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30852",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35717",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_35714",
+          "qty": 1
+        }
+      ],
+      "note": "梓匠 · 19级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_306",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "槿花茵·一",
+      "level": 21,
+      "tier": 4,
+      "energy": 69,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_10_1894",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35717",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_30852",
+          "qty": 1
+        },
+        {
+          "item": "m_x_5_35026",
+          "qty": 20
+        }
+      ],
+      "note": "梓匠 · 21级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_337",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "暮春落花·一",
+      "level": 23,
+      "tier": 4,
+      "energy": 69,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_10_2229",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30841",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30852",
+          "qty": 5
+        },
+        {
+          "item": "m_x_5_35025",
+          "qty": 20
+        }
+      ],
+      "note": "梓匠 · 23级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_433",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "胡笳月夜宴（内攻）",
+      "level": 24,
+      "tier": 3,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89317",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89970",
+          "qty": 7
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30843",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 24级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_313",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "鹰鳐纸鸢",
+      "level": 26,
+      "tier": 4,
+      "energy": 57,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_10_2028",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35717",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_35715",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_35716",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10173",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_35704",
+          "qty": 10
+        }
+      ],
+      "note": "梓匠 · 26级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_furniture_347",
+      "kind": "craft",
+      "skillId": "zijiang",
+      "name": "须弥座方柱",
+      "level": 28,
+      "tier": 4,
+      "energy": 69,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_10_2241",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_35717",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30853",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_35713",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_35701",
+          "qty": 20
+        }
+      ],
+      "note": "梓匠 · 28级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_435",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "黄云牧火宴（仇恨）",
+      "level": 32,
+      "tier": 3,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89319",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 7
+        },
+        {
+          "item": "m_m_5_30875",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 32级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_436",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "云中关宴（防御）",
+      "level": 34,
+      "tier": 3,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89320",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 7
+        },
+        {
+          "item": "m_m_5_30875",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 34级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1312",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "云冈石·腰（体质）",
+      "level": 38,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89426",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30845",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89962",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31992",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 38级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1313",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "云冈石·腰（御劲）",
+      "level": 40,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89427",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30850",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89964",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31994",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 40级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_founding_1314",
+      "kind": "craft",
+      "skillId": "duanzao",
+      "name": "云冈石·腰（化劲）",
+      "level": 42,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89428",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30845",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89967",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_10176",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31993",
+          "qty": 20
+        }
+      ],
+      "note": "锻造 · 42级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
     }
   ],
   "servers": [
@@ -11063,191 +17150,186 @@ window.JX3Data = {
   ],
   "serverPrices": {
     "s_mengjiangnan": {
-      "fengwangjiang": 175.35,
-      "shoupijiao": 58.39,
-      "qicaixian": 128,
+      "fengwangjiang": 178.76,
+      "shoupijiao": 59.97,
+      "qicaixian": 120,
       "bairanxian": 3.17,
       "fengyu_yi": 2134.92,
-      "m_m_5_30852": 16.09,
+      "m_m_5_30852": 16.45,
       "m_m_5_30853": 95.43,
-      "m_m_5_30828": 5.07,
+      "m_m_5_30828": 5.99,
       "m_m_5_89165": 10.64,
       "m_m_5_32000": 0.66,
-      "guajian_bei": 54.27,
-      "baihua_bu": 70.51,
+      "guajian_bei": 54.25,
+      "baihua_bu": 60.9,
       "guajian_yao": 76.46,
       "shuran_bu": 72,
       "shuran_bag": 18.96,
       "jinfeng_bag": 6752.14,
-      "wuseshi": 99,
-      "m_m_5_30856": 21.7,
-      "m_m_5_30855": 176.15,
-      "geyin_zhang": 150,
-      "m_m_5_89298": 34.54,
-      "m_m_5_30679": 15.15,
+      "wuseshi": 172.81,
+      "m_m_5_30856": 20,
+      "m_m_5_30855": 168.24,
+      "geyin_zhang": 145.11,
+      "m_m_5_89298": 34.9,
+      "m_m_5_30679": 19.21,
       "m_m_5_32004": 3.58,
-      "m_m_5_30847": 10.08,
-      "m_m_5_30846": 1.59,
-      "yinsi_duan": 104.9,
-      "m_m_5_32003": 0.65,
-      "m_m_5_30848": 18.84,
+      "m_m_5_30847": 9.55,
+      "m_m_5_30846": 1.65,
+      "yinsi_duan": 144.98,
+      "m_m_5_32003": 0.64,
+      "m_m_5_30848": 19.94,
       "m_m_5_32002": 0.66,
-      "m_m_5_30850": 106.99,
-      "m_m_5_30845": 147.25,
+      "m_m_5_30850": 105.42,
+      "m_m_5_30845": 146.82,
       "m_m_5_31397": 1,
-      "m_m_5_89433": 5986.25,
-      "m_m_5_89435": 5888,
+      "m_m_5_89433": 5399,
+      "m_m_5_89435": 5488.83,
       "m_m_5_31253": 530.22,
-      "m_m_5_30844": 1.94,
+      "m_m_5_30844": 1,
       "m_m_5_35718": 16.18,
       "m_m_5_35719": 32.18,
-      "m_m_5_30873": 24.36,
+      "m_m_5_30873": 29.36,
       "m_m_5_90205": 40,
       "m_m_8_614": 395.98,
       "shanshui_juan": 298,
-      "m_m_5_3819": 200,
+      "m_m_5_3819": 100.59,
       "m_m_5_3779": 9.99,
       "m_m_8_36148": 938.24,
       "m_m_8_19": 0.01,
-      "m_m_5_89474": 1500,
+      "m_m_5_89474": 950,
       "m_m_5_3820": 5.3,
-      "m_m_5_30827": 1.28,
-      "m_m_5_89970": 150,
+      "m_m_5_30827": 1.24,
+      "m_m_5_89970": 173.88,
       "m_m_5_32014": 232,
       "m_m_5_31978": 0.63,
       "m_m_5_31985": 0.66,
-      "lucai": 17.22,
-      "m_m_5_1831": 14.04,
+      "lucai": 17.99,
+      "m_m_5_1831": 14.03,
       "m_m_5_31973": 0.65,
-      "m_m_5_30849": 5.91,
-      "m_m_5_71293": 40,
-      "m_m_5_30826": 0.95,
+      "m_m_5_30849": 5.95,
+      "m_m_5_30826": 0.88,
       "m_m_5_30825": 0.03,
       "m_m_5_89171": 10.65,
       "m_m_5_31974": 0.6,
       "m_m_5_31968": 3.55,
-      "m_m_5_71292": 42,
-      "m_m_5_30824": 0.46,
+      "m_m_5_71292": 34.6,
+      "m_m_5_30824": 0.4,
       "m_m_5_71281": 22.4,
-      "m_m_5_30823": 0.64,
+      "m_m_5_30823": 0.56,
       "m_m_5_31969": 0.65,
       "m_m_5_71277": 55.28,
-      "m_m_5_89315": 1100,
-      "m_m_5_89969": 118.42,
+      "m_m_5_89315": 1099.71,
+      "m_m_5_89969": 116.26,
       "m_m_5_31976": 0.72,
-      "m_m_5_89303": 3077.29,
-      "m_m_5_89971": 181.97,
-      "lushui": 13.45,
-      "m_m_5_30875": 2,
-      "m_m_5_30829": 3.61,
-      "m_m_5_30843": 1.98,
-      "m_m_5_30874": 32,
-      "m_m_5_30842": 1.02,
-      "m_m_5_5270": 0.85,
+      "m_m_5_89303": 2988,
+      "m_m_5_89971": 174,
+      "lushui": 12.98,
+      "m_m_5_30875": 1.84,
+      "m_m_5_30829": 0.66,
+      "m_m_5_30843": 1.07,
+      "m_m_5_30874": 30,
+      "m_m_5_30842": 0.78,
+      "m_m_5_5270": 0.83,
       "m_m_5_31970": 0.65,
       "m_m_5_5269": 0.01,
       "m_m_5_31977": 0.66,
-      "m_m_5_31013": 148.36,
-      "gancao": 3,
-      "m_m_5_31012": 289.9,
+      "m_m_5_31013": 157.55,
+      "gancao": 2.93,
+      "m_m_5_31012": 288.37,
       "m_m_5_89172": 22.39,
-      "m_m_5_89304": 3644,
+      "m_m_5_89304": 3599.93,
       "m_m_5_26057": 1688,
       "m_m_5_26231": 2.87,
-      "m_m_5_89352": 626.86,
-      "m_m_5_89350": 542.93,
-      "m_m_5_71269": 100.21,
-      "m_m_5_89346": 615.8,
+      "m_m_5_89352": 588,
+      "m_m_5_89350": 535.53,
+      "m_m_5_71269": 99.64,
+      "m_m_5_89346": 602.4,
       "m_m_5_89167": 10.64,
       "m_m_5_89348": 169.49,
-      "m_m_5_71285": 140.41,
+      "m_m_5_71285": 136.28,
       "jieyuan_dan": 9.55,
-      "m_m_5_30836": 0.87,
-      "m_m_5_30833": 1.26,
+      "m_m_5_30836": 0.59,
+      "m_m_5_30832": 2.99,
+      "m_m_5_30833": 1.33,
       "m_m_5_31997": 3.55,
       "m_m_5_89324": 91.24,
-      "m_m_5_30831": 0.7,
+      "m_m_5_30831": 0.86,
       "m_m_5_89973": 129.8,
       "m_m_5_31996": 3.67,
       "m_m_5_71241": 15.09,
-      "m_m_5_71240": 39.59,
-      "m_m_5_31995": 0.66,
-      "m_m_5_71266": 65.25,
-      "m_m_5_30838": 1.08,
-      "shanhu": 3.07,
+      "m_m_5_71240": 40,
+      "m_m_5_31995": 0.69,
+      "m_m_5_30838": 0.93,
+      "shanhu": 3.6,
       "m_m_5_6646": 3.56,
       "m_m_5_89333": 550,
-      "m_m_5_30835": 2.94,
-      "m_m_5_89974": 78.17,
+      "m_m_5_30835": 2.5,
+      "m_m_5_89974": 78.1,
       "m_m_5_6648": 2.99,
-      "m_m_5_71267": 59.53,
+      "m_m_5_71267": 68.42,
       "m_m_5_89168": 22.39,
-      "yaoyin": 129.94,
-      "m_m_5_31100": 230,
+      "yaoyin": 128.41,
+      "m_m_5_31100": 49.62,
       "m_m_5_89322": 660,
-      "shaoyao": 1.8,
+      "shaoyao": 2.04,
       "m_m_5_90206": 33.59,
-      "m_m_5_31102": 0.28,
-      "m_m_5_30834": 1.91,
+      "m_m_5_31102": 0.07,
+      "m_m_5_30834": 1.96,
       "m_m_5_31998": 3.97,
       "m_m_5_90035": 9999.99,
-      "m_m_5_89328": 786.76,
+      "m_m_5_89328": 776.89,
       "m_m_5_89332": 795.04,
-      "m_m_5_89340": 95.67,
-      "m_m_5_89325": 613.4,
-      "m_m_5_71258": 72.66,
-      "m_m_5_31999": 3.58,
-      "m_m_5_89327": 70.98,
-      "m_m_5_89966": 75.18,
+      "m_m_5_89340": 94.64,
+      "m_m_5_89325": 601.24,
+      "m_m_5_71258": 71.62,
+      "m_m_5_89327": 280.48,
+      "m_m_5_89966": 78.95,
       "m_m_5_10176": 2.4,
-      "m_m_5_31991": 3.83,
       "m_m_5_89377": 481,
-      "m_m_5_89968": 67.23,
+      "m_m_5_89968": 70.2,
       "m_m_5_31993": 0.88,
-      "m_m_5_89376": 118.74,
+      "m_m_5_89376": 149.37,
       "m_m_5_89965": 100,
       "m_m_5_31992": 3.83,
       "m_m_5_89375": 150.93,
-      "m_m_5_89963": 53.25,
+      "m_m_5_89963": 52.99,
       "m_m_5_71192": 30.4,
       "m_m_5_89169": 10.63,
       "m_m_5_71188": 741.82,
-      "m_m_5_31994": 3.66,
-      "m_m_5_89962": 106,
-      "m_m_5_31139": 3188.68,
-      "m_m_5_89964": 55,
-      "m_m_5_10027": 79.88,
-      "m_m_5_89961": 84.08,
-      "tiekuang": 3,
-      "m_m_5_30676": 1.99,
-      "m_m_5_30678": 1.67,
-      "m_m_5_30674": 3.19,
-      "m_m_5_30675": 3.99,
+      "m_m_5_31994": 0.69,
+      "m_m_5_89962": 88,
+      "m_m_5_31139": 3188.61,
+      "m_m_5_89964": 45,
+      "m_m_5_10027": 68,
+      "m_m_5_89961": 78.87,
+      "tiekuang": 2.78,
+      "m_m_5_30676": 1.92,
+      "m_m_5_30678": 2.06,
+      "m_m_5_30674": 2.68,
+      "m_m_5_30675": 3.76,
       "m_m_5_89967": 49.25,
       "m_m_5_89367": 950.59,
-      "m_m_5_6246": 0.2,
+      "m_m_5_6246": 0.17,
       "m_m_5_6249": 0.21,
       "m_m_5_32787": 99.86,
-      "m_m_5_30841": 3.72,
+      "m_m_5_30841": 4.56,
       "m_m_5_35708": 6.48,
       "m_m_8_632": 270.74,
       "m_m_8_634": 305.19,
       "m_m_8_636": 324,
       "m_m_5_6066": 0.01,
-      "muban": 25,
-      "muliao": 2.93,
+      "muban": 24.99,
+      "muliao": 3.59,
       "m_m_5_35707": 11.97,
-      "m_m_5_35703": 3.58,
-      "qiwuling": 30.84,
-      "m_m_5_35716": 16.93,
+      "qiwuling": 27.86,
+      "m_m_5_35716": 11.11,
       "m_m_5_35702": 0.68,
-      "m_m_5_35715": 13.66,
-      "zhuzi": 1.97,
-      "m_m_5_35567": 2.05,
+      "m_m_5_35715": 19.99,
+      "zhuzi": 2.09,
+      "m_m_5_35567": 1.81,
       "m_m_5_35704": 0.64,
-      "m_m_5_35714": 18.4,
       "m_m_5_35701": 3.56,
-      "m_m_5_35713": 23.77,
+      "m_m_5_35713": 21.47,
       "m_m_5_35705": 3.55,
       "m_m_10_1778": 1267.83,
       "m_m_10_948": 310.17,
@@ -11257,47 +17339,125 @@ window.JX3Data = {
       "m_m_10_2034": 1430.11,
       "m_m_10_93": 63,
       "m_m_10_1882": 1459,
-      "m_m_5_35717": 2,
+      "m_m_5_35717": 2.22,
       "m_m_10_2037": 1460.83,
       "m_m_10_164": 130,
-      "m_m_5_52337": 1500,
+      "m_m_5_52337": 1587.51,
       "m_m_5_40232": 2797,
-      "m_m_5_35772": 1799,
-      "m_m_5_87917": 268.86,
-      "m_m_5_87881": 8299,
-      "zasui": 0.52,
-      "g_5_30681": 5.55,
-      "g_5_30680": 4.54
+      "m_m_5_35772": 1498,
+      "m_m_5_87917": 268.23,
+      "m_m_5_87881": 8000,
+      "zasui": 0.48,
+      "g_5_30681": 1.7,
+      "g_5_30680": 1.74,
+      "m_x_5_89353": 550,
+      "m_x_5_89359": 888.29,
+      "m_x_5_89305": 2755.75,
+      "m_x_5_89308": 5088.16,
+      "m_x_5_89349": 714.73,
+      "m_x_5_89355": 1199,
+      "m_x_5_89351": 581,
+      "m_x_5_89357": 2505.02,
+      "m_x_5_89434": 4689.99,
+      "m_x_5_89448": 23000,
+      "m_x_5_89436": 5090.09,
+      "m_x_5_89450": 32000,
+      "m_x_5_89438": 5090.42,
+      "m_x_5_89452": 19999,
+      "m_x_5_89439": 3995.95,
+      "m_x_5_89453": 20000.02,
+      "m_x_5_89440": 2999.94,
+      "m_x_5_89454": 8888.8,
+      "m_x_5_89441": 4088.99,
+      "m_x_5_89455": 19999,
+      "m_x_5_89456": 25555.55,
+      "m_x_5_89443": 4999.38,
+      "m_x_5_89444": 4950.2,
+      "m_x_5_89458": 19998.8,
+      "m_x_5_89445": 4500.25,
+      "m_x_5_89459": 19999,
+      "m_x_5_89446": 7777.37,
+      "m_x_5_89460": 39999,
+      "m_x_5_89329": 805,
+      "m_x_5_89335": 1998,
+      "m_x_5_89336": 2519.17,
+      "m_x_5_89331": 603.64,
+      "m_x_5_89337": 983.69,
+      "m_x_5_89368": 710.18,
+      "m_x_5_89372": 1366.38,
+      "m_x_5_89369": 799,
+      "m_x_5_89373": 3299.4,
+      "m_x_5_90436": 75.16,
+      "m_x_5_89379": 3763.97,
+      "m_x_5_89397": 21800,
+      "m_x_5_89380": 4978,
+      "m_x_5_90437": 74,
+      "m_x_5_89381": 5881,
+      "m_x_5_89399": 45530,
+      "m_x_5_89383": 3999,
+      "m_x_5_89384": 4500,
+      "m_x_5_89385": 5450.65,
+      "m_x_5_89403": 40000.89,
+      "m_x_5_89386": 5584,
+      "m_x_5_89404": 29999.87,
+      "m_x_5_89388": 4480.59,
+      "m_x_5_89406": 21999,
+      "m_x_5_89389": 4599,
+      "m_x_5_89407": 30000,
+      "m_x_5_89390": 3688.96,
+      "m_x_5_89408": 12000,
+      "m_x_5_89391": 4758.99,
+      "m_x_5_89409": 25000.85,
+      "m_x_5_89392": 3499.52,
+      "m_x_5_89393": 5190,
+      "m_x_5_89411": 28995.52,
+      "m_x_5_89394": 5400,
+      "m_x_5_89412": 22000,
+      "m_x_5_89395": 10000,
+      "m_x_5_89413": 35000.33,
+      "m_x_5_89396": 3699.6,
+      "m_x_5_89432": 1608.38,
+      "m_x_5_20971": 173,
+      "m_x_10_1894": 79.83,
+      "m_x_10_2229": 299.19,
+      "m_x_5_89317": 659.11,
+      "m_x_10_2028": 979.92,
+      "m_x_10_2241": 1087.9,
+      "m_x_5_89320": 443.51,
+      "m_x_5_89426": 2100,
+      "m_x_5_89427": 1688.75,
+      "m_x_5_89428": 2700
     },
     "s_pozhenzi": {
-      "fengwangjiang": 159.56,
+      "fengwangjiang": 156.97,
       "shoupijiao": 37.63,
-      "qicaixian": 179.24,
+      "qicaixian": 174.88,
       "bairanxian": 2.85,
-      "fengyu_yi": 1029.9,
-      "m_m_5_30852": 16,
-      "m_m_5_30853": 83.97,
-      "m_m_5_30828": 5,
+      "fengyu_yi": 1024.35,
+      "m_m_5_30852": 11.75,
+      "m_m_5_30853": 80.07,
+      "m_m_5_30828": 4.68,
       "guajian_bei": 56.61,
-      "baihua_bu": 100,
-      "guajian_yao": 94.46,
+      "baihua_bu": 99.99,
+      "guajian_yao": 92.58,
       "shuran_bu": 115.11,
       "shuran_bag": 80,
+      "jinfeng_bag": 9000,
       "wuseshi": 166.66,
-      "m_m_5_30856": 16.09,
-      "m_m_5_30855": 158.91,
-      "geyin_zhang": 50.53,
-      "m_m_5_89298": 25.55,
-      "m_m_5_30679": 15.28,
+      "m_m_5_30856": 16.07,
+      "m_m_5_30855": 155.7,
+      "geyin_zhang": 94.53,
+      "m_m_5_89298": 23.57,
+      "m_m_5_30679": 15.07,
       "m_m_5_30847": 8.55,
-      "m_m_5_30846": 1.61,
+      "m_m_5_30846": 3,
       "yinsi_duan": 109.73,
       "m_m_5_30848": 25.71,
-      "m_m_5_30850": 113.25,
+      "m_m_5_30850": 100.97,
       "m_m_5_30845": 124.84,
       "m_m_5_89435": 9999.05,
       "m_m_5_31253": 43,
-      "m_m_5_30844": 0.71,
+      "m_m_5_30844": 0.77,
       "m_m_5_30873": 50.49,
       "m_m_8_614": 66.58,
       "shanshui_juan": 108,
@@ -11305,106 +17465,107 @@ window.JX3Data = {
       "m_m_8_36148": 1049.66,
       "m_m_5_3820": 30.88,
       "m_m_5_30827": 1.74,
-      "m_m_5_89970": 151,
+      "m_m_5_89970": 143.96,
       "m_m_5_32014": 300.84,
-      "m_m_5_31985": 1.49,
-      "lucai": 16,
+      "m_m_5_31985": 3.64,
+      "lucai": 18,
       "m_m_5_1831": 13.28,
-      "m_m_5_31973": 0.71,
-      "m_m_5_30849": 5.71,
+      "m_m_5_31973": 0.68,
+      "m_m_5_30849": 5.8,
       "m_m_5_71293": 39.8,
-      "m_m_5_30826": 1.17,
+      "m_m_5_30826": 0.9,
       "m_m_5_31968": 5.43,
-      "m_m_5_71292": 45.16,
-      "m_m_5_30824": 0.99,
+      "m_m_5_71292": 45.15,
+      "m_m_5_30824": 0.78,
       "m_m_5_71281": 98.79,
       "m_m_5_30823": 1.05,
-      "m_m_5_71277": 30,
-      "m_m_5_89315": 1332,
-      "m_m_5_89969": 125.98,
+      "m_m_5_71277": 110.08,
+      "m_m_5_89315": 1218.84,
+      "m_m_5_89969": 125.76,
       "m_m_5_31976": 0.98,
-      "m_m_5_89303": 2946.34,
-      "m_m_5_89971": 148.9,
-      "lushui": 18.26,
-      "m_m_5_30875": 1.64,
-      "m_m_5_30843": 0.91,
-      "m_m_5_30874": 27.88,
+      "m_m_5_89303": 2945.16,
+      "m_m_5_89971": 144.01,
+      "lushui": 16.18,
+      "m_m_5_30875": 3.99,
+      "m_m_5_30843": 2.01,
+      "m_m_5_30874": 26.85,
       "m_m_5_30842": 0.85,
       "m_m_5_5270": 0.89,
       "m_m_5_5269": 0.05,
-      "m_m_5_31013": 135.99,
-      "gancao": 2.02,
-      "m_m_5_31012": 252.99,
+      "m_m_5_31013": 140,
+      "gancao": 1.93,
+      "m_m_5_31012": 249.95,
+      "m_m_5_89304": 4555.74,
       "m_m_5_26231": 1,
-      "m_m_5_89352": 654.07,
-      "m_m_5_71269": 135.48,
-      "m_m_5_89346": 548.19,
-      "m_m_5_89348": 194.4,
-      "m_m_5_71285": 80.04,
-      "m_m_5_30836": 0.98,
+      "m_m_5_89352": 599.9,
+      "m_m_5_71269": 133.92,
+      "m_m_5_89346": 500.36,
+      "m_m_5_89348": 190.88,
+      "m_m_5_71285": 80.28,
+      "m_m_5_30836": 2,
       "m_m_5_30832": 2.29,
-      "m_m_5_30833": 1.8,
+      "m_m_5_30833": 1.7,
       "m_m_5_89324": 100,
       "m_m_5_30831": 1.01,
       "m_m_5_89973": 93.33,
       "m_m_5_71241": 88.75,
-      "m_m_5_71240": 97.92,
-      "m_m_5_71266": 40.57,
+      "m_m_5_71240": 97,
+      "m_m_5_71266": 111.57,
       "m_m_5_30838": 2.06,
       "shanhu": 3.47,
       "m_m_5_6646": 7.33,
       "m_m_5_30835": 3.18,
-      "m_m_5_89974": 100.32,
-      "m_m_5_71267": 45.93,
+      "m_m_5_89974": 100,
+      "m_m_5_71267": 43,
       "m_m_5_89168": 20,
-      "yaoyin": 104.52,
+      "yaoyin": 103.39,
       "m_m_5_31100": 88.12,
       "m_m_5_89322": 600,
       "shaoyao": 2.21,
-      "m_m_5_31102": 0.6,
-      "m_m_5_30834": 2.02,
-      "m_m_5_89332": 937.61,
-      "m_m_5_89340": 76,
-      "m_m_5_89325": 663.73,
+      "m_m_5_31102": 0.36,
+      "m_m_5_30834": 1.94,
+      "m_m_5_31998": 8,
+      "m_m_5_89340": 75.99,
+      "m_m_5_89325": 661.82,
       "m_m_5_71258": 104.88,
       "m_m_5_89327": 79.98,
       "m_m_5_89966": 140.65,
-      "m_m_5_31991": 0.91,
+      "m_m_5_31991": 0.86,
       "m_m_5_89377": 166,
-      "m_m_5_89968": 96,
+      "m_m_5_89968": 94.34,
       "m_m_5_89376": 250.86,
       "m_m_5_89965": 95.82,
       "m_m_5_89963": 57,
       "m_m_5_71192": 20.57,
-      "m_m_5_89962": 139,
+      "m_m_5_89962": 130,
       "m_m_5_31139": 3599.07,
-      "m_m_5_89964": 60.89,
-      "m_m_5_10027": 69.21,
-      "m_m_5_89961": 98.9,
-      "tiekuang": 2.99,
-      "m_m_5_30676": 2.07,
-      "m_m_5_30678": 1.54,
-      "m_m_5_30674": 1.98,
-      "m_m_5_30675": 3.54,
+      "m_m_5_89964": 58.88,
+      "m_m_5_10027": 69.04,
+      "m_m_5_89961": 97.88,
+      "tiekuang": 2.29,
+      "m_m_5_30676": 3.78,
+      "m_m_5_30678": 1.52,
+      "m_m_5_30674": 1.97,
+      "m_m_5_30675": 3.49,
       "m_m_5_89967": 109.87,
-      "m_m_5_6246": 0.16,
+      "m_m_5_6246": 0.14,
       "m_m_5_32787": 42.9,
       "m_m_8_25762": 3.55,
-      "m_m_5_30841": 11.69,
-      "m_m_8_636": 1666,
-      "m_m_5_6072": 0.66,
+      "m_m_5_30841": 3.29,
+      "m_m_8_636": 140.57,
+      "m_m_5_6072": 0.56,
       "m_m_5_6068": 1.08,
-      "muban": 24.01,
-      "muliao": 2.7,
+      "muban": 23.88,
+      "muliao": 2.65,
       "m_m_5_35707": 6.92,
       "qiwuling": 22.69,
       "m_m_5_35716": 19.65,
       "m_m_5_35715": 13.33,
-      "zhuzi": 1.49,
-      "m_m_5_35567": 1.76,
+      "zhuzi": 1.37,
+      "m_m_5_35567": 1.58,
       "m_m_5_35714": 60.5,
       "m_m_5_35701": 2.09,
-      "m_m_5_35713": 18.1,
+      "m_m_5_35713": 17.99,
       "m_m_5_35705": 1.64,
       "m_m_5_35717": 1.53,
       "m_m_10_2037": 1984,
@@ -11412,47 +17573,84 @@ window.JX3Data = {
       "m_m_5_35772": 1210.15,
       "m_m_5_87917": 245,
       "m_m_5_87881": 9887.99,
-      "zasui": 0.72,
-      "g_5_30681": 3.15,
-      "g_5_30680": 1.11
+      "zasui": 0.7,
+      "g_5_30681": 1.3,
+      "g_5_30680": 1.11,
+      "m_x_5_89353": 735.73,
+      "m_x_5_89359": 1500,
+      "m_x_5_89305": 3452.81,
+      "m_x_5_89349": 1037.08,
+      "m_x_5_89355": 2384.15,
+      "m_x_5_89351": 747.72,
+      "m_x_5_89357": 3386.78,
+      "m_x_5_89436": 7688.92,
+      "m_x_5_89450": 48887.5,
+      "m_x_5_89438": 5666.79,
+      "m_x_5_89452": 49999.97,
+      "m_x_5_89439": 7868.44,
+      "m_x_5_89441": 4500.87,
+      "m_x_5_89455": 42498.98,
+      "m_x_5_89443": 5000.3,
+      "m_x_5_89445": 5000.01,
+      "m_x_5_89331": 688.82,
+      "m_x_5_89337": 1998.51,
+      "m_x_5_89368": 838.49,
+      "m_x_5_89372": 1666.66,
+      "m_x_5_90436": 69,
+      "m_x_5_89379": 4450.99,
+      "m_x_5_89380": 6497.12,
+      "m_x_5_90437": 99.24,
+      "m_x_5_89384": 4500.12,
+      "m_x_5_89386": 5772,
+      "m_x_5_89388": 6000.34,
+      "m_x_5_89390": 8993.23,
+      "m_x_5_89393": 5000.6,
+      "m_x_5_89396": 9000.97,
+      "m_x_5_20971": 148,
+      "m_x_10_2229": 259.64,
+      "m_x_5_89317": 1100.27,
+      "m_x_10_2241": 1999.49,
+      "m_x_5_89319": 398,
+      "m_x_5_89320": 2465,
+      "m_x_5_89426": 3200.15,
+      "m_x_5_89428": 3999.99
     },
     "s_dielianhua": {
-      "fengwangjiang": 161.33,
-      "shoupijiao": 48.2,
+      "fengwangjiang": 159.89,
+      "shoupijiao": 45.94,
       "qicaixian": 150.67,
       "fengyu_yi": 2171.14,
-      "m_m_5_30852": 24.02,
-      "m_m_5_30853": 80.54,
-      "m_m_5_30828": 8.96,
+      "m_m_5_30852": 13.52,
+      "m_m_5_30853": 80.32,
+      "m_m_5_30828": 8.94,
       "m_m_5_32000": 0.66,
       "guajian_bei": 70,
       "baihua_bu": 85.49,
       "guajian_yao": 89.16,
-      "shuran_bu": 105.98,
+      "shuran_bu": 70.37,
       "shuran_bag": 50.14,
       "wuseshi": 158.69,
-      "m_m_5_30856": 26.07,
-      "m_m_5_30855": 180.22,
+      "m_m_5_30856": 24.45,
+      "m_m_5_30855": 162.85,
       "geyin_zhang": 168.35,
-      "m_m_5_89298": 20.3,
-      "m_m_5_30679": 15.33,
+      "m_m_5_89298": 24.92,
+      "m_m_5_30679": 15.11,
       "m_m_5_30847": 8.22,
-      "m_m_5_30846": 1.56,
-      "yinsi_duan": 142.38,
+      "m_m_5_30846": 1.54,
+      "yinsi_duan": 140.7,
       "m_m_5_32003": 0.7,
-      "m_m_5_30848": 21.96,
+      "m_m_5_30848": 19.72,
       "m_m_5_30850": 99.97,
-      "m_m_5_30845": 123.33,
+      "m_m_5_30845": 122.51,
       "m_m_5_31253": 233.94,
-      "m_m_5_30844": 0.7,
       "m_m_5_90210": 100,
-      "m_m_5_30873": 18.23,
+      "m_m_5_30873": 17.8,
       "shanshui_juan": 180.88,
       "m_m_5_3779": 8.65,
       "m_m_8_36148": 790,
       "m_m_5_3820": 1,
-      "m_m_5_30827": 0.98,
-      "m_m_5_89970": 191.8,
+      "m_m_5_30827": 1,
+      "m_m_5_89970": 179.51,
       "m_m_5_31978": 2.67,
       "m_m_5_31985": 0.67,
       "lucai": 17.9,
@@ -11460,93 +17658,91 @@ window.JX3Data = {
       "m_m_5_31973": 0.5,
       "m_m_5_30849": 5.88,
       "m_m_5_71293": 28.22,
-      "m_m_5_30826": 0.89,
-      "m_m_5_30825": 0.01,
+      "m_m_5_30826": 0.7,
+      "m_m_5_30825": 0.2,
       "m_m_5_89171": 10.63,
       "m_m_5_31968": 0.65,
       "m_m_5_71292": 21.95,
-      "m_m_5_30824": 0.57,
+      "m_m_5_30824": 0.56,
       "m_m_5_71281": 11.99,
-      "m_m_5_30823": 1.11,
+      "m_m_5_30823": 1.05,
       "m_m_5_31969": 0.67,
       "m_m_5_71277": 32.49,
-      "m_m_5_89315": 1259.18,
+      "m_m_5_89315": 1249.46,
       "m_m_5_89969": 139.2,
       "m_m_5_89303": 4203.68,
-      "m_m_5_89971": 160,
-      "lushui": 12.33,
-      "m_m_5_30875": 2.97,
+      "m_m_5_89971": 155.33,
+      "lushui": 12.68,
+      "m_m_5_30875": 2.6,
       "m_m_5_30829": 0.66,
       "m_m_5_30843": 0.98,
-      "m_m_5_30874": 25.2,
-      "m_m_5_30842": 0.85,
+      "m_m_5_30874": 25,
+      "m_m_5_30842": 0.91,
       "m_m_5_5270": 1,
       "m_m_5_31977": 0.66,
-      "m_m_5_31013": 142.49,
-      "gancao": 2.54,
-      "m_m_5_31012": 222,
+      "m_m_5_31013": 108.98,
+      "gancao": 2.83,
+      "m_m_5_31012": 219.77,
       "m_m_5_89172": 22.39,
-      "m_m_5_89304": 4660.25,
       "m_m_5_26057": 3000,
-      "m_m_5_89352": 693.19,
+      "m_m_5_89352": 637.82,
       "m_m_5_89350": 635.92,
-      "m_m_5_71269": 123.64,
-      "m_m_5_89346": 659.72,
+      "m_m_5_71269": 120.18,
+      "m_m_5_89346": 654.92,
       "m_m_5_89167": 10.63,
       "m_m_5_89348": 300,
       "m_m_5_71285": 125.07,
       "m_m_5_30836": 2.64,
-      "m_m_5_30832": 2.11,
-      "m_m_5_30833": 1.08,
-      "m_m_5_89324": 119.98,
-      "m_m_5_30831": 0.8,
-      "m_m_5_89973": 145.9,
+      "m_m_5_30832": 1.6,
+      "m_m_5_30833": 1.07,
+      "m_m_5_89324": 119.67,
+      "m_m_5_30831": 0.78,
+      "m_m_5_89973": 145.88,
       "m_m_5_31996": 0.67,
       "m_m_5_71240": 28.32,
       "m_m_5_31995": 0.68,
       "m_m_5_71266": 30.04,
-      "m_m_5_30838": 0.9,
+      "m_m_5_30838": 1.09,
       "shanhu": 2.29,
       "m_m_5_6646": 2,
       "m_m_5_30835": 1.49,
       "m_m_5_89974": 123.16,
       "m_m_5_71267": 39.62,
       "m_m_5_89168": 22.39,
-      "yaoyin": 146.88,
+      "yaoyin": 119,
       "m_m_5_31100": 59.2,
-      "shaoyao": 1.46,
+      "shaoyao": 1.47,
       "m_m_5_30834": 3.56,
       "m_m_5_31998": 0.68,
-      "m_m_5_89328": 800.15,
-      "m_m_5_89340": 112.95,
-      "m_m_5_89325": 714.93,
-      "m_m_5_71258": 86.26,
-      "m_m_5_89327": 99.45,
+      "m_m_5_89340": 112.92,
+      "m_m_5_89325": 714.34,
+      "m_m_5_71258": 80.61,
+      "m_m_5_89327": 99,
       "m_m_5_89966": 95.58,
       "m_m_5_31991": 0.67,
-      "m_m_5_89968": 134.5,
-      "m_m_5_31993": 0.69,
+      "m_m_5_89968": 130,
+      "m_m_5_31993": 0.7,
       "m_m_5_89376": 297.3,
       "m_m_5_89965": 141.8,
       "m_m_5_31992": 0.67,
-      "m_m_5_89963": 130,
+      "m_m_5_89963": 125.26,
       "m_m_5_71192": 26.48,
       "m_m_5_71188": 1152.93,
-      "m_m_5_89962": 128.54,
-      "m_m_5_31139": 3185.37,
+      "m_m_5_89962": 99.81,
+      "m_m_5_31139": 3180.65,
       "m_m_5_89964": 90.12,
       "m_m_5_10027": 54.28,
       "m_m_5_89961": 170.02,
       "tiekuang": 2.79,
-      "m_m_5_30676": 1.5,
-      "m_m_5_30678": 1.1,
-      "m_m_5_30674": 2,
+      "m_m_5_30676": 1.43,
+      "m_m_5_30678": 1.69,
+      "m_m_5_30674": 1.9,
       "m_m_5_30675": 2.09,
-      "m_m_5_89967": 210.49,
-      "m_m_5_6246": 0.15,
+      "m_m_5_89967": 210.47,
+      "m_m_5_6246": 0.4,
       "m_m_5_6249": 0.48,
       "m_m_5_32787": 25,
-      "m_m_5_30841": 4.85,
+      "m_m_5_30841": 4.14,
       "m_m_5_35708": 6.49,
       "muban": 99.99,
       "muliao": 3.69,
@@ -11558,106 +17754,133 @@ window.JX3Data = {
       "m_m_5_35567": 1.5,
       "m_m_5_35714": 89.16,
       "m_m_5_35701": 0.66,
-      "m_m_5_35713": 26.69,
+      "m_m_5_35713": 89.5,
       "m_m_10_93": 60,
-      "m_m_5_35717": 2.05,
+      "m_m_5_35717": 2,
       "m_m_10_164": 299.99,
       "m_m_5_52337": 1999.98,
-      "m_m_5_35772": 1504,
+      "m_m_5_35772": 1166.93,
       "m_m_5_87917": 275.19,
-      "zasui": 1,
-      "g_5_30681": 1.16,
-      "g_5_30680": 2.3
+      "zasui": 0.7,
+      "g_5_30681": 1.15,
+      "g_5_30680": 2.28,
+      "m_x_5_89305": 4099.27,
+      "m_x_5_89351": 633.94,
+      "m_x_5_89357": 3808.46,
+      "m_x_5_89439": 6999.94,
+      "m_x_5_89440": 7000,
+      "m_x_5_89441": 6733.92,
+      "m_x_5_89331": 700.86,
+      "m_x_5_89337": 1333,
+      "m_x_5_89368": 788.44,
+      "m_x_5_89372": 3491.91,
+      "m_x_5_89369": 950,
+      "m_x_5_90436": 89.7,
+      "m_x_5_89379": 6195,
+      "m_x_5_89397": 19999,
+      "m_x_5_90437": 84,
+      "m_x_5_89386": 6999,
+      "m_x_5_89388": 6800.69,
+      "m_x_5_89389": 6900,
+      "m_x_5_89391": 6900.54,
+      "m_x_5_89409": 30000,
+      "m_x_5_89393": 8000,
+      "m_x_5_89394": 9888.4,
+      "m_x_5_89396": 8000,
+      "m_x_5_20971": 299,
+      "m_x_5_89317": 995.16,
+      "m_x_5_89426": 1611.96,
+      "m_x_5_89428": 3777
     },
     "s_jiandan": {
-      "fengwangjiang": 156.65,
-      "shoupijiao": 45.71,
+      "fengwangjiang": 155.03,
+      "shoupijiao": 40.72,
       "qicaixian": 150.58,
       "bairanxian": 3.17,
       "fengyu_yi": 789.66,
-      "m_m_5_30852": 16.6,
-      "m_m_5_30853": 81.77,
-      "m_m_5_30828": 6.96,
+      "m_m_5_30852": 12.89,
+      "m_m_5_30853": 80.86,
+      "m_m_5_30828": 4.87,
       "m_m_5_32000": 0.62,
       "guajian_bei": 54.34,
-      "baihua_bu": 89.31,
+      "baihua_bu": 86.99,
       "guajian_yao": 99.58,
       "shuran_bu": 118.2,
       "shuran_bag": 69.97,
       "wuseshi": 155.87,
-      "m_m_5_30856": 17.12,
-      "m_m_5_30855": 155.14,
+      "m_m_5_30856": 19.25,
+      "m_m_5_30855": 152.68,
       "geyin_zhang": 150.26,
-      "m_m_5_89298": 24.43,
-      "m_m_5_30679": 15.84,
+      "m_m_5_89298": 23.68,
+      "m_m_5_30679": 15.04,
       "m_m_5_32004": 0.69,
-      "m_m_5_30847": 8.11,
-      "m_m_5_30846": 1.6,
+      "m_m_5_30847": 7.59,
+      "m_m_5_30846": 6.61,
       "yinsi_duan": 159,
-      "m_m_5_30848": 20.51,
+      "m_m_5_30848": 20.48,
       "m_m_5_32002": 0.68,
-      "m_m_5_30850": 100.81,
-      "m_m_5_30845": 131.57,
+      "m_m_5_30850": 100,
+      "m_m_5_30845": 130.48,
       "m_m_5_31397": 1,
       "m_m_5_30844": 0.71,
       "m_m_5_35719": 32.4,
-      "m_m_5_30873": 30.47,
+      "m_m_5_30873": 28.2,
       "m_m_5_90205": 188.8,
       "shanshui_juan": 150,
       "m_m_5_3779": 4,
       "m_m_8_36148": 1490.87,
-      "m_m_5_30827": 0.97,
-      "m_m_5_89970": 154.37,
+      "m_m_5_30827": 0.86,
+      "m_m_5_89970": 153.23,
       "m_m_5_31978": 0.66,
       "m_m_5_31985": 0.69,
-      "lucai": 16.47,
+      "lucai": 16.45,
       "m_m_5_1831": 17,
-      "m_m_5_30849": 5.5,
+      "m_m_5_30849": 5.3,
       "m_m_5_71293": 45.52,
-      "m_m_5_30826": 0.43,
+      "m_m_5_30826": 0.39,
       "m_m_5_30825": 0.01,
       "m_m_5_89171": 10.63,
       "m_m_5_31974": 0.64,
       "m_m_5_31968": 0.66,
-      "m_m_5_30824": 0.68,
+      "m_m_5_30824": 0.5,
       "m_m_5_71281": 13.58,
-      "m_m_5_30823": 1.18,
+      "m_m_5_30823": 0.7,
       "m_m_5_31969": 0.66,
       "m_m_5_71277": 55.13,
-      "m_m_5_89315": 1457,
+      "m_m_5_89315": 1388.85,
       "m_m_5_89969": 120.82,
       "m_m_5_31976": 0.6,
       "m_m_5_89303": 2888.05,
-      "m_m_5_89971": 155.31,
-      "lushui": 10.78,
-      "m_m_5_30875": 5.4,
-      "m_m_5_30843": 0.99,
-      "m_m_5_30874": 35.04,
-      "m_m_5_30842": 1.19,
-      "m_m_5_5270": 2,
+      "m_m_5_89971": 154.1,
+      "lushui": 10,
+      "m_m_5_30875": 4.3,
+      "m_m_5_30843": 1.52,
+      "m_m_5_30874": 45.07,
+      "m_m_5_30842": 1.01,
+      "m_m_5_5270": 1.27,
       "m_m_5_5269": 0.05,
       "m_m_5_31977": 0.68,
-      "m_m_5_31013": 139.77,
-      "gancao": 2.81,
+      "m_m_5_31013": 137.06,
+      "gancao": 2.56,
       "m_m_5_31012": 275.16,
       "m_m_5_89304": 3999.85,
-      "m_m_5_89352": 729.53,
-      "m_m_5_89350": 778.79,
-      "m_m_5_71269": 86,
-      "m_m_5_89346": 698.03,
+      "m_m_5_89352": 728.25,
+      "m_m_5_89350": 778,
+      "m_m_5_71269": 83,
+      "m_m_5_89346": 697.23,
       "m_m_5_89167": 10.63,
       "m_m_5_89348": 179.98,
-      "m_m_5_71285": 109.61,
-      "m_m_5_30836": 0.66,
-      "m_m_5_30832": 0.62,
+      "m_m_5_71285": 108.29,
+      "m_m_5_30836": 0.5,
+      "m_m_5_30832": 0.44,
       "m_m_5_30833": 1.9,
-      "m_m_5_89324": 158.51,
-      "m_m_5_30831": 1.09,
-      "m_m_5_89973": 209.27,
+      "m_m_5_89324": 149.49,
+      "m_m_5_30831": 0.8,
+      "m_m_5_89973": 190.26,
       "m_m_5_31996": 0.66,
       "m_m_5_71241": 25,
       "m_m_5_71240": 89.75,
-      "m_m_5_30838": 1.66,
+      "m_m_5_30838": 1.1,
       "shanhu": 2.4,
       "m_m_5_30835": 1.03,
       "m_m_5_89974": 90.18,
@@ -11665,175 +17888,201 @@ window.JX3Data = {
       "m_m_5_71267": 35.7,
       "m_m_5_90029": 222.51,
       "m_m_5_89168": 21.89,
-      "yaoyin": 133.37,
+      "yaoyin": 130.99,
       "m_m_5_31100": 133,
       "shaoyao": 1.5,
       "m_m_5_30834": 1.42,
       "m_m_5_89328": 1305.58,
-      "m_m_5_89340": 121,
-      "m_m_5_89325": 758.33,
+      "m_m_5_89340": 120.21,
+      "m_m_5_89325": 748.87,
       "m_m_5_71258": 65.49,
-      "m_m_5_89327": 135.98,
+      "m_m_5_89327": 130.95,
       "m_m_5_89966": 127.8,
       "m_m_5_89968": 124.9,
       "m_m_5_89965": 95,
-      "m_m_5_31992": 0.65,
-      "m_m_5_89963": 80.11,
-      "m_m_5_89962": 100.68,
-      "m_m_5_31139": 3487.99,
-      "m_m_5_89964": 75,
-      "m_m_5_10027": 53.9,
-      "m_m_5_89961": 148,
+      "m_m_5_89963": 79,
+      "m_m_5_89962": 99.66,
+      "m_m_5_31139": 3487.95,
+      "m_m_5_89964": 70,
+      "m_m_5_10027": 56.99,
+      "m_m_5_89961": 128.87,
       "tiekuang": 2,
       "m_m_5_30676": 1.53,
-      "m_m_5_30678": 1,
+      "m_m_5_30678": 1.53,
       "m_m_5_30674": 2.17,
-      "m_m_5_30675": 1.99,
+      "m_m_5_30675": 2.14,
       "m_m_5_89967": 115,
-      "m_m_5_6246": 0.09,
+      "m_m_5_6246": 0.08,
       "m_m_5_6249": 0.43,
       "m_m_5_32787": 1,
-      "m_m_5_30841": 3.5,
+      "m_m_5_30841": 3.06,
       "m_m_5_10172": 39.63,
       "m_m_5_35708": 6.49,
-      "m_m_8_636": 251,
+      "m_m_8_636": 240.33,
       "m_m_5_6072": 4.1,
       "m_m_5_6068": 0.35,
       "m_m_5_6066": 0.01,
-      "muban": 26.38,
+      "muban": 24.65,
       "muliao": 2.26,
-      "m_m_5_35707": 6.47,
+      "m_m_5_35707": 5.95,
       "qiwuling": 99,
       "m_m_5_35716": 10.31,
       "m_m_5_35715": 89.49,
       "zhuzi": 1.42,
-      "m_m_5_35567": 1.74,
+      "m_m_5_35567": 1.67,
       "m_m_5_35714": 89.41,
       "m_m_5_35713": 89.49,
       "m_m_10_1779": 899.99,
-      "m_m_5_35717": 2.26,
+      "m_m_5_35717": 3.17,
       "m_m_10_164": 110,
-      "m_m_5_52337": 1700.69,
-      "m_m_5_35772": 1450.96,
+      "m_m_5_52337": 2200.85,
+      "m_m_5_35772": 1450,
       "m_m_5_87917": 260.1,
       "m_m_5_87881": 7900,
-      "zasui": 0.4,
-      "g_5_30681": 1.12,
-      "g_5_30680": 1.18
+      "zasui": 0.35,
+      "g_5_30681": 1.18,
+      "g_5_30680": 1.17,
+      "m_x_5_89305": 3296.54,
+      "m_x_5_89349": 930.35,
+      "m_x_5_89357": 4054.86,
+      "m_x_5_89438": 8888.77,
+      "m_x_5_89439": 10000.99,
+      "m_x_5_89440": 12026.49,
+      "m_x_5_89441": 7499.99,
+      "m_x_5_89443": 8600.99,
+      "m_x_5_89444": 6851.45,
+      "m_x_5_89445": 9700.99,
+      "m_x_5_89329": 998.25,
+      "m_x_5_89335": 3468.14,
+      "m_x_5_89331": 798.64,
+      "m_x_5_89337": 2703.26,
+      "m_x_5_89368": 945.23,
+      "m_x_5_89372": 3000,
+      "m_x_5_90436": 82.42,
+      "m_x_5_89379": 5788.36,
+      "m_x_5_90437": 108.8,
+      "m_x_5_89386": 5000.14,
+      "m_x_5_89388": 5554.06,
+      "m_x_5_89389": 6655,
+      "m_x_5_89390": 9999.51,
+      "m_x_5_89408": 18887.88,
+      "m_x_5_89391": 4800.49,
+      "m_x_5_89396": 5500,
+      "m_x_5_20971": 100.08,
+      "m_x_5_89317": 1100.86,
+      "m_x_10_2241": 1201
     },
     "s_youyuelun": {
-      "fengwangjiang": 157.88,
-      "shoupijiao": 31.6,
-      "qicaixian": 139.38,
+      "fengwangjiang": 157.97,
+      "shoupijiao": 30.11,
+      "qicaixian": 139,
       "bairanxian": 2.89,
       "fengyu_yi": 831.41,
-      "m_m_5_30852": 16.7,
+      "m_m_5_30852": 16.78,
       "m_m_5_30853": 82.85,
       "m_m_5_30828": 6.8,
       "m_m_5_89165": 10.64,
       "m_m_5_32000": 0.6,
-      "guajian_bei": 55.8,
-      "baihua_bu": 80.22,
-      "guajian_yao": 88.61,
-      "shuran_bu": 99.36,
+      "guajian_bei": 55.44,
+      "baihua_bu": 79.55,
+      "guajian_yao": 82.32,
+      "shuran_bu": 90.36,
       "shuran_bag": 15.7,
       "jinfeng_bag": 10000,
       "wuseshi": 159,
-      "m_m_5_30856": 25.9,
-      "m_m_5_30855": 169.79,
-      "geyin_zhang": 140.1,
-      "m_m_5_89298": 29.15,
-      "m_m_5_30679": 15,
-      "m_m_5_30847": 8.42,
+      "m_m_5_30856": 18.5,
+      "m_m_5_30855": 160.02,
+      "geyin_zhang": 136,
+      "m_m_5_89298": 36.24,
+      "m_m_5_30679": 144.74,
+      "m_m_5_30847": 8.25,
       "m_m_5_30846": 1.6,
-      "yinsi_duan": 133,
-      "m_m_5_30848": 25.48,
-      "m_m_5_30850": 99.99,
-      "m_m_5_30845": 120.45,
+      "yinsi_duan": 120,
+      "m_m_5_30848": 32.24,
+      "m_m_5_30850": 99.98,
+      "m_m_5_30845": 125.95,
       "m_m_5_31397": 1.55,
       "m_m_5_89433": 12180.65,
       "m_m_5_31253": 200,
-      "m_m_5_30844": 1.13,
-      "m_m_5_30873": 19.88,
-      "m_m_5_90205": 5.33,
+      "m_m_5_30844": 0.94,
+      "m_m_5_30873": 38.07,
+      "m_m_5_90205": 5.47,
       "m_m_8_614": 268.92,
       "shanshui_juan": 180.55,
       "m_m_5_3779": 6.99,
       "m_m_8_36148": 798,
-      "m_m_5_30827": 1.2,
-      "m_m_5_89970": 177,
+      "m_m_5_30827": 1.12,
+      "m_m_5_89970": 175.12,
       "m_m_5_31978": 0.66,
-      "lucai": 15.97,
+      "lucai": 15.93,
       "m_m_5_1831": 12.15,
       "m_m_5_31973": 0.7,
       "m_m_5_30849": 6,
       "m_m_5_30826": 1,
-      "m_m_5_30825": 0.01,
       "m_m_5_89171": 10.64,
       "m_m_5_31974": 0.67,
       "m_m_5_71292": 70.5,
-      "m_m_5_30824": 0.34,
+      "m_m_5_30824": 0.6,
       "m_m_5_30823": 0.6,
+      "m_m_5_31969": 0.66,
       "m_m_5_71277": 55.91,
-      "m_m_5_89315": 1300,
-      "m_m_5_89969": 115,
+      "m_m_5_89315": 1100,
+      "m_m_5_89969": 113.82,
       "m_m_5_31976": 0.61,
-      "m_m_5_89971": 191.2,
-      "lushui": 10.49,
-      "m_m_5_30875": 1.21,
+      "m_m_5_89971": 185.76,
+      "lushui": 10.2,
+      "m_m_5_30875": 1.2,
       "m_m_5_30829": 1.25,
-      "m_m_5_30843": 1.02,
-      "m_m_5_30874": 33.49,
+      "m_m_5_30843": 1.38,
+      "m_m_5_30874": 35.44,
       "m_m_5_30842": 1,
       "m_m_5_5270": 1.16,
       "m_m_5_5269": 0.01,
       "m_m_5_31977": 0.57,
-      "m_m_5_31013": 160.76,
-      "gancao": 1.75,
-      "m_m_5_31012": 271.49,
+      "m_m_5_31013": 140.64,
+      "gancao": 1.69,
+      "m_m_5_31012": 281.47,
       "m_m_5_89172": 22.39,
       "m_m_5_26231": 0.94,
-      "m_m_5_89352": 659.79,
+      "m_m_5_89352": 649.94,
       "m_m_5_89350": 659.68,
-      "m_m_5_71269": 158.86,
-      "m_m_5_89346": 689.79,
+      "m_m_5_71269": 156.52,
+      "m_m_5_89346": 687.7,
       "m_m_5_89167": 10.63,
-      "m_m_5_89348": 209.13,
+      "m_m_5_89348": 199.99,
       "m_m_5_71285": 80.18,
-      "jieyuan_dan": 41,
       "m_m_5_30836": 1.24,
       "m_m_5_30832": 1.4,
-      "m_m_5_30833": 1.55,
-      "m_m_5_89324": 135.4,
+      "m_m_5_30833": 1.49,
+      "m_m_5_89324": 130.73,
       "m_m_5_30831": 1.02,
-      "m_m_5_89973": 150,
+      "m_m_5_89973": 100,
       "m_m_5_31996": 0.68,
       "m_m_5_71241": 88.64,
       "m_m_5_71240": 62.88,
       "m_m_5_31995": 0.67,
       "m_m_5_71266": 75,
       "m_m_5_30838": 0.59,
-      "shanhu": 3,
+      "shanhu": 2.66,
       "m_m_5_6646": 2,
-      "m_m_5_30835": 1.52,
-      "m_m_5_89974": 70,
+      "m_m_5_30835": 1.59,
+      "m_m_5_89974": 69.98,
       "m_m_5_6648": 3.9,
       "m_m_5_71267": 95.84,
       "m_m_5_89168": 21.79,
-      "yaoyin": 118.98,
+      "yaoyin": 117.99,
       "m_m_5_31100": 90.41,
       "m_m_5_89322": 1000,
-      "shaoyao": 1.88,
-      "m_m_5_31102": 0.05,
-      "m_m_5_30834": 1.65,
+      "shaoyao": 2.12,
+      "m_m_5_30834": 1.59,
       "m_m_5_31998": 0.68,
-      "m_m_5_89328": 900.14,
-      "m_m_5_89332": 1398.29,
-      "m_m_5_89340": 97.99,
-      "m_m_5_89325": 774.86,
+      "m_m_5_89328": 899.94,
+      "m_m_5_89332": 1398.07,
+      "m_m_5_89340": 85.51,
+      "m_m_5_89325": 774.2,
       "m_m_5_71258": 97.59,
       "m_m_5_31999": 0.66,
-      "m_m_5_89327": 98.85,
+      "m_m_5_89327": 97,
       "m_m_5_89966": 116.57,
       "m_m_5_89968": 128.3,
       "m_m_5_31993": 0.64,
@@ -11844,22 +18093,23 @@ window.JX3Data = {
       "m_m_5_71192": 20.31,
       "m_m_5_71188": 1512.81,
       "m_m_5_31994": 0.66,
-      "m_m_5_89962": 119.98,
+      "m_m_5_89962": 99.15,
       "m_m_5_31139": 2973.68,
-      "m_m_5_89964": 85,
-      "m_m_5_10027": 51.34,
-      "m_m_5_89961": 117.86,
+      "m_m_5_89964": 70.08,
+      "m_m_5_10027": 51,
+      "m_m_5_89961": 99.35,
       "tiekuang": 2.99,
       "m_m_5_30676": 2.22,
       "m_m_5_30678": 1.65,
-      "m_m_5_30674": 2.99,
-      "m_m_5_30675": 3.46,
+      "m_m_5_30674": 2.98,
+      "m_m_5_30675": 3.34,
       "m_m_5_89967": 127.7,
-      "m_m_5_89367": 1991.97,
-      "m_m_5_6246": 0.55,
+      "m_m_5_89367": 1300.9,
+      "m_m_5_6246": 0.17,
       "m_m_5_6249": 0.48,
       "m_m_5_32787": 15,
-      "m_m_5_30841": 3.19,
+      "m_m_8_25762": 38.38,
+      "m_m_5_30841": 3.06,
       "m_m_5_10172": 31.99,
       "m_m_5_35708": 6.49,
       "m_m_8_632": 800.29,
@@ -11869,77 +18119,122 @@ window.JX3Data = {
       "m_m_5_6068": 1,
       "m_m_5_6066": 0.01,
       "muban": 20.98,
-      "muliao": 3.67,
+      "muliao": 3.11,
       "m_m_5_35707": 6.42,
       "m_m_5_35703": 0.67,
       "qiwuling": 25.98,
-      "m_m_5_35716": 8.16,
+      "m_m_5_35716": 7.97,
       "m_m_5_35715": 10.93,
-      "zhuzi": 1.87,
-      "m_m_5_35567": 2.24,
+      "zhuzi": 1.78,
+      "m_m_5_35567": 2,
       "m_m_5_35714": 30,
       "m_m_5_35713": 15.07,
       "m_m_5_35705": 0.62,
       "m_m_10_1882": 1450,
       "m_m_5_35717": 2.08,
-      "m_m_5_52337": 1720,
-      "m_m_5_35772": 1798.24,
-      "m_m_5_87917": 250.08,
+      "m_m_5_52337": 1587,
+      "m_m_5_35772": 1798,
       "m_m_5_87881": 7666.23,
       "zasui": 0.29,
-      "g_5_30681": 1.15,
-      "g_5_30680": 1.17
+      "g_5_30681": 1.02,
+      "g_5_30680": 1.17,
+      "m_x_5_89353": 1327.4,
+      "m_x_5_89359": 3460.82,
+      "m_x_5_89305": 4326.83,
+      "m_x_5_89308": 8888.8,
+      "m_x_5_89349": 788.71,
+      "m_x_5_89355": 1199.84,
+      "m_x_5_89351": 890.65,
+      "m_x_5_89434": 7777.72,
+      "m_x_5_89436": 5555.85,
+      "m_x_5_89438": 4990,
+      "m_x_5_89439": 6221.99,
+      "m_x_5_89440": 4800.33,
+      "m_x_5_89441": 5199.99,
+      "m_x_5_89455": 23000.59,
+      "m_x_5_89443": 7188.87,
+      "m_x_5_89444": 3500.4,
+      "m_x_5_89445": 5888.88,
+      "m_x_5_89459": 46718.68,
+      "m_x_5_89329": 1240.05,
+      "m_x_5_89335": 1399.81,
+      "m_x_5_89330": 843.16,
+      "m_x_5_89331": 599.59,
+      "m_x_5_89337": 968.8,
+      "m_x_5_89368": 899.67,
+      "m_x_5_89372": 1388.82,
+      "m_x_5_90436": 84,
+      "m_x_5_89379": 4399,
+      "m_x_5_89397": 22970,
+      "m_x_5_89380": 5498.9,
+      "m_x_5_90437": 120.03,
+      "m_x_5_89383": 9998.52,
+      "m_x_5_89384": 3999,
+      "m_x_5_89385": 5488.23,
+      "m_x_5_89386": 4591.39,
+      "m_x_5_89388": 7288.78,
+      "m_x_5_89389": 6288.85,
+      "m_x_5_89391": 5333.63,
+      "m_x_5_89392": 3988.15,
+      "m_x_5_89393": 5688.87,
+      "m_x_5_89412": 38999,
+      "m_x_5_89395": 11992,
+      "m_x_5_89396": 5000.11,
+      "m_x_5_20971": 199.68,
+      "m_x_10_1281": 599,
+      "m_x_5_89317": 899.01,
+      "m_x_5_89320": 1000
     },
     "s_longzheng": {
-      "fengwangjiang": 151.56,
-      "shoupijiao": 38.88,
-      "qicaixian": 142,
+      "fengwangjiang": 152.21,
+      "shoupijiao": 37.9,
+      "qicaixian": 128,
       "bairanxian": 3.14,
       "fengyu_yi": 2139.86,
-      "m_m_5_30852": 19.44,
-      "m_m_5_30853": 80.32,
+      "m_m_5_30852": 16.65,
+      "m_m_5_30853": 79,
       "m_m_5_30828": 5.59,
       "guajian_bei": 65,
-      "baihua_bu": 78.75,
-      "guajian_yao": 102.93,
-      "shuran_bu": 132,
+      "baihua_bu": 68.6,
+      "guajian_yao": 98.93,
+      "shuran_bu": 120,
       "shuran_bag": 31.41,
       "jinfeng_bag": 11000.82,
       "wuseshi": 144.88,
-      "m_m_5_30856": 24.98,
-      "m_m_5_30855": 164.29,
-      "geyin_zhang": 180.08,
-      "m_m_5_89298": 25.19,
-      "m_m_5_30679": 15.47,
+      "m_m_5_30856": 22.5,
+      "m_m_5_30855": 198.99,
+      "geyin_zhang": 178.31,
+      "m_m_5_89298": 24.24,
+      "m_m_5_30679": 15.2,
       "m_m_5_32004": 0.69,
-      "m_m_5_30847": 19.05,
-      "m_m_5_30846": 1.99,
+      "m_m_5_30847": 14.99,
+      "m_m_5_30846": 2,
       "yinsi_duan": 149,
       "m_m_5_32003": 0.7,
       "m_m_5_30848": 20.62,
       "m_m_5_32002": 0.66,
-      "m_m_5_30850": 98.9,
-      "m_m_5_30845": 134.65,
+      "m_m_5_30850": 98.75,
+      "m_m_5_30845": 134.62,
       "m_m_5_31397": 0.8,
-      "m_m_5_89433": 5400.88,
-      "m_m_5_89435": 4888,
+      "m_m_5_89435": 4880,
       "m_m_5_31253": 400.32,
-      "m_m_5_30844": 0.84,
-      "m_m_5_30873": 31.19,
+      "m_m_5_30844": 2.37,
+      "m_m_5_30873": 30.97,
       "m_m_5_90205": 2,
       "shanshui_juan": 100,
       "m_m_8_36148": 1100.77,
-      "m_m_5_89474": 2628,
+      "m_m_5_89475": 3500,
+      "m_m_5_89474": 2620,
       "m_m_5_30827": 1.19,
-      "m_m_5_89970": 177.77,
+      "m_m_5_89970": 169.99,
       "m_m_5_32014": 229,
       "m_m_5_31978": 0.66,
       "m_m_5_31985": 0.66,
       "lucai": 16.73,
       "m_m_5_1831": 15.95,
-      "m_m_5_31973": 0.68,
-      "m_m_5_30849": 5.91,
-      "m_m_5_71293": 40,
+      "m_m_5_31973": 0.6,
+      "m_m_5_30849": 5.86,
+      "m_m_5_71293": 39,
       "m_m_5_30826": 0.79,
       "m_m_5_89171": 10.63,
       "m_m_5_31974": 0.67,
@@ -11947,64 +18242,66 @@ window.JX3Data = {
       "m_m_5_71292": 41,
       "m_m_5_30824": 0.68,
       "m_m_5_71281": 32,
-      "m_m_5_30823": 0.64,
+      "m_m_5_30823": 0.6,
       "m_m_5_31969": 0.65,
       "m_m_5_71277": 50.17,
-      "m_m_5_89315": 1190.3,
-      "m_m_5_89969": 100.61,
+      "m_m_5_89315": 1400,
+      "m_m_5_89969": 95.61,
       "m_m_5_31976": 0.67,
-      "m_m_5_89971": 175.92,
-      "lushui": 11.88,
-      "m_m_5_30875": 1,
+      "m_m_5_89303": 2692.22,
+      "m_m_5_89971": 174.85,
+      "lushui": 11.84,
+      "m_m_5_30875": 6.98,
       "m_m_5_30829": 0.55,
-      "m_m_5_30843": 1.04,
+      "m_m_5_30843": 1,
       "m_m_5_30874": 25.22,
-      "m_m_5_30842": 1.6,
+      "m_m_5_30842": 2.7,
+      "m_m_5_5270": 3.72,
       "m_m_5_31970": 0.67,
       "m_m_5_31977": 0.55,
-      "m_m_5_31013": 159.99,
-      "gancao": 3.63,
-      "m_m_5_31012": 279.4,
+      "m_m_5_31013": 148,
+      "gancao": 2.53,
+      "m_m_5_31012": 278.2,
       "m_m_5_90034": 7500,
-      "m_m_5_89352": 599.99,
+      "m_m_5_89352": 567.76,
       "m_m_5_89350": 503.92,
-      "m_m_5_71269": 139.6,
-      "m_m_5_89346": 552.89,
+      "m_m_5_71269": 138.61,
+      "m_m_5_89346": 552.36,
       "m_m_5_89167": 10.63,
       "m_m_5_89348": 198.86,
-      "m_m_5_71285": 86.38,
-      "jieyuan_dan": 68,
+      "m_m_5_71285": 85.07,
+      "jieyuan_dan": 49.99,
       "m_m_5_30836": 4.37,
       "m_m_5_30832": 2.31,
-      "m_m_5_30833": 1.55,
-      "m_m_5_89324": 130,
-      "m_m_5_30831": 2.77,
-      "m_m_5_89973": 107.85,
+      "m_m_5_30833": 1.99,
+      "m_m_5_89324": 128.77,
+      "m_m_5_30831": 2.81,
+      "m_m_5_89973": 105.36,
       "m_m_5_31996": 0.66,
-      "m_m_5_71240": 124.09,
+      "m_m_5_71240": 85.11,
       "m_m_5_31995": 0.67,
-      "m_m_5_71266": 45.54,
-      "m_m_5_30838": 1,
+      "m_m_5_71266": 40.49,
+      "m_m_5_30838": 2,
       "shanhu": 3.99,
       "m_m_5_6646": 1.5,
       "m_m_5_30835": 5.2,
-      "m_m_5_89974": 58.79,
+      "m_m_5_89974": 58.7,
       "m_m_5_71267": 43.94,
       "m_m_5_90029": 666.35,
       "m_m_5_89168": 22.99,
-      "yaoyin": 116.92,
-      "m_m_5_31100": 16.22,
+      "yaoyin": 115,
+      "m_m_5_31100": 89.12,
       "m_m_5_89322": 500,
-      "shaoyao": 3.76,
+      "shaoyao": 3.68,
       "m_m_5_90206": 266.91,
       "m_m_5_31102": 0.45,
-      "m_m_5_30834": 2.28,
+      "m_m_5_30834": 2.4,
       "m_m_5_31998": 0.68,
       "m_m_5_90035": 13000,
       "m_m_5_89328": 728.82,
-      "m_m_5_89340": 70,
-      "m_m_5_89325": 790,
-      "m_m_5_71258": 92.55,
+      "m_m_5_89340": 69.32,
+      "m_m_5_89325": 774,
+      "m_m_5_71258": 85.11,
       "m_m_5_31999": 0.55,
       "m_m_5_89327": 87,
       "m_m_5_89966": 90.29,
@@ -12012,30 +18309,31 @@ window.JX3Data = {
       "m_m_5_31991": 0.67,
       "m_m_5_89377": 280.12,
       "m_m_5_89968": 104,
-      "m_m_5_89376": 370.74,
-      "m_m_5_89965": 97.9,
+      "m_m_5_89376": 200,
+      "m_m_5_89965": 90.9,
       "m_m_5_31992": 0.67,
       "m_m_5_89375": 999,
       "m_m_5_89963": 70.49,
       "m_m_5_89169": 10.64,
-      "m_m_5_31994": 0.68,
+      "m_m_5_71188": 588.66,
+      "m_m_5_31994": 2,
       "m_m_5_89962": 99.29,
-      "m_m_5_31139": 3830.57,
+      "m_m_5_31139": 3820,
       "m_m_5_89964": 89.07,
       "m_m_5_10027": 77.47,
-      "m_m_5_89961": 104,
-      "tiekuang": 2.24,
-      "m_m_5_30676": 3.96,
-      "m_m_5_30678": 2.4,
+      "m_m_5_89961": 103.18,
+      "tiekuang": 2.16,
+      "m_m_5_30676": 3.95,
+      "m_m_5_30678": 2.37,
       "m_m_5_30674": 3.07,
-      "m_m_5_30675": 3.16,
+      "m_m_5_30675": 3.09,
       "m_m_5_89967": 80.48,
       "m_m_5_89367": 1599.79,
-      "m_m_5_6246": 0.27,
+      "m_m_5_6246": 0.11,
       "m_m_5_6249": 0.49,
       "m_m_5_32787": 17.33,
       "m_m_8_25762": 9.25,
-      "m_m_5_30841": 3.03,
+      "m_m_5_30841": 4.12,
       "m_m_5_35708": 6.48,
       "m_m_8_632": 330.33,
       "m_m_8_634": 600.99,
@@ -12043,129 +18341,184 @@ window.JX3Data = {
       "m_m_5_90257": 175.67,
       "m_m_5_6072": 3,
       "muban": 26.98,
-      "muliao": 2.88,
+      "muliao": 3.53,
       "m_m_5_35707": 6.49,
-      "m_m_5_35703": 0.65,
-      "qiwuling": 34.31,
+      "qiwuling": 34.3,
       "m_m_5_35716": 10.89,
       "m_m_5_35715": 19.59,
-      "zhuzi": 2.16,
-      "m_m_5_35567": 1.71,
+      "zhuzi": 2.4,
+      "m_m_5_35567": 2.21,
       "m_m_5_35704": 0.68,
-      "m_m_5_35714": 15.24,
+      "m_m_5_35714": 25.54,
       "m_m_5_35701": 0.59,
       "m_m_5_35713": 89.19,
       "m_m_5_35705": 0.66,
-      "m_m_5_89260": 24790,
+      "m_m_5_89260": 24600,
       "m_m_10_93": 48,
-      "m_m_5_35717": 2.45,
+      "m_m_5_35717": 0.96,
       "m_m_10_2037": 1134,
       "m_m_5_52337": 1099.11,
-      "m_m_5_87917": 347.26,
+      "m_m_5_35772": 1450.72,
+      "m_m_5_87917": 268.26,
       "zasui": 0.79,
-      "g_5_30681": 1.6,
-      "g_5_30680": 1.21
+      "g_5_30681": 1.59,
+      "g_5_30680": 1.12,
+      "m_x_5_89359": 1200.79,
+      "m_x_5_89351": 959.63,
+      "m_x_5_89357": 3695.7,
+      "m_x_5_89434": 4200,
+      "m_x_5_89436": 5600.08,
+      "m_x_5_89438": 4950,
+      "m_x_5_89439": 4999.22,
+      "m_x_5_89453": 28888.8,
+      "m_x_5_89441": 3796,
+      "m_x_5_89455": 18000.07,
+      "m_x_5_89456": 20000,
+      "m_x_5_89443": 4300.11,
+      "m_x_5_89444": 8350.01,
+      "m_x_5_89445": 4998,
+      "m_x_5_89446": 4999,
+      "m_x_5_89329": 797.54,
+      "m_x_5_89335": 2500.53,
+      "m_x_5_89330": 595.61,
+      "m_x_5_89331": 759.5,
+      "m_x_5_89337": 1630.65,
+      "m_x_5_89368": 750,
+      "m_x_5_89372": 1750,
+      "m_x_5_89369": 500,
+      "m_x_5_89373": 4000.8,
+      "m_x_5_90436": 97.87,
+      "m_x_5_89379": 4449.27,
+      "m_x_5_89397": 31992.98,
+      "m_x_5_89380": 5250.32,
+      "m_x_5_90437": 60.9,
+      "m_x_5_89381": 7500,
+      "m_x_5_89383": 6500.84,
+      "m_x_5_89385": 5777,
+      "m_x_5_89386": 4998,
+      "m_x_5_89388": 4000,
+      "m_x_5_89406": 28900.2,
+      "m_x_5_89389": 5494,
+      "m_x_5_89407": 36888.7,
+      "m_x_5_89390": 3500.28,
+      "m_x_5_89391": 4500.5,
+      "m_x_5_89409": 34999.28,
+      "m_x_5_89392": 5500.93,
+      "m_x_5_89393": 6920,
+      "m_x_5_89411": 38750,
+      "m_x_5_89395": 8500,
+      "m_x_5_89396": 4500.56,
+      "m_x_5_89432": 2999,
+      "m_x_5_20971": 198.09,
+      "m_x_10_1281": 599.99,
+      "m_x_10_2229": 599.99,
+      "m_x_5_89317": 1090.28,
+      "m_x_10_2028": 575,
+      "m_x_10_2241": 1137.89,
+      "m_x_5_89319": 186,
+      "m_x_5_89320": 2088.49,
+      "m_x_5_89426": 3399,
+      "m_x_5_89427": 2222.22,
+      "m_x_5_89428": 2500
     },
     "s_changancheng": {
-      "fengwangjiang": 150,
-      "shoupijiao": 49.25,
-      "qicaixian": 142,
+      "fengwangjiang": 150.61,
+      "shoupijiao": 46,
+      "qicaixian": 140.99,
       "bairanxian": 3,
       "fengyu_yi": 2500.89,
-      "m_m_5_30852": 24.87,
-      "m_m_5_30853": 81.44,
-      "m_m_5_30828": 11.63,
+      "m_m_5_30852": 20.53,
+      "m_m_5_30853": 81.4,
+      "m_m_5_30828": 7.7,
       "guajian_bei": 52.74,
       "baihua_bu": 80,
-      "guajian_yao": 88.64,
-      "shuran_bu": 127.88,
+      "guajian_yao": 88.63,
+      "shuran_bu": 122.75,
       "m_m_5_32001": 0.65,
       "shuran_bag": 30.65,
-      "wuseshi": 128.83,
-      "m_m_5_30856": 18.86,
-      "m_m_5_30855": 189.05,
+      "wuseshi": 126.84,
+      "m_m_5_30856": 17.96,
+      "m_m_5_30855": 175.93,
       "geyin_zhang": 100.08,
-      "m_m_5_89298": 23.93,
-      "m_m_5_30679": 15,
+      "m_m_5_89298": 21.99,
+      "m_m_5_30679": 15.09,
       "m_m_5_30847": 10.4,
-      "m_m_5_30846": 9.52,
-      "yinsi_duan": 153.91,
-      "m_m_5_30848": 21.87,
+      "m_m_5_30846": 1.5,
+      "yinsi_duan": 149.92,
+      "m_m_5_30848": 21.9,
       "m_m_5_32002": 0.66,
-      "m_m_5_30850": 100.1,
-      "m_m_5_30845": 118.8,
+      "m_m_5_30850": 100,
+      "m_m_5_30845": 118.71,
       "m_m_5_31253": 200,
-      "m_m_5_30844": 1.11,
-      "m_m_5_30873": 17.76,
+      "m_m_5_30873": 17.6,
       "m_m_8_614": 449,
-      "m_m_8_36148": 1149.19,
-      "m_m_5_30827": 1.07,
-      "m_m_5_89970": 175,
+      "m_m_8_36148": 1148.97,
+      "m_m_5_30827": 1.46,
+      "m_m_5_89970": 160,
       "m_m_5_32014": 129.94,
       "m_m_5_31978": 0.64,
-      "lucai": 15.06,
+      "m_m_5_31985": 0.64,
+      "lucai": 18,
       "m_m_5_1831": 13.52,
       "m_m_5_31973": 0.65,
-      "m_m_5_30849": 5.5,
+      "m_m_5_30849": 5.49,
       "m_m_5_71293": 26.54,
-      "m_m_5_30826": 0.88,
+      "m_m_5_30826": 0.7,
       "m_m_5_30825": 0.01,
       "m_m_5_89171": 10.62,
       "m_m_5_31974": 0.67,
       "m_m_5_71292": 50,
-      "m_m_5_30824": 0.5,
-      "m_m_5_31967": 0.64,
+      "m_m_5_30824": 0.53,
+      "m_m_5_31967": 0.62,
       "m_m_5_71281": 20.36,
       "m_m_5_30823": 0.3,
-      "m_m_5_89315": 1400.75,
-      "m_m_5_89969": 143.68,
+      "m_m_5_89315": 1299.55,
+      "m_m_5_89969": 139.08,
       "m_m_5_31976": 0.66,
-      "m_m_5_89971": 140,
+      "m_m_5_89971": 139.33,
       "lushui": 13.96,
-      "m_m_5_30875": 1.3,
+      "m_m_5_30875": 10.09,
       "m_m_5_30843": 0.98,
       "m_m_5_30874": 30.8,
-      "m_m_5_30842": 0.84,
+      "m_m_5_30842": 0.81,
       "m_m_5_5270": 0.99,
       "m_m_5_31970": 0.65,
       "m_m_5_31977": 0.64,
-      "m_m_5_31013": 118.37,
-      "m_m_5_31012": 266.18,
-      "m_m_5_89304": 3487.09,
-      "m_m_5_89352": 657.48,
-      "m_m_5_71269": 136.18,
-      "m_m_5_89346": 635.9,
-      "m_m_5_89348": 278,
-      "m_m_5_71285": 101.38,
-      "m_m_5_30836": 0.58,
-      "m_m_5_30832": 0.98,
-      "m_m_5_30833": 1.2,
+      "m_m_5_31013": 114.95,
+      "gancao": 3.5,
+      "m_m_5_31012": 244.47,
+      "m_m_5_89352": 620.06,
+      "m_m_5_71269": 133.97,
+      "m_m_5_89346": 580.62,
+      "m_m_5_89348": 260,
+      "m_m_5_71285": 100.62,
+      "m_m_5_30836": 0.6,
+      "m_m_5_30832": 0.81,
+      "m_m_5_30833": 1.3,
       "m_m_5_31997": 0.64,
-      "m_m_5_89324": 76,
-      "m_m_5_30831": 0.51,
-      "m_m_5_89973": 169,
+      "m_m_5_89324": 73,
+      "m_m_5_30831": 0.5,
+      "m_m_5_89973": 157.96,
       "m_m_5_31996": 0.67,
-      "m_m_5_71240": 62.98,
+      "m_m_5_71240": 43,
       "m_m_5_31995": 0.67,
       "m_m_5_71266": 35.72,
       "m_m_5_30838": 1.01,
-      "shanhu": 2.26,
+      "shanhu": 2.24,
       "m_m_5_6646": 0.67,
-      "m_m_5_30835": 1.28,
-      "m_m_5_89974": 131.2,
+      "m_m_5_30835": 1.39,
+      "m_m_5_89974": 118.57,
       "m_m_5_6648": 2.95,
       "m_m_5_71267": 30.25,
-      "yaoyin": 157,
+      "yaoyin": 148.99,
       "m_m_5_31100": 19.5,
-      "shaoyao": 3.45,
-      "m_m_5_31102": 0.83,
-      "m_m_5_30834": 1.47,
+      "m_m_5_30834": 6,
       "m_m_5_31998": 0.67,
-      "m_m_5_89340": 83.99,
-      "m_m_5_89325": 849.69,
-      "m_m_5_71258": 57.4,
-      "m_m_5_89327": 78.96,
-      "m_m_5_89966": 116.31,
+      "m_m_5_89340": 83,
+      "m_m_5_89325": 838.3,
+      "m_m_5_71258": 50.85,
+      "m_m_5_89327": 78.95,
+      "m_m_5_89966": 109.63,
       "m_m_5_31991": 0.65,
       "m_m_5_89968": 91.86,
       "m_m_5_31993": 0.67,
@@ -12174,93 +18527,123 @@ window.JX3Data = {
       "m_m_5_31992": 0.67,
       "m_m_5_89963": 89.15,
       "m_m_5_89169": 10.64,
-      "m_m_5_89962": 114.88,
-      "m_m_5_31139": 3497,
-      "m_m_5_89964": 116.31,
+      "m_m_5_89962": 113,
+      "m_m_5_31139": 10001.11,
+      "m_m_5_89964": 98,
       "m_m_5_10027": 66.02,
-      "m_m_5_89961": 99.95,
+      "m_m_5_89961": 97.28,
       "tiekuang": 1.97,
-      "m_m_5_30676": 2.48,
-      "m_m_5_30678": 0.97,
-      "m_m_5_30674": 1.99,
-      "m_m_5_30675": 1.99,
+      "m_m_5_30676": 2.5,
+      "m_m_5_30678": 0.95,
+      "m_m_5_30674": 1.69,
+      "m_m_5_30675": 1.97,
       "m_m_5_89967": 95.55,
       "m_m_5_89367": 1999,
-      "m_m_5_6246": 0.11,
+      "m_m_5_6246": 0.13,
       "m_m_5_6249": 0.67,
       "m_m_8_25762": 34.39,
-      "m_m_5_30841": 4.35,
+      "m_m_5_30841": 3.94,
       "m_m_5_35708": 6.48,
-      "muban": 26.5,
+      "muban": 22.53,
       "muliao": 2.89,
       "m_m_5_35707": 6.49,
       "m_m_5_35703": 0.66,
-      "qiwuling": 34.98,
-      "m_m_5_35716": 89.9,
+      "qiwuling": 24.33,
       "m_m_5_35702": 0.64,
       "m_m_5_35715": 89.93,
-      "zhuzi": 1.4,
-      "m_m_5_35567": 1.68,
+      "m_m_5_35567": 1.63,
       "m_m_5_35704": 0.67,
       "m_m_5_35714": 89.85,
       "m_m_5_35701": 0.66,
-      "m_m_5_35713": 89.96,
-      "m_m_5_35717": 2.44,
+      "m_m_5_35713": 18.47,
+      "m_m_5_35717": 2.13,
       "m_m_5_52337": 1303.77,
       "m_m_5_35772": 999.9,
-      "m_m_5_87917": 337.61,
+      "m_m_5_87917": 280.53,
       "m_m_5_87881": 7500,
-      "zasui": 0.36,
+      "zasui": 0.22,
       "g_5_30681": 1.11,
-      "g_5_30680": 1.18
+      "g_5_30680": 1.01,
+      "m_x_5_89305": 3536.85,
+      "m_x_5_89355": 1200.94,
+      "m_x_5_89436": 10000,
+      "m_x_5_89452": 29000,
+      "m_x_5_89439": 5788.97,
+      "m_x_5_89440": 7111.66,
+      "m_x_5_89454": 49999,
+      "m_x_5_89441": 6555.21,
+      "m_x_5_89455": 24313.51,
+      "m_x_5_89444": 7777,
+      "m_x_5_89445": 6988.32,
+      "m_x_5_89331": 847.8,
+      "m_x_5_89337": 1555.79,
+      "m_x_5_89368": 997.76,
+      "m_x_5_89372": 1995,
+      "m_x_5_89369": 1222.99,
+      "m_x_5_90436": 93.61,
+      "m_x_5_89379": 5555.89,
+      "m_x_5_90437": 105.87,
+      "m_x_5_89406": 35559.49,
+      "m_x_5_89389": 8999.4,
+      "m_x_5_89390": 5298.14,
+      "m_x_5_89391": 6098.38,
+      "m_x_5_89393": 8999.35,
+      "m_x_5_89394": 8000,
+      "m_x_5_89396": 5775.27,
+      "m_x_10_157": 450,
+      "m_x_5_20971": 106.99,
+      "m_x_5_89317": 500.73,
+      "m_x_10_2241": 1499.96,
+      "m_x_5_89320": 2000
     },
     "s_douzhuang": {
-      "fengwangjiang": 163.82,
-      "shoupijiao": 57.97,
+      "fengwangjiang": 169.13,
+      "shoupijiao": 50.02,
       "qicaixian": 164.97,
       "bairanxian": 3.07,
-      "m_m_5_30852": 16.81,
-      "m_m_5_30853": 91.21,
-      "m_m_5_30828": 15.18,
+      "fengyu_yi": 960.94,
+      "m_m_5_30852": 11.48,
+      "m_m_5_30853": 87,
+      "m_m_5_30828": 6.44,
       "m_m_5_89165": 10.64,
       "m_m_5_32000": 0.62,
-      "guajian_bei": 65.61,
-      "baihua_bu": 75.95,
-      "guajian_yao": 93,
-      "shuran_bu": 95.2,
+      "guajian_bei": 60,
+      "baihua_bu": 74.99,
+      "guajian_yao": 88.18,
+      "shuran_bu": 94.88,
       "shuran_bag": 40.56,
-      "m_m_5_10173": 31.99,
+      "m_m_5_10173": 29.01,
       "wuseshi": 159.33,
-      "m_m_5_30856": 24,
-      "m_m_5_30855": 159.59,
+      "m_m_5_30856": 17,
+      "m_m_5_30855": 152.92,
       "geyin_zhang": 180.66,
-      "m_m_5_89298": 28.25,
-      "m_m_5_30679": 17.73,
-      "m_m_5_30847": 8.1,
-      "m_m_5_30846": 1.75,
+      "m_m_5_89298": 29.06,
+      "m_m_5_30679": 15.34,
+      "m_m_5_30847": 10.18,
+      "m_m_5_30846": 1.45,
       "yinsi_duan": 157.92,
       "m_m_5_32003": 0.62,
       "m_m_5_30848": 20.96,
-      "m_m_5_30850": 100.07,
-      "m_m_5_30845": 126.2,
+      "m_m_5_30850": 98.3,
+      "m_m_5_30845": 124.65,
       "m_m_5_31397": 2.04,
       "m_m_5_31253": 357.43,
-      "m_m_5_30844": 1.08,
-      "m_m_5_30873": 22.25,
+      "m_m_5_30844": 0.77,
+      "m_m_5_30873": 20.49,
       "m_m_5_90205": 30,
       "m_m_8_614": 300,
       "shanshui_juan": 89.03,
       "m_m_5_3779": 5.98,
-      "m_m_8_36148": 971.04,
-      "m_m_5_30827": 1.03,
-      "m_m_5_89970": 190.42,
+      "m_m_8_36148": 900.62,
+      "m_m_5_30827": 1,
+      "m_m_5_89970": 184.98,
       "lucai": 15.98,
       "m_m_5_1831": 12.2,
-      "m_m_5_30849": 5.76,
-      "m_m_5_71293": 39.25,
-      "m_m_5_30826": 0.44,
+      "m_m_5_30849": 5.54,
+      "m_m_5_71293": 38.48,
+      "m_m_5_30826": 1.3,
       "m_m_5_30825": 0.01,
-      "m_m_5_89171": 10.63,
+      "m_m_5_89171": 10.64,
       "m_m_5_31974": 0.68,
       "m_m_5_31968": 0.68,
       "m_m_5_71292": 45.58,
@@ -12269,225 +18652,263 @@ window.JX3Data = {
       "m_m_5_30823": 0.4,
       "m_m_5_31969": 0.7,
       "m_m_5_71277": 39.7,
-      "m_m_5_89315": 1569.78,
-      "m_m_5_89969": 166.97,
+      "m_m_5_89315": 1540.03,
+      "m_m_5_89969": 129.87,
       "m_m_5_31976": 0.68,
-      "m_m_5_89303": 3629.61,
-      "m_m_5_89971": 170,
-      "lushui": 10.59,
-      "m_m_5_30875": 2,
-      "m_m_5_30843": 2.01,
-      "m_m_5_30874": 26.5,
-      "m_m_5_30842": 2.33,
+      "m_m_5_89303": 3629.38,
+      "m_m_5_89971": 151.15,
+      "lushui": 12.9,
+      "m_m_5_30875": 3.07,
+      "m_m_5_30843": 1.61,
+      "m_m_5_30874": 26.64,
+      "m_m_5_30842": 1,
       "m_m_5_5270": 0.98,
       "m_m_5_5269": 0.02,
-      "m_m_5_31013": 139,
-      "gancao": 3.21,
-      "m_m_5_31012": 269.62,
+      "m_m_5_31013": 130.99,
+      "gancao": 2.48,
+      "m_m_5_31012": 238,
       "m_m_5_89172": 22.49,
-      "m_m_5_89304": 4149.1,
-      "m_m_5_89352": 639.76,
-      "m_m_5_71269": 90.18,
-      "m_m_5_89346": 707.57,
+      "m_m_5_89304": 4141.18,
+      "m_m_5_89352": 636.09,
+      "m_m_5_71269": 88.42,
+      "m_m_5_89346": 695,
       "m_m_5_89167": 10.64,
-      "m_m_5_89348": 180.07,
+      "m_m_5_89348": 177.9,
       "m_m_5_71285": 80.04,
       "m_m_5_30836": 0.59,
-      "m_m_5_30832": 2.1,
-      "m_m_5_30833": 1.15,
+      "m_m_5_30832": 1.13,
+      "m_m_5_30833": 1.12,
       "m_m_5_89324": 80.48,
       "m_m_5_30831": 0.7,
-      "m_m_5_89973": 164.91,
+      "m_m_5_89973": 164.33,
       "m_m_5_71241": 15,
-      "m_m_5_71240": 120.34,
+      "m_m_5_71240": 66.51,
       "m_m_5_71266": 48.17,
-      "m_m_5_30838": 0.88,
       "shanhu": 2.98,
-      "m_m_5_30835": 3.55,
+      "m_m_5_30835": 2.1,
       "m_m_5_89974": 94.66,
       "m_m_5_6648": 3.5,
       "m_m_5_71267": 92.16,
       "m_m_5_90029": 3000,
       "m_m_5_89168": 22.27,
-      "yaoyin": 133.44,
+      "yaoyin": 120.97,
       "m_m_5_31100": 30.24,
       "shaoyao": 1.74,
-      "m_m_5_31102": 0.24,
-      "m_m_5_30834": 1.51,
+      "m_m_5_30834": 1.87,
       "m_m_5_89328": 994.92,
-      "m_m_5_89340": 101.99,
-      "m_m_5_89325": 658.44,
-      "m_m_5_71258": 78.49,
+      "m_m_5_89340": 97.11,
+      "m_m_5_89325": 656.47,
+      "m_m_5_71258": 78.15,
       "m_m_5_31999": 0.66,
-      "m_m_5_89327": 70,
-      "m_m_5_89966": 139.5,
+      "m_m_5_89327": 74.82,
+      "m_m_5_89966": 130.59,
       "m_m_5_31991": 0.68,
+      "m_m_5_89968": 94,
       "m_m_5_89376": 281,
-      "m_m_5_89965": 110,
+      "m_m_5_89965": 107.13,
       "m_m_5_31992": 0.67,
-      "m_m_5_89963": 85,
+      "m_m_5_89963": 80.72,
       "m_m_5_89370": 800,
       "m_m_5_89169": 10.63,
       "m_m_5_31994": 0.69,
       "m_m_5_89962": 103,
-      "m_m_5_31139": 3588.86,
+      "m_m_5_31139": 3588.82,
       "m_m_5_89964": 92,
       "m_m_5_10027": 60,
-      "m_m_5_89961": 119,
-      "tiekuang": 2.76,
+      "m_m_5_89961": 118,
+      "tiekuang": 2.6,
       "m_m_5_30676": 2.78,
-      "m_m_5_30678": 2.2,
+      "m_m_5_30678": 1.66,
       "m_m_5_30674": 2.58,
-      "m_m_5_30675": 3,
+      "m_m_5_30675": 2.86,
       "m_m_5_89967": 90,
-      "m_m_5_6246": 0.1,
+      "m_m_5_6246": 0.15,
       "m_m_5_32787": 130.13,
-      "m_m_5_30841": 3,
+      "m_m_5_30841": 2.12,
       "m_m_8_636": 300.18,
-      "m_m_5_2578": 5,
+      "m_m_5_2578": 9.98,
       "m_m_5_6072": 0.5,
-      "muban": 22.01,
-      "muliao": 2.75,
-      "qiwuling": 39.99,
+      "muban": 22,
+      "muliao": 2.73,
+      "m_m_5_35703": 0.67,
+      "qiwuling": 24,
       "m_m_5_35716": 16.85,
-      "m_m_5_35715": 11.9,
-      "zhuzi": 1.6,
-      "m_m_5_35567": 1.5,
+      "m_m_5_35715": 8.22,
+      "zhuzi": 1.5,
+      "m_m_5_35567": 2.85,
       "m_m_5_35704": 0.67,
       "m_m_5_35714": 26.43,
       "m_m_5_35701": 0.65,
       "m_m_5_35713": 15.39,
       "m_m_10_1779": 859.98,
-      "m_m_5_35717": 2,
+      "m_m_5_35717": 1,
       "m_m_5_52337": 1388.12,
-      "m_m_5_35772": 1609.88,
+      "m_m_5_35772": 1693,
       "m_m_5_87917": 314.67,
       "m_m_5_87881": 7700.15,
-      "zasui": 1.46,
-      "g_5_30681": 1.19,
-      "g_5_30680": 1.38
+      "zasui": 0.6,
+      "g_5_30681": 1.08,
+      "g_5_30680": 1.18,
+      "m_x_5_89305": 4820.94,
+      "m_x_5_89349": 986.64,
+      "m_x_5_89351": 599.89,
+      "m_x_5_89436": 6007.62,
+      "m_x_5_89438": 5555.33,
+      "m_x_5_89439": 5000.45,
+      "m_x_5_89441": 4800.01,
+      "m_x_5_89443": 5700,
+      "m_x_5_89444": 4400,
+      "m_x_5_89445": 5831.85,
+      "m_x_5_89329": 996.65,
+      "m_x_5_89335": 2099.85,
+      "m_x_5_89336": 2819.78,
+      "m_x_5_89331": 786.44,
+      "m_x_5_89337": 1886.73,
+      "m_x_5_89368": 700.74,
+      "m_x_5_89372": 1088.68,
+      "m_x_5_89369": 744.98,
+      "m_x_5_90436": 106.91,
+      "m_x_5_89379": 4270.11,
+      "m_x_5_89397": 24587.8,
+      "m_x_5_89380": 5999.88,
+      "m_x_5_90437": 100.14,
+      "m_x_5_89384": 5000,
+      "m_x_5_89388": 5495.21,
+      "m_x_5_89389": 5799.22,
+      "m_x_5_89390": 4604.18,
+      "m_x_5_89391": 5249.16,
+      "m_x_5_89409": 22005.01,
+      "m_x_5_89392": 3999.23,
+      "m_x_5_89393": 6665.75,
+      "m_x_5_20971": 199.97,
+      "m_x_10_2229": 399.99,
+      "m_x_5_89317": 1550.93,
+      "m_x_10_2241": 1188.19,
+      "m_x_5_89426": 3295.75
     },
     "s_qiankun": {
-      "fengwangjiang": 162.49,
+      "fengwangjiang": 162.29,
       "shoupijiao": 50,
-      "qicaixian": 146,
+      "qicaixian": 142,
       "bairanxian": 3.08,
       "fengyu_yi": 990.07,
-      "m_m_5_30852": 15.65,
+      "m_m_5_30852": 14.88,
       "m_m_5_30853": 86,
       "m_m_5_30828": 6.07,
       "m_m_5_89165": 10.64,
-      "guajian_bei": 53.17,
+      "guajian_bei": 53.2,
       "baihua_bu": 74.99,
-      "guajian_yao": 90.95,
+      "guajian_yao": 130.95,
       "shuran_bu": 96.03,
       "m_m_5_32001": 0.55,
       "shuran_bag": 22.2,
       "m_m_5_10173": 31.77,
-      "wuseshi": 160.17,
-      "m_m_5_30856": 21.21,
-      "m_m_5_30855": 153.95,
-      "geyin_zhang": 140,
-      "m_m_5_89298": 33.5,
-      "m_m_5_30679": 22.67,
-      "m_m_5_30847": 11.31,
-      "m_m_5_30846": 1.64,
+      "wuseshi": 158.78,
+      "m_m_5_30856": 16.18,
+      "m_m_5_30855": 170.37,
+      "geyin_zhang": 135.33,
+      "m_m_5_89298": 29.72,
+      "m_m_5_30679": 20.32,
+      "m_m_5_30847": 9.57,
+      "m_m_5_30846": 1.28,
       "yinsi_duan": 143,
       "m_m_5_32003": 0.7,
       "m_m_5_30848": 22,
-      "m_m_5_30850": 102.72,
-      "m_m_5_30845": 144.87,
+      "m_m_5_30850": 101.03,
+      "m_m_5_30845": 138.8,
       "m_m_5_31397": 1,
       "m_m_5_89433": 8888.24,
-      "m_m_5_89435": 7983.65,
-      "m_m_5_30844": 0.86,
+      "m_m_5_89435": 7983.64,
+      "m_m_5_30844": 1,
       "m_m_5_35718": 13.18,
       "m_m_5_35719": 32.48,
-      "m_m_5_30873": 33.65,
+      "m_m_5_30873": 30.73,
+      "m_m_5_90205": 200.6,
       "m_m_8_614": 399.32,
       "shanshui_juan": 110.2,
       "m_m_5_3819": 100,
-      "m_m_5_3779": 5.99,
-      "m_m_8_36148": 700.48,
+      "m_m_5_3779": 3.72,
+      "m_m_8_36148": 949.8,
       "m_m_5_3820": 1.89,
-      "m_m_5_30827": 1.39,
-      "m_m_5_89970": 165,
-      "m_m_5_32014": 120,
+      "m_m_5_30827": 1,
+      "m_m_5_89970": 159.97,
+      "m_m_5_32014": 149.99,
       "m_m_5_31978": 0.67,
       "m_m_5_31985": 0.68,
-      "lucai": 16.16,
+      "lucai": 16.11,
       "m_m_5_31973": 0.6,
-      "m_m_5_30849": 5.94,
+      "m_m_5_30849": 6.02,
       "m_m_5_71293": 45,
-      "m_m_5_30826": 1.58,
-      "m_m_5_30825": 0.2,
+      "m_m_5_30826": 1.43,
+      "m_m_5_30825": 0.19,
       "m_m_5_89171": 12,
       "m_m_5_31968": 0.52,
-      "m_m_5_71292": 30,
-      "m_m_5_30824": 0.44,
+      "m_m_5_30824": 0.21,
       "m_m_5_31967": 0.69,
-      "m_m_5_71281": 31,
-      "m_m_5_30823": 0.4,
+      "m_m_5_71281": 29.01,
+      "m_m_5_30823": 0.49,
       "m_m_5_71277": 35.08,
       "m_m_5_89315": 1300.86,
-      "m_m_5_89969": 110.78,
-      "m_m_5_31976": 0.61,
-      "m_m_5_89971": 179,
-      "lushui": 12.45,
-      "m_m_5_30875": 2,
+      "m_m_5_89969": 109,
+      "m_m_5_31976": 0.67,
+      "m_m_5_89971": 176.84,
+      "lushui": 11.19,
+      "m_m_5_30875": 1.79,
       "m_m_5_30829": 1.19,
-      "m_m_5_30843": 0.61,
-      "m_m_5_30874": 29.8,
+      "m_m_5_30843": 0.58,
+      "m_m_5_30874": 34.85,
       "m_m_5_30842": 0.82,
       "m_m_5_5270": 0.99,
       "m_m_5_5269": 0.02,
-      "m_m_5_31013": 155.2,
-      "gancao": 2.76,
-      "m_m_5_31012": 295.2,
+      "m_m_5_31977": 0.49,
+      "m_m_5_31013": 148.99,
+      "gancao": 1.97,
+      "m_m_5_31012": 291,
       "m_m_5_89172": 16,
+      "m_m_5_89304": 4049.53,
       "m_m_5_26231": 1.15,
-      "m_m_5_89352": 665.91,
-      "m_m_5_89350": 568.87,
-      "m_m_5_71269": 128.17,
-      "m_m_5_89346": 699.74,
+      "m_m_5_89352": 665.53,
+      "m_m_5_89350": 899.58,
+      "m_m_5_71269": 127.91,
+      "m_m_5_89346": 696.92,
       "m_m_5_89167": 10.63,
-      "m_m_5_89348": 180,
-      "m_m_5_71285": 90.09,
+      "m_m_5_89348": 178,
+      "m_m_5_71285": 85.56,
       "m_m_5_30836": 1,
-      "m_m_5_30832": 2.19,
+      "m_m_5_30832": 2.12,
       "m_m_5_30833": 1.83,
       "m_m_5_89324": 109.99,
-      "m_m_5_30831": 3.88,
-      "m_m_5_89973": 148,
-      "m_m_5_71241": 70,
+      "m_m_5_30831": 3.87,
+      "m_m_5_89973": 140,
+      "m_m_5_71241": 55,
       "m_m_5_71240": 100.27,
       "m_m_5_31995": 0.64,
       "m_m_5_71266": 128,
-      "m_m_5_30838": 0.96,
+      "m_m_5_30838": 1.53,
       "shanhu": 2.18,
-      "m_m_5_6646": 1.33,
-      "m_m_5_30835": 2.05,
-      "m_m_5_89974": 97.99,
-      "m_m_5_71267": 89.04,
+      "m_m_5_6646": 1.08,
+      "m_m_5_30835": 2.01,
+      "m_m_5_89974": 98.47,
+      "m_m_5_71267": 80,
       "m_m_5_89168": 22.38,
-      "yaoyin": 153.88,
+      "yaoyin": 143.61,
       "m_m_5_31100": 45.83,
       "m_m_5_89322": 800,
       "shaoyao": 2.31,
-      "m_m_5_31102": 0.18,
-      "m_m_5_30834": 1.71,
-      "m_m_5_89328": 699.37,
-      "m_m_5_89332": 700.18,
-      "m_m_5_89340": 114.95,
-      "m_m_5_89325": 718.5,
-      "m_m_5_71258": 92.84,
-      "m_m_5_89327": 169.95,
+      "m_m_5_31102": 0.12,
+      "m_m_5_30834": 2.29,
+      "m_m_5_89328": 698.54,
+      "m_m_5_89332": 600,
+      "m_m_5_89340": 189.99,
+      "m_m_5_89325": 718.12,
+      "m_m_5_71258": 86.18,
+      "m_m_5_89327": 117.61,
       "m_m_5_89966": 78,
       "m_m_5_31991": 0.66,
       "m_m_5_89377": 650,
       "m_m_5_89968": 60.09,
       "m_m_5_89376": 350,
-      "m_m_5_89965": 100,
+      "m_m_5_89965": 79.51,
       "m_m_5_31992": 0.69,
       "m_m_5_89963": 70.04,
       "m_m_5_71192": 25.06,
@@ -12495,20 +18916,19 @@ window.JX3Data = {
       "m_m_5_71188": 235.8,
       "m_m_5_31994": 0.99,
       "m_m_5_89962": 63.3,
-      "m_m_5_31139": 3445.07,
-      "m_m_5_89964": 55,
-      "m_m_5_10027": 79.34,
-      "m_m_5_89961": 86.5,
-      "tiekuang": 2.61,
-      "m_m_5_30676": 2.3,
-      "m_m_5_30678": 1.43,
-      "m_m_5_30674": 2.49,
-      "m_m_5_30675": 2.81,
+      "m_m_5_31139": 3445.05,
+      "m_m_5_89964": 100.33,
+      "m_m_5_10027": 69.29,
+      "m_m_5_89961": 70.99,
+      "m_m_5_30676": 2.08,
+      "m_m_5_30678": 1.55,
+      "m_m_5_30674": 2.53,
+      "m_m_5_30675": 3,
       "m_m_5_89967": 55,
-      "m_m_5_6246": 0.13,
+      "m_m_5_6246": 0.31,
       "m_m_5_6249": 0.79,
       "m_m_8_25762": 5.73,
-      "m_m_5_30841": 3.36,
+      "m_m_5_30841": 3.17,
       "m_m_5_10172": 31.78,
       "m_m_5_35708": 6.49,
       "m_m_8_632": 340.01,
@@ -12516,186 +18936,243 @@ window.JX3Data = {
       "m_m_5_2578": 8.99,
       "m_m_5_6068": 1,
       "m_m_5_6066": 0.01,
-      "muban": 20.98,
-      "muliao": 4.72,
+      "muban": 22,
+      "muliao": 4.51,
       "m_m_5_35703": 0.64,
-      "qiwuling": 21.34,
+      "qiwuling": 27.07,
       "m_m_5_35716": 15.03,
-      "m_m_5_35715": 15.99,
-      "zhuzi": 1.94,
-      "m_m_5_35567": 1.76,
+      "m_m_5_35715": 16.32,
+      "zhuzi": 1.86,
+      "m_m_5_35567": 1.75,
       "m_m_5_35714": 27,
       "m_m_5_35713": 17.19,
       "m_m_10_1778": 939.74,
       "m_m_10_93": 37.9,
-      "m_m_5_35717": 2.11,
+      "m_m_5_35717": 1.92,
       "m_m_10_164": 90.99,
-      "m_m_5_52337": 1666,
+      "m_m_5_52337": 1399,
       "m_m_5_40232": 2422.97,
-      "m_m_5_35772": 1930.11,
+      "m_m_5_35772": 1811,
       "m_m_5_87917": 366.05,
-      "m_m_5_87881": 9999.51,
-      "zasui": 0.39,
-      "g_5_30681": 1.2,
-      "g_5_30680": 1.23
+      "m_m_5_87881": 9062.34,
+      "zasui": 0.33,
+      "g_5_30681": 1.11,
+      "g_5_30680": 1.23,
+      "m_x_5_89353": 491.58,
+      "m_x_5_89308": 6000.33,
+      "m_x_5_89355": 1000.44,
+      "m_x_5_89351": 565.74,
+      "m_x_5_89357": 1350,
+      "m_x_5_89434": 8193.91,
+      "m_x_5_89436": 6384.1,
+      "m_x_5_89438": 6197.48,
+      "m_x_5_89439": 6096.34,
+      "m_x_5_89440": 6599.69,
+      "m_x_5_89441": 4880,
+      "m_x_5_89455": 39978.93,
+      "m_x_5_89443": 7997.73,
+      "m_x_5_89444": 4000.44,
+      "m_x_5_89445": 6085.91,
+      "m_x_5_89446": 10000.11,
+      "m_x_5_89329": 850.56,
+      "m_x_5_89335": 2329.47,
+      "m_x_5_89330": 790.32,
+      "m_x_5_89336": 3933.29,
+      "m_x_5_89331": 831.76,
+      "m_x_5_89337": 1339.88,
+      "m_x_5_89368": 688,
+      "m_x_5_89372": 1348.71,
+      "m_x_5_89369": 900,
+      "m_x_5_89373": 1799,
+      "m_x_5_90436": 58.64,
+      "m_x_5_89379": 3900.66,
+      "m_x_5_89397": 28821.13,
+      "m_x_5_89380": 5972.59,
+      "m_x_5_90437": 85,
+      "m_x_5_89383": 6998.95,
+      "m_x_5_89384": 4300,
+      "m_x_5_89385": 5808.01,
+      "m_x_5_89403": 28880,
+      "m_x_5_89386": 5880.77,
+      "m_x_5_89404": 38143.59,
+      "m_x_5_89388": 4998,
+      "m_x_5_89389": 5996.24,
+      "m_x_5_89390": 4847,
+      "m_x_5_89391": 4977.75,
+      "m_x_5_89409": 32188.05,
+      "m_x_5_89392": 4050.11,
+      "m_x_5_89393": 6187.38,
+      "m_x_5_89411": 38885.95,
+      "m_x_5_89394": 5000.9,
+      "m_x_5_89395": 15000.3,
+      "m_x_5_89396": 3862.89,
+      "m_x_10_157": 780.91,
+      "m_x_5_20971": 199.99,
+      "m_x_5_38122": 884.55,
+      "m_x_10_1281": 275.54,
+      "m_x_10_1894": 97.76,
+      "m_x_10_2229": 435.7,
+      "m_x_5_89317": 998,
+      "m_x_10_2241": 1271.19,
+      "m_x_5_89426": 3730.01,
+      "m_x_5_89427": 3800,
+      "m_x_5_89428": 2580.7
     },
     "s_weiwo": {
-      "fengwangjiang": 175.88,
-      "shoupijiao": 56.33,
-      "qicaixian": 135.6,
+      "fengwangjiang": 175.52,
+      "shoupijiao": 50,
+      "qicaixian": 113.74,
       "bairanxian": 2.9,
       "fengyu_yi": 1007.06,
-      "m_m_5_30852": 16,
-      "m_m_5_30853": 88.18,
+      "m_m_5_30852": 15.35,
+      "m_m_5_30853": 87.08,
       "m_m_5_30828": 8.1,
       "m_m_5_89165": 10.62,
       "m_m_5_32000": 0.66,
-      "guajian_bei": 55.2,
-      "baihua_bu": 75,
-      "guajian_yao": 91.45,
-      "shuran_bu": 93.88,
+      "guajian_bei": 55.96,
+      "baihua_bu": 69.77,
+      "guajian_yao": 89.27,
+      "shuran_bu": 85.27,
       "shuran_bag": 19.31,
-      "m_m_5_10173": 29.68,
+      "m_m_5_10173": 30.01,
       "jinfeng_bag": 8000.01,
-      "wuseshi": 129.94,
-      "m_m_5_30856": 16.1,
-      "m_m_5_30855": 158.92,
-      "geyin_zhang": 177.88,
-      "m_m_5_89298": 35.5,
-      "m_m_5_30679": 17.45,
-      "m_m_5_30847": 9,
-      "m_m_5_30846": 1.29,
-      "yinsi_duan": 128.05,
-      "m_m_5_32003": 0.66,
-      "m_m_5_30848": 20.21,
-      "m_m_5_30850": 101.36,
-      "m_m_5_30845": 149.7,
+      "wuseshi": 129.77,
+      "m_m_5_30856": 20,
+      "m_m_5_30855": 158.58,
+      "geyin_zhang": 177.52,
+      "m_m_5_89298": 29.54,
+      "m_m_5_30679": 23.47,
+      "m_m_5_30847": 8.99,
+      "m_m_5_30846": 2.6,
+      "yinsi_duan": 124.07,
+      "m_m_5_32003": 0.7,
+      "m_m_5_30848": 20.18,
+      "m_m_5_32002": 0.66,
+      "m_m_5_30850": 100.57,
+      "m_m_5_30845": 147.36,
       "m_m_5_31397": 1.48,
       "m_m_5_89433": 5500,
       "m_m_5_31253": 300.85,
       "m_m_5_30844": 0.88,
       "m_m_5_35718": 15.99,
-      "m_m_5_30873": 39.18,
+      "m_m_5_30873": 32.78,
       "m_m_5_90205": 18.4,
       "m_m_8_614": 1099.99,
       "shanshui_juan": 210.78,
-      "m_m_5_3819": 80,
-      "m_m_5_3779": 3.26,
-      "m_m_8_36148": 1100,
+      "m_m_5_3819": 77,
+      "m_m_8_36148": 988.58,
       "m_m_5_3820": 30.14,
-      "m_m_5_30827": 1.09,
+      "m_m_5_30827": 1.1,
       "m_m_5_89970": 176.73,
-      "m_m_5_32014": 120.3,
+      "m_m_5_32014": 149.99,
       "m_m_5_31978": 0.44,
       "m_m_5_31985": 0.61,
-      "lucai": 16.5,
-      "m_m_5_1831": 15.97,
+      "lucai": 16.2,
+      "m_m_5_1831": 12.88,
       "m_m_5_31973": 0.64,
       "m_m_5_30849": 6,
       "m_m_5_71293": 36.9,
-      "m_m_5_30826": 1,
+      "m_m_5_30826": 0.9,
       "m_m_5_30825": 0.01,
-      "m_m_5_89171": 10.63,
       "m_m_5_31974": 0.66,
       "m_m_5_31968": 0.63,
       "m_m_5_71292": 60.04,
       "m_m_5_30824": 0.29,
       "m_m_5_31967": 0.63,
-      "m_m_5_71281": 22,
+      "m_m_5_71281": 20.8,
       "m_m_5_30823": 0.51,
       "m_m_5_31969": 0.64,
       "m_m_5_71277": 24.99,
-      "m_m_5_89315": 1300.81,
-      "m_m_5_89969": 113.25,
+      "m_m_5_89315": 1250.9,
+      "m_m_5_89969": 111.26,
       "m_m_5_31976": 0.89,
-      "m_m_5_89303": 3918.71,
-      "m_m_5_89971": 203.33,
-      "lushui": 14.72,
-      "m_m_5_30875": 2.64,
+      "m_m_5_89303": 3918.46,
+      "m_m_5_89971": 186.69,
+      "lushui": 12.75,
+      "m_m_5_30875": 1.7,
       "m_m_5_30829": 0.66,
-      "m_m_5_30843": 1.38,
-      "m_m_5_30874": 44.99,
-      "m_m_5_30842": 1.1,
+      "m_m_5_30843": 1.12,
+      "m_m_5_30874": 42,
+      "m_m_5_30842": 0.7,
       "m_m_5_5270": 0.96,
-      "m_m_5_5269": 0.01,
-      "m_m_5_31977": 0.64,
+      "m_m_5_5269": 0.08,
+      "m_m_5_31977": 0.63,
       "m_m_5_31013": 160,
-      "gancao": 3.16,
-      "m_m_5_31012": 308.03,
+      "gancao": 3.09,
+      "m_m_5_31012": 297,
       "m_m_5_90034": 2888,
-      "m_m_5_89304": 4589.02,
+      "m_m_5_89304": 4257,
       "m_m_5_26057": 5000,
       "m_m_5_26231": 1.33,
-      "m_m_5_89352": 639.86,
-      "m_m_5_89350": 622.18,
-      "m_m_5_71269": 108.7,
+      "m_m_5_89352": 550.76,
+      "m_m_5_89350": 614.84,
+      "m_m_5_71269": 108.5,
       "m_m_5_89346": 598.28,
       "m_m_5_89167": 10.63,
-      "m_m_5_89348": 200,
+      "m_m_5_89348": 170,
       "m_m_5_71285": 80,
       "jieyuan_dan": 22.99,
-      "m_m_5_30836": 1.89,
-      "m_m_5_30832": 2.05,
+      "m_m_5_30836": 1.77,
+      "m_m_5_30832": 2,
       "m_m_5_30833": 2,
       "m_m_5_31997": 0.63,
-      "m_m_5_89324": 89.07,
-      "m_m_5_30831": 3.21,
-      "m_m_5_89973": 106,
+      "m_m_5_89324": 140.32,
+      "m_m_5_30831": 3.04,
+      "m_m_5_89973": 99.06,
       "m_m_5_31996": 0.59,
       "m_m_5_71241": 99,
-      "m_m_5_71240": 99.9,
+      "m_m_5_71240": 99.88,
       "m_m_5_31995": 0.69,
       "m_m_5_71266": 96.99,
       "m_m_5_30838": 1.28,
-      "shanhu": 3.08,
+      "shanhu": 3.99,
       "m_m_5_6646": 0.62,
       "m_m_5_30835": 3.98,
-      "m_m_5_89974": 84.32,
+      "m_m_5_89974": 78.99,
       "m_m_5_6648": 1.76,
-      "m_m_5_71267": 70.32,
+      "m_m_5_71267": 65,
       "m_m_5_90029": 500.46,
       "m_m_5_89168": 22.59,
-      "yaoyin": 139.88,
+      "yaoyin": 135.3,
       "m_m_5_31100": 59.04,
       "shaoyao": 4,
-      "m_m_5_31102": 0.88,
-      "m_m_5_30834": 1.8,
-      "m_m_5_31998": 0.63,
+      "m_m_5_90206": 120,
+      "m_m_5_30834": 1.72,
       "m_m_5_90035": 4780,
-      "m_m_5_89328": 715.16,
-      "m_m_5_89332": 987.87,
-      "m_m_5_89340": 174.63,
-      "m_m_5_89325": 677.68,
-      "m_m_5_71258": 75.9,
-      "m_m_5_89327": 79.5,
-      "m_m_5_89966": 60.73,
+      "m_m_5_89328": 713.64,
+      "m_m_5_89332": 978.74,
+      "m_m_5_89340": 115.84,
+      "m_m_5_89325": 668.75,
+      "m_m_5_71258": 69.56,
+      "m_m_5_89327": 199.99,
+      "m_m_5_89966": 90.7,
       "m_m_5_10176": 2.99,
-      "m_m_5_31991": 0.66,
+      "m_m_5_31991": 0.69,
       "m_m_5_89377": 488.01,
-      "m_m_5_89968": 60,
+      "m_m_5_89968": 55.31,
       "m_m_5_31993": 0.89,
-      "m_m_5_89376": 517,
-      "m_m_5_89965": 80.88,
+      "m_m_5_89376": 470.61,
+      "m_m_5_89965": 79.87,
       "m_m_5_31992": 0.69,
       "m_m_5_89375": 450.12,
-      "m_m_5_89963": 58,
+      "m_m_5_89963": 45,
       "m_m_5_89169": 10.62,
       "m_m_5_71188": 367.99,
       "m_m_5_31994": 0.69,
-      "m_m_5_89962": 85,
-      "m_m_5_31139": 3650.15,
-      "m_m_5_89964": 68.8,
+      "m_m_5_89962": 71,
+      "m_m_5_31139": 3646.94,
+      "m_m_5_89964": 51.87,
       "m_m_5_10027": 82.99,
       "m_m_5_89961": 87.9,
-      "tiekuang": 2.98,
-      "m_m_5_30676": 1.96,
-      "m_m_5_30678": 2.8,
+      "tiekuang": 3.24,
+      "m_m_5_30676": 1.91,
+      "m_m_5_30678": 3.99,
       "m_m_5_30674": 2.95,
-      "m_m_5_30675": 3.9,
+      "m_m_5_30675": 3.59,
       "m_m_5_89967": 58,
       "m_m_5_6246": 0.19,
       "m_m_5_6249": 0.21,
-      "m_m_5_30841": 3.93,
+      "m_m_5_30841": 3.66,
       "m_m_5_35708": 6.58,
       "m_m_8_632": 255.41,
       "m_m_8_634": 248.9,
@@ -12703,166 +19180,228 @@ window.JX3Data = {
       "m_m_5_90257": 294.51,
       "m_m_5_6072": 0.24,
       "m_m_5_6068": 0.19,
-      "muban": 24.9,
+      "muban": 24.8,
       "muliao": 3.64,
       "m_m_5_35707": 6.05,
       "m_m_5_35703": 0.63,
-      "qiwuling": 29.5,
+      "qiwuling": 26.29,
       "m_m_5_35716": 7.27,
-      "m_m_5_35715": 18,
-      "zhuzi": 2,
-      "m_m_5_35567": 1.91,
+      "m_m_5_35715": 16.6,
+      "zhuzi": 1.99,
+      "m_m_5_35567": 1.74,
       "m_m_5_35704": 0.63,
       "m_m_5_35714": 24,
       "m_m_5_35701": 0.63,
-      "m_m_5_35713": 19.5,
+      "m_m_5_35713": 39.03,
       "m_m_5_35705": 0.64,
       "m_m_10_948": 252.68,
       "m_m_5_89260": 23456,
       "m_m_10_93": 40,
       "m_m_10_1882": 1395.59,
-      "m_m_5_35717": 2.22,
-      "m_m_5_52337": 1798.75,
+      "m_m_5_35717": 2.03,
+      "m_m_5_52337": 1398.07,
       "m_m_5_40232": 2778.05,
-      "m_m_5_35772": 1610.07,
+      "m_m_5_35772": 1300.69,
       "m_m_5_87917": 360.4,
       "m_m_5_87881": 9199,
-      "zasui": 0.5,
-      "g_5_30681": 1.11,
-      "g_5_30680": 1.39
+      "zasui": 0.6,
+      "g_5_30681": 1,
+      "g_5_30680": 1.39,
+      "m_x_5_89353": 492.52,
+      "m_x_5_89359": 1500,
+      "m_x_5_89305": 3200.26,
+      "m_x_5_89308": 4888.55,
+      "m_x_5_89349": 685.66,
+      "m_x_5_89355": 1995.59,
+      "m_x_5_89351": 599.54,
+      "m_x_5_89357": 1976.99,
+      "m_x_5_89434": 3985,
+      "m_x_5_89448": 32330,
+      "m_x_5_89436": 6462,
+      "m_x_5_89450": 15999.03,
+      "m_x_5_89438": 4888.43,
+      "m_x_5_89452": 24288,
+      "m_x_5_89439": 4000,
+      "m_x_5_89441": 3997,
+      "m_x_5_89443": 4500,
+      "m_x_5_89445": 4100.02,
+      "m_x_5_89446": 4500.96,
+      "m_x_5_89329": 732.9,
+      "m_x_5_89335": 1298.9,
+      "m_x_5_89330": 644.93,
+      "m_x_5_89336": 1984.83,
+      "m_x_5_89331": 633.82,
+      "m_x_5_89337": 1048.52,
+      "m_x_5_89368": 738.8,
+      "m_x_5_89372": 1148.15,
+      "m_x_5_89369": 1049.4,
+      "m_x_5_89373": 2881.95,
+      "m_x_5_90436": 70,
+      "m_x_5_89379": 5489.74,
+      "m_x_5_89380": 5108.36,
+      "m_x_5_90437": 75.15,
+      "m_x_5_89381": 6110.08,
+      "m_x_5_89383": 6000,
+      "m_x_5_89384": 3000.95,
+      "m_x_5_89385": 6500.11,
+      "m_x_5_89386": 5666.59,
+      "m_x_5_89404": 20800,
+      "m_x_5_89388": 3991,
+      "m_x_5_89406": 28800.36,
+      "m_x_5_89389": 4500.88,
+      "m_x_5_89407": 35000.21,
+      "m_x_5_89390": 4500.7,
+      "m_x_5_89408": 20000,
+      "m_x_5_89391": 4700,
+      "m_x_5_89393": 7498.98,
+      "m_x_5_89394": 4500.56,
+      "m_x_5_89395": 5298.83,
+      "m_x_5_89396": 3999.07,
+      "m_x_5_20971": 5.01,
+      "m_x_10_1281": 599.98,
+      "m_x_10_2229": 1000.97,
+      "m_x_5_89317": 1199.37,
+      "m_x_10_2241": 1399.91,
+      "m_x_5_89320": 70,
+      "m_x_5_89426": 2449.7,
+      "m_x_5_89427": 2829.99,
+      "m_x_5_89428": 1999.4
     },
     "s_juedai": {
-      "fengwangjiang": 168.85,
+      "fengwangjiang": 166.89,
       "shoupijiao": 38.2,
-      "qicaixian": 145.97,
+      "qicaixian": 142,
       "bairanxian": 3.2,
       "fengyu_yi": 2955.68,
       "m_m_5_30852": 14.6,
       "m_m_5_30853": 81.99,
       "m_m_5_30828": 6.91,
       "m_m_5_89165": 10.64,
-      "guajian_bei": 56.93,
+      "guajian_bei": 77.93,
       "baihua_bu": 55.42,
       "guajian_yao": 88.27,
-      "shuran_bu": 95.64,
+      "shuran_bu": 92,
       "shuran_bag": 38.99,
       "wuseshi": 143.8,
-      "m_m_5_30856": 21.58,
-      "m_m_5_30855": 158.59,
+      "m_m_5_30856": 19.99,
+      "m_m_5_30855": 157.64,
       "geyin_zhang": 395.37,
-      "m_m_5_89298": 33.66,
+      "m_m_5_89298": 30.91,
       "m_m_5_30679": 15.14,
       "m_m_5_32004": 0.69,
-      "m_m_5_30847": 10.75,
-      "m_m_5_30846": 2.5,
+      "m_m_5_30847": 8.41,
+      "m_m_5_30846": 1.46,
       "yinsi_duan": 142.08,
-      "m_m_5_30848": 20,
-      "m_m_5_30850": 100,
-      "m_m_5_30845": 136.9,
+      "m_m_5_30848": 30.7,
+      "m_m_5_30850": 99.99,
+      "m_m_5_30845": 135.38,
       "m_m_5_89433": 9506.77,
       "m_m_5_89435": 7990.81,
-      "m_m_5_30844": 0.71,
+      "m_m_5_30844": 0.7,
       "m_m_5_35719": 32.4,
       "m_m_5_30873": 24.92,
       "m_m_5_90205": 6,
       "m_m_8_614": 688.67,
       "m_m_5_3819": 100,
-      "m_m_8_36148": 738.38,
+      "m_m_8_36148": 740,
       "m_m_5_3820": 10,
       "m_m_5_30827": 1.06,
-      "m_m_5_89970": 165.3,
+      "m_m_5_89970": 164.4,
       "m_m_5_31978": 0.62,
       "m_m_5_31985": 0.6,
-      "lucai": 16.54,
-      "m_m_5_1831": 12.45,
+      "lucai": 15.98,
+      "m_m_5_1831": 12.53,
       "m_m_5_31973": 0.68,
-      "m_m_5_30849": 5.89,
-      "m_m_5_71293": 36.95,
-      "m_m_5_30826": 0.44,
+      "m_m_5_30849": 5.85,
+      "m_m_5_71293": 36.99,
+      "m_m_5_30826": 0.33,
       "m_m_5_30825": 0.01,
       "m_m_5_89171": 12,
       "m_m_5_31974": 0.69,
-      "m_m_5_31968": 0.48,
+      "m_m_5_31968": 0.69,
       "m_m_5_71292": 54.56,
       "m_m_5_30824": 0.31,
       "m_m_5_71281": 44.25,
       "m_m_5_30823": 0.34,
       "m_m_5_31969": 0.67,
-      "m_m_5_71277": 37.78,
-      "m_m_5_89315": 1410.65,
-      "m_m_5_89969": 112,
-      "m_m_5_89971": 198,
-      "lushui": 12.5,
-      "m_m_5_30875": 1.4,
-      "m_m_5_30843": 1.25,
-      "m_m_5_30874": 30.58,
-      "m_m_5_30842": 0.81,
+      "m_m_5_71277": 30,
+      "m_m_5_89315": 1389,
+      "m_m_5_89969": 103.05,
+      "m_m_5_89303": 3077.01,
+      "m_m_5_89971": 169,
+      "lushui": 11.99,
+      "m_m_5_30875": 1.05,
+      "m_m_5_30843": 1.04,
+      "m_m_5_30874": 30.59,
+      "m_m_5_30842": 0.94,
       "m_m_5_5270": 1,
       "m_m_5_31970": 0.59,
       "m_m_5_5269": 0.02,
-      "m_m_5_31013": 144.77,
-      "gancao": 2.39,
-      "m_m_5_31012": 268.65,
+      "m_m_5_31013": 145.11,
+      "gancao": 2.23,
+      "m_m_5_31012": 265.39,
       "m_m_5_89172": 22.4,
+      "m_m_5_89304": 3408.03,
       "m_m_5_26057": 7777,
       "m_m_5_26231": 1.77,
-      "m_m_5_89352": 599.59,
-      "m_m_5_71269": 80.68,
-      "m_m_5_89346": 576.58,
+      "m_m_5_89352": 589.26,
+      "m_m_5_89350": 470,
+      "m_m_5_71269": 75.47,
+      "m_m_5_89346": 576,
       "m_m_5_89167": 10.63,
-      "m_m_5_89348": 210.04,
-      "m_m_5_71285": 77.05,
-      "jieyuan_dan": 64.49,
-      "m_m_5_30836": 0.87,
-      "m_m_5_30832": 0.98,
+      "m_m_5_89348": 209,
+      "m_m_5_71285": 96.17,
+      "jieyuan_dan": 20.69,
+      "m_m_5_30836": 0.76,
+      "m_m_5_30832": 0.86,
       "m_m_5_30833": 1.43,
-      "m_m_5_89324": 98.99,
-      "m_m_5_30831": 0.77,
-      "m_m_5_89973": 139.98,
+      "m_m_5_89324": 98.5,
+      "m_m_5_30831": 0.75,
+      "m_m_5_89973": 134.22,
       "m_m_5_31996": 0.67,
-      "m_m_5_71240": 85.68,
+      "m_m_5_71240": 43.66,
       "m_m_5_31995": 0.67,
-      "m_m_5_71266": 40,
-      "m_m_5_30838": 1.12,
+      "m_m_5_71266": 33.93,
+      "m_m_5_30838": 0.69,
       "shanhu": 2.41,
       "m_m_5_6646": 1.2,
-      "m_m_5_30835": 1.54,
+      "m_m_5_30835": 1.48,
       "m_m_5_89974": 100,
       "m_m_5_6648": 3.88,
       "m_m_5_71267": 40.15,
       "m_m_5_89168": 22.39,
-      "yaoyin": 129.99,
+      "yaoyin": 128.91,
       "m_m_5_31100": 28.02,
-      "shaoyao": 2.76,
+      "shaoyao": 2.73,
       "m_m_5_90206": 100.45,
-      "m_m_5_30834": 1.64,
+      "m_m_5_30834": 1.57,
       "m_m_5_89328": 719.78,
-      "m_m_5_89340": 88.6,
-      "m_m_5_89325": 749.88,
-      "m_m_5_71258": 80.86,
+      "m_m_5_89340": 110.66,
+      "m_m_5_89325": 680.23,
+      "m_m_5_71258": 78.31,
       "m_m_5_31999": 0.65,
-      "m_m_5_89327": 71.57,
+      "m_m_5_89327": 148.96,
       "m_m_5_89966": 110,
       "m_m_5_10176": 2.86,
-      "m_m_5_89968": 105.67,
+      "m_m_5_89968": 99.24,
       "m_m_5_89376": 395,
-      "m_m_5_89965": 103.04,
+      "m_m_5_89965": 101,
       "m_m_5_89963": 67.99,
       "m_m_5_71192": 13.5,
       "m_m_5_89169": 10.64,
       "m_m_5_31994": 0.69,
       "m_m_5_89962": 114.39,
-      "m_m_5_31139": 3646.54,
-      "m_m_5_89964": 106.9,
+      "m_m_5_31139": 3646.52,
+      "m_m_5_89964": 90.37,
       "m_m_5_10027": 58.16,
-      "m_m_5_89961": 108.95,
+      "m_m_5_89961": 105.77,
       "tiekuang": 2.48,
       "m_m_5_30676": 2.5,
       "m_m_5_30678": 2,
-      "m_m_5_30674": 2.72,
-      "m_m_5_30675": 3,
-      "m_m_5_89967": 70,
-      "m_m_5_6246": 0.16,
+      "m_m_5_30674": 2.77,
+      "m_m_5_30675": 2.39,
+      "m_m_5_89967": 67.99,
+      "m_m_5_6246": 0.1,
       "m_m_5_6249": 0.43,
       "m_m_8_25762": 25.39,
       "m_m_5_30841": 3.06,
@@ -12873,18 +19412,17 @@ window.JX3Data = {
       "m_m_5_2578": 6.66,
       "m_m_5_6072": 1.35,
       "m_m_5_6068": 5.35,
-      "muban": 19.03,
-      "muliao": 2.87,
+      "muban": 17.98,
+      "muliao": 2.82,
       "m_m_5_35707": 6.49,
-      "m_m_5_35703": 0.64,
-      "qiwuling": 18.95,
-      "m_m_5_35716": 9.3,
+      "qiwuling": 18.94,
+      "m_m_5_35716": 9.25,
       "m_m_5_35715": 12.9,
-      "zhuzi": 1.66,
-      "m_m_5_35567": 1.67,
-      "m_m_5_35714": 17,
+      "zhuzi": 1.62,
+      "m_m_5_35567": 1.63,
+      "m_m_5_35714": 15.2,
       "m_m_5_35701": 0.69,
-      "m_m_5_35713": 16.15,
+      "m_m_5_35713": 15.01,
       "m_m_10_1778": 919,
       "m_m_10_1779": 820,
       "m_m_10_1880": 1200,
@@ -12896,199 +19434,287 @@ window.JX3Data = {
       "m_m_10_164": 80.86,
       "m_m_5_52337": 1589.85,
       "m_m_5_40232": 2000.93,
-      "m_m_5_35772": 1999.78,
-      "m_m_5_87917": 308.4,
+      "m_m_5_35772": 1989.91,
+      "m_m_5_87917": 305.9,
       "m_m_5_87881": 8000.99,
-      "zasui": 0.31,
-      "g_5_30681": 1.11,
-      "g_5_30680": 1.38
+      "zasui": 1.38,
+      "g_5_30681": 1.1,
+      "g_5_30680": 0.99,
+      "m_x_5_89353": 562.1,
+      "m_x_5_89349": 781.07,
+      "m_x_5_89355": 3998.78,
+      "m_x_5_89351": 954.82,
+      "m_x_5_89357": 1999.33,
+      "m_x_5_89434": 5453.23,
+      "m_x_5_89436": 6000.82,
+      "m_x_5_89450": 30000,
+      "m_x_5_89438": 4688.19,
+      "m_x_5_89439": 4499.54,
+      "m_x_5_89440": 4584,
+      "m_x_5_89441": 4998.98,
+      "m_x_5_89443": 6480.36,
+      "m_x_5_89444": 6560.55,
+      "m_x_5_89445": 5721.44,
+      "m_x_5_89459": 40000,
+      "m_x_5_89329": 1151.63,
+      "m_x_5_89335": 3799.33,
+      "m_x_5_89330": 855.05,
+      "m_x_5_89331": 649.48,
+      "m_x_5_89337": 1887.51,
+      "m_x_5_89368": 757.32,
+      "m_x_5_89372": 1500.92,
+      "m_x_5_89369": 900.14,
+      "m_x_5_90436": 104.55,
+      "m_x_5_89379": 3700.58,
+      "m_x_5_89397": 21886.08,
+      "m_x_5_89380": 4582.11,
+      "m_x_5_90437": 95.4,
+      "m_x_5_89386": 7700.6,
+      "m_x_5_89406": 29899,
+      "m_x_5_89389": 4500.54,
+      "m_x_5_89390": 3400.2,
+      "m_x_5_89391": 4555.65,
+      "m_x_5_89409": 30000,
+      "m_x_5_89393": 7687.87,
+      "m_x_5_89411": 30000,
+      "m_x_5_89396": 4111.1,
+      "m_x_5_20971": 110.42,
+      "m_x_10_1281": 267.44,
+      "m_x_10_1894": 123.48,
+      "m_x_10_2229": 200.11,
+      "m_x_5_89317": 810,
+      "m_x_10_2028": 649.97,
+      "m_x_10_2241": 974,
+      "m_x_5_89320": 1000,
+      "m_x_5_89428": 3877.2
     },
     "s_tianeping": {
-      "fengwangjiang": 154.17,
-      "shoupijiao": 37.71,
-      "qicaixian": 130.74,
+      "fengwangjiang": 153.83,
+      "shoupijiao": 59.43,
+      "qicaixian": 129.72,
       "bairanxian": 3,
       "fengyu_yi": 2555.5,
       "m_m_5_30852": 16.66,
-      "m_m_5_30853": 80.28,
-      "m_m_5_30828": 4.9,
+      "m_m_5_30853": 80.09,
+      "m_m_5_30828": 4.95,
       "guajian_bei": 65.07,
-      "baihua_bu": 75.5,
-      "guajian_yao": 80,
-      "shuran_bu": 99.91,
-      "m_m_5_32001": 0.62,
+      "baihua_bu": 69.99,
+      "guajian_yao": 78.55,
+      "shuran_bu": 99.35,
+      "shuran_bag": 5.05,
       "m_m_5_10173": 30,
-      "wuseshi": 154.88,
-      "m_m_5_30856": 18,
+      "wuseshi": 151.55,
+      "m_m_5_30856": 16.95,
       "m_m_5_30855": 150,
       "geyin_zhang": 129.93,
-      "m_m_5_89298": 33.91,
-      "m_m_5_30679": 15.52,
-      "m_m_5_32004": 1.2,
+      "m_m_5_89298": 30.59,
+      "m_m_5_30679": 15.02,
       "m_m_5_30847": 8,
       "m_m_5_30846": 1.95,
-      "yinsi_duan": 108.95,
+      "yinsi_duan": 110.77,
       "m_m_5_32003": 0.97,
       "m_m_5_30848": 22,
       "m_m_5_32002": 0.96,
-      "m_m_5_30850": 103.23,
-      "m_m_5_30845": 135.51,
+      "m_m_5_30850": 100.44,
+      "m_m_5_30845": 133.44,
       "m_m_5_31397": 3.41,
       "m_m_5_89435": 8999.98,
-      "m_m_5_31253": 185.63,
-      "m_m_5_30844": 0.87,
-      "m_m_5_30873": 25.88,
+      "m_m_5_30844": 0.95,
+      "m_m_5_30873": 22.95,
       "m_m_5_90205": 30.98,
-      "m_m_8_614": 200.42,
+      "m_m_8_614": 1299.43,
       "shanshui_juan": 99,
-      "m_m_5_3819": 65.5,
+      "m_m_5_3819": 65.33,
       "m_m_5_3779": 1,
       "m_m_8_36148": 877.05,
       "m_m_5_3820": 9.77,
-      "m_m_5_30827": 1.04,
-      "m_m_5_89970": 164.99,
+      "m_m_5_30827": 1.03,
+      "m_m_5_89970": 140.88,
       "m_m_5_32014": 122.72,
       "m_m_5_31978": 0.58,
       "m_m_5_31985": 0.7,
-      "lucai": 16.55,
-      "m_m_5_1831": 16.21,
-      "m_m_5_31973": 2.6,
+      "lucai": 17.55,
+      "m_m_5_1831": 16.02,
       "m_m_5_30849": 5.7,
-      "m_m_5_71293": 30.4,
-      "m_m_5_30826": 0.32,
+      "m_m_5_71293": 28,
+      "m_m_5_30826": 0.34,
       "m_m_5_89171": 17.99,
       "m_m_5_31974": 2.85,
       "m_m_5_31968": 0.6,
       "m_m_5_71292": 34.49,
-      "m_m_5_30824": 0.29,
+      "m_m_5_30824": 0.41,
       "m_m_5_31967": 0.74,
-      "m_m_5_71281": 17.01,
+      "m_m_5_71281": 14.8,
       "m_m_5_30823": 0.98,
       "m_m_5_31969": 0.66,
       "m_m_5_71277": 28.73,
-      "m_m_5_89315": 997.99,
-      "m_m_5_89969": 122.36,
+      "m_m_5_89315": 999,
+      "m_m_5_89969": 119,
       "m_m_5_31976": 0.7,
-      "m_m_5_89303": 2987.74,
+      "m_m_5_89303": 2987.15,
       "m_m_5_89971": 156,
-      "lushui": 11.67,
-      "m_m_5_30875": 4.51,
+      "lushui": 12.78,
+      "m_m_5_30875": 3.37,
       "m_m_5_30829": 1.66,
       "m_m_5_30843": 0.99,
-      "m_m_5_30874": 29.99,
-      "m_m_5_30842": 0.82,
+      "m_m_5_30874": 29.98,
+      "m_m_5_30842": 1,
       "m_m_5_5270": 1.61,
       "m_m_5_31970": 0.71,
-      "m_m_5_5269": 0.04,
-      "m_m_5_31013": 150.88,
-      "gancao": 2.66,
-      "m_m_5_31012": 300,
+      "m_m_5_5269": 0.03,
+      "m_m_5_31013": 125.1,
+      "gancao": 2.28,
+      "m_m_5_31012": 240.89,
       "m_m_5_89172": 59.96,
-      "m_m_5_26057": 2500.58,
       "m_m_5_26231": 2.99,
-      "m_m_5_89352": 705.84,
-      "m_m_5_89350": 582.69,
-      "m_m_5_71269": 112.48,
-      "m_m_5_89346": 636.91,
+      "m_m_5_89352": 702.28,
+      "m_m_5_89350": 581.25,
+      "m_m_5_71269": 102.66,
+      "m_m_5_89346": 598.82,
       "m_m_5_89167": 28.14,
-      "m_m_5_89348": 276.88,
+      "m_m_5_89348": 255.9,
       "m_m_5_71285": 80,
       "jieyuan_dan": 15.97,
       "m_m_5_30836": 1.1,
-      "m_m_5_30832": 2.43,
+      "m_m_5_30832": 2.03,
       "m_m_5_30833": 2,
       "m_m_5_89324": 60,
-      "m_m_5_30831": 1.13,
-      "m_m_5_89973": 149.94,
-      "m_m_5_71241": 88.52,
+      "m_m_5_30831": 1,
+      "m_m_5_89973": 128.85,
+      "m_m_5_71241": 77.52,
       "m_m_5_71240": 83.59,
       "m_m_5_31995": 0.9,
-      "m_m_5_71266": 161,
+      "m_m_5_71266": 75.11,
       "m_m_5_30838": 3.5,
-      "shanhu": 18.77,
-      "m_m_5_6646": 4.22,
-      "m_m_5_30835": 2.22,
-      "m_m_5_89974": 96.18,
+      "shanhu": 2.5,
+      "m_m_5_6646": 4.18,
+      "m_m_5_30835": 2.01,
+      "m_m_5_89974": 90.23,
       "m_m_5_6648": 0.95,
-      "m_m_5_71267": 72.59,
+      "m_m_5_71267": 69.98,
       "m_m_5_89168": 40.99,
-      "yaoyin": 153.97,
-      "m_m_5_31100": 89.7,
+      "yaoyin": 140,
+      "m_m_5_31100": 89.32,
       "shaoyao": 2.25,
-      "m_m_5_30834": 2.09,
-      "m_m_5_89328": 930,
-      "m_m_5_89332": 928.6,
-      "m_m_5_89340": 111.36,
-      "m_m_5_89325": 779,
+      "m_m_5_31102": 0.1,
+      "m_m_5_30834": 1.71,
+      "m_m_5_89328": 923.99,
+      "m_m_5_89340": 107.83,
+      "m_m_5_89325": 703.8,
       "m_m_5_71258": 69.26,
-      "m_m_5_89327": 59.97,
-      "m_m_5_89966": 78.82,
+      "m_m_5_89327": 200,
+      "m_m_5_89966": 70,
       "m_m_5_31991": 0.82,
       "m_m_5_89377": 450.11,
-      "m_m_5_89968": 115.3,
+      "m_m_5_89968": 114.74,
       "m_m_5_89376": 399.99,
-      "m_m_5_89965": 100.19,
-      "m_m_5_89963": 64,
+      "m_m_5_89965": 99.45,
+      "m_m_5_89963": 62.29,
       "m_m_5_71192": 9,
       "m_m_5_89169": 53,
       "m_m_5_71188": 555.12,
-      "m_m_5_89962": 77,
-      "m_m_5_31139": 3486.99,
+      "m_m_5_89962": 76.76,
+      "m_m_5_31139": 3486.97,
       "m_m_5_89964": 79,
       "m_m_5_10027": 66.92,
       "m_m_5_89961": 94.83,
-      "tiekuang": 2.66,
+      "tiekuang": 2.32,
       "m_m_5_30676": 2.66,
-      "m_m_5_30678": 1.54,
-      "m_m_5_30674": 2.99,
-      "m_m_5_30675": 3.66,
-      "m_m_5_89967": 70.8,
-      "m_m_5_6246": 0.36,
+      "m_m_5_30678": 2,
+      "m_m_5_30674": 2.34,
+      "m_m_5_30675": 3.6,
+      "m_m_5_89967": 70,
+      "m_m_5_6246": 0.13,
       "m_m_5_32787": 200.47,
       "m_m_8_25762": 19.09,
-      "m_m_5_30841": 3.85,
+      "m_m_5_30841": 3.8,
       "m_m_5_90032": 9999,
-      "m_m_8_634": 243,
+      "m_m_8_634": 242.99,
       "m_m_8_636": 760.48,
       "m_m_5_6072": 2.3,
       "m_m_5_6068": 1.01,
       "m_m_5_6066": 0.02,
-      "muban": 25.27,
-      "muliao": 3.04,
+      "muban": 24.99,
+      "muliao": 3.01,
       "m_m_5_35707": 7.72,
+      "qiwuling": 44.19,
       "m_m_5_35716": 19.63,
       "m_m_5_35715": 19.99,
-      "zhuzi": 6,
-      "m_m_5_35567": 1.54,
-      "m_m_5_35704": 0.6,
+      "zhuzi": 2.87,
+      "m_m_5_35567": 2.96,
       "m_m_5_35714": 30.79,
       "m_m_5_35701": 1.25,
-      "m_m_5_35713": 22.1,
-      "m_m_5_35705": 0.55,
+      "m_m_5_35713": 20.1,
       "m_m_10_1778": 988.56,
       "m_m_10_948": 852.9,
       "m_m_10_2034": 1982,
       "m_m_10_93": 1.34,
-      "m_m_5_35717": 2.01,
+      "m_m_5_35717": 2,
       "m_m_10_164": 200,
-      "m_m_5_52337": 1775,
-      "m_m_5_40232": 4319.8,
-      "m_m_5_35772": 1678.2,
-      "m_m_5_87917": 397.66,
+      "m_m_5_52337": 1771,
+      "m_m_5_40232": 4320.65,
+      "m_m_5_35772": 1678.15,
+      "m_m_5_87917": 390.73,
       "m_m_5_87881": 7992,
       "zasui": 0.41,
-      "g_5_30681": 4.52,
-      "g_5_30680": 5.04
+      "g_5_30681": 2.52,
+      "g_5_30680": 5.04,
+      "m_x_5_89353": 496.02,
+      "m_x_5_89349": 820.91,
+      "m_x_5_89357": 4012.09,
+      "m_x_5_89434": 7070.59,
+      "m_x_5_89436": 7998.98,
+      "m_x_5_89438": 4990,
+      "m_x_5_89439": 4499.14,
+      "m_x_5_89440": 4788.75,
+      "m_x_5_89441": 5229,
+      "m_x_5_89455": 28068.99,
+      "m_x_5_89443": 6899,
+      "m_x_5_89444": 5996,
+      "m_x_5_89458": 36887.5,
+      "m_x_5_89445": 6332.2,
+      "m_x_5_89446": 7886.99,
+      "m_x_5_89329": 988,
+      "m_x_5_89335": 1995.66,
+      "m_x_5_89336": 3888,
+      "m_x_5_89331": 815.5,
+      "m_x_5_89337": 1620,
+      "m_x_5_89368": 896.92,
+      "m_x_5_89372": 1500.3,
+      "m_x_5_89369": 980.67,
+      "m_x_5_90436": 88.88,
+      "m_x_5_89379": 4655,
+      "m_x_5_89397": 27990,
+      "m_x_5_90437": 78,
+      "m_x_5_89384": 5500.46,
+      "m_x_5_89385": 7554.49,
+      "m_x_5_89386": 4300,
+      "m_x_5_89389": 4200,
+      "m_x_5_89391": 4882,
+      "m_x_5_89409": 22186,
+      "m_x_5_89392": 4444,
+      "m_x_5_89393": 5787.74,
+      "m_x_5_89396": 4000,
+      "m_x_5_20971": 180.09,
+      "m_x_10_1281": 464.9,
+      "m_x_10_1894": 258.99,
+      "m_x_10_2229": 328.06,
+      "m_x_5_89317": 691.3,
+      "m_x_10_2028": 1549.18,
+      "m_x_10_2241": 1599.38,
+      "m_x_5_89320": 1499,
+      "m_x_5_89426": 2900,
+      "m_x_5_89427": 2185
     },
     "s_feilong": {
-      "fengwangjiang": 176.19,
-      "shoupijiao": 48.3,
-      "qicaixian": 190.09,
+      "fengwangjiang": 171.68,
+      "shoupijiao": 48,
+      "qicaixian": 189.59,
       "bairanxian": 5.88,
       "fengyu_yi": 1111,
-      "m_m_5_30852": 15.98,
+      "m_m_5_30852": 15.4,
       "m_m_5_30853": 79.89,
-      "m_m_5_30828": 6.8,
+      "m_m_5_30828": 6.41,
       "guajian_bei": 52.87,
       "baihua_bu": 86.5,
       "guajian_yao": 99.78,
@@ -13096,79 +19722,80 @@ window.JX3Data = {
       "shuran_bag": 60.69,
       "jinfeng_bag": 10000,
       "wuseshi": 121.53,
-      "m_m_5_30856": 25.7,
-      "m_m_5_30855": 154.46,
+      "m_m_5_30856": 21.8,
+      "m_m_5_30855": 150.07,
       "geyin_zhang": 199,
-      "m_m_5_89298": 20.87,
+      "m_m_5_89298": 20.99,
       "m_m_5_30679": 15,
-      "m_m_5_30847": 13.33,
-      "m_m_5_30846": 4.5,
+      "m_m_5_30847": 13.05,
+      "m_m_5_30846": 3.57,
       "yinsi_duan": 133.29,
-      "m_m_5_30848": 29.99,
-      "m_m_5_30850": 123.18,
-      "m_m_5_30845": 124.33,
-      "m_m_5_89435": 5999,
-      "m_m_5_30844": 2.99,
-      "m_m_5_30873": 37.14,
+      "m_m_5_30848": 22.22,
+      "m_m_5_30850": 122.83,
+      "m_m_5_30845": 115.95,
+      "m_m_5_89435": 4666,
+      "m_m_5_30844": 2.82,
+      "m_m_5_30873": 23,
       "m_m_5_90205": 20,
       "m_m_8_614": 1666,
       "m_m_5_3779": 1,
       "m_m_8_36148": 1300.78,
-      "m_m_5_30827": 1.66,
-      "m_m_5_89970": 170.87,
+      "m_m_5_30827": 1.61,
+      "m_m_5_89970": 162.1,
       "m_m_5_32014": 222,
-      "lucai": 15.88,
-      "m_m_5_1831": 28.08,
+      "lucai": 15,
+      "m_m_5_1831": 28.07,
       "m_m_5_31973": 3.39,
       "m_m_5_30849": 6,
       "m_m_5_71293": 41,
       "m_m_5_30826": 1,
+      "m_m_5_30825": 0.14,
       "m_m_5_71292": 35,
       "m_m_5_30824": 0.25,
       "m_m_5_71281": 17.13,
-      "m_m_5_30823": 0.77,
+      "m_m_5_30823": 0.76,
       "m_m_5_71277": 39,
       "m_m_5_89315": 1100.53,
-      "m_m_5_89969": 155.95,
+      "m_m_5_89969": 154.43,
+      "m_m_5_89303": 3680.74,
       "m_m_5_89971": 175,
-      "lushui": 12,
-      "m_m_5_30875": 2.22,
-      "m_m_5_30843": 0.97,
-      "m_m_5_30874": 30.05,
+      "lushui": 15.53,
+      "m_m_5_30875": 4.5,
+      "m_m_5_30843": 3.96,
+      "m_m_5_30874": 30.03,
       "m_m_5_30842": 0.85,
       "m_m_5_5270": 1.54,
       "m_m_5_31013": 150.5,
-      "gancao": 3.96,
-      "m_m_5_31012": 268,
-      "m_m_5_89304": 3101.84,
+      "gancao": 3.1,
+      "m_m_5_31012": 265.8,
+      "m_m_5_89304": 3090,
       "m_m_5_26057": 5000,
       "m_m_5_26231": 3.23,
-      "m_m_5_89352": 689.58,
+      "m_m_5_89352": 679.64,
       "m_m_5_71269": 137.16,
-      "m_m_5_89346": 798.69,
-      "m_m_5_89348": 199.9,
+      "m_m_5_89346": 779.65,
+      "m_m_5_89348": 195.85,
       "m_m_5_71285": 80,
       "m_m_5_30836": 0.71,
-      "m_m_5_30832": 3.3,
-      "m_m_5_30833": 1.42,
-      "m_m_5_89324": 130,
-      "m_m_5_30831": 1.99,
-      "m_m_5_89973": 158.96,
+      "m_m_5_30832": 1.31,
+      "m_m_5_30833": 1.43,
+      "m_m_5_89324": 120,
+      "m_m_5_30831": 1.01,
+      "m_m_5_89973": 158.8,
       "m_m_5_31996": 1,
       "m_m_5_71240": 25,
       "m_m_5_71266": 39,
-      "m_m_5_30838": 1.06,
+      "m_m_5_30838": 1.05,
       "shanhu": 4.74,
-      "m_m_5_30835": 3.99,
-      "m_m_5_89974": 133.75,
+      "m_m_5_30835": 2.97,
+      "m_m_5_89974": 115,
       "m_m_5_71267": 30.55,
-      "yaoyin": 169.42,
+      "yaoyin": 168,
       "m_m_5_31100": 153.24,
-      "shaoyao": 2.6,
-      "m_m_5_31102": 0.46,
-      "m_m_5_30834": 4.22,
-      "m_m_5_89340": 100.9,
-      "m_m_5_89325": 760.89,
+      "shaoyao": 1.87,
+      "m_m_5_30834": 4.08,
+      "m_m_5_89340": 97.98,
+      "m_m_5_89325": 759.35,
       "m_m_5_71258": 111.5,
       "m_m_5_89327": 87.77,
       "m_m_5_89966": 139,
@@ -13177,19 +19804,18 @@ window.JX3Data = {
       "m_m_5_89965": 126.08,
       "m_m_5_31992": 14.95,
       "m_m_5_89963": 130,
-      "m_m_5_31994": 9.99,
-      "m_m_5_89962": 125.71,
+      "m_m_5_89962": 114.88,
       "m_m_5_31139": 2999.96,
-      "m_m_5_89964": 90.26,
+      "m_m_5_89964": 87,
       "m_m_5_10027": 58.99,
-      "m_m_5_89961": 124.3,
-      "tiekuang": 2.27,
+      "m_m_5_89961": 116.5,
+      "tiekuang": 2.2,
       "m_m_5_30676": 1.52,
-      "m_m_5_30678": 1.07,
-      "m_m_5_30674": 2.24,
+      "m_m_5_30678": 1.05,
+      "m_m_5_30674": 2.16,
       "m_m_5_30675": 8.67,
       "m_m_5_89967": 94.32,
-      "m_m_5_6246": 0.29,
+      "m_m_5_6246": 0.14,
       "m_m_5_30841": 3,
       "m_m_8_17538": 30,
       "m_m_8_632": 1660,
@@ -13197,86 +19823,110 @@ window.JX3Data = {
       "m_m_8_636": 1666,
       "m_m_5_6072": 5,
       "m_m_5_6066": 0.05,
-      "muban": 30.16,
-      "muliao": 4.7,
+      "muban": 30,
+      "muliao": 4.34,
       "m_m_5_35707": 12.89,
-      "qiwuling": 99.99,
-      "m_m_5_35716": 88.98,
+      "qiwuling": 43.55,
       "m_m_5_35715": 89.72,
-      "zhuzi": 5.06,
+      "zhuzi": 4.96,
       "m_m_5_35567": 3,
       "m_m_5_35714": 89,
       "m_m_5_35701": 12.44,
       "m_m_5_35713": 84.42,
       "m_m_5_35705": 3.75,
-      "m_m_5_35717": 1.1,
+      "m_m_5_35717": 1.08,
       "m_m_5_52337": 1800,
-      "m_m_5_35772": 1498.47,
+      "m_m_5_35772": 1498.46,
       "m_m_5_87917": 488.72,
-      "m_m_5_87881": 8888,
+      "m_m_5_87881": 7633.39,
       "zasui": 0.41,
       "g_5_30681": 1.64,
-      "g_5_30680": 2.2
+      "g_5_30680": 2.2,
+      "m_x_5_89305": 3774,
+      "m_x_5_89349": 629.79,
+      "m_x_5_89351": 1462.34,
+      "m_x_5_89434": 3666,
+      "m_x_5_89436": 4319,
+      "m_x_5_89440": 5555,
+      "m_x_5_89441": 4211,
+      "m_x_5_89329": 733.83,
+      "m_x_5_89335": 2266,
+      "m_x_5_89331": 798.82,
+      "m_x_5_89337": 1222,
+      "m_x_5_89368": 729.86,
+      "m_x_5_89372": 1500,
+      "m_x_5_89369": 1485,
+      "m_x_5_90436": 120.44,
+      "m_x_5_89379": 8000.17,
+      "m_x_5_90437": 108,
+      "m_x_5_89390": 4100,
+      "m_x_5_89392": 5999,
+      "m_x_5_89393": 7221.14,
+      "m_x_5_89394": 9988,
+      "m_x_5_89396": 3866,
+      "m_x_5_20971": 199,
+      "m_x_5_89317": 1099,
+      "m_x_5_89320": 1995.85,
+      "m_x_5_89426": 3600.44,
+      "m_x_5_89427": 3000
     },
     "s_jiutian": {
-      "fengwangjiang": 1105,
+      "fengwangjiang": 1050,
       "shoupijiao": 71.08,
       "qicaixian": 90.03,
-      "m_m_5_30852": 20,
-      "m_m_5_30853": 559.08,
-      "m_m_5_30828": 7,
+      "m_m_5_30852": 24.65,
+      "m_m_5_30828": 6.19,
       "m_m_5_89165": 50,
-      "guajian_bei": 59.99,
+      "guajian_bei": 80.06,
       "baihua_bu": 64,
-      "guajian_yao": 98.4,
-      "shuran_bu": 60.95,
+      "guajian_yao": 89.8,
+      "shuran_bu": 59,
       "m_m_5_32001": 3.91,
       "m_m_5_10173": 40.61,
       "wuseshi": 68.01,
-      "m_m_5_30856": 24.41,
-      "m_m_5_30855": 165.55,
-      "m_m_5_89298": 13.32,
+      "m_m_5_30856": 20,
+      "m_m_5_30855": 294,
+      "m_m_5_89298": 12.38,
       "m_m_5_30679": 29.76,
       "m_m_5_30847": 12,
-      "m_m_5_30846": 7,
+      "m_m_5_30846": 5.37,
       "yinsi_duan": 62.79,
-      "m_m_5_30848": 19.05,
+      "m_m_5_30848": 16.06,
       "m_m_5_32002": 3,
       "m_m_5_30850": 77.27,
-      "m_m_5_30845": 212.81,
-      "m_m_5_30844": 0.7,
-      "m_m_5_30873": 30,
+      "m_m_5_30845": 213.21,
+      "m_m_5_30844": 0.56,
+      "m_m_5_30873": 38.14,
       "shanshui_juan": 55,
       "m_m_5_3819": 188.87,
       "m_m_5_3779": 0.77,
       "m_m_5_3820": 4.58,
-      "m_m_5_30827": 2,
+      "m_m_5_30827": 5.87,
       "m_m_5_89970": 95,
-      "lucai": 20,
+      "lucai": 15,
       "m_m_5_31973": 1.68,
-      "m_m_5_30849": 6,
+      "m_m_5_30849": 5.99,
       "m_m_5_30826": 1.85,
       "m_m_5_30825": 0.01,
       "m_m_5_89171": 15.97,
       "m_m_5_31974": 3,
-      "m_m_5_30824": 0.43,
+      "m_m_5_30824": 0.42,
       "m_m_5_31967": 3,
-      "m_m_5_30823": 0.48,
+      "m_m_5_30823": 0.44,
       "m_m_5_31969": 5.07,
       "m_m_5_71277": 222,
       "m_m_5_89315": 1000,
       "m_m_5_89969": 60.88,
       "m_m_5_31976": 0.96,
       "m_m_5_89971": 110.95,
-      "lushui": 10.04,
-      "m_m_5_30875": 12.99,
-      "m_m_5_30829": 10,
-      "m_m_5_30843": 2,
-      "m_m_5_30874": 29.86,
-      "m_m_5_30842": 1.99,
+      "lushui": 9.28,
+      "m_m_5_30875": 12.89,
+      "m_m_5_30843": 1.66,
+      "m_m_5_30874": 28.9,
+      "m_m_5_30842": 1.95,
       "m_m_5_5270": 0.6,
       "m_m_5_31970": 3.77,
-      "m_m_5_5269": 0.02,
+      "m_m_5_5269": 0.07,
       "m_m_5_31977": 0.85,
       "m_m_5_31013": 238.21,
       "gancao": 2.42,
@@ -13294,217 +19944,256 @@ window.JX3Data = {
       "m_m_5_30833": 2,
       "m_m_5_89324": 150.3,
       "m_m_5_30831": 1.88,
-      "m_m_5_89973": 153.8,
+      "m_m_5_89973": 110.01,
       "m_m_5_31996": 3.42,
       "m_m_5_31995": 3.96,
       "m_m_5_30838": 1.99,
       "shanhu": 6.87,
-      "m_m_5_30835": 2.38,
-      "yaoyin": 138.1,
+      "m_m_5_30835": 2.01,
+      "m_m_5_89974": 140,
+      "yaoyin": 98,
       "m_m_5_31100": 88.15,
       "shaoyao": 1.98,
-      "m_m_5_31102": 0.8,
       "m_m_5_30834": 5.1,
       "m_m_5_31998": 5.37,
       "m_m_5_89328": 1999,
       "m_m_5_89340": 228.29,
       "m_m_5_89325": 1100.9,
       "m_m_5_31999": 1.58,
-      "m_m_5_89327": 188.58,
+      "m_m_5_89327": 187.75,
       "m_m_5_89966": 69.79,
+      "m_m_5_89377": 666,
       "m_m_5_89968": 36.66,
-      "m_m_5_89376": 664.52,
+      "m_m_5_89376": 650.87,
       "m_m_5_89965": 43.21,
       "m_m_5_31992": 6,
-      "m_m_5_89963": 50,
+      "m_m_5_89963": 66,
       "m_m_5_89962": 62.27,
-      "m_m_5_89964": 36,
-      "m_m_5_10027": 70.07,
+      "m_m_5_89964": 77.38,
+      "m_m_5_10027": 80.8,
       "m_m_5_89961": 68.29,
       "tiekuang": 3.96,
-      "m_m_5_30676": 3.34,
-      "m_m_5_30678": 3,
+      "m_m_5_30676": 3.18,
+      "m_m_5_30678": 2.99,
       "m_m_5_30674": 4,
       "m_m_5_30675": 4.43,
       "m_m_5_6246": 1.1,
+      "m_m_5_6249": 0.75,
       "m_m_8_636": 40,
       "m_m_5_90257": 555,
-      "muban": 49.71,
-      "muliao": 5.32,
-      "qiwuling": 28.93,
+      "muban": 45.7,
+      "muliao": 4.5,
+      "qiwuling": 35,
       "m_m_5_35716": 66,
+      "m_m_5_35715": 130.18,
       "zhuzi": 1.7,
-      "m_m_5_35567": 2.4,
+      "m_m_5_35567": 1.46,
       "m_m_5_35714": 110.31,
       "m_m_5_35713": 50.02,
-      "m_m_5_35717": 14.4,
+      "m_m_5_35717": 5.66,
       "m_m_5_52337": 4550,
-      "zasui": 0.2,
-      "g_5_30681": 2.3,
-      "g_5_30680": 2.26
+      "zasui": 1.48,
+      "g_5_30681": 1.9,
+      "g_5_30680": 2.26,
+      "m_x_5_89305": 6000.35,
+      "m_x_5_89351": 1888.38,
+      "m_x_5_89441": 7500,
+      "m_x_5_89329": 1999,
+      "m_x_5_89335": 3333,
+      "m_x_5_89331": 1000.18,
+      "m_x_5_89368": 1378.83,
+      "m_x_5_89372": 3999,
+      "m_x_5_90436": 188.78,
+      "m_x_5_89379": 6487,
+      "m_x_5_90437": 49.48,
+      "m_x_5_89388": 7977,
+      "m_x_5_89391": 7199,
+      "m_x_5_20971": 1.55,
+      "m_x_5_89317": 1778
     },
     "s_meijianxue": {
-      "fengwangjiang": 187.46,
+      "fengwangjiang": 187.16,
       "shoupijiao": 38.89,
       "qicaixian": 165,
       "fengyu_yi": 1103.16,
-      "m_m_5_30852": 15,
-      "m_m_5_30853": 89.99,
-      "m_m_5_30828": 4.77,
+      "m_m_5_30852": 14.88,
+      "m_m_5_30853": 80.94,
+      "m_m_5_30828": 4.74,
       "guajian_bei": 55.5,
       "baihua_bu": 112,
       "guajian_yao": 87,
       "shuran_bu": 140.45,
       "shuran_bag": 50,
       "wuseshi": 135,
-      "m_m_5_30856": 18.09,
-      "m_m_5_30855": 159.93,
+      "m_m_5_30856": 18.98,
+      "m_m_5_30855": 155.07,
       "geyin_zhang": 277.21,
-      "m_m_5_89298": 34.8,
-      "m_m_5_30679": 15.35,
+      "m_m_5_89298": 35,
+      "m_m_5_30679": 14.58,
       "m_m_5_30847": 7.89,
       "m_m_5_30846": 2.77,
       "yinsi_duan": 150.25,
-      "m_m_5_30848": 21.46,
+      "m_m_5_30848": 17.66,
       "m_m_5_30850": 119.91,
-      "m_m_5_30845": 179.96,
+      "m_m_5_30845": 189,
       "m_m_5_31397": 3,
       "m_m_5_30844": 0.88,
-      "m_m_5_30873": 17,
+      "m_m_5_30873": 48.88,
       "m_m_5_90205": 5,
-      "m_m_5_30827": 1.21,
-      "m_m_5_89970": 178.98,
+      "m_m_5_30827": 1.04,
+      "m_m_5_89970": 175,
       "m_m_5_32014": 302,
       "m_m_5_31985": 1.46,
       "lucai": 14.5,
       "m_m_5_1831": 15,
-      "m_m_5_30849": 5.95,
+      "m_m_5_30849": 6,
       "m_m_5_71293": 22.5,
       "m_m_5_30826": 1.48,
       "m_m_5_30825": 0.15,
       "m_m_5_31974": 1,
       "m_m_5_31968": 20,
       "m_m_5_71292": 25.87,
-      "m_m_5_30824": 1,
+      "m_m_5_30824": 0.95,
       "m_m_5_31967": 77.99,
       "m_m_5_71281": 6.74,
-      "m_m_5_30823": 0.99,
+      "m_m_5_30823": 0.87,
       "m_m_5_89315": 1290,
       "m_m_5_89969": 120.92,
       "m_m_5_31976": 0.63,
       "m_m_5_89971": 160,
-      "lushui": 16.6,
-      "m_m_5_30875": 5,
+      "lushui": 12.15,
+      "m_m_5_30875": 4.79,
       "m_m_5_30843": 1.61,
       "m_m_5_30874": 34.22,
-      "m_m_5_30842": 1,
+      "m_m_5_30842": 0.98,
       "m_m_5_5270": 1.58,
       "m_m_5_31013": 150,
       "gancao": 1.93,
-      "m_m_5_31012": 453.16,
-      "m_m_5_89352": 868,
+      "m_m_5_31012": 270,
+      "m_m_5_89352": 867.9,
       "m_m_5_89350": 999,
       "m_m_5_71269": 124.82,
-      "m_m_5_89346": 900,
+      "m_m_5_89346": 899.88,
       "m_m_5_89348": 260,
-      "m_m_5_71285": 90.4,
+      "m_m_5_71285": 104.03,
       "jieyuan_dan": 28.92,
-      "m_m_5_30836": 0.87,
-      "m_m_5_30832": 5.8,
-      "m_m_5_30833": 2.66,
+      "m_m_5_30836": 0.49,
+      "m_m_5_30832": 2.36,
+      "m_m_5_30833": 1.1,
       "m_m_5_89324": 220,
-      "m_m_5_30831": 0.78,
-      "m_m_5_89973": 214.96,
+      "m_m_5_30831": 0.61,
+      "m_m_5_89973": 209.42,
       "m_m_5_31996": 9.89,
       "m_m_5_71241": 28,
       "m_m_5_71240": 49.48,
       "m_m_5_31995": 2.41,
       "m_m_5_71266": 33.28,
       "m_m_5_30838": 1.19,
-      "shanhu": 2.85,
+      "shanhu": 3.94,
       "m_m_5_6646": 27,
-      "m_m_5_30835": 3.87,
+      "m_m_5_30835": 2.88,
       "m_m_5_89974": 148,
       "m_m_5_71267": 39.58,
-      "yaoyin": 179,
+      "yaoyin": 165.99,
       "m_m_5_31100": 151,
       "shaoyao": 1.27,
-      "m_m_5_31102": 1.39,
       "m_m_5_30834": 3.9,
       "m_m_5_89340": 119.97,
-      "m_m_5_89325": 828.9,
+      "m_m_5_89325": 990,
       "m_m_5_71258": 75.48,
       "m_m_5_89327": 140,
       "m_m_5_89966": 130,
       "m_m_5_31991": 30,
       "m_m_5_89968": 158.78,
+      "m_m_5_89376": 1110.82,
       "m_m_5_89965": 250.42,
       "m_m_5_31992": 9,
       "m_m_5_89963": 104.98,
       "m_m_5_89962": 123.99,
-      "m_m_5_31139": 4600.67,
+      "m_m_5_31139": 4588.58,
       "m_m_5_89964": 125.7,
       "m_m_5_10027": 93.92,
       "m_m_5_89961": 101,
-      "tiekuang": 3.94,
-      "m_m_5_30676": 3.8,
+      "tiekuang": 3.44,
+      "m_m_5_30676": 2.99,
       "m_m_5_30678": 2.24,
       "m_m_5_30674": 3.35,
       "m_m_5_30675": 4.99,
       "m_m_5_89967": 95,
+      "m_m_5_6246": 0.27,
       "m_m_5_30841": 2.97,
       "m_m_8_634": 500,
-      "muban": 36,
-      "muliao": 4.36,
-      "qiwuling": 48.71,
-      "m_m_5_35716": 89.69,
+      "muban": 36.5,
+      "muliao": 3.19,
+      "qiwuling": 42,
       "m_m_5_35715": 40.2,
-      "zhuzi": 2.54,
-      "m_m_5_35567": 2.4,
+      "zhuzi": 2.53,
+      "m_m_5_35567": 2.38,
       "m_m_5_35714": 24.65,
-      "m_m_5_35713": 30.3,
-      "m_m_5_35717": 2.09,
+      "m_m_5_35713": 29.3,
+      "m_m_5_35717": 1.52,
       "m_m_5_52337": 2879,
       "m_m_5_35772": 2899.99,
       "m_m_5_87917": 179.84,
       "m_m_5_87881": 7999,
       "zasui": 0.21,
       "g_5_30681": 1.11,
-      "g_5_30680": 1.99
+      "g_5_30680": 1.99,
+      "m_x_5_89438": 6777.79,
+      "m_x_5_89452": 31111.44,
+      "m_x_5_89439": 7666.38,
+      "m_x_5_89443": 7444.83,
+      "m_x_5_89329": 888.9,
+      "m_x_5_89335": 1555.3,
+      "m_x_5_89330": 599.24,
+      "m_x_5_89336": 1999.54,
+      "m_x_5_89331": 999,
+      "m_x_5_89368": 1187.46,
+      "m_x_5_89372": 2665.45,
+      "m_x_5_90436": 94,
+      "m_x_5_89379": 5600.23,
+      "m_x_5_90437": 125.78,
+      "m_x_5_89389": 6777,
+      "m_x_5_89393": 7777.46,
+      "m_x_5_89394": 10000,
+      "m_x_5_89396": 6999.06,
+      "m_x_10_2229": 400.8,
+      "m_x_5_89317": 1200,
+      "m_x_5_89320": 1200
     },
     "s_shanhai": {
-      "fengwangjiang": 187,
-      "shoupijiao": 49,
+      "fengwangjiang": 183.48,
+      "shoupijiao": 49.07,
       "qicaixian": 89.99,
       "bairanxian": 20.63,
       "fengyu_yi": 1888.68,
-      "m_m_5_30852": 17,
-      "m_m_5_30853": 82.73,
-      "m_m_5_30828": 5.11,
+      "m_m_5_30852": 15.99,
+      "m_m_5_30853": 80,
+      "m_m_5_30828": 5,
       "guajian_bei": 62.97,
       "baihua_bu": 73.99,
       "guajian_yao": 87.47,
       "shuran_bu": 123,
       "shuran_bag": 15,
-      "m_m_5_30856": 23.79,
-      "m_m_5_30855": 170.28,
-      "m_m_5_89298": 35.4,
-      "m_m_5_30679": 15.99,
-      "m_m_5_30847": 10.58,
-      "m_m_5_30846": 2.88,
+      "m_m_5_30856": 22,
+      "m_m_5_30855": 158.79,
+      "m_m_5_89298": 30.26,
+      "m_m_5_30679": 14.44,
+      "m_m_5_30847": 10.6,
+      "m_m_5_30846": 1.55,
       "yinsi_duan": 159.2,
-      "m_m_5_30848": 19,
-      "m_m_5_30850": 118.8,
-      "m_m_5_30845": 197,
-      "m_m_5_30844": 1.49,
+      "m_m_5_30848": 18.6,
+      "m_m_5_30850": 114.49,
+      "m_m_5_30845": 196.8,
+      "m_m_5_30844": 1.21,
       "m_m_5_30873": 45.78,
       "m_m_5_90205": 150.89,
       "m_m_8_36148": 1450.99,
-      "m_m_5_30827": 0.94,
-      "m_m_5_89970": 168,
+      "m_m_5_30827": 0.89,
+      "m_m_5_89970": 158.99,
       "m_m_5_32014": 220.96,
-      "lucai": 15.3,
-      "m_m_5_30849": 6.12,
+      "lucai": 15.29,
+      "m_m_5_30849": 5.98,
       "m_m_5_71293": 31.63,
       "m_m_5_30826": 1.35,
       "m_m_5_30825": 0.01,
@@ -13512,28 +20201,27 @@ window.JX3Data = {
       "m_m_5_71292": 39,
       "m_m_5_30824": 1.07,
       "m_m_5_71281": 12.9,
-      "m_m_5_30823": 1.02,
+      "m_m_5_30823": 0.3,
       "m_m_5_89315": 1888.88,
-      "m_m_5_89969": 109.98,
+      "m_m_5_89969": 109.94,
       "m_m_5_89303": 3500,
       "m_m_5_89971": 156.09,
-      "lushui": 15.6,
-      "m_m_5_30875": 1.23,
+      "lushui": 12.68,
       "m_m_5_30843": 0.81,
       "m_m_5_30874": 29.04,
-      "m_m_5_30842": 0.82,
+      "m_m_5_30842": 1.19,
       "m_m_5_5270": 3.5,
-      "m_m_5_31013": 199.99,
-      "gancao": 3.11,
+      "m_m_5_31013": 188,
+      "gancao": 2.48,
       "m_m_5_31012": 269.5,
       "m_m_5_89304": 3986.42,
-      "m_m_5_89352": 777.77,
+      "m_m_5_89352": 739.99,
       "m_m_5_89350": 666,
       "m_m_5_71269": 125.49,
       "m_m_5_89346": 870.17,
-      "m_m_5_89348": 380,
+      "m_m_5_89348": 250.78,
       "m_m_5_71285": 111.92,
-      "m_m_5_30836": 1.13,
+      "m_m_5_30836": 1.71,
       "m_m_5_30832": 0.75,
       "m_m_5_30833": 1.89,
       "m_m_5_89324": 136,
@@ -13544,16 +20232,16 @@ window.JX3Data = {
       "m_m_5_30838": 0.99,
       "shanhu": 3.09,
       "m_m_5_30835": 3,
-      "m_m_5_89974": 106,
+      "m_m_5_89974": 105,
       "m_m_5_71267": 40.91,
-      "yaoyin": 200.02,
+      "yaoyin": 194,
       "m_m_5_31100": 229.23,
-      "shaoyao": 3.61,
+      "shaoyao": 3.5,
       "m_m_5_30834": 2.46,
       "m_m_5_89340": 160,
       "m_m_5_89325": 995,
       "m_m_5_71258": 77.1,
-      "m_m_5_89327": 142,
+      "m_m_5_89327": 140,
       "m_m_5_89966": 98,
       "m_m_5_89968": 99.9,
       "m_m_5_89376": 690,
@@ -13564,29 +20252,50 @@ window.JX3Data = {
       "m_m_5_89964": 88.16,
       "m_m_5_10027": 99,
       "m_m_5_89961": 119,
-      "tiekuang": 2.96,
+      "tiekuang": 2.39,
       "m_m_5_30676": 3,
       "m_m_5_30678": 1.48,
-      "m_m_5_30674": 2.8,
-      "m_m_5_30675": 3.28,
+      "m_m_5_30674": 1.87,
+      "m_m_5_30675": 3.23,
       "m_m_5_89967": 140.97,
       "m_m_5_6246": 0.13,
-      "m_m_5_30841": 3.08,
+      "m_m_5_30841": 2.88,
       "m_m_8_636": 39,
-      "muban": 38.79,
+      "muban": 33.49,
       "muliao": 3.96,
-      "qiwuling": 21.21,
-      "m_m_5_35716": 15.98,
+      "qiwuling": 38.97,
       "m_m_5_35715": 16.77,
       "zhuzi": 4.03,
       "m_m_5_35567": 2.28,
       "m_m_5_35714": 22.55,
       "m_m_5_35713": 89.26,
-      "m_m_5_35717": 2,
       "m_m_5_35772": 1985.89,
       "zasui": 0.3,
       "g_5_30681": 1,
-      "g_5_30680": 0.89
+      "g_5_30680": 0.89,
+      "m_x_5_89353": 2799.65,
+      "m_x_5_89349": 1862.95,
+      "m_x_5_89355": 2589.64,
+      "m_x_5_89351": 499,
+      "m_x_5_89438": 6081.78,
+      "m_x_5_89452": 48888.88,
+      "m_x_5_89439": 11000,
+      "m_x_5_89329": 889,
+      "m_x_5_89330": 821.44,
+      "m_x_5_89331": 998,
+      "m_x_5_89337": 1999.13,
+      "m_x_5_89368": 1047.5,
+      "m_x_5_89369": 1020.33,
+      "m_x_5_90436": 77.39,
+      "m_x_5_89379": 5878,
+      "m_x_5_90437": 100.99,
+      "m_x_5_89388": 6373,
+      "m_x_5_89390": 6000,
+      "m_x_5_89391": 5515,
+      "m_x_5_89396": 6999.84,
+      "m_x_5_20971": 99.98,
+      "m_x_5_89317": 850,
+      "m_x_5_89426": 2918.75
     },
     "s_aoxue": {
       "fengwangjiang": 348.99,
@@ -13596,57 +20305,56 @@ window.JX3Data = {
       "m_m_5_30828": 10.13,
       "guajian_bei": 100,
       "guajian_yao": 100,
-      "m_m_5_30856": 38,
+      "m_m_5_30856": 35.7,
       "m_m_5_30855": 250,
       "geyin_zhang": 300,
       "m_m_5_89298": 170,
       "m_m_5_30679": 14.93,
-      "m_m_5_30847": 4.5,
+      "m_m_5_30847": 3.85,
       "m_m_5_30848": 90,
-      "m_m_5_30850": 121,
-      "m_m_5_30845": 200.44,
+      "m_m_5_30850": 120,
+      "m_m_5_30845": 199.44,
       "m_m_5_30844": 0.99,
       "m_m_5_30873": 99.59,
       "m_m_8_36148": 1800.31,
-      "m_m_5_30827": 0.35,
+      "m_m_5_30827": 0.3,
       "lucai": 99.99,
       "m_m_5_31973": 0.9,
       "m_m_5_30826": 1.78,
       "m_m_5_30825": 0.01,
       "m_m_5_30824": 1.24,
       "m_m_5_30823": 1.99,
-      "lushui": 3.99,
+      "lushui": 2.98,
       "m_m_5_30843": 1.34,
       "m_m_5_30874": 80,
-      "m_m_5_30842": 0.8,
+      "m_m_5_30842": 0.6,
       "m_m_5_31013": 259.99,
       "gancao": 0.74,
       "m_m_5_31012": 655,
       "m_m_5_89352": 2500,
       "m_m_5_89346": 1500,
-      "m_m_5_71285": 60.66,
+      "m_m_5_71285": 60,
       "m_m_5_30836": 2,
       "m_m_5_30832": 0.86,
       "m_m_5_30833": 0.88,
       "m_m_5_30831": 0.66,
       "m_m_5_71241": 10,
-      "m_m_5_71240": 40,
+      "m_m_5_71240": 35.17,
       "m_m_5_71266": 30,
       "m_m_5_30838": 1.04,
-      "shanhu": 0.86,
       "m_m_5_30835": 0.55,
       "m_m_5_71267": 13,
       "yaoyin": 777,
       "shaoyao": 2.55,
-      "m_m_5_31102": 1.95,
       "m_m_5_30834": 2.15,
       "m_m_5_89340": 475,
       "m_m_5_71258": 200,
+      "m_m_5_71192": 50,
       "m_m_5_71188": 20,
       "m_m_5_10027": 129.99,
-      "tiekuang": 0.7,
+      "tiekuang": 10,
       "m_m_5_30676": 0.66,
-      "m_m_5_30678": 10.7,
+      "m_m_5_30678": 10.65,
       "m_m_5_30674": 5,
       "m_m_5_6246": 0.2,
       "muban": 59,
@@ -13657,7 +20365,7 @@ window.JX3Data = {
       "zhuzi": 1.31,
       "m_m_5_35567": 0.95,
       "m_m_5_35714": 25.98,
-      "m_m_5_35713": 39.69,
+      "m_m_5_35713": 59.99,
       "m_m_10_1880": 2170,
       "m_m_5_35717": 0.2,
       "m_m_5_52337": 2400,
@@ -13665,7 +20373,8 @@ window.JX3Data = {
       "m_m_5_87917": 1199,
       "zasui": 1.41,
       "g_5_30681": 4.9,
-      "g_5_30680": 1
+      "g_5_30680": 1,
+      "m_x_5_89368": 1150
     }
   },
   "stoneMeta": {
@@ -13777,31 +20486,31 @@ window.JX3Data = {
   "stonePrices": {
     "s_mengjiangnan": {
       "1": 0.81,
-      "2": 4.21,
-      "3": 13.54,
+      "2": 4.2,
+      "3": 13.69,
       "4": 54.37,
-      "5": 169,
-      "6": 548.16,
-      "7": 8670.29,
-      "8": 27400
+      "5": 167.73,
+      "6": 545.37,
+      "7": 8633,
+      "8": 27397.38
     },
     "s_pozhenzi": {
       "1": 0.8,
       "2": 5.71,
       "3": 11.97,
       "4": 59.6,
-      "5": 168.66,
-      "6": 509,
+      "5": 165.04,
+      "6": 512.77,
       "7": 10888.88,
-      "8": 25200.06
+      "8": 24899.06
     },
     "s_dielianhua": {
       "1": 0.8,
       "2": 4.36,
       "3": 14.85,
-      "4": 54.98,
-      "5": 166.18,
-      "6": 510.19,
+      "4": 49.5,
+      "5": 165,
+      "6": 512.72,
       "7": 7888,
       "8": 28000.48
     },
@@ -13809,49 +20518,49 @@ window.JX3Data = {
       "1": 0.84,
       "2": 4.64,
       "3": 13.7,
-      "4": 48.4,
-      "5": 158.44,
-      "6": 528.54,
+      "4": 47.29,
+      "5": 158.32,
+      "6": 525.81,
       "7": 10888.88,
-      "8": 25900.78
+      "8": 25899
     },
     "s_youyuelun": {
       "1": 0.82,
       "2": 5.48,
       "3": 13.95,
-      "4": 56.67,
+      "4": 52.2,
       "5": 166.98,
-      "6": 512.92,
+      "6": 513.67,
       "7": 8882.63,
-      "8": 26666.66
+      "8": 25775.9
     },
     "s_longzheng": {
       "1": 0.8,
       "2": 6.55,
       "3": 15.23,
       "4": 58.51,
-      "5": 160.97,
-      "6": 510,
-      "7": 8535.88,
+      "5": 159.99,
+      "6": 510.5,
+      "7": 8535.87,
       "8": 27000
     },
     "s_changancheng": {
-      "1": 0.81,
+      "1": 0.8,
       "2": 5.18,
-      "3": 11.97,
+      "3": 18.88,
       "4": 44.96,
-      "5": 168.88,
-      "6": 510.29,
+      "5": 165.96,
+      "6": 510.44,
       "7": 8639,
       "8": 28660.43
     },
     "s_douzhuang": {
       "1": 0.85,
-      "2": 5.66,
+      "2": 5.23,
       "3": 13,
       "4": 51.38,
-      "5": 159.09,
-      "6": 510.4,
+      "5": 158.55,
+      "6": 510.3,
       "7": 7998.69,
       "8": 36900
     },
@@ -13860,28 +20569,28 @@ window.JX3Data = {
       "2": 3.9,
       "3": 12.9,
       "4": 51.85,
-      "5": 158.25,
-      "6": 530.64,
+      "5": 157.14,
+      "6": 536.24,
       "7": 10888.88,
       "8": 26731.25
     },
     "s_weiwo": {
       "1": 0.83,
       "2": 5.44,
-      "3": 13.5,
-      "4": 77,
-      "5": 165.31,
-      "6": 547.38,
-      "7": 8850,
-      "8": 27400.01
+      "3": 13.47,
+      "4": 49.84,
+      "5": 165.2,
+      "6": 542.99,
+      "7": 8847,
+      "8": 27300.19
     },
     "s_juedai": {
       "1": 0.81,
-      "2": 6.49,
+      "2": 5.82,
       "3": 13.8,
-      "4": 52.3,
+      "4": 52.29,
       "5": 155.27,
-      "6": 516.67,
+      "6": 516.73,
       "7": 8200,
       "8": 24449.91
     },
@@ -13891,18 +20600,18 @@ window.JX3Data = {
       "3": 13.4,
       "4": 49.84,
       "5": 157.76,
-      "6": 525.12,
+      "6": 525.98,
       "7": 10888.88,
-      "8": 26999.02
+      "8": 27255.66
     },
     "s_feilong": {
       "1": 0.81,
       "2": 4,
       "3": 12.01,
-      "4": 49.94,
+      "4": 49.89,
       "5": 146,
       "6": 510.16,
-      "7": 9888.88,
+      "7": 9294.95,
       "8": 25498.07
     },
     "s_jiutian": {
@@ -13910,17 +20619,17 @@ window.JX3Data = {
       "2": 6.79,
       "3": 15,
       "4": 54.49,
-      "5": 190.7,
-      "6": 613.62,
-      "7": 18888.99,
-      "8": 54575.43
+      "5": 189.99,
+      "6": 629.83,
+      "7": 18888.65,
+      "8": 85100.01
     },
     "s_meijianxue": {
       "1": 0.81,
       "2": 5.08,
       "3": 13.63,
-      "4": 46.9,
-      "5": 152.94,
+      "4": 55.9,
+      "5": 151.5,
       "6": 549.91,
       "7": 8054.26,
       "8": 30000
@@ -13930,8 +20639,8 @@ window.JX3Data = {
       "2": 4,
       "3": 13.88,
       "4": 48.3,
-      "5": 145.99,
-      "6": 527.2,
+      "5": 168.88,
+      "6": 527.22,
       "7": 8100.44,
       "8": 29000.88
     },
@@ -13940,8 +20649,8 @@ window.JX3Data = {
       "3": 13.44,
       "4": 80.6,
       "5": 209,
-      "6": 580,
-      "7": 16546.11,
+      "6": 579.99,
+      "7": 7999.79,
       "8": 29994.8
     }
   },
