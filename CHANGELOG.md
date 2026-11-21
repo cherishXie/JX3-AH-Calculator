@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 45be4ab
+
+update JX3BOX prices
+
 ## 2026-11-21 · 6285bac
 
 update JX3BOX prices
@@ -493,7 +497,3 @@ add file picker to WPS price refresh command
 ## 2026-11-19 · f19901c
 
 repair release notes json
-
-## 2026-11-19 · b6c3d2a
-
-support inline-string price sheets in Excel patcher
