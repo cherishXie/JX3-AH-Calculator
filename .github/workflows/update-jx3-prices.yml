@@ -73,3 +73,22 @@ jobs:
         with:
           name: jx3-minitool
           path: "剑网三物价助手-minitool.zip"
+
+      # 价格机器人也要把行情同步到 dev 预览。
+      # dev 的目录（物品/配方）比 main 新，不能直接复制 main 的 data.js，
+      # 所以切到 dev 分支后重跑一次更新脚本：以 dev 自己的 data.js 为底，
+      # 只把价格写进去。只提交数据文件，不碰任何网页代码。
+      - name: Sync prices to dev
+        run: |
+          # 前面的云同步可能改了工作区，切分支前先清掉未提交改动（main 的提交已完成）
+          git reset --hard HEAD
+          git fetch origin dev
+          git checkout -B dev origin/dev
+          ./scripts/update-prices.sh --web-only
+          git add assets/data.js miniapp/src/shared/catalog.json minitool/assets/data.js minitool/assets/price-history.js scripts/jx3-item-map.json data/price-history data/price-trends
+          if git diff --cached --quiet; then
+            echo "No dev price changes"
+          else
+            git commit -m "chore: update JX3BOX prices"
+            git push origin dev
+          fi
