@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · d964706
+
+部署检出完整历史；网页更新说明改为按最近提交自动生成
+
 ## 2026-11-21 · 753dad9
 
 价格机器人同步更新 dev 预览的行情数据
@@ -497,7 +501,3 @@ allow forced local price update
 ## 2026-11-20 · 4431edd
 
 trigger prices every 30 minutes
-
-## 2026-11-20 · 6a3eed1
-
-switch prices to hourly Cloudflare schedule
