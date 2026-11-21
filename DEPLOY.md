@@ -111,6 +111,7 @@ GitHub Pages 走跨境线路，国内访问时单个请求可能卡住十几秒�
 
 - `manifest.webmanifest` + `icons/`：可添加到主屏幕；
 - `sw.js`：构建时注入**应用壳版本**（不含 `data.js`），缓存应用壳，代码新版本安装后进入 waiting 状态；
+- 预缓存用 `cache: 'no-cache'`（只做条件请求，Pages 支持 ETag/304），不用 `reload`。`reload` 会把首屏刚下过的文件整包重下一次，实测每次首访多传 **1.65 MB（gzip 254 KB）**；`no-cache` 没变化时 0 字节确认，内容变了才真正下载，缓存里仍是当前版本；
 - `version.json` / `updates.json`：当前版本与本次更新说明；
 - 页面检测到 waiting SW 后弹出更新提示，展示 `updates.json` 的标题和 notes；
 - 点「立即更新」→ `skipWaiting` → `controllerchange` → 自动重载；`localStorage` 里的价格和配方保留；

@@ -5,6 +5,11 @@
 const VERSION = '__APP_VERSION__';
 const CACHE = 'jx3-shell-' + VERSION;
 const DATA_CACHE = 'jx3-data';
+// 预缓存用 no-cache，不用 reload：
+//   reload 会绕过 HTTP 缓存，把首屏刚下载过的文件整包再下一次，等于首访流量翻倍；
+//   no-cache 只发条件请求，Pages 支持 ETag/304，没变化就是 0 字节确认，
+//   内容变了才真正下载，所以缓存里仍然是当前版本，正确性不变。
+const PRECACHE_MODE = 'no-cache';
 const SHELL = [
   './',
   './index.html',
@@ -22,13 +27,13 @@ const SHELL = [
 self.addEventListener('install', (event) => {
   event.waitUntil(Promise.all([
     caches.open(CACHE).then((cache) => {
-      return cache.addAll(SHELL.map((url) => new Request(url, { cache: 'reload' })));
+      return cache.addAll(SHELL.map((url) => new Request(url, { cache: PRECACHE_MODE })));
     }),
     // 价格数据单独放一个缓存：应用壳更新时仍保留，数据更新不触发 SW 升级。
     caches.open(DATA_CACHE).then((cache) => {
       return Promise.all([
-        cache.add(new Request('./assets/data.js', { cache: 'reload' })),
-        cache.add(new Request('./assets/audit-data.js', { cache: 'reload' })).catch(() => {})
+        cache.add(new Request('./assets/data.js', { cache: PRECACHE_MODE })),
+        cache.add(new Request('./assets/audit-data.js', { cache: PRECACHE_MODE })).catch(() => {})
       ]);
     }).catch(() => {})
   ]));
