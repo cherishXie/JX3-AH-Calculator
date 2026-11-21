@@ -2212,7 +2212,8 @@
 
   function analysisLandBadge(row) {
     if (!row) return '<span class="badge badge-neutral">—</span>';
-    if (row.landGrade === 'G') return '<span class="badge badge-neutral" title="采集产出，不参与配方判断">采集</span>';
+    // 采集产出直接挂交易行出售，没有「能不能做」的判断，因此不给可做标记
+    if (row.landGrade === 'G') return '<span class="badge badge-neutral">—</span>';
     return gradeBadge(row.landGrade, { title: row.landSelfCraft ? '条件可做：含自产' : '仅看本服报价' });
   }
 
@@ -2249,7 +2250,8 @@
     const abRows = craftRows.filter(function (r) { return r.landGrade === 'A' || r.landGrade === 'B'; });
     const gatherRows = scoped.filter(function (r) { return r.landGrade === 'G'; });
     const cRows = craftRows.filter(function (r) { return r.landGrade === 'C'; });
-    let rows = landFilter === 'ab' ? abRows.concat(gatherRows) : scoped.slice();
+    // 「可做」列表只放制造配方；采集点没有可做判断，只在「全部」里展示
+    let rows = landFilter === 'ab' ? abRows.slice() : scoped.slice();
     if (complete && landFilter !== 'all') rows = rows.filter(function (r) { return !r.calc.missing; });
     const sorted = sortRows(rows, p.sort || 'perEnergy', p.dir || 'desc');
     const valid = abRows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
