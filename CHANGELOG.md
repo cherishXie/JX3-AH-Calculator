@@ -478,7 +478,3 @@ update price schedule times and recovery audit
 ## 2026-11-19 · 0b1cc50
 
 re-register price schedule under repository owner
-
-## 2026-11-19 · 1c5a2df
-
-re-register price schedule under repository owner
