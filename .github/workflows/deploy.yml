@@ -82,12 +82,15 @@ jobs:
         with:
           ref: ${{ needs.changelog.outputs.revision }}
           path: main
+          # 更新说明由 git log 自动生成，浅克隆只有 1 条提交会退化成旧文案
+          fetch-depth: 0
 
       - name: Checkout dev (preview)
         uses: actions/checkout@v4
         with:
           ref: dev
           path: dev
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
