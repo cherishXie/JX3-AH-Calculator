@@ -136,6 +136,7 @@ async function main() {
   }
   const existingCraft = data.recipes.filter((r) => r.kind !== 'gather');
   const existingNames = new Set(existingCraft.map((r) => r.name));
+  const existingByName = new Map(existingCraft.map((r) => [r.name, r]));
   const existingLevels = new Set(existingCraft.map((r) => r.level));
   const selected = [];
   const seen = new Set(existingNames);
@@ -167,10 +168,12 @@ async function main() {
     seen.add(entry.recipe.Name);
     selected.push(entry);
   }
-  console.log(`[core] 现有制造配方 ${existingCraft.length}，新增 ${selected.length}，目标 ${existingCraft.length + selected.length}`);
+  const allL50 = allRaw.filter((entry) => entry.recipe.RequireLevel === 50);
+  const toProcess = allL50.concat(selected.filter((entry) => entry.recipe.RequireLevel !== 50));
+  console.log(`[core] 现有制造配方 ${existingCraft.length}；本次处理 50 级 ${allL50.length} 条 + 空缺等级 ${selected.filter((x) => x.recipe.RequireLevel !== 50).length} 条`);
 
   const allKeys = new Set();
-  selected.forEach(({ recipe }) => {
+  toProcess.forEach(({ recipe }) => {
     const { mats, outs } = recipePoints(recipe);
     mats.forEach((m) => allKeys.add(m.key));
     outs.forEach((o) => allKeys.add(o.key));
@@ -178,7 +181,6 @@ async function main() {
   const details = await fetchItemDetails(allKeys);
   const keyToItemId = new Map();
   const newItems = [];
-  const newItemIds = new Set();
 
   function ensureItem(key, fallbackName) {
     const detail = details[key] || {};
@@ -214,19 +216,19 @@ async function main() {
     if (!map[name]) map[name] = key;
     keyToItemId.set(key, id);
     newItems.push(item);
-    newItemIds.add(id);
     return item;
   }
 
   // 先建立全部 key → item 映射
-  selected.forEach(({ recipe }) => {
+  toProcess.forEach(({ recipe }) => {
     const { mats, outs } = recipePoints(recipe);
     mats.forEach((m) => ensureItem(m.key));
     outs.forEach((o) => ensureItem(o.key));
   });
 
-  const newRecipes = [];
-  for (const { type, skillId, label, recipe } of selected) {
+  let addedRecipes = 0;
+  let updatedRecipes = 0;
+  for (const { type, skillId, label, recipe } of toProcess) {
     const { mats, outs } = recipePoints(recipe);
     const materials = mats.map((m) => ({ item: keyToItemId.get(m.key), qty: m.qty })).filter((m) => m.item);
     const outputs = outs.map((o) => ({
@@ -248,11 +250,24 @@ async function main() {
       item.source = '制造';
       item.tier = clampTier(item.tier || recipe.Quality);
     }
+    const outputTier = Math.max(1, ...outputs.map((o) => itemById.get(o.item).tier || 1));
+    const energy = Number(recipe.CostVigor) || Math.round((Number(recipe.Exp) || 0) / 2) || 1;
+    const existing = existingByName.get(recipe.Name);
+    if (existing) {
+      existing.level = Number(recipe.RequireLevel) || existing.level;
+      existing.tier = outputTier;
+      existing.energy = energy;
+      existing.outputs = outputs;
+      existing.materials = materials;
+      existing.note = `${label} · ${recipe.RequireLevel}级 · JX3BOX 当前赛季配方`;
+      existing.origin = 'JX3BOX 技艺助手 · ' + DATE;
+      existing.verified = true;
+      updatedRecipes++;
+      continue;
+    }
     let id = `m_${type}_${recipe.ID}`;
     let suffix = 2;
     while (data.recipes.some((r) => r.id === id)) id = `m_${type}_${recipe.ID}_${suffix++}`;
-    const outputTier = Math.max(1, ...outputs.map((o) => itemById.get(o.item).tier || 1));
-    const energy = Number(recipe.CostVigor) || Math.round((Number(recipe.Exp) || 0) / 2) || 1;
     const newRecipe = {
       id,
       kind: 'craft',
@@ -270,7 +285,7 @@ async function main() {
       custom: false,
     };
     data.recipes.push(newRecipe);
-    newRecipes.push(newRecipe);
+    addedRecipes++;
   }
 
   // 补新物品的当前行情作为 base（只用于首次种子；随后 updater 会刷新全量）
@@ -340,7 +355,7 @@ async function main() {
   fs.writeFileSync(path.join(ROOT, 'minitool', 'assets', 'data.js'), '/* 小工具离线数据 · 全服自动价格修订 */\nwindow.JX3Data = ' + JSON.stringify(mini, null, 2) + ';\n');
   fs.writeFileSync(path.join(ROOT, 'scripts', 'jx3-item-map.json'), JSON.stringify(map, null, 2) + '\n');
 
-  console.log(`[core] 完成：物品 ${data.items.length}，制造配方 ${data.recipes.filter((r) => r.kind !== 'gather').length}，新增物品 ${newItems.length}，新增配方 ${newRecipes.length}`);
+  console.log(`[core] 完成：物品 ${data.items.length}，制造配方 ${data.recipes.filter((r) => r.kind !== 'gather').length}，新增物品 ${newItems.length}，新增配方 ${addedRecipes}，更新 ${updatedRecipes} 条 50 级配方`);
   console.log(`[core] 新物品有报价 ${newItems.filter((i) => i.base > 0).length} / ${newItems.length}`);
 }
 

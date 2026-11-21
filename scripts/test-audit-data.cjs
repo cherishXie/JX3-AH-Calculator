@@ -28,10 +28,10 @@ const SID = 's_mengjiangnan';
 const server = A.servers[SID];
 const recipeByName = (name) => (D.recipes || []).find((r) => r.name === name);
 
-assert.equal(A.meta.snapshots, 45, '快照数应为 45');
+assert.equal(A.meta.snapshots, 46, '快照数应为 46');
 assert.equal(JSON.stringify(server.counts), JSON.stringify({ A: 29, B: 17, C: 184, feasible: 142, positive: 90 }));
 assert.equal(JSON.stringify(server.countsLocal), JSON.stringify({ A: 40, B: 9, C: 181, feasible: 145, positive: 93 }));
-assert.equal(A.servers.s_mengjiangnan.items.quote, 277);
+assert.equal(A.servers.s_mengjiangnan.items.quote, 287);
 assert.equal(A.servers.s_mengjiangnan.items.vendor, 12);
 assert.equal(A.servers.s_mengjiangnan.items.base, 55);
 
@@ -55,11 +55,11 @@ const rows = Object.entries(server.recipes).map(([id, r]) => {
 });
 const plan = L.plan(rows, 3000, { includeSelfCraft: false, localOnly: true });
 assert.equal(plan.energyUsed, 2992);
-assert.ok(plan.profit > 41500 && plan.profit < 43500, '本服混合组合利润 ' + plan.profit);
+assert.ok(plan.profit > 39500 && plan.profit < 41500, '本服混合组合利润 ' + plan.profit);
 
 const forge = L.plan(rows.filter((r) => r.skill === 'duanzao'), 3000, { includeSelfCraft: false, localOnly: true });
 assert.equal(forge.energyUsed, 920);
-assert.ok(forge.profit > 12000 && forge.profit < 13000, '本服锻造利润 ' + forge.profit);
+assert.ok(forge.profit > 10200 && forge.profit < 11200, '本服锻造利润 ' + forge.profit);
 const sew = L.plan(rows.filter((r) => r.skill === 'fengren'), 3000, { includeSelfCraft: false, localOnly: true });
 assert.equal(sew.energyUsed, 2992);
 assert.ok(sew.profit > 31000 && sew.profit < 33500, '本服缝纫利润 ' + sew.profit);

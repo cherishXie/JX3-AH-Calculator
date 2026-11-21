@@ -1,7 +1,7 @@
 /* =========================================================================
    剑网三物价助手 · 苍生铸世 50 级生活技艺数据
    数据版本：v3.7（2026-11-21）
-   价格修订：2026-11-21T17:05:09+08:00 · JX3BOX 全服拍卖
+   价格修订：2026-11-21T17:12:39+08:00 · JX3BOX 全服拍卖
    制造：JX3BOX 技艺助手 API · 154 条代表配方
    采集：21 条按材料拆分；产值按掉率折算
    五行石：1-8 级拍卖价 + 快速/最优合成 + 7/8 爆率盈亏线
@@ -120,119 +120,119 @@ window.JX3Data = {
       }
     ],
     "scope": "收录 154 条当前版本制造配方 + 21 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
-    "priceUpdatedAt": "2026-11-21T17:05:09+08:00",
+    "priceUpdatedAt": "2026-11-21T17:12:39+08:00",
     "priceCoverage": {
-      "updated": 277,
-      "total": 414,
+      "updated": 287,
+      "total": 444,
       "source": "JX3BOX 拍卖 · 17 个服务器",
       "filtered": 21,
-      "noQuote": 137
+      "noQuote": 157
     },
     "serverCoverage": {
       "s_mengjiangnan": {
-        "updated": 277,
-        "total": 414,
+        "updated": 287,
+        "total": 444,
         "filtered": 21,
-        "noQuote": 137
+        "noQuote": 157
       },
       "s_pozhenzi": {
-        "updated": 185,
-        "total": 414,
+        "updated": 189,
+        "total": 444,
         "filtered": 32,
-        "noQuote": 229
+        "noQuote": 255
       },
       "s_dielianhua": {
-        "updated": 175,
-        "total": 414,
+        "updated": 179,
+        "total": 444,
         "filtered": 23,
-        "noQuote": 239
+        "noQuote": 265
       },
       "s_jiandan": {
-        "updated": 178,
-        "total": 414,
-        "filtered": 32,
-        "noQuote": 236
+        "updated": 184,
+        "total": 444,
+        "filtered": 33,
+        "noQuote": 260
       },
       "s_youyuelun": {
-        "updated": 211,
-        "total": 414,
+        "updated": 216,
+        "total": 444,
         "filtered": 28,
-        "noQuote": 203
+        "noQuote": 228
       },
       "s_longzheng": {
-        "updated": 234,
-        "total": 414,
+        "updated": 238,
+        "total": 444,
         "filtered": 27,
-        "noQuote": 180
+        "noQuote": 206
       },
       "s_changancheng": {
-        "updated": 173,
-        "total": 414,
+        "updated": 177,
+        "total": 444,
         "filtered": 27,
-        "noQuote": 241
+        "noQuote": 267
       },
       "s_douzhuang": {
-        "updated": 188,
-        "total": 414,
+        "updated": 192,
+        "total": 444,
         "filtered": 34,
-        "noQuote": 226
-      },
-      "s_qiankun": {
-        "updated": 230,
-        "total": 414,
-        "filtered": 35,
-        "noQuote": 184
-      },
-      "s_weiwo": {
-        "updated": 247,
-        "total": 414,
-        "filtered": 24,
-        "noQuote": 167
-      },
-      "s_juedai": {
-        "updated": 219,
-        "total": 414,
-        "filtered": 31,
-        "noQuote": 195
-      },
-      "s_tianeping": {
-        "updated": 216,
-        "total": 414,
-        "filtered": 33,
-        "noQuote": 198
-      },
-      "s_feilong": {
-        "updated": 162,
-        "total": 414,
-        "filtered": 41,
         "noQuote": 252
       },
+      "s_qiankun": {
+        "updated": 235,
+        "total": 444,
+        "filtered": 36,
+        "noQuote": 209
+      },
+      "s_weiwo": {
+        "updated": 253,
+        "total": 444,
+        "filtered": 27,
+        "noQuote": 191
+      },
+      "s_juedai": {
+        "updated": 225,
+        "total": 444,
+        "filtered": 31,
+        "noQuote": 219
+      },
+      "s_tianeping": {
+        "updated": 223,
+        "total": 444,
+        "filtered": 33,
+        "noQuote": 221
+      },
+      "s_feilong": {
+        "updated": 165,
+        "total": 444,
+        "filtered": 41,
+        "noQuote": 279
+      },
       "s_jiutian": {
-        "updated": 139,
-        "total": 414,
+        "updated": 141,
+        "total": 444,
         "filtered": 34,
-        "noQuote": 275
+        "noQuote": 303
       },
       "s_meijianxue": {
-        "updated": 148,
-        "total": 414,
-        "filtered": 26,
-        "noQuote": 266
+        "updated": 152,
+        "total": 444,
+        "filtered": 27,
+        "noQuote": 292
       },
       "s_shanhai": {
-        "updated": 134,
-        "total": 414,
+        "updated": 137,
+        "total": 444,
         "filtered": 25,
-        "noQuote": 280
+        "noQuote": 307
       },
       "s_aoxue": {
         "updated": 77,
-        "total": 414,
+        "total": 444,
         "filtered": 19,
-        "noQuote": 337
+        "noQuote": 367
       }
     },
-    "stonePriceUpdatedAt": "2026-11-21T17:05:09+08:00",
+    "stonePriceUpdatedAt": "2026-11-21T17:12:39+08:00",
     "stoneVerifiedAt": "2026-11-19"
   },
   "tiers": [
@@ -6281,6 +6281,406 @@ window.JX3Data = {
       "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
       "custom": false,
       "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89309",
+      "gameKey": "5_89309",
+      "name": "长安珍馐宴（通用）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89310",
+      "gameKey": "5_89310",
+      "name": "华岳开锋宴（外攻）",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 11800,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89347",
+      "gameKey": "5_89347",
+      "name": "云芝竹沥羹·精",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1050.09,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89356",
+      "gameKey": "5_89356",
+      "name": "山城毛血旺·精",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 890.13,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89358",
+      "gameKey": "5_89358",
+      "name": "云州刀削面·精",
+      "skillId": "pengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1158.99,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89447",
+      "gameKey": "5_89447",
+      "name": "云锦绣·腕（身法）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 29999,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89449",
+      "gameKey": "5_89449",
+      "name": "云锦绣·腕（力道）",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112790_2",
+      "gameKey": "7_112790",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112791_2",
+      "gameKey": "7_112791",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114859_2",
+      "gameKey": "7_114859",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114860_2",
+      "gameKey": "7_114860",
+      "name": "无观鞋·内·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112793_2",
+      "gameKey": "7_112793",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112794_2",
+      "gameKey": "7_112794",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114862_2",
+      "gameKey": "7_114862",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114863_2",
+      "gameKey": "7_114863",
+      "name": "无观鞋·外·荒",
+      "skillId": "fengren",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89323",
+      "gameKey": "5_89323",
+      "name": "竹沥清心露·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1000.34,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89326",
+      "gameKey": "5_89326",
+      "name": "五气归元丹·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1295.39,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89334",
+      "gameKey": "5_89334",
+      "name": "巴山凝神丹·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 1489.64,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89338",
+      "gameKey": "5_89338",
+      "name": "河洛生息丹·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_89339",
+      "gameKey": "5_89339",
+      "name": "云州固阵丹·精",
+      "skillId": "zhiyao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 2000,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89371",
+      "gameKey": "5_89371",
+      "name": "苍生·瀑沙焠晶（武伤）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 5555,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false,
+      "priceSource": "auction"
+    },
+    {
+      "id": "m_x_5_89374",
+      "gameKey": "5_89374",
+      "name": "苍生·巨灵焠晶（仇恨）",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112784_2",
+      "gameKey": "7_112784",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112785_2",
+      "gameKey": "7_112785",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114853_2",
+      "gameKey": "7_114853",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114854_2",
+      "gameKey": "7_114854",
+      "name": "无观冠·内·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112787_2",
+      "gameKey": "7_112787",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_112788_2",
+      "gameKey": "7_112788",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114856_2",
+      "gameKey": "7_114856",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_7_114857_2",
+      "gameKey": "7_114857",
+      "name": "无观冠·外·荒",
+      "skillId": "duanzao",
+      "kind": "product",
+      "tier": 4,
+      "source": "制造",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 当前赛季配方 · 2026-11-21",
+      "custom": false
     }
   ],
   "recipes": [
@@ -6323,9 +6723,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "上衣 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -6367,9 +6767,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "鞋 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -6411,9 +6811,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "护手 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -6603,9 +7003,9 @@ window.JX3Data = {
           "qty": 6
         }
       ],
-      "note": "背包 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -6903,9 +7303,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "上衣 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -6947,9 +7347,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "上衣 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7010,7 +7410,15 @@ window.JX3Data = {
           "item": "m_m_5_89433",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89447",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -7035,9 +7443,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "刺绣 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7054,7 +7462,15 @@ window.JX3Data = {
           "item": "m_m_5_89435",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89449",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -7079,9 +7495,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "刺绣 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7163,9 +7579,9 @@ window.JX3Data = {
           "qty": 2
         }
       ],
-      "note": "制品 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7207,9 +7623,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "制品 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7226,7 +7642,50 @@ window.JX3Data = {
           "item": "m_m_7_112569",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_114864",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112793_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112794_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114862_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114863_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114864",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
         }
       ],
       "materials": [
@@ -7251,9 +7710,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "鞋 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7270,7 +7729,50 @@ window.JX3Data = {
           "item": "m_m_7_112568",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_114861",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112790_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112791_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114859_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114860_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114861",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
         }
       ],
       "materials": [
@@ -7295,9 +7797,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "鞋 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7383,9 +7885,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "护手 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -7427,9 +7929,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "护手 · JX3BOX 当前版本配方",
+      "note": "缝纫 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -8202,7 +8704,15 @@ window.JX3Data = {
           "item": "m_m_5_89303",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89309",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -8227,9 +8737,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "宴席 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -8559,9 +9069,9 @@ window.JX3Data = {
           "qty": 4
         }
       ],
-      "note": "烹饪材料 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -8578,7 +9088,15 @@ window.JX3Data = {
           "item": "m_m_5_89304",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89310",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -8603,9 +9121,9 @@ window.JX3Data = {
           "qty": 1
         }
       ],
-      "note": "宴席 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -8695,9 +9213,9 @@ window.JX3Data = {
           "qty": 3
         }
       ],
-      "note": "特殊食品 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -8748,9 +9266,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89352",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89358",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -8775,9 +9301,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -8792,9 +9318,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89350",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89356",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -8819,9 +9353,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -8880,9 +9414,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89346",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89347",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -8907,9 +9449,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -9228,9 +9770,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89333",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89339",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -9255,9 +9805,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -9536,9 +10086,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89322",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89323",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -9563,9 +10121,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -9687,9 +10245,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "医术材料 · JX3BOX 当前版本配方",
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -9704,9 +10262,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89328",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89334",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -9731,9 +10297,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -9748,9 +10314,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89332",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89338",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -9775,9 +10349,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -9836,9 +10410,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89325",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89326",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -9863,9 +10445,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -9964,7 +10546,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "juling_chou",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -9987,9 +10569,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10124,9 +10706,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89370",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89374",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -10147,9 +10737,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10271,9 +10861,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "帽子 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10315,9 +10905,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "腰带 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10359,9 +10949,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "裤子 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10403,9 +10993,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "消耗品 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10792,9 +11382,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89367",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9600000381469727
+        },
+        {
+          "item": "m_x_5_89371",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.039999961853027344
         }
       ],
       "materials": [
@@ -10815,9 +11413,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "消耗品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10895,9 +11493,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "裤子 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -10939,9 +11537,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "裤子 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -11027,9 +11625,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "腰带 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -11071,9 +11669,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "腰带 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -11254,7 +11852,50 @@ window.JX3Data = {
           "item": "m_m_7_112582",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.7600002288818359
+        },
+        {
+          "item": "m_x_7_114858",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112787_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_112788_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.013333320617675781
+        },
+        {
+          "item": "m_x_7_114856_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114857_2",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
+        },
+        {
+          "item": "m_x_7_114858",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.0666666030883789
         }
       ],
       "materials": [
@@ -11279,9 +11920,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "帽子 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -11323,9 +11964,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "帽子 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -11407,9 +12048,9 @@ window.JX3Data = {
           "qty": 3
         }
       ],
-      "note": "制品 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -11451,9 +12092,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "制品 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -11611,9 +12252,9 @@ window.JX3Data = {
           "qty": 4
         }
       ],
-      "note": "礼品 · JX3BOX 当前版本配方",
+      "note": "锻造 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -12119,9 +12760,9 @@ window.JX3Data = {
           "qty": 5
         }
       ],
-      "note": "材料 · JX3BOX 当前版本配方",
+      "note": "梓匠 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-21",
       "custom": false
     },
     {
@@ -14426,35 +15067,35 @@ window.JX3Data = {
           "chance": 0.7600002288818359
         },
         {
-          "item": "m_x_7_112789",
+          "item": "m_x_7_114861",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112790",
+          "item": "m_x_7_112790_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112791",
+          "item": "m_x_7_112791_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_114859",
+          "item": "m_x_7_114859_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.0666666030883789
         },
         {
-          "item": "m_x_7_114860",
+          "item": "m_x_7_114860_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
@@ -14557,35 +15198,35 @@ window.JX3Data = {
           "chance": 0.7600002288818359
         },
         {
-          "item": "m_x_7_112792",
+          "item": "m_x_7_114864",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112793",
+          "item": "m_x_7_112793_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112794",
+          "item": "m_x_7_112794_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_114862",
+          "item": "m_x_7_114862_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.0666666030883789
         },
         {
-          "item": "m_x_7_114863",
+          "item": "m_x_7_114863_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
@@ -16004,35 +16645,35 @@ window.JX3Data = {
           "chance": 0.7600002288818359
         },
         {
-          "item": "m_x_7_112783",
+          "item": "m_x_7_114855",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112784",
+          "item": "m_x_7_112784_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112785",
+          "item": "m_x_7_112785_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_114853",
+          "item": "m_x_7_114853_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.0666666030883789
         },
         {
-          "item": "m_x_7_114854",
+          "item": "m_x_7_114854_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
@@ -16091,35 +16732,35 @@ window.JX3Data = {
           "chance": 0.7600002288818359
         },
         {
-          "item": "m_x_7_112786",
+          "item": "m_x_7_114858",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112787",
+          "item": "m_x_7_112787_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112788",
+          "item": "m_x_7_112788_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_114856",
+          "item": "m_x_7_114856_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.0666666030883789
         },
         {
-          "item": "m_x_7_114857",
+          "item": "m_x_7_114857_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
@@ -16178,35 +16819,35 @@ window.JX3Data = {
           "chance": 0.7600002288818359
         },
         {
-          "item": "m_x_7_112783",
+          "item": "m_x_7_114855",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112784",
+          "item": "m_x_7_112784_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_112785",
+          "item": "m_x_7_112785_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.013333320617675781
         },
         {
-          "item": "m_x_7_114853",
+          "item": "m_x_7_114853_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 0.0666666030883789
         },
         {
-          "item": "m_x_7_114854",
+          "item": "m_x_7_114854_2",
           "qty": 1,
           "qtyMin": 1,
           "qtyMax": 1,
@@ -17433,7 +18074,17 @@ window.JX3Data = {
       "m_x_5_89320": 443.51,
       "m_x_5_89426": 2100,
       "m_x_5_89427": 1688.75,
-      "m_x_5_89428": 2700
+      "m_x_5_89428": 2700,
+      "m_x_5_89310": 11800,
+      "m_x_5_89347": 1050.09,
+      "m_x_5_89356": 890.13,
+      "m_x_5_89358": 1158.99,
+      "m_x_5_89447": 29999,
+      "m_x_5_89323": 1000.34,
+      "m_x_5_89326": 1295.39,
+      "m_x_5_89334": 1489.64,
+      "m_x_5_89339": 2000,
+      "m_x_5_89371": 5555
     },
     "s_pozhenzi": {
       "fengwangjiang": 156.97,
@@ -17620,7 +18271,11 @@ window.JX3Data = {
       "m_x_5_89319": 398,
       "m_x_5_89320": 2465,
       "m_x_5_89426": 3200.15,
-      "m_x_5_89428": 3999.99
+      "m_x_5_89428": 3999.99,
+      "m_x_5_89347": 1000,
+      "m_x_5_89356": 1248.09,
+      "m_x_5_89358": 1086.62,
+      "m_x_5_89326": 2390
     },
     "s_dielianhua": {
       "fengwangjiang": 159.89,
@@ -17797,7 +18452,11 @@ window.JX3Data = {
       "m_x_5_20971": 299,
       "m_x_5_89317": 995.16,
       "m_x_5_89426": 1611.96,
-      "m_x_5_89428": 3777
+      "m_x_5_89428": 3777,
+      "m_x_5_89347": 1100.41,
+      "m_x_5_89356": 3308.16,
+      "m_x_5_89358": 1979.58,
+      "m_x_5_89326": 1388
     },
     "s_jiandan": {
       "fengwangjiang": 155.03,
@@ -17977,7 +18636,13 @@ window.JX3Data = {
       "m_x_5_89396": 5500,
       "m_x_5_20971": 100.08,
       "m_x_5_89317": 1100.86,
-      "m_x_10_2241": 1201
+      "m_x_10_2241": 1201,
+      "m_x_5_89310": 15999.91,
+      "m_x_5_89347": 1200.77,
+      "m_x_5_89356": 2280.4,
+      "m_x_5_89358": 1737.95,
+      "m_x_5_89323": 6789,
+      "m_x_5_89326": 1109.01
     },
     "s_youyuelun": {
       "fengwangjiang": 157.97,
@@ -18190,7 +18855,12 @@ window.JX3Data = {
       "m_x_5_20971": 199.68,
       "m_x_10_1281": 599,
       "m_x_5_89317": 899.01,
-      "m_x_5_89320": 1000
+      "m_x_5_89320": 1000,
+      "m_x_5_89347": 1288.86,
+      "m_x_5_89356": 1500.04,
+      "m_x_5_89358": 1050.06,
+      "m_x_5_89326": 2760.18,
+      "m_x_5_89334": 2865.53
     },
     "s_longzheng": {
       "fengwangjiang": 152.21,
@@ -18426,7 +19096,11 @@ window.JX3Data = {
       "m_x_5_89320": 2088.49,
       "m_x_5_89426": 3399,
       "m_x_5_89427": 2222.22,
-      "m_x_5_89428": 2500
+      "m_x_5_89428": 2500,
+      "m_x_5_89347": 958,
+      "m_x_5_89358": 993.99,
+      "m_x_5_89326": 1250,
+      "m_x_5_89334": 3157.99
     },
     "s_changancheng": {
       "fengwangjiang": 150.61,
@@ -18601,7 +19275,11 @@ window.JX3Data = {
       "m_x_5_20971": 106.99,
       "m_x_5_89317": 500.73,
       "m_x_10_2241": 1499.96,
-      "m_x_5_89320": 2000
+      "m_x_5_89320": 2000,
+      "m_x_5_89347": 1200.97,
+      "m_x_5_89358": 1069.79,
+      "m_x_5_89326": 1404.47,
+      "m_x_5_89334": 2222.06
     },
     "s_douzhuang": {
       "fengwangjiang": 169.13,
@@ -18791,7 +19469,11 @@ window.JX3Data = {
       "m_x_10_2229": 399.99,
       "m_x_5_89317": 1550.93,
       "m_x_10_2241": 1188.19,
-      "m_x_5_89426": 3295.75
+      "m_x_5_89426": 3295.75,
+      "m_x_5_89347": 1329,
+      "m_x_5_89356": 3000,
+      "m_x_5_89358": 1485.24,
+      "m_x_5_89326": 1995.94
     },
     "s_qiankun": {
       "fengwangjiang": 162.29,
@@ -19023,7 +19705,12 @@ window.JX3Data = {
       "m_x_10_2241": 1271.19,
       "m_x_5_89426": 3730.01,
       "m_x_5_89427": 3800,
-      "m_x_5_89428": 2580.7
+      "m_x_5_89428": 2580.7,
+      "m_x_5_89347": 888.88,
+      "m_x_5_89356": 978.1,
+      "m_x_5_89358": 1148.96,
+      "m_x_5_89326": 1676.83,
+      "m_x_5_89334": 3431.88
     },
     "s_weiwo": {
       "fengwangjiang": 175.52,
@@ -19272,7 +19959,13 @@ window.JX3Data = {
       "m_x_5_89320": 70,
       "m_x_5_89426": 2449.7,
       "m_x_5_89427": 2829.99,
-      "m_x_5_89428": 1999.4
+      "m_x_5_89428": 1999.4,
+      "m_x_5_89310": 11740.49,
+      "m_x_5_89347": 1987.09,
+      "m_x_5_89356": 1048.33,
+      "m_x_5_89358": 1088.14,
+      "m_x_5_89326": 1347.05,
+      "m_x_5_89334": 1250.1
     },
     "s_juedai": {
       "fengwangjiang": 166.89,
@@ -19493,7 +20186,13 @@ window.JX3Data = {
       "m_x_10_2028": 649.97,
       "m_x_10_2241": 974,
       "m_x_5_89320": 1000,
-      "m_x_5_89428": 3877.2
+      "m_x_5_89428": 3877.2,
+      "m_x_5_89310": 13675.48,
+      "m_x_5_89347": 1249,
+      "m_x_5_89356": 1160,
+      "m_x_5_89358": 1295,
+      "m_x_5_89326": 1200.55,
+      "m_x_5_89334": 4970.23
     },
     "s_tianeping": {
       "fengwangjiang": 153.83,
@@ -19711,7 +20410,14 @@ window.JX3Data = {
       "m_x_10_2241": 1599.38,
       "m_x_5_89320": 1499,
       "m_x_5_89426": 2900,
-      "m_x_5_89427": 2185
+      "m_x_5_89427": 2185,
+      "m_x_5_89310": 11999.99,
+      "m_x_5_89347": 1056.04,
+      "m_x_5_89356": 1300.02,
+      "m_x_5_89358": 999.25,
+      "m_x_5_89323": 2000,
+      "m_x_5_89326": 1300.66,
+      "m_x_5_89334": 1999.84
     },
     "s_feilong": {
       "fengwangjiang": 171.68,
@@ -19875,7 +20581,10 @@ window.JX3Data = {
       "m_x_5_89317": 1099,
       "m_x_5_89320": 1995.85,
       "m_x_5_89426": 3600.44,
-      "m_x_5_89427": 3000
+      "m_x_5_89427": 3000,
+      "m_x_5_89347": 1374,
+      "m_x_5_89358": 1100,
+      "m_x_5_89326": 1200
     },
     "s_jiutian": {
       "fengwangjiang": 1050,
@@ -20016,7 +20725,9 @@ window.JX3Data = {
       "m_x_5_89388": 7977,
       "m_x_5_89391": 7199,
       "m_x_5_20971": 1.55,
-      "m_x_5_89317": 1778
+      "m_x_5_89317": 1778,
+      "m_x_5_89347": 3666.01,
+      "m_x_5_89334": 2888
     },
     "s_meijianxue": {
       "fengwangjiang": 187.16,
@@ -20166,7 +20877,11 @@ window.JX3Data = {
       "m_x_5_89396": 6999.06,
       "m_x_10_2229": 400.8,
       "m_x_5_89317": 1200,
-      "m_x_5_89320": 1200
+      "m_x_5_89320": 1200,
+      "m_x_5_89347": 1400.61,
+      "m_x_5_89356": 3000.41,
+      "m_x_5_89358": 1500,
+      "m_x_5_89326": 2499.55
     },
     "s_shanhai": {
       "fengwangjiang": 183.48,
@@ -20302,7 +21017,10 @@ window.JX3Data = {
       "m_x_5_89396": 6999.84,
       "m_x_5_20971": 99.98,
       "m_x_5_89317": 850,
-      "m_x_5_89426": 2918.75
+      "m_x_5_89426": 2918.75,
+      "m_x_5_89347": 1494.18,
+      "m_x_5_89358": 2469.99,
+      "m_x_5_89326": 1999
     },
     "s_aoxue": {
       "fengwangjiang": 348.99,

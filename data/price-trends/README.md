@@ -49,8 +49,8 @@ node scripts/build-price-trends.mjs --dry-run
 
 | 数据 | 体积 |
 | --- | ---: |
-| 原始 `price-history/days`（17 服全量） | 766 KB（gzip 约 151 KB） |
-| 区服趋势 `days/`（17 服报价增量） | 577 KB（gzip 约 125 KB） |
+| 原始 `price-history/days`（17 服全量） | 769 KB（gzip 约 151 KB） |
+| 区服趋势 `days/`（17 服报价增量） | 580 KB（gzip 约 125 KB） |
 | 物价走势 `servers/<id>/`（17 服 + 目录兜底） | 1.35 MB（gzip 约 186 KB） |
 | 单服走势 `servers/<id>/` 日均 | 约 18 KB（gzip 约 2 KB） |
 | 单服走势 4 天 | 约 78 KB（gzip 约 10 KB） |
