@@ -599,6 +599,32 @@
     });
     return html;
   }
+
+  const CATEGORY_META = {};
+  (DATA.meta.categories || []).forEach(function (c) { CATEGORY_META[c.id] = c; });
+  function categoryName(id) {
+    if (id === 'life') return '配方相关';
+    return (CATEGORY_META[id] && CATEGORY_META[id].name) || '其他';
+  }
+  function categoryOptions(selected) {
+    let html = '<option value="">全部分类</option>';
+    html += '<option value="life"' + (selected === 'life' ? ' selected' : '') + '>配方相关</option>';
+    (DATA.meta.categories || []).forEach(function (c) {
+      html += '<option value="' + c.id + '"' + (selected === c.id ? ' selected' : '') + '>' + U.esc(c.name) + '</option>';
+    });
+    return html;
+  }
+  function itemCategory(it) {
+    return it.category || (it.life ? 'life' : 'other');
+  }
+  function categoryCounts() {
+    const counts = {};
+    (Store.state.items || []).forEach(function (it) {
+      const c = itemCategory(it);
+      counts[c] = (counts[c] || 0) + 1;
+    });
+    return counts;
+  }
   function currentServerUpdatedAt() {
     let ts = 0;
     const bucket = Store.state.prices[Store.state.serverId] || {};
@@ -731,7 +757,7 @@
   const PAGE_TITLES = {
     '/overview': '总览',
     '/skills': '生活技艺',
-    '/prices': '价格库',
+    '/prices': '行情',
     '/analysis': '精力收益分析',
     '/trends': '物价走势',
     '/server-trends': '区服趋势',
@@ -749,9 +775,9 @@
         ]
       },
       {
-        group: '行情与配方', items: [
+        group: '行情', items: [
           { href: Route.href('/skills/shennong'), label: '生活技艺', icon: 'hammer', path: '/skills', badge: DATA.skills.length },
-          { href: Route.href('/prices'), label: '价格库', icon: 'database', path: '/prices', badge: miss || '' },
+          { href: Route.href('/prices'), label: '行情', icon: 'database', path: '/prices', badge: miss || '' },
           { href: Route.href('/stones'), label: '五行石', icon: 'gem', path: '/stones', badge: (DATA.stones || []).length || '' }
         ]
       },
@@ -862,6 +888,10 @@
     const stats = Calc.stats(Store.state.serverId);
     const audit = auditServer(Store.state.serverId);
     const ac = audit && audit.items;
+    const catCounts = categoryCounts();
+    const categoryBadges = (DATA.meta.categories || []).map(function (c) {
+      return '<span class="badge badge-outline">' + U.esc(c.name) + ' ' + (catCounts[c.id] || 0) + '</span>';
+    }).join('');
     const sim = Calc.simulate(rows, settings().energyBudget);
     const type = p.type || 'all';
     const tierId = p.tier || '';
@@ -884,7 +914,8 @@
 
     let html = '<div class="page">';
     html += '<div class="page-head"><div><h1 class="page-title">总览</h1>' +
-      '<p class="page-sub">苍生铸世 50 级 · 生活技艺成本与精力收益一览。所有价格按「' + U.esc(server().name) + '」计算，示例价可直接使用，校准后更贴近本服。</p></div>' +
+      '<p class="page-sub">苍生铸世 50 级 · 生活技艺成本、精力收益与行情目录。所有价格按「' + U.esc(server().name) + '」计算；配方物品参与收益，行情物品只做价格查询。</p>' +
+      '<div class="flex" style="flex-wrap:wrap;gap:6px;margin-top:8px"><span class="badge badge-outline">行情目录 ' + DATA.items.length + '</span>' + categoryBadges + '</div></div>' +
       '<div class="page-tools">' +
         '<span class="badge badge-outline" title="可在设置中修改默认成本口径">成本口径：' + (currentBasis(p) === 'min' ? '取最低' : '市场价') + '</span>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
@@ -1013,7 +1044,7 @@
             { label: '制造', value: avgPerEnergy(rows.filter(function (r) { return r.type === 'craft'; })) },
             { palette: Charts.palette(ui.theme) }
           ) +
-          '<div class="flex" style="margin-top:4px"><a class="btn btn-sm" href="' + Route.href('/prices') + '">校准价格库 ' + icon('arrowRight') + '</a>' +
+          '<div class="flex" style="margin-top:4px"><a class="btn btn-sm" href="' + Route.href('/prices') + '">校准行情 ' + icon('arrowRight') + '</a>' +
           '<button class="btn btn-sm" data-action="toggle-server-menu">切换服务器</button></div>' +
         '</div>' +
       '</section>' +
@@ -1507,7 +1538,7 @@
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
-        '<a class="btn" href="' + Route.href('/prices') + '">' + icon('database') + '<span class="txt">价格库</span></a>' +
+        '<a class="btn" href="' + Route.href('/prices') + '">' + icon('database') + '<span class="txt">行情</span></a>' +
       '</div></div>';
 
     html += '<div class="grid"><aside class="col-3"><div class="skill-nav-wrap">' + navHtml + '</div></aside><div class="col-9 flex-col" style="min-width:0">';
@@ -1533,7 +1564,7 @@
           '<span class="spacer"></span><span class="tiny dim">' + filtered.length + ' 条结果</span>' +
         '</div>' +
         (missingRows ? '<div style="margin-top:12px">' + notice('本技艺有 <b>' + missingRows + '</b> 个配方存在未定价材料或产物，收益会被低估。' +
-          '<a class="link" href="' + Route.href('/prices') + '">去价格库补价</a>') + '</div>' : '') +
+          '<a class="link" href="' + Route.href('/prices') + '">去行情补价</a>') + '</div>' : '') +
       '</div>';
 
     if (!filtered.length) {
@@ -1595,7 +1626,7 @@
     const items = ids.map(item).filter(Boolean).sort(function (a, b) { return a.name.localeCompare(b.name, 'zh-CN'); });
     return '<section class="card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">本技艺材料行情</h2>' +
       '<p class="card-sub">直接改价，本页收益即时重算 · 共 ' + items.length + ' 项</p></div>' +
-      '<div class="card-tools"><a class="btn btn-sm" href="' + Route.href('/prices', { skill: sk.id }) + '">打开完整价格库 ' + icon('arrowRight') + '</a></div></div>' +
+      '<div class="card-tools"><a class="btn btn-sm" href="' + Route.href('/prices', { skill: sk.id }) + '">打开完整行情 ' + icon('arrowRight') + '</a></div></div>' +
       '<div class="table-wrap medium"><table class="data compact"><thead><tr><th>物品</th><th>类型</th><th>品阶</th><th>来源</th><th class="num">本服单价（金）</th><th>状态</th><th class="num">更新时间</th></tr></thead><tbody>' +
       items.map(function (it) {
         const p = Store.price(Store.state.serverId, it.id);
@@ -1624,7 +1655,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 价格库                                                             */
+  /* 行情                                                             */
   /* ------------------------------------------------------------------ */
   const itemUsageSkills = (function () {
     const map = Object.create(null);
@@ -1645,15 +1676,18 @@
   function itemSearchText(it) {
     const names = itemSkillIds(it).map(function (id) { return skill(id).name; });
     const t = DATA.tiers.filter(function (x) { return String(x.id) === String(it.tier); })[0];
-    return [it.name, names.join(' '), (t && t.name) || '', it.origin || ''].join(' ');
+    return [it.name, names.join(' '), categoryName(itemCategory(it)), (t && t.name) || '', it.origin || ''].join(' ');
   }
   function filteredItems(p) {
     const q = (p.q || '').trim();
     const skillId = p.skill || '';
+    const category = p.category || '';
     const kind = p.kind || '';
     const missingOnly = p.missing === '1';
     return Store.state.items.filter(function (it) {
       if (skillId && itemSkillIds(it).indexOf(skillId) === -1) return false;
+      if (category === 'life' && !it.life) return false;
+      if (category && category !== 'life' && itemCategory(it) !== category) return false;
       if (kind && it.kind !== kind) return false;
       if (missingOnly && !Store.price(Store.state.serverId, it.id).missing) return false;
       if (q && !U.includes(itemSearchText(it), q)) return false;
@@ -1713,13 +1747,17 @@
     const vendorCount = ac ? ac.vendor : 0;
     const baseCount = ac ? ac.base : stats.seed;
     const missingCount = ac ? ac.missing : stats.missing;
-    const items = filteredItems(p);
+    const allItems = filteredItems(p);
+    const pageSize = 100;
+    const totalPages = Math.max(1, Math.ceil(allItems.length / pageSize));
+    const page = Math.min(totalPages, Math.max(1, Number(p.page) || 1));
+    const items = allItems.slice((page - 1) * pageSize, page * pageSize);
     const spreads = serverSpreads();
     const q = p.q || '';
 
     let html = '<div class="page">';
-    html += '<div class="page-head"><div><h1 class="page-title">价格库</h1>' +
-      '<p class="page-sub">为「' + U.esc(server().name) + '」填写每种材料与成品的交易行价格。示例价基于当前版本样本行情，可直接参与计算；校准后收益更贴近本服。</p></div>' +
+    html += '<div class="page-head"><div><h1 class="page-title">行情</h1>' +
+      '<p class="page-sub">为「' + U.esc(server().name) + '」查看材料、成品与家园/消耗品等行情。配方物品参与收益计算；行情物品只做价格查询。</p></div>' +
       '<div class="page-tools">' +
         '<button class="btn" data-action="export-csv" data-csv="prices">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
         '<a class="btn btn-primary" href="' + Route.href('/analysis') + '">' + icon('chart') + '<span class="txt">看收益分析</span></a>' +
@@ -1741,6 +1779,7 @@
       '<h2 class="card-title">本服物品价格</h2><p class="card-sub">直接在表格中改价，失焦或回车即保存 · 共 ' + items.length + ' 项</p></div>' +
       '<div class="card-tools">' +
         '<div class="search-box">' + icon('search') + '<input class="input" type="search" placeholder="搜索物品" value="' + U.esc(q) + '" data-search="q" data-fkey="search" aria-label="搜索物品"></div>' +
+        '<select class="select" data-filter="category" aria-label="分类筛选" style="width:104px">' + categoryOptions(p.category || '') + '</select>' +
         '<select class="select" data-filter="skill" aria-label="技艺筛选" style="width:96px">' + skillOptions(p.skill || '') + '</select>' +
         '<select class="select" data-filter="kind" aria-label="类型筛选" style="width:88px"><option value="">全部类型</option>' +
           '<option value="material"' + (p.kind === 'material' ? ' selected' : '') + '>材料</option>' +
@@ -1750,20 +1789,21 @@
       '</div></div>';
 
     if (!items.length) {
-      html += emptyState('没有匹配的物品', '调整搜索或筛选条件；也可以在价格库新增自定义成品后补价。', '<a class="btn btn-sm" href="' + Route.href('/skills/shennong') + '">去生活技艺</a>');
+      html += emptyState('没有匹配的物品', '调整搜索或分类筛选条件。', '<a class="btn btn-sm" href="' + Route.href('/skills/shennong') + '">去生活技艺</a>');
     } else {
       html += '<div class="table-wrap tall"><table class="data"><thead><tr>' +
-        '<th class="sticky">物品</th><th>技艺</th><th>类型</th><th>品阶</th><th>获取</th><th>报价</th>' +
+        '<th class="sticky">物品</th><th>分类</th><th>技艺</th><th>类型</th><th>品阶</th><th>获取</th><th>报价</th>' +
         '<th class="num">本服单价（金）</th><th>价格状态</th><th class="num">更新时间</th><th></th>' +
       '</tr></thead><tbody>' +
       items.map(function (it) {
         const p = Store.price(Store.state.serverId, it.id);
-        const sk = skill(it.skillId);
+        const sk = it.skillId ? skill(it.skillId) : { name: '—', color: '#64748B', icon: 'database' };
         return '<tr data-item-row="' + U.esc(it.id) + '">' +
           '<td class="sticky"><div class="cell-main">' + skillIcon(sk, 'sm') + '<div class="txt"><div class="t1">' + U.esc(it.name) +
             (it.custom ? ' <span class="badge badge-custom">自定义</span>' : '') +
             '</div><div class="t2">' + U.esc(it.origin || '') + '</div></div></div></td>' +
-          '<td class="dim">' + U.esc(sk.name) + '</td>' +
+          '<td class="dim">' + U.esc(categoryName(itemCategory(it))) + '</td>' +
+          '<td class="dim">' + U.esc(it.skillId ? sk.name : '—') + '</td>' +
           '<td><span class="dim">' + (it.kind === 'product' ? '产物' : '材料') + '</span></td>' +
           '<td>' + tierBadge(tier(it.tier)) + '</td>' +
           '<td class="dim">' + U.esc(it.source || '—') + '</td>' +
@@ -1775,7 +1815,12 @@
         '</tr>';
       }).join('') +
       '</tbody></table></div>' +
-      '<div class="card-foot"><span>实价=本服拍卖报价；商店=主城常驻；示例=无报价回退目录价，仅兼容视图参与；缺价不补。</span><span class="spacer"></span><span>共 ' + items.length + ' 项</span></div>';
+      '<div class="card-foot"><span>实价=本服拍卖报价；商店=主城常驻；示例=无报价回退目录价，仅兼容视图参与；缺价不补。</span><span class="spacer"></span><span>共 ' + allItems.length + ' 项 · 第 ' + page + ' / ' + totalPages + ' 页</span></div>' +
+      (totalPages > 1 ? '<div class="flex" style="justify-content:center;gap:8px;padding:12px">' +
+        '<button class="btn btn-sm" data-filter="page" data-value="' + (page - 1) + '"' + (page <= 1 ? ' disabled' : '') + '>上一页</button>' +
+        '<span class="tiny dim" style="align-self:center">第 ' + page + ' / ' + totalPages + ' 页</span>' +
+        '<button class="btn btn-sm" data-filter="page" data-value="' + (page + 1) + '"' + (page >= totalPages ? ' disabled' : '') + '>下一页</button>' +
+      '</div>' : '');
     }
     html += '</section>';
 
@@ -1796,7 +1841,7 @@
         '<div class="info-row"><span class="k">数据版本</span><span class="v">' + U.esc(DATA.meta.version) + ' · ' + U.esc(DATA.meta.catalogVersion) + '</span></div>' +
       '</div>' +
       '<div class="hairline"></div>' +
-      '<p class="tiny dim" style="line-height:16px">物品名目来自 JX3BOX 当前版本配方；各服优先取 JX3BOX 拍卖样本，过滤异常/低样本；该服无报价时回退梦江南示例价。所有价格都可编辑，不代表实时行情。</p>' +
+      '<p class="tiny dim" style="line-height:16px">物品名目来自 JX3BOX 当前版本配方与行情目录；各服优先取 JX3BOX 拍卖样本，过滤异常/低样本；该服无报价时回退目录示例价。所有价格都可编辑，不代表实时行情。</p>' +
       '<div class="flex" style="margin-top:10px"><button class="btn btn-sm" data-action="open-data">查看完整来源</button></div>' +
       '</div></section>';
     html += '</aside></div>';
@@ -2418,6 +2463,10 @@
     if (skillId && skillId !== 'stone' && !DATA.skills.some(function (s) { return s.id === skillId; })) {
       skillId = '';
     }
+    let category = p.tcategory || '';
+    if (category && category !== 'life' && !(DATA.meta.categories || []).some(function (c) { return c.id === category; })) {
+      category = '';
+    }
     const skill = DATA.skills.filter(function (s) { return s.id === skillId; })[0];
     let type = p.ttype || 'all';
     if (skillId === 'stone') {
@@ -2428,7 +2477,7 @@
       type = 'all';
     }
     const priceRange = trendPriceRange(p);
-    const allScope = T.items(type, skillId).map(function (item, index) {
+    const allScope = T.items(type, skillId, category).map(function (item, index) {
       return Object.assign({}, item, { color: trendItemColor(index) });
     });
     const seriesMap = {};
@@ -2475,7 +2524,7 @@
       T: T, view: view, points: points,
       rawReady: rawReady, rawPoints: rawPoints,
       skillId: skillId, skill: skill || null,
-      type: type, scopeItems: scopeItems, scopeKeys: scopeKeys,
+      category: category, type: type, scopeItems: scopeItems, scopeKeys: scopeKeys,
       selectedKeys: selectedKeys, selectedItems: selectedItems,
       rankedItems: rankedItems, focusKey: focusKey, focusItem: focusItemColored, focusSeries: focusSeries,
       seriesMap: seriesMap, priceRange: priceRange,
@@ -2499,6 +2548,7 @@
     const pickerOpen = ui.trendPickerOpen ? ' open' : '';
     const skill = ctx.skill;
     const skillLabel = ctx.skillId === 'stone' ? '五行石' : (skill ? skill.name : '全部技艺');
+    const categoryLabel = ctx.category ? categoryName(ctx.category) : '全部分类';
     const typeLabel = ctx.type === 'material' ? '材料' : ctx.type === 'product' ? '产物' : ctx.type === 'stone' ? '五行石' : '全部类型';
     const syncLabel = view.partial || view.stale ? ' · 更新中' : '';
     const timeLabel = fromDate.slice(5) + ' ' + fromHour + ':00 – ' + toDate.slice(5) + ' ' + toHour + ':00' + syncLabel;
@@ -2506,7 +2556,7 @@
     let html = '<section class="card trend-filter-card"><div class="card-body tight">' +
       '<button class="trend-filter-toggle" data-action="toggle-trend-filter" aria-expanded="' + (filterOpen ? 'true' : 'false') + '">' +
         '<span class="trend-filter-toggle-main">' + icon('filter') + '筛选</span>' +
-        '<span class="trend-filter-toggle-sum">' + U.esc(skillLabel + ' · ' + typeLabel + ' · ' + selectedCount + '/' + total + ' · ' + timeLabel) + '</span>' +
+        '<span class="trend-filter-toggle-sum">' + U.esc(categoryLabel + ' · ' + skillLabel + ' · ' + typeLabel + ' · ' + selectedCount + '/' + total + ' · ' + timeLabel) + '</span>' +
         icon('chevronDown') +
       '</button>' +
       '<div class="trend-filter-body' + (filterOpen ? ' open' : '') + '"><div class="trend-filter">';
@@ -2522,6 +2572,8 @@
         '" max="' + U.esc(maxDate) + '" data-trend-range="to-date" aria-label="结束日期">' +
       '<select class="select trend-hour" data-trend-range="to-hour" aria-label="结束小时">' + trendHourOptions(toHour) + '</select>' +
     '</div><span class="server-range-note">最多 7 天</span>';
+    html += '<label class="trend-filter-field"><span>分类</span><select class="select" data-filter="tcategory" aria-label="分类筛选">' +
+      categoryOptions(ctx.category || '') + '</select></label>';
     html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="tskill" aria-label="技艺筛选">' +
       trendSkillOptions(ctx.skillId || 'all') + '</select></label>';
     if (ctx.skillId === 'stone') {
@@ -2823,7 +2875,7 @@
     const nodeHtml = groups.map(function (group, index) {
       const rows = group.rows.map(function (row) {
         return '<tr><td>' + U.esc(row.item.name) + '</td>' +
-          '<td>' + U.esc(row.item.kind === 'stone' ? '五行石' : row.item.kind === 'product' ? '产物' : '材料') + '</td>' +
+          '<td>' + U.esc(row.item.kind === 'stone' ? '五行石' : categoryName(row.item.category)) + '</td>' +
           '<td class="dim">' + U.esc(row.item.skillName) + '</td>' +
           '<td class="num">' + (row.quote == null ? '—' : U.fmt(row.quote, 2)) + '</td>' +
           '<td class="num">' + (row.base == null ? '—' : U.fmt(row.base, 2)) + '</td>' +
@@ -2835,7 +2887,7 @@
         '<span class="badge badge-outline">' + group.rows.length + ' 项</span>' +
         '<span class="chev">' + icon('chevronDown') + '</span></summary>' +
         '<div class="trend-node-body"><div class="table-wrap medium"><table class="data compact"><thead><tr>' +
-          '<th>物品</th><th>类别</th><th>技艺</th><th class="num">本服报价</th><th class="num">基准价</th><th class="num">采用价</th><th>来源</th>' +
+          '<th>物品</th><th>分类</th><th>技艺</th><th class="num">本服报价</th><th class="num">基准价</th><th class="num">采用价</th><th>来源</th>' +
         '</tr></thead><tbody>' + rows + '</tbody></table></div></div></details>';
     }).join('');
     return '<details class="card col-12 trend-raw-details"><summary class="trend-raw-summary">' +
@@ -3206,7 +3258,7 @@
         if (ctx.priceRange.max != null && price > ctx.priceRange.max) return;
         rows.push([
           trendAtText(point.at), server().name, item.id, item.name,
-          item.kind === 'stone' ? '五行石' : item.kind === 'product' ? '产物' : '材料',
+          item.kind === 'stone' ? '五行石' : categoryName(item.category),
           item.skillName, quote == null ? '' : quote, base == null ? '' : base, price,
           quote != null ? '本服报价' : '基准价'
         ]);
@@ -3223,7 +3275,7 @@
       (ctx.seriesMap[item.key] || []).forEach(function (point) {
         rows.push([
           trendAtText(point.at), server().name, item.id, item.name,
-          item.kind === 'stone' ? '五行石' : item.kind === 'product' ? '产物' : '材料',
+          item.kind === 'stone' ? '五行石' : categoryName(item.category),
           item.skillName, point.price, point.source
         ]);
       });
@@ -3285,6 +3337,7 @@
   function serverItemKind(item) {
     if (!item) return '—';
     if (item.kind === 'stone') return '五行石';
+    if (!item.skillId) return categoryName(item.category);
     return item.kind === 'product' ? '产物' : '材料';
   }
   function serverItemParam(selected, all) {
@@ -3332,11 +3385,12 @@
       const group = { id: s.id, name: s.name, type: s.type };
       if (s.type === 'gather') gather.push(group); else craft.push(group);
     });
-    return craft.concat(gather, [{ id: 'stone', name: '五行石', type: 'stone' }]);
+    return craft.concat(gather, [{ id: 'stone', name: '五行石', type: 'stone' }, { id: 'market', name: '行情物品', type: 'market' }]);
   }
   function serverGroupItems(group, items) {
     return (items || []).filter(function (item) {
       if (group.id === 'stone') return item.kind === 'stone' && ['6', '7', '8'].indexOf(String(item.level)) !== -1;
+      if (group.id === 'market') return item.kind !== 'stone' && !item.skillId;
       if (group.type === 'gather') return item.kind === 'material' && item.skillId === group.id;
       return item.kind === 'product' && item.skillId === group.id;
     });
@@ -4432,7 +4486,7 @@
       '<span class="spacer"></span><span class="tiny dim">' + (basis === 'min' ? '成本口径：取最低（仅成本）' : '成本口径：市场价') + '</span></div>';
 
     if (c.missing) {
-      html += notice('该配方有 ' + (c.missingMaterials + c.missingOutputs) + ' 项未定价，计算按 0 计。请在下方或价格库补齐。', 'warn');
+      html += notice('该配方有 ' + (c.missingMaterials + c.missingOutputs) + ' 项未定价，计算按 0 计。请在下方或行情补齐。', 'warn');
       html += '<div style="height:12px"></div>';
     }
 
@@ -4585,7 +4639,7 @@
           '<button class="del" data-action="remove-mat" data-index="' + i + '" aria-label="删除材料">' + icon('trash') + '</button>' +
         '</div>';
       });
-      html += '<p class="tiny dim" style="margin-top:6px">只填数量，单价统一在「价格库」维护；参考小计按当前本服价格。</p>';
+      html += '<p class="tiny dim" style="margin-top:6px">只填数量，单价统一在「行情」维护；参考小计按当前本服价格。</p>';
     }
 
     html += '</div>';
@@ -4959,7 +5013,7 @@
         '1-8级五行石', '与五行石合成页共用'
       ]);
     });
-    U.download('剑网三物价助手_价格库_' + server().name + '_' + new Date().toISOString().slice(0, 10) + '.csv', U.csv(out), 'text/csv;charset=utf-8');
+    U.download('剑网三物价助手_行情_' + server().name + '_' + new Date().toISOString().slice(0, 10) + '.csv', U.csv(out), 'text/csv;charset=utf-8');
     toast('已导出 ' + (items.length + (Stone.levels || []).length) + ' 条价格（含五行石）');
   }
 
@@ -5717,7 +5771,7 @@
     }
     if (t.matches('[data-filter]')) {
       const key = t.getAttribute('data-filter');
-      if (key === 'tskill' || key === 'ttype' || key === 'tmin' || key === 'tmax' || key === 'tdaxis' || key === 'tsaxis') {
+      if (key === 'tskill' || key === 'tcategory' || key === 'ttype' || key === 'tmin' || key === 'tmax' || key === 'tdaxis' || key === 'tsaxis') {
         ui.trendPickerQuery = '';
       }
       updateParams({ [key]: t.value });
@@ -6188,7 +6242,7 @@
       const sid = route.path.split('/')[2];
       title = '生活技艺 · ' + (C.skillOf(sid) ? C.skillOf(sid).name : '');
     } else if (route.path === '/prices') {
-      html = renderPrices(p); title = '价格库';
+      html = renderPrices(p); title = '行情';
     } else if (route.path === '/analysis') {
       html = renderAnalysis(p); title = '精力收益分析';
     } else if (route.path === '/trends') {
@@ -6254,7 +6308,6 @@
   }
 
   function boot() {
-    let trendPrefetchAt = 0;
     Store.init();
     if (Stone && Stone.ensure) Stone.ensure();
     ui.theme = settings().theme === 'light' ? 'light' : 'dark';
@@ -6276,20 +6329,6 @@
       });
     }
     bindEvents();
-    const prefetchTrends = function (e) {
-      const a = e.target && e.target.closest ? e.target.closest('a[href*="#/trends"],a[href*="#/server-trends"]') : null;
-      if (!a || !window.JX3Trends || !window.JX3Trends.prefetch) return;
-      const now = Date.now();
-      if (now - trendPrefetchAt < 3000) return;
-      trendPrefetchAt = now;
-      window.JX3Trends.prefetch({
-        lastOnly: true,
-        mode: a.getAttribute('href').indexOf('/server-trends') >= 0 ? 'server' : 'price',
-        serverId: Store.state.serverId
-      });
-    };
-    document.addEventListener('pointerover', prefetchTrends, { passive: true });
-    document.addEventListener('pointerdown', prefetchTrends, { passive: true });
     renderSkeleton();
     setTimeout(dataSyncTick, isDevDeployment() ? 1200 : 5000);
     document.addEventListener('visibilitychange', function () {

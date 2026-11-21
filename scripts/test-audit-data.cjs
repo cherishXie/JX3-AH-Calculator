@@ -28,12 +28,12 @@ const SID = 's_mengjiangnan';
 const server = A.servers[SID];
 const recipeByName = (name) => (D.recipes || []).find((r) => r.name === name);
 
-assert.equal(A.meta.snapshots, 46, '快照数应为 46');
-assert.equal(JSON.stringify(server.counts), JSON.stringify({ A: 29, B: 17, C: 184, feasible: 142, positive: 90 }));
-assert.equal(JSON.stringify(server.countsLocal), JSON.stringify({ A: 40, B: 9, C: 181, feasible: 145, positive: 93 }));
-assert.equal(A.servers.s_mengjiangnan.items.quote, 287);
+assert.equal(A.meta.snapshots, 47, '快照数应为 47');
+assert.equal(JSON.stringify(server.counts), JSON.stringify({ A: 28, B: 17, C: 185, feasible: 142, positive: 90 }));
+assert.equal(JSON.stringify(server.countsLocal), JSON.stringify({ A: 39, B: 9, C: 182, feasible: 145, positive: 93 }));
+assert.equal(A.servers.s_mengjiangnan.items.quote, 770);
 assert.equal(A.servers.s_mengjiangnan.items.vendor, 12);
-assert.equal(A.servers.s_mengjiangnan.items.base, 55);
+assert.equal(A.servers.s_mengjiangnan.items.base, 244);
 
 const gradeOf = (name) => {
   const r = recipeByName(name);
@@ -61,8 +61,8 @@ const forge = L.plan(rows.filter((r) => r.skill === 'duanzao'), 3000, { includeS
 assert.equal(forge.energyUsed, 920);
 assert.ok(forge.profit > 10200 && forge.profit < 11200, '本服锻造利润 ' + forge.profit);
 const sew = L.plan(rows.filter((r) => r.skill === 'fengren'), 3000, { includeSelfCraft: false, localOnly: true });
-assert.equal(sew.energyUsed, 2992);
-assert.ok(sew.profit > 31000 && sew.profit < 33500, '本服缝纫利润 ' + sew.profit);
+assert.equal(sew.energyUsed, 2982);
+assert.ok(sew.profit > 30500 && sew.profit < 33000, '本服缝纫利润 ' + sew.profit);
 
 const coal = (D.items || []).find((i) => i.id === 'm_m_5_31993');
 assert.ok(P.vendorPrice({ quotes: {}, catalog: {} }, coal.id) > 0, '煤炭应有商店价');

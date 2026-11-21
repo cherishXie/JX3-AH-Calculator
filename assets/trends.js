@@ -17,6 +17,7 @@
 
   const DATA = window.JX3Data || {};
   const MAX_DAYS = 7;
+  const CACHE_DAYS = 1;
   const DB_NAME = 'jx3-price-trends';
   const DB_STORE = 'segments';
   const listeners = [];
@@ -74,6 +75,8 @@
       skillNames: (used.length ? used : (item.skillId ? [item.skillId] : [])).map(skillName).join(' / '),
       color: skillColor(item.skillId),
       skillOrder: skillOrder[item.skillId] == null ? 99 : skillOrder[item.skillId],
+      category: item.category || (item.life ? 'life' : 'other'),
+      life: !!item.life,
       tier: Number(item.tier) || 0,
       tierName: (tierMap[item.tier] || {}).name || '其他',
       tierColor: (tierMap[item.tier] || {}).color || '#64748B'
@@ -252,6 +255,13 @@
 
   function storageSet(key, value) {
     state.memoryStore[key] = value;
+    const parts = String(key).split('|');
+    const keyDate = parts[parts.length - 1];
+    if (/^\d{4}-\d{2}-\d{2}$/.test(keyDate)) {
+      const days = state.manifest ? manifestDates(state.manifest) : [];
+      const latest = days.length ? days[days.length - 1].date : '';
+      if (latest && keyDate !== latest) return Promise.resolve();
+    }
     return openStorage().then(function (db) {
       if (!db) return;
       return new Promise(function (resolve) {
@@ -365,10 +375,14 @@
       if (!dates.has(date)) delete state.rawDays[date];
     });
     storageKeys().then(function (keys) {
+      const latest = state.manifest && state.manifest.days.length
+        ? state.manifest.days[state.manifest.days.length - 1].date
+        : '';
       (keys || []).forEach(function (key) {
-        const match = String(key).match(/^(?:p\|[^|]+\||[dr])\|?(\d{4}-\d{2}-\d{2})$/);
-        if (!match) return;
-        if (!dates.has(match[1])) storageDelete(key);
+        const parts = String(key).split('|');
+        const date = parts[parts.length - 1];
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+        if (!dates.has(date) || (latest && date !== latest)) storageDelete(key);
       });
     });
   }
@@ -792,7 +806,7 @@
     const maxDays = Math.min(MAX_DAYS, Math.max(1, Number(state.manifest && state.manifest.maxDays) || MAX_DAYS));
     const requestedFrom = parseBound(opts && opts.from, false);
     const requestedTo = parseBound(opts && opts.to, true);
-    let dayFrom = requestedFrom != null ? beijingDateOf(requestedFrom) : firstDate;
+    let dayFrom = requestedFrom != null ? beijingDateOf(requestedFrom) : lastDate;
     let dayTo = requestedTo != null ? beijingDateOf(requestedTo) : lastDate;
     if (dayFrom < firstDate) dayFrom = firstDate;
     if (dayTo > lastDate) dayTo = lastDate;
@@ -960,7 +974,7 @@
   /* ------------------------------------------------------------------ */
   /* 目录与图表纯函数                                                    */
   /* ------------------------------------------------------------------ */
-  function items(type, skillId) {
+  function items(type, skillId, category) {
     let list = catalog.slice();
     if (type === 'material' || type === 'product' || type === 'stone') {
       list = list.filter(function (item) { return item.kind === type; });
@@ -971,6 +985,11 @@
       list = list.filter(function (item) {
         return item.kind !== 'stone' && (item.skillIds || [item.skillId]).indexOf(skillId) !== -1;
       });
+    }
+    if (category === 'life') {
+      list = list.filter(function (item) { return item.life; });
+    } else if (category) {
+      list = list.filter(function (item) { return item.category === category; });
     }
     list.sort(function (a, b) {
       if (a.skillOrder !== b.skillOrder) return a.skillOrder - b.skillOrder;

@@ -106,7 +106,7 @@ node scripts/test-trends-loader.cjs
 - 主定时：Cloudflare Worker 全天每 30 分钟 :06 / :36 触发 `workflow_dispatch`。
 - 兜底：GitHub Actions `schedule` 每 2 小时 :31（UTC）运行一次；外部调度失效时仍会执行。
 - 本机 launchd 兜底已取消，不再安装或维护本机定时任务。
-- 两种触发都执行 `./scripts/update-prices.sh`，有变化才提交并推送 `main`。
+- 两种触发都执行 `./scripts/update-prices.sh --web-only`，只更新 Web 行情；小程序云目录完成前不覆盖本地 catalog，有变化才提交并推送 `main`。
 
 GitHub Actions 也可以直接执行 `./scripts/update-prices.sh`，然后提交变更/上传 artifact。
 

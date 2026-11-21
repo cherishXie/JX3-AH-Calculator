@@ -39,7 +39,7 @@ jobs:
           node scripts/test-price-trends.mjs
 
       - name: Update prices and rebuild minitool zip
-        run: ./scripts/update-prices.sh
+        run: ./scripts/update-prices.sh --web-only
 
       - name: Commit changes
         run: |
