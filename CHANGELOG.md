@@ -2,6 +2,12 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 621b5da
+
+将小程序核心目录与云端行情接入价格机器人
+
+- --web-only 同步 444 项核心目录与 672 项行情目录数据，不再跳过小程序\\n- build-remote-prices 从最新核心目录生成云端 payload\\n- 云端旧行情不覆盖新包内价，并增加核心目录校验\\n- 仅合入数据链路，不含 dev 的 4 Tab UI 重构
+
 ## 2026-11-21 · 849bdcc
 
 update JX3BOX prices
@@ -537,7 +543,3 @@ keep production service worker out of dev preview
 ## 2026-11-20 · 82376b6
 
 style: show hour select affordance
-
-## 2026-11-20 · b180788
-
-refine trend filters, hour range and dev PWA updates
