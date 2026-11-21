@@ -2,9 +2,53 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · c809110
+
+release: 走势数据增量加载、7 天口径与三端同步
+
+## 2026-11-21 · 8c70ad3
+
+同步最新快照数量与走势体积
+
+## 2026-11-21 · ceee427
+
+同步合并后的走势与审计基线
+
+## 2026-11-21 · fc2f007
+
+区服趋势手动刷新与 5 分钟趋势缓存
+
 ## 2026-11-21 · ba44fbe
 
 update JX3BOX prices
+
+## 2026-11-21 · 836137a
+
+小程序与小工具同步 7 天走势口径
+
+## 2026-11-21 · 842b108
+
+同步合并后的构建产物
+
+## 2026-11-21 · 3a3831a
+
+走势失败重试保护与更新中提示
+
+## 2026-11-21 · cd8aa7d
+
+更新走势增量说明并校准审计基线
+
+## 2026-11-21 · 95585dc
+
+走势数据预计算与浏览器增量缓存
+
+## 2026-11-21 · 3148f62
+
+重建合并后的走势增量数据
+
+## 2026-11-21 · 11dd602
+
+走势数据预计算与浏览器增量缓存
 
 ## 2026-11-21 · 675b7b8
 
@@ -42,9 +86,29 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-21 · e389d70
+
+开启组件按需注入并加入代码质量校验
+
+## 2026-11-21 · 616439a
+
+压缩启动图以通过 1.5MB 代码质量线
+
+## 2026-11-21 · 16fff51
+
+分析页行情三看、Tab 进度条与 Q 版启动图
+
 ## 2026-11-21 · 6d9d24f
 
 update JX3BOX prices
+
+## 2026-11-21 · 0d147a6
+
+按最新代码重建并提供 1.0.5 包
+
+## 2026-11-21 · 3eb9188
+
+行情自动同步与云端时间优先
 
 ## 2026-11-21 · d9f9a2e
 
@@ -433,35 +497,3 @@ update JX3BOX prices (manual)
 ## 2026-11-19 · e7e8910
 
 use native Excel Web Query for price refresh
-
-## 2026-11-19 · fb3c6fb
-
-seed snapshot into no-macro auto workbook
-
-## 2026-11-19 · dab1af9
-
-make price refresh button visible and add form control props
-
-## 2026-11-19 · a6c6bdd
-
-auto-refresh on open and no-macro auto workbook
-
-## 2026-11-19 · 4b53cce
-
-update JX3BOX prices (local cron)
-
-## 2026-11-19 · 8d8fd73
-
-add overview, gem module and one-click price refresh
-
-## 2026-11-19 · 373ea55
-
-make local price fallback work under launchd
-
-## 2026-11-19 · 8d39dcd
-
-update JX3BOX prices (local cron)
-
-## 2026-11-19 · 0ea8b9a
-
-add Excel craft-profit workbook and Pages price feed
