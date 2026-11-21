@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 849bdcc
+
+update JX3BOX prices
+
 ## 2026-11-21 · 24ff76e
 
 侧边栏新增工具分组与剑网三工作台外链
@@ -541,7 +545,3 @@ refine trend filters, hour range and dev PWA updates
 ## 2026-11-20 · 422877c
 
 update JX3BOX prices
-
-## 2026-11-20 · 9bd884e
-
-note stable dev preview deployment
