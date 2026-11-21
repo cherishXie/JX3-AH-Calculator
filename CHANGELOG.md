@@ -2,9 +2,89 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 675b7b8
+
+update JX3BOX prices
+
+## 2026-11-21 · 0980859
+
+update JX3BOX prices
+
+## 2026-11-21 · a50c820
+
+update JX3BOX prices
+
+## 2026-11-21 · 9f8e13f
+
+update JX3BOX prices
+
+## 2026-11-21 · 835fc87
+
+update JX3BOX prices
+
+## 2026-11-21 · 27e495d
+
+update JX3BOX prices
+
+## 2026-11-21 · 56bff37
+
+update JX3BOX prices
+
+## 2026-11-21 · 69875f6
+
+update JX3BOX prices
+
+## 2026-11-21 · ddb08bc
+
+update JX3BOX prices
+
+## 2026-11-21 · 6d9d24f
+
+update JX3BOX prices
+
+## 2026-11-21 · d9f9a2e
+
+release: 本服可做判断上线，更新小程序与小工具
+
+## 2026-11-21 · c667422
+
+精力收益改用可做/谨慎/不可做
+
+## 2026-11-21 · e25bdef
+
+精力收益审计融入原模块
+
 ## 2026-11-21 · 07fff9f
 
 update JX3BOX prices
+
+## 2026-11-21 · 832ced2
+
+更新说明前置历史加载优化
+
+## 2026-11-21 · cf9cd27
+
+物价走势加载进度与缓存
+
+## 2026-11-21 · fdd9f9b
+
+移植制作收益、落地校验与离线走势模块
+
+## 2026-11-21 · 76ccafd
+
+标注薄价待样本与时效
+
+## 2026-11-21 · 531519a
+
+价格库跨服参考折叠为本服独立视图
+
+## 2026-11-21 · 5ed7844
+
+报价可信度与本服可落地收益
+
+## 2026-11-21 · f7ee802
+
+制作收益落地校验与物价/精力收益 Tab
 
 ## 2026-11-21 · 60fa90e
 
@@ -385,160 +465,3 @@ add Excel craft-profit workbook and Pages price feed
 ## 2026-11-19 · 22e02e6
 
 show signed breakthrough profit and align design styles
-
-## 2026-11-19 · 9500739
-
-calibrate skill experience and separate energy and gold routes
-
-## 2026-11-19 · 1186c72
-
-include root offline assets in automatic releases
-
-## 2026-11-19 · 5d142be
-
-align breakthrough calculations and automate Pages releases
-
-- 按本服脚本报价独立核算三档产量，缺价费用不按零计算。
-- 保留 30/35/40/45 级任务，新增逐级经验估算表并修正阶段边界。
-- 统一 Web、小工具、小程序计算模型并覆盖真实数据回归。
-- 推送后自动维护 CHANGELOG 与更新说明，验证并部署 GitHub Pages。
-
-## 2026-11-19 · 084cdf9
-
-update price schedule times and recovery audit
-
-## 2026-11-19 · 0b1cc50
-
-re-register price schedule under repository owner
-
-## 2026-11-19 · 1c5a2df
-
-re-register price schedule under repository owner
-
-## 2026-11-19 · d4cde93
-
-update JX3BOX prices
-
-## 2026-11-19 · b190e05
-
-label the final ranked quest as the level-50 breakthrough and show the 50 endpoint
-
-## 2026-11-19 · b9cf614
-
-update JX3BOX prices
-
-## 2026-11-19 · 7bc9462
-
-restore direct price schedule and add recovery checks
-
-## 2026-11-19 · 9200682
-
-profit-based breakthrough results and 1-30/30-50 stage summary
-
-## 2026-11-19 · 8a07b14
-
-update JX3BOX prices
-
-## 2026-11-19 · 3d1a5b7
-
-add onboarding guide, wechat/xhs deliverable packs and screenshots
-
-## 2026-11-19 · fd41a1a
-
-sync breakthrough module to miniapp; finalize stones and cloud sync
-
-## 2026-11-19 · e887062
-
-add breakthrough leveling module to web and minitool
-
-## 2026-11-19 · 0a03d1d
-
-add Cloudflare Worker cloud price scheduler
-
-## 2026-11-19 · 90ad1a4
-
-update JX3BOX prices (local cron)
-
-## 2026-11-19 · 0555464
-
-add local launchd price updater fallback
-
-## 2026-11-19 · 518b034
-
-keep price updates from triggering app update UI
-
-## 2026-11-19 · c2fcc69
-
-default to light theme
-
-## 2026-11-19 · 63fc2e1
-
-adapt 11-19 life skill level changes
-
-## 2026-11-19 · fce4133
-
-update JX3BOX prices
-
-## 2026-11-19 · 872963e
-
-add horse grass gathering to Shennong
-
-## 2026-11-19 · 44e7edf
-
-use current-season 40 energy for gathering
-
-## 2026-11-19 · 455a469
-
-default transaction tax to 5% and refresh PWA notes
-
-## 2026-11-19 · 6bd83e7
-
-move price schedule to dedicated workflow
-
-## 2026-11-19 · 6def8eb
-
-rebuild minitool zip with stone price library
-
-## 2026-11-19 · 1174ab0
-
-show stone prices in price library
-
-## 2026-11-19 · aed6baa
-
-add dedicated price schedule workflow
-
-## 2026-11-19 · 766b22e
-
-update JX3BOX prices
-
-## 2026-11-19 · 6c47d6d
-
-include stone catalog data and tax-aware skill profits
-
-## 2026-11-19 · 5c2761b
-
-update JX3BOX prices
-
-## 2026-11-19 · 441a72e
-
-make iOS home-screen install discoverable
-
-## 2026-11-19 · 933ff84
-
-update JX3BOX prices
-
-## 2026-11-19 · 8852485
-
-avoid top-of-hour schedule delay, trigger price update
-
-## 2026-11-19 · d801596
-
-auto refresh prices while page is open
-
-## 2026-11-19 · 287106d
-
-silent price updates and PWA progress bar
-
-## 2026-11-19 · ff1d16a
-
-update prices every 2 hours on the hour (08:00-24:00)
