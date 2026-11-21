@@ -497,7 +497,3 @@ update JX3BOX prices
 ## 2026-11-20 · b1f7eb0
 
 add file picker to WPS price refresh command
-
-## 2026-11-19 · f19901c
-
-repair release notes json
