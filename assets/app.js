@@ -6138,7 +6138,12 @@
     if (typeof window.setBootStatus === 'function') window.setBootStatus(text);
   }
 
+  function setBootProgress(value, text) {
+    if (typeof window.setBootProgress === 'function') window.setBootProgress(value, text);
+  }
+
   function hideBootLoader() {
+    if (typeof window.bootLoaderDone === 'function') window.bootLoaderDone();
     const el = document.getElementById('boot-loader');
     if (!el || el.classList.contains('is-done')) return;
     el.setAttribute('aria-busy', 'false');
@@ -6317,6 +6322,7 @@
   }
 
   function boot() {
+    setBootProgress(55, '正在初始化计算内核…');
     Store.init();
     if (Stone && Stone.ensure) Stone.ensure();
     ui.theme = settings().theme === 'light' ? 'light' : 'dark';
@@ -6339,6 +6345,7 @@
     }
     bindEvents();
     renderSkeleton();
+    setBootProgress(70, '正在准备页面…');
     setTimeout(dataSyncTick, isDevDeployment() ? 1200 : 5000);
     document.addEventListener('visibilitychange', function () {
       if (!document.hidden) checkForDataUpdate();
@@ -6346,7 +6353,7 @@
 
     setTimeout(function () {
       ui.booted = true;
-      setBootStatus('正在计算精力收益…');
+      setBootProgress(85, '正在计算本服收益…');
       try {
         render();
         hideBootLoader();

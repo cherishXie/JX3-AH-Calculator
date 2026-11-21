@@ -147,19 +147,85 @@ body.booting { overflow: hidden; }
 
 .boot-loader__bar i {
   display: block;
-  width: 100%;
+  width: 0;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, rgba(232, 84, 62, 0), #e8543e 32%, #e8b44a 64%, rgba(232, 84, 62, 0));
+  background: linear-gradient(90deg, #e8543e, #e8b44a 58%, #e8543e);
   background-size: 220% 100%;
-  animation: boot-bar 1.25s linear infinite;
+  transition: width 0.25s ease;
+  animation: boot-bar 1.4s linear infinite;
 }
 
 .boot-loader__hint {
   margin-top: 12px;
   font-size: 11px;
   color: #64748b;
+  max-width: 300px;
+  line-height: 1.5;
 }
+
+.boot-loader__progress {
+  margin-top: 14px;
+  width: 260px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+#boot-stage {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boot-loader__progress b {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  color: #e8b44a;
+}
+
+.boot-loader__progress small {
+  min-width: 28px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #64748b;
+}
+
+.boot-loader__diag {
+  margin-top: 12px;
+  width: 300px;
+  padding: 10px 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.35);
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.boot-loader__diag[hidden] { display: none; }
+.boot-loader__diag b { color: #e2e8f0; font-weight: 600; }
+.boot-loader__diag .copy {
+  margin-top: 8px;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 6px;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 11px;
+}
+html.light .boot-loader__diag {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+html.light .boot-loader__diag b { color: #0f172a; }
+html.light .boot-loader__diag .copy { color: #334155; border-color: #cbd5e1; }
 
 .boot-loader__retry {
   margin-top: 16px;
@@ -220,43 +286,127 @@ html.light .boot-loader__retry:hover { background: #f1f5f9; }
       <div class="boot-loader__name">剑网三物价助手</div>
       <div class="boot-loader__sub">JX3 PRICE LEDGER</div>
       <div class="boot-loader__status" id="boot-status">正在载入本服行情…</div>
-      <div class="boot-loader__bar" aria-hidden="true"><i></i></div>
-      <div class="boot-loader__hint">首次加载或更新后可能需要几秒</div>
+      <div class="boot-loader__bar" aria-hidden="true"><i id="boot-bar-fill"></i></div>
+      <div class="boot-loader__progress"><span id="boot-stage">准备加载</span><b id="boot-pct">0%</b><small id="boot-elapsed">0s</small></div>
+      <div class="boot-loader__hint" id="boot-hint">首次加载或更新后可能需要几秒</div>
+      <div class="boot-loader__diag" id="boot-diag" hidden>
+        <div id="boot-diag-text">正在收集加载信息…</div>
+        <button type="button" class="copy" id="boot-copy">复制诊断信息</button>
+      </div>
       <button type="button" class="boot-loader__retry" id="boot-retry" hidden>重新加载</button>
     </div>
   </div>
   <script>
   (function () {
     var el = document.getElementById('boot-loader');
+    var bar = document.getElementById('boot-bar-fill');
+    var pctEl = document.getElementById('boot-pct');
+    var stageEl = document.getElementById('boot-stage');
+    var elapsedEl = document.getElementById('boot-elapsed');
+    var statusEl = document.getElementById('boot-status');
+    var hintEl = document.getElementById('boot-hint');
+    var diagEl = document.getElementById('boot-diag');
+    var diagText = document.getElementById('boot-diag-text');
+    var copyEl = document.getElementById('boot-copy');
     var retry = document.getElementById('boot-retry');
-    function setStatus(text) {
-      var node = document.getElementById('boot-status');
-      if (node && text) node.textContent = text;
+    var started = Date.now();
+    var done = false;
+    var progress = 0;
+    var total = 0;
+    var loaded = 0;
+    var failed = [];
+
+    function elapsed() { return Math.max(0, Math.round((Date.now() - started) / 1000)); }
+    function setStatus(text) { if (statusEl && text) statusEl.textContent = text; }
+    function setProgress(value, text) {
+      progress = Math.max(progress, Math.min(100, Number(value) || 0));
+      if (bar) bar.style.width = progress + '%';
+      if (pctEl) pctEl.textContent = Math.round(progress) + '%';
+      if (text) {
+        if (stageEl) stageEl.textContent = text;
+        setStatus(text);
+      }
     }
-    window.setBootStatus = setStatus;
-    window.bootLoaderFail = function (message) {
-      if (!el) return;
+    function updateElapsed() {
+      if (elapsedEl && !done) elapsedEl.textContent = elapsed() + 's';
+    }
+
+    function resourceUrls() {
+      return Array.prototype.map.call(document.querySelectorAll('script[src], link[rel="stylesheet"]'), function (node) {
+        return node.src || node.href;
+      }).filter(Boolean);
+    }
+    function refreshResources() {
+      if (done || typeof performance === 'undefined' || !performance.getEntriesByType) return;
+      var urls = resourceUrls();
+      if (!urls.length) return;
+      total = urls.length;
+      var names = {};
+      performance.getEntriesByType('resource').forEach(function (entry) { names[entry.name] = true; });
+      loaded = urls.filter(function (url) { return names[url] || names[url.split('?')[0]]; }).length;
+      if (!done) {
+        setProgress(8 + Math.round((loaded / total) * 42), '正在加载页面资源 ' + loaded + '/' + total);
+        updateElapsed();
+      }
+    }
+    function showDiag() {
+      if (!diagEl || done) return;
+      if (diagEl.hidden) diagEl.hidden = false;
+      var conn = navigator.connection || {};
+      var network = navigator.onLine ? '在线' : '离线';
+      var type = conn.effectiveType ? ' · ' + conn.effectiveType : '';
+      var sec = elapsed();
+      diagText.innerHTML = '<b>网络：</b>' + network + type + '<br>' +
+        '<b>资源：</b>' + loaded + '/' + (total || '?') + ' 已加载' + (failed.length ? ' · 失败 ' + failed.length : '') + '<br>' +
+        '<b>已等待：</b>' + sec + ' 秒<br>' +
+        '<b>资源来源：</b>GitHub Pages';
+      if (sec >= 6) {
+        hintEl.textContent = '资源来自 GitHub Pages。如果长时间停在加载资源，可能是网络到 Pages 较慢，可尝试切换网络或 VPN 后重试。';
+        if (retry) retry.hidden = false;
+      }
+      if (failed.length) {
+        setStatus('部分资源加载失败，请检查网络后重试');
+        if (retry) retry.hidden = false;
+      }
+    }
+    function fail(message) {
+      if (!el || done) return;
       el.classList.add('is-stalled');
       setStatus(message || '加载失败，请刷新重试');
       if (retry) retry.hidden = false;
-    };
-    if (retry) {
-      retry.addEventListener('click', function () { location.reload(); });
+      showDiag();
     }
-    var watch = window.setInterval(function () {
-      if (!el || el.classList.contains('is-done')) { window.clearInterval(watch); return; }
-      if (window.performance && performance.now && performance.now() < 520) return;
-      if (document.querySelector('#page .page-title')) {
-        el.classList.add('is-done');
-        document.body.classList.remove('booting');
-        window.setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 320);
-        window.clearInterval(watch);
+
+    window.setBootStatus = setStatus;
+    window.setBootProgress = setProgress;
+    window.bootLoaderFail = fail;
+    window.bootLoaderDone = function () { done = true; setProgress(100, '加载完成'); };
+    if (retry) retry.addEventListener('click', function () { location.reload(); });
+    if (copyEl) copyEl.addEventListener('click', function () {
+      var text = 'JX3 加载诊断\n时间：' + new Date().toISOString() + '\nUA：' + navigator.userAgent +
+        '\n页面：' + location.href + '\n在线：' + navigator.onLine + '\n资源：' + loaded + '/' + total +
+        '\n失败：' + (failed.join(', ') || '无') + '\n已等待：' + elapsed() + 's';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { copyEl.textContent = '已复制'; }, function () {});
       }
-    }, 250);
-    window.setTimeout(function () {
-      if (!el || el.classList.contains('is-done')) return;
-      window.bootLoaderFail('加载时间较长，请检查网络后重试');
-    }, 10000);
+    });
+    window.addEventListener('error', function (event) {
+      var target = event.target;
+      if (!target || !(target.tagName === 'SCRIPT' || target.tagName === 'LINK')) return;
+      var name = String(target.src || target.href || '').split('/').pop();
+      if (failed.indexOf(name) === -1) failed.push(name);
+      setStatus('资源加载失败：' + name);
+      showDiag();
+    }, true);
+    window.addEventListener('load', function () {
+      if (!done) setProgress(50, '资源已加载，正在初始化计算内核…');
+    });
+    document.addEventListener('DOMContentLoaded', refreshResources);
+    setInterval(refreshResources, 300);
+    setInterval(updateElapsed, 1000);
+    setTimeout(function () { if (!done) showDiag(); }, 6000);
+    setTimeout(function () { if (!done) setStatus('仍在加载，已等待 ' + elapsed() + ' 秒…'); }, 12000);
+    setTimeout(function () { if (!done) fail('加载超过 20 秒，可能网络较慢；可重试或切换网络/VPN'); }, 20000);
   })();
   </script>
   <a class="skip-link" href="#page">跳到主要内容</a>
