@@ -2471,10 +2471,13 @@
   function trendContext(p) {
     const T = window.JX3Trends;
     if (!T) return { view: { status: 'error', error: '走势模块未加载' } };
-    const view = T.view(Store.state.serverId, { from: p.tfrom, to: p.tto, mode: 'price' });
+    const preset = trendPresetRange(p);
+    const fromBound = preset ? preset.from : p.tfrom;
+    const toBound = preset ? preset.to : p.tto;
+    const view = T.view(Store.state.serverId, { from: fromBound, to: toBound, mode: 'price' });
     if (view.status !== 'ready') return { view: view };
     const points = view.points;
-    const raw = T.rawView ? T.rawView(Store.state.serverId, { from: p.tfrom, to: p.tto }) : null;
+    const raw = T.rawView ? T.rawView(Store.state.serverId, { from: fromBound, to: toBound }) : null;
     const rawReady = !!(raw && raw.status === 'ready');
     const rawPoints = rawReady ? raw.points : null;
     const allItems = T.items('all', '');
@@ -2577,43 +2580,22 @@
     let html = '<section class="card trend-filter-card"><div class="card-body tight">' +
       '<button class="trend-filter-toggle" data-action="toggle-trend-filter" aria-expanded="' + (filterOpen ? 'true' : 'false') + '">' +
         '<span class="trend-filter-toggle-main">' + icon('filter') + '筛选</span>' +
-        '<span class="trend-filter-toggle-sum">' + U.esc(categoryLabel + ' · ' + skillLabel + ' · ' + typeLabel + ' · ' + selectedCount + '/' + total + ' · ' + timeLabel) + '</span>' +
+        '<span class="trend-filter-toggle-sum">' + U.esc(skillLabel + ' · ' + typeLabel + ' · ' + selectedCount + '/' + total + ' · ' + timeLabel) + '</span>' +
         icon('chevronDown') +
       '</button>' +
       '<div class="trend-filter-body' + (filterOpen ? ' open' : '') + '"><div class="trend-filter">';
-    html += '<div class="trend-time-group">' +
-      '<span class="trend-time-label">开始</span>' +
-      '<input class="input trend-date" type="date" value="' + U.esc(fromDate) + '" min="' + U.esc(minDate) +
-        '" max="' + U.esc(maxDate) + '" data-trend-range="from-date" aria-label="开始日期">' +
-      '<select class="select trend-hour" data-trend-range="from-hour" aria-label="开始小时">' + trendHourOptions(fromHour) + '</select>' +
-    '</div><span class="trend-time-sep">至</span>' +
-    '<div class="trend-time-group">' +
-      '<span class="trend-time-label">结束</span>' +
-      '<input class="input trend-date" type="date" value="' + U.esc(toDate) + '" min="' + U.esc(minDate) +
-        '" max="' + U.esc(maxDate) + '" data-trend-range="to-date" aria-label="结束日期">' +
-      '<select class="select trend-hour" data-trend-range="to-hour" aria-label="结束小时">' + trendHourOptions(toHour) + '</select>' +
-    '</div><span class="server-range-note">最多 7 天</span>';
-    html += '<label class="trend-filter-field"><span>分类</span><select class="select" data-filter="tcategory" aria-label="分类筛选">' +
-      categoryOptions(ctx.category || '') + '</select></label>';
-    html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="tskill" aria-label="技艺筛选">' +
-      trendSkillOptions(ctx.skillId || 'all') + '</select></label>';
+    html += rangeSegHtml(p);
     if (ctx.skillId === 'stone') {
       html += '<span class="trend-filter-field"><span>类型</span><span class="badge badge-custom">五行石</span></span>';
     } else if (skill && skill.type === 'gather') {
       html += '<span class="trend-filter-field"><span>类型</span><span class="badge badge-positive">材料</span></span>';
     } else {
-      html += '<div class="trend-filter-field"><span>类型</span><div class="seg seg-sm">' +
-        '<button class="' + (ctx.type === 'all' ? 'active' : '') + '" data-filter="ttype" data-value="all">全部类型</button>' +
-        '<button class="' + (ctx.type === 'material' ? 'active' : '') + '" data-filter="ttype" data-value="material">材料</button>' +
-        '<button class="' + (ctx.type === 'product' ? 'active' : '') + '" data-filter="ttype" data-value="product">产物</button>' +
-        '</div></div>';
+      html += '<div class="trend-filter-field">' + typeSegHtml(ctx.type, 'ttype') + '</div>';
     }
+    html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="tskill" aria-label="技艺筛选">' +
+      trendSkillOptions(ctx.skillId || 'all') + '</select></label>';
     const allSelected = total > 0 && selectedCount === total;
-    html += '<div class="trend-filter-field"><span>价格区间</span>' +
-      '<input class="input trend-price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="最低" value="' + U.esc(p.tmin || '') + '" data-filter="tmin" aria-label="最低价格">' +
-      '<span class="dim">–</span>' +
-      '<input class="input trend-price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="最高" value="' + U.esc(p.tmax || '') + '" data-filter="tmax" aria-label="最高价格">' +
-    '</div>';
+    // 价格区间控件已并入统一筛选栏（保留 URL 里的 tmin/tmax 以兼容旧链接）。
     html += '<details class="trend-picker"' + pickerOpen + '>' +
       '<summary class="trend-picker-summary" title="可多选物品，支持全选/清空"><span>物品 <em>多选</em></span><b>' + selectedCount + ' / ' + total + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel">' +
@@ -3333,6 +3315,70 @@
     const T = window.JX3Trends;
     return T ? T.items('all', '') : [];
   }
+
+  /* ------------------------------------------------------------------ */
+  /* 走势筛选栏（物价走势 / 区服趋势 共用）                              */
+  /* 日期用「今日 / 近 3 日 / 近 7 日」，物品筛选统一为类型 + 技艺 + 指定产物。 */
+  /* ------------------------------------------------------------------ */
+  const RANGE_PRESETS = [['today', '今日'], ['3d', '近 3 日'], ['7d', '近 7 日']];
+  function rangePresetDays(p) {
+    const days = ({ today: 1, '3d': 3, '7d': 7, '30d': 7 })[p && p.srange];
+    return days || 0;
+  }
+  function rangeSegHtml(p) {
+    const active = p.srange === '3d' ? '3d' : (p.srange === '7d' || p.srange === '30d') ? '7d' : 'today';
+    return '<div class="seg seg-sm server-range">' + RANGE_PRESETS.map(function (it) {
+      return '<button class="' + (active === it[0] ? 'active' : '') + '" data-filter="srange" data-value="' + it[0] + '">' + it[1] + '</button>';
+    }).join('') + '</div><span class="server-range-note">最多保留 7 天</span>';
+  }
+  const TYPE_PRESETS = [['all', '全部类型'], ['material', '材料'], ['product', '产出物']];
+  function typeSegHtml(value, param) {
+    const active = value === 'material' || value === 'product' ? value : 'all';
+    return '<div class="seg seg-sm type-seg">' + TYPE_PRESETS.map(function (it) {
+      return '<button class="' + (active === it[0] ? 'active' : '') + '" data-filter="' + param + '" data-value="' + it[0] + '">' + it[1] + '</button>';
+    }).join('') + '</div>';
+  }
+  function skillOptionsHtml(current, allLabel) {
+    let html = '<option value="">' + U.esc(allLabel || '全部技艺') + '</option>';
+    (DATA.skills || []).forEach(function (s) {
+      html += '<option value="' + U.esc(s.id) + '"' + (current === s.id ? ' selected' : '') + '>' + U.esc(s.name) + '</option>';
+    });
+    (DATA.stones && DATA.stones.length ? [{ id: 'stone', name: '五行石' }] : []).forEach(function (s) {
+      html += '<option value="' + s.id + '"' + (current === s.id ? ' selected' : '') + '>' + s.name + '</option>';
+    });
+    return html;
+  }
+  function serverFilterType(p) {
+    return p.stype === 'material' || p.stype === 'product' ? p.stype : 'all';
+  }
+  function serverFilterSkill(p) {
+    const id = p.sskill || '';
+    if (!id) return '';
+    if (id === 'stone') return 'stone';
+    return (DATA.skills || []).some(function (s) { return s.id === id; }) ? id : '';
+  }
+  function serverCatalogFiltered(p) {
+    const type = serverFilterType(p);
+    const skill = serverFilterSkill(p);
+    return serverCatalog().filter(function (item) {
+      if (type !== 'all' && item.kind !== type) return false;
+      if (!skill) return true;
+      if (skill === 'stone') return item.kind === 'stone';
+      return item.kind !== 'stone' && (item.skillIds || [item.skillId]).indexOf(skill) !== -1;
+    });
+  }
+  // 物价走势的日期区间也走 srange：有预设就用预设，没有才回落到旧的 tfrom / tto。
+  function trendPresetRange(p) {
+    const days = rangePresetDays(p);
+    if (!days) return null;
+    const T = window.JX3Trends;
+    const manifestDays = (T && T.state && T.state.manifest && T.state.manifest.days) || [];
+    const latest = manifestDays.length ? manifestDays[manifestDays.length - 1].date : '';
+    if (!latest) return null;
+    const base = Date.parse(latest + 'T12:00:00+08:00');
+    const start = new Date(base - (days - 1) * 86400000 + 8 * 3600000).toISOString().slice(0, 10);
+    return { from: start + 'T00:00', to: latest + 'T23:00', days: days };
+  }
   function serverQuote(point, item) {
     if (!point || !item) return null;
     if (item.kind === 'stone') {
@@ -3372,7 +3418,7 @@
     return 'only:' + all.filter(function (item) { return selectedSet.has(item.key); }).map(function (item) { return item.key; }).join(',');
   }
   function serverItemSelection(p) {
-    const all = serverCatalog();
+    const all = serverCatalogFiltered(p);
     let selected = all.slice();
     if (p.sitems === '__none__') {
       selected = [];
@@ -3681,7 +3727,8 @@
       const ready = ctx.status === 'ready';
       const selected = ready && ctx.selection ? ctx.selection.selected.length : serverCatalog().length;
       const total = ctx.selection && ctx.selection.all ? ctx.selection.all.length : serverCatalog().length;
-      const scope = ready && !selected ? '未选物品' : (selected !== total ? '所选 ' + selected + ' 项物品' : '全部物品 ' + total + ' 项（含五行石）');
+      const stoneNote = total === serverCatalog().length ? '（含五行石）' : '';
+      const scope = ready && !selected ? '未选物品' : (selected !== total ? '所选 ' + selected + ' 项物品' : '全部物品 ' + total + ' 项' + stoneNote);
       const serverTotal = ctx.serverCount != null ? ctx.serverCount : (DATA.servers || []).length;
       meta = '<p class="page-sub server-page-sub">' + (viewLabel ? viewLabel + ' · ' : '') + scope + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + (ctx.partial ? ' · 更新中' : '') + ' · 缺失报价留空</p>';
     }
@@ -3731,11 +3778,9 @@
     let html = '<section class="card server-filter-card"><div class="card-body tight">';
     html += '<button class="server-filter-toggle' + (ui.serverFilterOpen ? ' open' : '') + '" data-action="toggle-server-filter">' + icon('filter') + '<span>筛选</span><span class="sum">' + serverCount + ' / ' + totalServers + ' 服 · ' + (allProductSelected ? '全部 ' + totalItems + ' 项' : '已选 ' + selectedCount + ' 项') + ' · ' + ctx.range.label + '</span>' + icon('chevronDown') + '</button>';
     html += '<div class="server-filter-body' + (ui.serverFilterOpen ? ' open' : '') + '"><div class="server-filter">';
-    html += '<div class="seg seg-sm server-range">' +
-      '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
-      '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
-      '<button class="' + (p.srange === '7d' || p.srange === '30d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
-    '</div><span class="server-range-note">最多保留 7 天</span>';
+    html += rangeSegHtml(p);
+    html += '<div class="trend-filter-field">' + typeSegHtml(serverFilterType(p), 'stype') + '</div>';
+    html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="sskill" aria-label="技艺筛选">' + skillOptionsHtml(serverFilterSkill(p)) + '</select></label>';
     html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + serverCount + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
         '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (serverAll ? ' checked' : '') + '>全选</label>' +
@@ -3759,7 +3804,8 @@
             '<span class="trend-dot" style="--c:' + U.esc(item.color || '#64748B') + '"></span><span class="nm">' + U.esc(item.name) + '</span><span class="tier">' + U.esc(item.tierName || item.skillName) + '</span></label>';
         }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
       '</div></div></details>';
-    html += '<button class="btn btn-sm" data-action="server-reset">' + icon('refresh') + '重置</button>';
+    html += '<button class="btn btn-sm" data-action="server-refresh" title="重新拉取最新走势">' + icon('refresh') + '刷新</button>';
+    html += '<button class="btn btn-sm" data-action="server-reset">重置</button>';
     html += '<span class="filter-note"><span class="dot"></span>缺失报价留空 · 不计入分母</span>';
     html += '</div></div></div></section>';
     return html;
@@ -3982,11 +4028,9 @@
     let html = '<section class="card server-filter-card"><div class="card-body tight">';
     html += '<button class="server-filter-toggle' + (ui.serverFilterOpen ? ' open' : '') + '" data-action="toggle-server-filter">' + icon('filter') + '<span>筛选</span><span class="sum">' + (selectedItem ? U.esc(selectedItem.name) : '未选物品') + ' · ' + selectedServers.length + '/' + totalServers + ' 服 · ' + ctx.range.label + '</span>' + icon('chevronDown') + '</button>';
     html += '<div class="server-filter-body' + (ui.serverFilterOpen ? ' open' : '') + '"><div class="server-filter server-item-filter">';
-    html += '<div class="seg seg-sm server-range">' +
-      '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
-      '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
-      '<button class="' + (p.srange === '7d' || p.srange === '30d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
-    '</div><span class="server-range-note">最多保留 7 天</span>';
+    html += rangeSegHtml(p);
+    html += '<div class="trend-filter-field">' + typeSegHtml(serverFilterType(p), 'stype') + '</div>';
+    html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="sskill" aria-label="技艺筛选">' + skillOptionsHtml(serverFilterSkill(p)) + '</select></label>';
     html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + selectedServers.length + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
         '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (allProductSelected ? ' checked' : '') + '>全选</label>' +
@@ -4006,7 +4050,8 @@
             '<span class="nm">' + U.esc(item.name) + '</span><span class="meta">' + U.esc(serverItemMeta(item)) + '</span></button>';
         }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
       '</div></div></details>';
-    html += '<button class="btn btn-sm" data-action="server-item-reset">' + icon('refresh') + '重置</button>';
+    html += '<button class="btn btn-sm" data-action="server-refresh" title="重新拉取最新走势">' + icon('refresh') + '刷新</button>';
+    html += '<button class="btn btn-sm" data-action="server-item-reset">重置</button>';
     html += '<span class="filter-note"><span class="dot"></span>有报价才计入 · 缺失不算持平</span>';
     html += '</div></div></div></section>';
     return html;
@@ -5336,8 +5381,14 @@
       case 'server-select-none': updateParams({ sservers: '__none__' }); break;
       case 'server-product-none': updateParams({ sitems: '__none__', skeyword: '' }); break;
       case 'server-clear-skill': updateParams({ sskill: '' }); break;
-      case 'server-item-reset': updateParams({ srange: 'today', sservers: '', sitem: '', sview: 'item' }); break;
-      case 'server-reset': updateParams({ srange: 'today', sservers: '', sitems: '', sserver: '', sskill: '', skeyword: '' }); break;
+      case 'server-refresh': {
+        if (window.JX3Trends && window.JX3Trends.invalidate) window.JX3Trends.invalidate();
+        render();
+        toast('已刷新，正在拉取最新走势', 'info');
+        break;
+      }
+      case 'server-item-reset': updateParams({ srange: 'today', sservers: '', sitem: '', sview: 'item', stype: '', sskill: '' }); break;
+      case 'server-reset': updateParams({ srange: 'today', sservers: '', sitems: '', sserver: '', sskill: '', stype: '', skeyword: '' }); break;
       case 'export-csv': {
         const kind = el.getAttribute('data-csv');
         if (kind === 'prices') csvPrices();
