@@ -287,6 +287,38 @@
     setTimeout(function () { showDataSync(state, text); }, wait);
   }
 
+  // 目录版本变了（物品/配方增删）：页面内的热合并只能处理价格变化，
+  // 必须换一份应用壳。PWA 的导航请求走缓存里的 index.html，所以普通的
+  // “刷新”拿到的还是旧壳，必须清缓存 + 让等待中的新 SW 接管后再重载。
+  function forceAppReload() {
+    var reload = function () { location.reload(); };
+    if (!navigator.serviceWorker || !navigator.serviceWorker.getRegistration) { reload(); return; }
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+      var jobs = [];
+      if (reg && reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+      if (typeof caches !== 'undefined' && caches.keys) {
+        jobs.push(caches.keys().then(function (keys) {
+          return Promise.all(keys.map(function (key) { return caches.delete(key); }));
+        }).catch(function () {}));
+      }
+      Promise.all(jobs).then(reload).catch(reload);
+    }).catch(reload);
+  }
+
+  function recoverFromCatalogChange() {
+    var KEY = 'jx3-catalog-reload-at';
+    var last = 0;
+    try { last = Number(sessionStorage.getItem(KEY) || 0) || 0; } catch (err) { last = 0; }
+    // 30 秒内只自动重载一次，避免网络异常时来回刷新。
+    if (Date.now() - last > 30000) {
+      try { sessionStorage.setItem(KEY, String(Date.now())); } catch (err) { /* 隐私模式忽略 */ }
+      showDataSync('loading', '数据目录已更新，正在重新加载…');
+      forceAppReload();
+      return;
+    }
+    showDataSync('error', '数据目录已更新，请关闭页面后重新打开');
+  }
+
   function fetchWithTimeout(url, options, timeout) {
     return new Promise(function (resolve, reject) {
       var settled = false;
@@ -420,7 +452,7 @@
             }
 
             if (!mergePriceData(next)) {
-              finishDataSync('error', '数据目录已变化，请刷新页面');
+              recoverFromCatalogChange();
               return;
             }
             if (ui.drawer || ui.modal) {
@@ -1222,7 +1254,7 @@
         '<button class="btn btn-sm" data-action="stone-reset-all">' + icon('refresh') + '恢复默认</button>' +
       '</div></div>';
 
-    html += '<div style="margin-top:14px">' + notice('当前赛季官方未逐条公布五行石合成公式；默认值来自 2026-07 精炼面板攻略，并用 2026-09 官方「精炼公式未调整」与测试服精六成本交叉核对。7/8 级无稳定保底公式，所有公式可在页面内编辑校准。', 'info') + '</div>';
+    html += '<div class="page-notice">' + notice('当前赛季官方未逐条公布五行石合成公式；默认值来自 2026-07 精炼面板攻略，并用 2026-09 官方「精炼公式未调整」与测试服精六成本交叉核对。7/8 级无稳定保底公式，所有公式可在页面内编辑校准。', 'info') + '</div>';
 
     html += '<div class="kpi-grid">' +
       '<div class="kpi"><div class="kpi-label">6级最优单颗成本</div>' +

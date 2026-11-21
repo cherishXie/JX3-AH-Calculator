@@ -297,7 +297,8 @@ h1, h2, h3, p { margin: 0; }
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 24px;
+  /* 顶部状态条已经占了一行，页面上边距收窄，避免顶部大片空白 */
+  padding: 12px 24px 24px;
   animation: page-in 240ms ease-out both;
 }
 @keyframes page-in {
@@ -900,6 +901,8 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
 .notice svg { width: 14px; height: 14px; color: var(--warning); flex: none; margin-top: 1px; }
 .notice.info { border-color: color-mix(in srgb, var(--info) 24%, var(--border)); background: color-mix(in srgb, var(--info) 6%, transparent); }
 .notice.info svg { color: var(--info); }
+/* 页面级提示条：上下都要留白，否则会贴住下面的 KPI / 卡片 */
+.page-notice { margin: 14px 0 16px; }
 .notice .link { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
 
 .data-foot {
@@ -1070,7 +1073,7 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
 .market-status {
   width: 100%;
   max-width: var(--content-max);
-  margin: 12px auto 0;
+  margin: 6px auto 0;
   padding: 0 24px;
   box-sizing: border-box;
   display: -webkit-box;
@@ -1097,7 +1100,8 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
   background: var(--border);
 }
 .market-status__check {
-  margin-left: auto;
+  /* 紧跟「行情检查」时间，不再推到行尾，保持顶部信息一组 */
+  margin-left: 10px;
   height: 24px;
   padding: 0 9px;
   border: 1px solid var(--border);
@@ -1924,7 +1928,7 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
 .server-item-rank-table tbody tr[hidden] { display: none !important; }
 .server-item-option .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .server-item-option .meta { font-size: 8px; color: var(--muted-2); white-space: nowrap; }
-.server-item-quick { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 27px; margin: -2px 0 10px; }
+.server-item-quick { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 27px; margin: 12px 0 10px; }
 .server-item-quick .lab { font-size: 9px; letter-spacing: .05em; color: var(--muted-2); text-transform: uppercase; margin-right: 2px; }
 .server-quick-chip { height: 23px; border: 1px solid var(--border); border-radius: 4px; background: transparent; color: var(--muted); font-size: 9.5px; padding: 0 7px; white-space: nowrap; }
 .server-quick-chip.on { border-color: rgba(91,143,249,.45); background: rgba(91,143,249,.09); color: var(--text); }
@@ -2076,7 +2080,8 @@ html.light .bt-page { --positive: #15803d; --danger: #be123c; }
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin: 0 0 14px;
+  /* 与 .section-gap 的 16px 节奏对齐：Tab 上方要有明确留白，不能贴住筛选栏 */
+  margin: 16px 0 14px;
   padding: 3px;
   border: 1px solid var(--border);
   border-radius: 8px;
