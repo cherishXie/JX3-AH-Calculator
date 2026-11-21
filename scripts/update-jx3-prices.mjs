@@ -76,7 +76,7 @@ function writeData(data) {
   const marketDir = path.join(ROOT, 'miniapp/src/market/data');
   fs.mkdirSync(marketDir, { recursive: true });
   fs.writeFileSync(path.join(marketDir, 'market-catalog.json'), serializeMarketCatalog(marketCore));
-  if (WEB_ONLY) return;
+  if (WEB_ONLY) return { miniCore, marketCore };
 
   // 小工具仍展示物品来源/核验，保留 origin/verified；小程序主包版本为了体积不保留。
   const mini = buildMiniappCatalog(data, { keepItemMeta: true });
@@ -85,6 +85,7 @@ function writeData(data) {
     mini.stoneMeta.sources = mini.stoneMeta.sources.map((s) => Object.assign({}, s, { url: '' }));
   }
   fs.writeFileSync(path.join(ROOT, 'minitool/assets/data.js'), '/* 小工具离线数据 · 全服自动价格修订 */\nwindow.JX3Data = ' + JSON.stringify(mini, null, 2) + ';\n');
+  return { miniCore, marketCore };
 }
 function loadMap() {
   const p = path.join(ROOT, 'scripts/jx3-item-map.json');
@@ -275,10 +276,10 @@ async function main() {
   data.meta.serverCoverage = serverCoverage;
   data.meta.disclaimer = '制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。';
 
-  writeData(data);
+  const written = writeData(data);
   console.log(WEB_ONLY
-    ? `已写入 assets/data.js + 小程序核心目录 ${miniCore.items.length} 项 + 行情目录 ${marketCore.items.length} 项（Web-only，跳过小工具，${priceStamp}）`
-    : `已写入 assets/data.js、小程序核心目录 ${miniCore.items.length} 项、行情目录 ${marketCore.items.length} 项、minitool/assets/data.js（${priceStamp}）`);
+    ? `已写入 assets/data.js + 小程序核心目录 ${written.miniCore.items.length} 项 + 行情目录 ${written.marketCore.items.length} 项（Web-only，跳过小工具，${priceStamp}）`
+    : `已写入 assets/data.js、小程序核心目录 ${written.miniCore.items.length} 项、行情目录 ${written.marketCore.items.length} 项、minitool/assets/data.js（${priceStamp}）`);
 
   try {
     const history = recordPriceSnapshot({

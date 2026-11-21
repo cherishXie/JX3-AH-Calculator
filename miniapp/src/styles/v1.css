@@ -419,3 +419,31 @@ page {
 .stm-rank-val { font-size: 28rpx; line-height: 38rpx; }
 .stm-rank-meta { font-size: 24rpx; line-height: 34rpx; }
 .stm-bar-track { height: 14rpx; }
+
+/* 今日：按技艺分组的收益排行 */
+.today-head { padding: 8rpx 4rpx 20rpx; }
+.today-head .t { display: block; font-size: 42rpx; font-weight: 700; line-height: 58rpx; }
+.today-head .s { display: block; font-size: 26rpx; color: var(--muted); line-height: 38rpx; margin-top: 6rpx; }
+.today-price {
+  display: flex; align-items: center; justify-content: space-between; gap: 16rpx;
+  min-height: 88rpx; padding: 16rpx 20rpx; margin-bottom: 20rpx;
+  border-radius: 16rpx; background: var(--panel); border: 1rpx solid var(--border);
+  font-size: 24rpx; color: var(--muted);
+}
+.today-price .act { flex-shrink: 0; font-size: 26rpx; color: var(--info); font-weight: 600; }
+.today-rank-row {
+  display: flex; align-items: center; gap: 14rpx;
+  min-height: 104rpx; padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--border);
+}
+.today-rank-row:last-child { border-bottom: 0; }
+.today-rank-row .main { flex: 1; min-width: 0; }
+.today-rank-row .row { display: flex; align-items: center; }
+.today-rank-row .nm { font-size: 30rpx; font-weight: 600; line-height: 40rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.today-rank-row .ds { display: block; font-size: 24rpx; color: var(--muted); line-height: 34rpx; margin-top: 2rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.today-rank-row .val { flex-shrink: 0; text-align: right; }
+.today-rank-row .v { display: block; font-size: 32rpx; font-weight: 700; line-height: 40rpx; font-variant-numeric: tabular-nums; }
+.today-rank-row .u { display: block; font-size: 24rpx; color: var(--muted-2); line-height: 32rpx; }
+.today-empty { padding: 28rpx 0 12rpx; }
+.today-empty .t { display: block; font-size: 30rpx; font-weight: 600; line-height: 42rpx; }
+.today-empty .s { display: block; font-size: 24rpx; color: var(--muted); line-height: 36rpx; margin: 8rpx 0 20rpx; }
