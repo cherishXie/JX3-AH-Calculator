@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 753dad9
+
+价格机器人同步更新 dev 预览的行情数据
+
 ## 2026-11-21 · 7a445f5
 
 update JX3BOX prices
@@ -497,7 +501,3 @@ trigger prices every 30 minutes
 ## 2026-11-20 · 6a3eed1
 
 switch prices to hourly Cloudflare schedule
-
-## 2026-11-20 · 8b233b2
-
-update JX3BOX prices
