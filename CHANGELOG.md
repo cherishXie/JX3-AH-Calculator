@@ -555,7 +555,3 @@ update mini program page count
 ## 2026-11-20 · 221103f
 
 rebuild mini program bundles for cloud trends
-
-## 2026-11-20 · ad802b1
-
-include mini program trends build
