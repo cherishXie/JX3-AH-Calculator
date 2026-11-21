@@ -1,27 +1,21 @@
 import Taro from '@tarojs/taro';
 
+const WEAPP = process.env.TARO_ENV === 'weapp';
 const LIGHT_TABS = [
   { icon: 'assets/tabs/home-light.png', selected: 'assets/tabs/home-on-light.png' },
-  { icon: 'assets/tabs/skills-light.png', selected: 'assets/tabs/skills-on-light.png' },
-  { icon: 'assets/tabs/prices-light.png', selected: 'assets/tabs/prices-on-light.png' },
-  { icon: 'assets/tabs/analysis-light.png', selected: 'assets/tabs/analysis-on-light.png' },
-  { icon: 'assets/tabs/stones-light.png', selected: 'assets/tabs/stones-on-light.png' }
-];
+  { icon: 'assets/tabs/prices-light.png', selected: 'assets/tabs/prices-on-light.png' }
+].concat(WEAPP ? [{ icon: 'assets/tabs/stones-light.png', selected: 'assets/tabs/stones-on-light.png' }] : [])
+ .concat([{ icon: 'assets/tabs/me-light.png', selected: 'assets/tabs/me-on-light.png' }]);
 const DARK_TABS = [
   { icon: 'assets/tabs/home.png', selected: 'assets/tabs/home-on.png' },
-  { icon: 'assets/tabs/skills.png', selected: 'assets/tabs/skills-on.png' },
-  { icon: 'assets/tabs/prices.png', selected: 'assets/tabs/prices-on.png' },
-  { icon: 'assets/tabs/analysis.png', selected: 'assets/tabs/analysis-on.png' },
-  { icon: 'assets/tabs/stones.png', selected: 'assets/tabs/stones-on.png' }
-];
+  { icon: 'assets/tabs/prices.png', selected: 'assets/tabs/prices-on.png' }
+].concat(WEAPP ? [{ icon: 'assets/tabs/stones.png', selected: 'assets/tabs/stones-on.png' }] : [])
+ .concat([{ icon: 'assets/tabs/me.png', selected: 'assets/tabs/me-on.png' }]);
 
 const TAB_ROUTES = [
   'pages/overview/index',
-  'pages/skills/index',
-  'pages/prices/index',
-  'pages/analysis/index',
-  'pages/stones/index'
-];
+  'pages/prices/index'
+].concat(WEAPP ? ['pages/stones/index'] : []).concat(['pages/settings/index']);
 
 export function isTabPage() {
   try {
@@ -79,7 +73,7 @@ export function applyTheme(theme) {
     safe(function () {
       Taro.setTabBarStyle({
         color: muted,
-        selectedColor: fg,
+        selectedColor: light ? '#1D6FE0' : '#5B9CFF',
         backgroundColor: tabBg,
         borderStyle: light ? 'white' : 'black'
       });

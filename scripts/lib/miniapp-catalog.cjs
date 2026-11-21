@@ -17,7 +17,7 @@
 
 // origin / verified 只在配方详情与数据说明中使用，物品层 UI 不读，省下约 20KB。
 const CORE_ITEM_FIELDS = [
-  'id', 'name', 'skillId', 'kind', 'tier', 'source', 'base', 'custom'
+  'id', 'name', 'skillId', 'category', 'kind', 'tier', 'source', 'base', 'custom'
 ];
 const MARKET_ITEM_FIELDS = [
   'id', 'name', 'category', 'kind', 'tier', 'source', 'base'
@@ -113,7 +113,8 @@ function buildMeta(webMeta, items, recipes, serverPrices, servers, excluded, sou
     items.length + ' 个生活技艺物品；网页行情目录的 ' + excluded + ' 个物品不进入主包';
   meta.coreOnly = true;
   meta.excludedMarketItems = excluded;
-  delete meta.categories;
+  // 保留网页行情分类，行情 Tab 需要「全部 / 材料 / 成品 / 分类」筛选。
+  meta.categories = (webMeta && webMeta.categories) || [];
 
   return meta;
 }

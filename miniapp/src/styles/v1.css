@@ -1,0 +1,360 @@
+/* 精力做什么 · V1 移动端设计覆盖层
+   在 app.css 之后加载：统一放大字号、触控区、卡片与列表节奏。
+   旧页面仍复用这些基础类，新页面使用本文件底部的 hero/rank/me 等模块类。 */
+
+page {
+  font-size: 30rpx;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+}
+.page {
+  padding: 0 32rpx;
+  padding-bottom: calc(48rpx + env(safe-area-inset-bottom));
+}
+.theme-root { font-size: 30rpx; }
+
+/* ---------- 顶栏：页面内不再重复标题，只保留区服行 ---------- */
+.server-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 112rpx; padding: 8rpx 0;
+}
+.server-pill-lg {
+  display: flex; align-items: center; gap: 12rpx;
+  height: 88rpx; padding: 0 24rpx; border-radius: 16rpx;
+  background: var(--panel); border: 1rpx solid var(--border);
+  font-size: 30rpx; font-weight: 600; max-width: 360rpx;
+}
+.server-pill-lg .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.server-pill-lg .caret { color: var(--muted); font-size: 22rpx; margin-left: 4rpx; }
+.server-meta { font-size: 24rpx; color: var(--muted); max-width: 280rpx; text-align: right; }
+
+.topbar { padding: 24rpx 0 16rpx; }
+.topbar-title { font-size: 48rpx; line-height: 64rpx; }
+.topbar-sub { font-size: 26rpx; line-height: 36rpx; margin-top: 6rpx; }
+.server-pill { height: 80rpx; padding: 0 20rpx; border-radius: 14rpx; font-size: 28rpx; max-width: 300rpx; }
+.icon-btn { width: 80rpx; height: 80rpx; border-radius: 14rpx; font-size: 32rpx; margin-left: 12rpx; }
+.brand-tag { height: 38rpx; font-size: 20rpx; margin-top: 8rpx; }
+
+/* ---------- 卡片 ---------- */
+.card {
+  padding: 28rpx 28rpx 24rpx;
+  border-radius: 24rpx;
+  margin-bottom: 24rpx;
+  background: var(--card);
+  border: 1rpx solid var(--border);
+}
+.card-head { padding: 0; gap: 16rpx; align-items: flex-start; }
+.card-title { font-size: 32rpx; line-height: 44rpx; }
+.card-sub { font-size: 26rpx; line-height: 36rpx; margin-top: 6rpx; }
+.card-body { padding: 20rpx 0 0; }
+.card-foot {
+  margin: 16rpx -28rpx -24rpx; padding: 16rpx 28rpx;
+  border-top: 1rpx solid rgba(148, 163, 184, 0.14);
+  font-size: 22rpx; line-height: 32rpx; color: var(--muted-2);
+}
+.card-tool { padding-left: 12rpx; }
+
+/* ---------- 字号/文本 ---------- */
+.small { font-size: 26rpx; }
+.tiny { font-size: 24rpx; line-height: 34rpx; }
+.dim { color: var(--muted); }
+.strong { font-weight: 600; }
+
+/* ---------- 按钮/输入 ---------- */
+.btn {
+  height: 88rpx; padding: 0 28rpx; border-radius: 18rpx;
+  font-size: 28rpx; font-weight: 500; line-height: 1;
+}
+.btn-sm { height: 80rpx; padding: 0 20rpx; font-size: 26rpx; border-radius: 16rpx; }
+.btn-row { gap: 16rpx; }
+.btn-row .btn { margin-right: 0; margin-bottom: 16rpx; }
+.btn-primary-lg {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 96rpx; margin-top: 24rpx;
+  border-radius: 20rpx; background: var(--accent-blue); color: #ffffff;
+  font-size: 32rpx; font-weight: 600;
+}
+.input { height: 88rpx; padding: 0 24rpx; border-radius: 16rpx; font-size: 30rpx; }
+.input-sm { height: 80rpx; padding: 0 20rpx; font-size: 28rpx; }
+.textarea { min-height: 240rpx; padding: 24rpx; font-size: 28rpx; line-height: 44rpx; border-radius: 16rpx; }
+.picker { height: 88rpx; padding: 0 24rpx; border-radius: 16rpx; font-size: 30rpx; }
+.picker-sm { height: 80rpx; padding: 0 20rpx; border-radius: 16rpx; font-size: 28rpx; }
+.form-field { margin-bottom: 24rpx; }
+.form-label { font-size: 24rpx; margin-bottom: 10rpx; }
+.toggle { font-size: 24rpx; gap: 10rpx; }
+.toggle .track { width: 64rpx; height: 36rpx; border-radius: 18rpx; }
+.toggle .thumb { width: 32rpx; height: 32rpx; top: 1rpx; left: 2rpx; }
+.toggle.on .thumb { left: 30rpx; }
+
+/* ---------- 分段/标签 ---------- */
+.seg { padding: 6rpx; border-radius: 16rpx; }
+.seg-item { height: 76rpx; border-radius: 12rpx; font-size: 28rpx; }
+.badge { height: 38rpx; padding: 0 12rpx; border-radius: 8rpx; font-size: 22rpx; }
+.tier-dot, .type-dot { width: 12rpx; height: 12rpx; margin-right: 8rpx; }
+.section-h { padding: 8rpx 0 16rpx; }
+.section-h .t { font-size: 30rpx; }
+.section-h .more { font-size: 24rpx; }
+
+/* ---------- KPI（只在分析/价格等旧页保留） ---------- */
+.kpi-grid { gap: 16rpx; }
+.kpi {
+  width: 48.8%; padding: 24rpx; margin-bottom: 16rpx;
+  border-radius: 20rpx; background: var(--card); border: 1rpx solid var(--border);
+}
+.kpi-label { font-size: 24rpx; line-height: 32rpx; }
+.kpi-value { font-size: 44rpx; line-height: 54rpx; margin-top: 8rpx; }
+.kpi-unit { font-size: 22rpx; }
+.kpi-meta { font-size: 22rpx; line-height: 32rpx; margin-top: 6rpx; }
+.progress { height: 10rpx; border-radius: 5rpx; margin-top: 14rpx; }
+
+/* ---------- 列表/排行 ---------- */
+.list-row { min-height: 112rpx; padding: 20rpx 0; }
+.list-row .main { padding-right: 16rpx; }
+.list-row .nm { font-size: 30rpx; line-height: 40rpx; }
+.list-row .ds { font-size: 24rpx; line-height: 32rpx; margin-top: 4rpx; }
+.list-row .val .v { font-size: 34rpx; }
+.list-row .val .u { font-size: 22rpx; }
+.rank { width: 44rpx; height: 44rpx; border-radius: 10rpx; font-size: 22rpx; margin-right: 14rpx; }
+.chev { font-size: 36rpx; margin-left: 8rpx; }
+.skill-ic { width: 60rpx; height: 60rpx; border-radius: 12rpx; font-size: 24rpx; margin-right: 16rpx; }
+.bar-row { padding: 18rpx 0; }
+.bar-label { width: 240rpx; }
+.bar-label .n { font-size: 28rpx; line-height: 38rpx; max-width: 240rpx; }
+.bar-label .m { font-size: 22rpx; line-height: 30rpx; }
+.bar-track { height: 18rpx; border-radius: 9rpx; margin: 0 16rpx; }
+.bar-val { width: 132rpx; font-size: 28rpx; }
+
+/* ---------- 价格行（价格库/材料） ---------- */
+.price-line { min-height: 120rpx; padding: 20rpx 0; }
+.price-line .nm { font-size: 30rpx; line-height: 40rpx; }
+.price-line .ds { font-size: 24rpx; line-height: 32rpx; }
+.price-box { width: 180rpx; height: 80rpx; padding: 0 16rpx; border-radius: 14rpx; font-size: 28rpx; }
+.price-state { font-size: 22rpx; margin-top: 4rpx; }
+.picker.picker-sm { font-size: 28rpx; }
+.filter-row .picker { width: 200rpx; }
+.filter-row .picker.wide { width: 240rpx; }
+
+/* ---------- 技能横向滚动 ---------- */
+.skill-scroll { margin: 0 0 20rpx; }
+.skill-tab { height: 80rpx; padding: 0 24rpx; margin-right: 12rpx; border-radius: 16rpx; font-size: 28rpx; }
+.bt-skill-tab { height: 80rpx; font-size: 28rpx; padding: 0 24rpx; }
+
+/* ---------- 提示/空态/脚注 ---------- */
+.notice { padding: 20rpx 24rpx; border-radius: 16rpx; font-size: 26rpx; line-height: 38rpx; margin-bottom: 20rpx; }
+.empty { padding: 72rpx 32rpx; }
+.empty .e1 { font-size: 32rpx; }
+.empty .e2 { font-size: 26rpx; line-height: 38rpx; }
+.data-note { font-size: 22rpx; line-height: 32rpx; padding: 24rpx 8rpx 8rpx; }
+.divider { margin: 24rpx 0; }
+.kv { padding: 14rpx 0; font-size: 28rpx; }
+.compare-row { padding: 16rpx 0; font-size: 26rpx; }
+.compare-row .k { width: 170rpx; }
+
+/* =====================================================================
+   今日
+   ===================================================================== */
+.hero-card {
+  padding: 32rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(155deg, var(--accent-2) 0%, var(--card) 78%);
+  border: 1rpx solid var(--line-strong);
+  margin-bottom: 24rpx;
+}
+.hero-top { display: flex; align-items: center; justify-content: space-between; }
+.hero-tag {
+  display: inline-flex; align-items: center; height: 44rpx; padding: 0 14rpx;
+  border-radius: 8rpx; background: rgba(69, 212, 131, 0.14); color: var(--positive);
+  font-size: 24rpx; font-weight: 600;
+}
+.hero-source { font-size: 22rpx; color: var(--muted); }
+.hero-name { display: block; font-size: 48rpx; line-height: 64rpx; font-weight: 700; margin-top: 24rpx; }
+.hero-meta { display: block; font-size: 26rpx; line-height: 36rpx; color: var(--muted); margin-top: 6rpx; }
+.hero-number { display: flex; align-items: baseline; margin-top: 24rpx; }
+.hero-number .n { font-size: 80rpx; line-height: 84rpx; font-weight: 700; letter-spacing: -1rpx; }
+.hero-number .u { font-size: 24rpx; color: var(--muted); margin-left: 12rpx; }
+.plan-grid {
+  display: flex; align-items: stretch; margin-top: 28rpx;
+  border-radius: 16rpx; background: rgba(148, 163, 184, 0.08);
+  border: 1rpx solid rgba(148, 163, 184, 0.16);
+}
+.plan-cell { flex: 1; padding: 20rpx 24rpx; }
+.plan-cell + .plan-cell { border-left: 1rpx solid rgba(148, 163, 184, 0.16); }
+.plan-cell .k { display: block; font-size: 22rpx; color: var(--muted); }
+.plan-cell .v { display: block; font-size: 32rpx; font-weight: 700; margin-top: 6rpx; }
+.plan-cell .v.pos { color: var(--positive); }
+
+.price-strip {
+  display: flex; align-items: center; gap: 16rpx;
+  padding: 18rpx 20rpx; border-radius: 16rpx; margin-bottom: 24rpx;
+  background: rgba(245, 179, 1, 0.08); border: 1rpx solid rgba(245, 179, 1, 0.28);
+}
+.price-strip.ok { background: rgba(69, 212, 131, 0.08); border-color: rgba(69, 212, 131, 0.28); }
+.price-strip .txt { flex: 1; font-size: 24rpx; line-height: 34rpx; color: var(--text); }
+.price-strip .btn-sm { height: 88rpx; min-width: 128rpx; }
+.alt-row {
+  display: flex; align-items: center; min-height: 112rpx; padding: 16rpx 0;
+  border-bottom: 1rpx solid rgba(148, 163, 184, 0.12);
+}
+.alt-row:last-of-type { border-bottom: 0; }
+.alt-row .rank { width: 40rpx; height: 40rpx; font-size: 22rpx; }
+.alt-row .main { flex: 1; min-width: 0; }
+.alt-row .nm { display: block; font-size: 30rpx; font-weight: 600; line-height: 40rpx; }
+.alt-row .ds { display: block; font-size: 24rpx; color: var(--muted); line-height: 32rpx; margin-top: 4rpx; }
+.alt-row .val { text-align: right; }
+.alt-row .v { display: block; font-size: 34rpx; font-weight: 700; }
+.alt-row .u { display: block; font-size: 20rpx; color: var(--muted-2); }
+.stone-quick { display: flex; align-items: center; gap: 20rpx; }
+.stone-quick .icon {
+  width: 88rpx; height: 88rpx; border-radius: 20rpx; flex-shrink: 0;
+  background: rgba(199, 155, 255, 0.14); color: var(--peak);
+  display: flex; align-items: center; justify-content: center; font-size: 32rpx; font-weight: 700;
+}
+.stone-quick .main { flex: 1; min-width: 0; }
+.stone-quick .t { display: block; font-size: 30rpx; font-weight: 600; line-height: 40rpx; }
+.stone-quick .t .pos { color: var(--positive); }
+.stone-quick .s { display: block; font-size: 24rpx; color: var(--muted); line-height: 34rpx; margin-top: 4rpx; }
+
+/* =====================================================================
+   排行
+   ===================================================================== */
+.rank-search { display: flex; align-items: center; gap: 16rpx; margin: 8rpx 0 20rpx; }
+.rank-search .input { flex: 1; }
+.rank-filter {
+  width: 88rpx; height: 88rpx; flex-shrink: 0; border-radius: 16rpx;
+  border: 1rpx solid var(--border); background: var(--panel);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text); font-size: 28rpx;
+}
+.chips-scroll { width: 100%; white-space: nowrap; margin-bottom: 16rpx; }
+.chips-inner { display: inline-flex; align-items: center; padding: 2rpx 0; }
+.chip {
+  display: inline-flex; align-items: center; height: 76rpx; padding: 0 24rpx;
+  margin-right: 12rpx; border-radius: 38rpx; border: 1rpx solid var(--border);
+  background: var(--card); color: var(--muted); font-size: 26rpx; white-space: nowrap;
+}
+.chip.active { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 600; }
+.rank-summary { display: flex; justify-content: space-between; font-size: 24rpx; color: var(--muted); margin: 4rpx 0 8rpx; }
+.rank-list { background: var(--card); border: 1rpx solid var(--border); border-radius: 24rpx; padding: 0 28rpx; }
+.rank-row {
+  display: flex; align-items: center; min-height: 128rpx; padding: 18rpx 0;
+  border-bottom: 1rpx solid rgba(148, 163, 184, 0.12);
+}
+.rank-row:last-child { border-bottom: 0; }
+.rank-row .no { width: 44rpx; flex-shrink: 0; font-size: 24rpx; font-weight: 700; color: var(--muted-2); text-align: center; }
+.rank-row .no.top { color: var(--peak); font-size: 28rpx; }
+.rank-row .main { flex: 1; min-width: 0; padding: 0 16rpx; }
+.rank-row .nm { display: block; font-size: 30rpx; font-weight: 600; line-height: 40rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-row .ds { display: block; font-size: 24rpx; color: var(--muted); line-height: 32rpx; margin-top: 4rpx; }
+.rank-row .val { text-align: right; flex-shrink: 0; }
+.rank-row .v { display: block; font-size: 34rpx; font-weight: 700; font-variant-numeric: tabular-nums; }
+.rank-row .u { display: block; font-size: 20rpx; color: var(--muted-2); }
+.rank-row .v.missing { font-size: 26rpx; color: var(--warning); }
+.rank-more { margin-top: 20rpx; }
+
+/* =====================================================================
+   五行石
+   ===================================================================== */
+.stone-hero {
+  padding: 28rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(155deg, var(--accent-2), var(--card));
+  border: 1rpx solid var(--line-strong);
+  margin-bottom: 24rpx;
+}
+.stone-hero .hero-name { margin-top: 18rpx; font-size: 40rpx; }
+.stone-levels { background: var(--card); border: 1rpx solid var(--border); border-radius: 24rpx; padding: 0 28rpx; margin-bottom: 24rpx; }
+.stone-level-row { display: flex; align-items: center; min-height: 128rpx; padding: 18rpx 0; border-bottom: 1rpx solid rgba(148, 163, 184, 0.12); }
+.stone-level-row:last-child { border-bottom: 0; }
+.stone-lv-badge { width: 64rpx; height: 64rpx; border-radius: 16rpx; flex-shrink: 0; margin-right: 18rpx; display: flex; align-items: center; justify-content: center; font-size: 24rpx; font-weight: 700; color: #08111f; }
+.stone-level-row .main { flex: 1; min-width: 0; }
+.stone-level-row .nm { display: block; font-size: 30rpx; font-weight: 600; line-height: 40rpx; }
+.stone-level-row .ds { display: block; font-size: 24rpx; color: var(--muted); line-height: 32rpx; margin-top: 4rpx; }
+.stone-level-row .val { text-align: right; }
+.stone-level-row .v { display: block; font-size: 34rpx; font-weight: 700; }
+.stone-level-row .u { display: block; font-size: 20rpx; color: var(--muted-2); }
+.stone-jack { background: var(--card); border: 1rpx solid var(--border); border-radius: 24rpx; padding: 0 28rpx; margin-bottom: 24rpx; }
+.stone-jack-row { display: flex; align-items: center; min-height: 112rpx; padding: 18rpx 0; border-bottom: 1rpx solid rgba(148, 163, 184, 0.12); }
+.stone-jack-row:last-child { border-bottom: 0; }
+.stone-jack-row .main { flex: 1; }
+.stone-jack-row .t { display: block; font-size: 30rpx; font-weight: 600; line-height: 40rpx; }
+.stone-jack-row .s { display: block; font-size: 24rpx; color: var(--muted); line-height: 32rpx; margin-top: 4rpx; }
+.stone-jack-row .badge { height: 44rpx; padding: 0 14rpx; font-size: 24rpx; }
+
+/* =====================================================================
+   我的
+   ===================================================================== */
+.me-profile {
+  display: flex; align-items: center; gap: 20rpx;
+  padding: 28rpx; margin: 8rpx 0 28rpx;
+  border-radius: 24rpx; background: linear-gradient(150deg, var(--accent-2), var(--card));
+  border: 1rpx solid var(--line-strong);
+}
+.me-avatar {
+  width: 96rpx; height: 96rpx; border-radius: 24rpx; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(29, 111, 224, 0.14); color: var(--info);
+  font-size: 34rpx; font-weight: 700;
+}
+.me-profile .n { display: block; font-size: 34rpx; font-weight: 600; line-height: 44rpx; }
+.me-profile .s { display: block; font-size: 24rpx; color: var(--muted); line-height: 32rpx; margin-top: 4rpx; }
+.me-group-title { font-size: 24rpx; color: var(--muted); margin: 24rpx 8rpx 12rpx; }
+.me-group { background: var(--card); border: 1rpx solid var(--border); border-radius: 24rpx; overflow: hidden; }
+.me-row {
+  display: flex; align-items: center; gap: 18rpx;
+  min-height: 112rpx; padding: 0 24rpx;
+  border-bottom: 1rpx solid rgba(148, 163, 184, 0.12);
+}
+.me-row:last-child { border-bottom: 0; }
+.me-row .ic {
+  width: 56rpx; height: 56rpx; border-radius: 14rpx; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22rpx; font-weight: 700;
+  background: rgba(148, 163, 184, 0.12); color: var(--text-2);
+}
+.me-row .ic.blue { background: rgba(122, 184, 255, 0.14); color: var(--info); }
+.me-row .ic.green { background: rgba(69, 212, 131, 0.14); color: var(--positive); }
+.me-row .ic.purple { background: rgba(199, 155, 255, 0.14); color: var(--peak); }
+.me-row .ic.amber { background: rgba(245, 179, 1, 0.14); color: var(--warning); }
+.me-row .l { flex: 1; font-size: 30rpx; }
+.me-row .r { font-size: 24rpx; color: var(--muted); }
+.me-row .chev { font-size: 32rpx; }
+
+/* 设置展开区 */
+.settings-panel { margin-top: 16rpx; }
+.settings-panel .card { margin-bottom: 20rpx; }
+.settings-panel .card-title { font-size: 30rpx; }
+.settings-note { font-size: 22rpx; line-height: 32rpx; color: var(--muted-2); }
+
+/* 行情目录（分包）兼容 */
+.market-search, .market-sheet-input { font-size: 30rpx; }
+.market-row { min-height: 120rpx; }
+.market-row .nm { font-size: 30rpx; }
+.market-row .ds { font-size: 24rpx; }
+.market-row .v { font-size: 34rpx; }
+.market-chip { height: 80rpx; font-size: 26rpx; }
+
+.rank-filter.active { background: var(--text); border-color: var(--text); color: var(--bg); }
+
+/* 触控下限：44px = 88rpx；小屏上宁大勿小 */
+.btn-sm, .picker-sm, .input-sm, .price-box, .rank-filter, .icon-btn,
+.server-pill, .skill-tab, .bt-skill-tab, .chip, .market-chip, .seg-item {
+  min-height: 88rpx;
+  height: 88rpx;
+}
+.btn { font-size: 30rpx; }
+.btn-sm { font-size: 28rpx; }
+.chip, .market-chip, .seg-item { font-size: 28rpx; }
+.price-box { font-size: 30rpx; }
+.price-state, .server-meta, .rank-summary, .me-group-title, .hero-source,
+.plan-cell .k, .card-foot, .data-note, .settings-note, .price-strip .txt {
+  font-size: 24rpx;
+}
+.alt-row .u, .rank-row .u, .stone-level-row .u, .stone-jack-row .s,
+.price-line .ds, .rank-row .ds, .me-row .r, .alt-row .ds {
+  font-size: 24rpx;
+}
+.server-row { min-height: 96rpx; padding: 16rpx 0; }
+.server-row .nm { font-size: 30rpx; font-weight: 600; }
+.server-row .rg { font-size: 24rpx; }
+.server-row .ops .btn { margin-left: 12rpx; }

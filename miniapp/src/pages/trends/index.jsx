@@ -231,7 +231,7 @@ function Trends() {
   if (!meta.points) {
     return (
       <View className='page'>
-        <TopBar title='物价走势' subtitle='本服历史报价 · 离线快照' />
+        <TopBar showTitle={false} subtitle='本服历史报价 · 离线快照' />
         <Empty title='暂无物价历史' desc='等待下一次物价快照生成后再同步小程序。' />
         <DataNote extra='离线历史快照' />
       </View>
@@ -240,7 +240,7 @@ function Trends() {
 
   return (
     <View className='page trend-page'>
-      <TopBar title='物价走势' subtitle='本服历史报价 · 离线快照' />
+      <TopBar showTitle={false} subtitle='本服历史报价 · 离线快照' />
 
       <View className='card'>
         <View className='card-head'>

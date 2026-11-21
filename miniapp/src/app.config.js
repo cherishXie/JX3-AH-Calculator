@@ -5,7 +5,6 @@ const PAGES = [];
 if (IS_WEAPP) PAGES.push('pages/guide/index');
 PAGES.push(
   'pages/overview/index',
-  'pages/skills/index',
   'pages/prices/index',
   'pages/analysis/index'
 );
@@ -20,15 +19,14 @@ const SUB_PACKAGES = IS_WEAPP
 PAGES.push('pages/breakthrough/index', 'pages/recipe/index', 'pages/settings/index');
 
 const TAB_LIST = [
-  { pagePath: 'pages/overview/index', text: '总览', iconPath: 'assets/tabs/home-light.png', selectedIconPath: 'assets/tabs/home-on-light.png' },
-  { pagePath: 'pages/skills/index', text: '技艺', iconPath: 'assets/tabs/skills-light.png', selectedIconPath: 'assets/tabs/skills-on-light.png' },
-  { pagePath: 'pages/prices/index', text: '价格', iconPath: 'assets/tabs/prices-light.png', selectedIconPath: 'assets/tabs/prices-on-light.png' },
-  { pagePath: 'pages/analysis/index', text: '分析', iconPath: 'assets/tabs/analysis-light.png', selectedIconPath: 'assets/tabs/analysis-on-light.png' }
+  { pagePath: 'pages/overview/index', text: '今日', iconPath: 'assets/tabs/home-light.png', selectedIconPath: 'assets/tabs/home-on-light.png' },
+  { pagePath: 'pages/prices/index', text: '行情', iconPath: 'assets/tabs/prices-light.png', selectedIconPath: 'assets/tabs/prices-on-light.png' }
 ];
 
 if (IS_WEAPP) {
   TAB_LIST.push({ pagePath: 'pages/stones/index', text: '五行石', iconPath: 'assets/tabs/stones-light.png', selectedIconPath: 'assets/tabs/stones-on-light.png' });
 }
+TAB_LIST.push({ pagePath: 'pages/settings/index', text: '我的', iconPath: 'assets/tabs/me-light.png', selectedIconPath: 'assets/tabs/me-on-light.png' });
 
 export default {
   // 微信代码质量「组件按需注入」：只注入页面实际用到的自定义组件。
@@ -44,7 +42,7 @@ export default {
   },
   tabBar: {
     color: '#64748B',
-    selectedColor: '#0F172A',
+    selectedColor: '#1D6FE0',
     backgroundColor: '#FFFFFF',
     borderStyle: 'white',
     list: TAB_LIST

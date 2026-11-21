@@ -153,7 +153,7 @@ function ServerTrends() {
   if (!meta.points) {
     return (
       <View className='page'>
-        <TopBar title='区服趋势' subtitle='17 服净涨跌与物品跨服统计' />
+        <TopBar showTitle={false} subtitle='17 服净涨跌与物品跨服统计' />
         <Empty title='暂无历史数据' desc='等待物价快照同步后再查看区服趋势。' />
         <DataNote extra='区服趋势使用走势历史快照' />
       </View>
@@ -162,7 +162,7 @@ function ServerTrends() {
 
   return (
     <View className='page st-page'>
-      <TopBar title='区服趋势' subtitle={loading ? '正在同步历史…' : '17 服净涨跌 · 物品跨服统计'} />
+      <TopBar showTitle={false} subtitle={loading ? '正在同步历史…' : '17 服净涨跌 · 物品跨服统计'} />
 
       <View className='card'>
         <View className='card-body'>

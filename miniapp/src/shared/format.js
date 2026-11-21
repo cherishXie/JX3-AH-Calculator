@@ -35,6 +35,16 @@ export function fmtSigned(v, d) {
   return (v > 0 ? '+' : v < 0 ? '−' : '') + fmt(Math.abs(v), d);
 }
 
+/** 汇总收益：≥1 万用「万」，最多 2 位小数；详情仍可用 fmt 看精确值。 */
+export function fmtWan(v, d) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return '—';
+  const abs = Math.abs(n);
+  if (abs >= 1000000) return (n / 10000).toFixed(1) + ' 万';
+  if (abs >= 10000) return (n / 10000).toFixed(d == null ? 2 : d) + ' 万';
+  return fmt(n, d == null ? 2 : d);
+}
+
 export function fmtTime(ts) {
   if (!ts) return '—';
   const d = new Date(ts);

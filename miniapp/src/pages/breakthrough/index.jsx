@@ -54,7 +54,7 @@ function Breakthrough() {
 
   return (
     <View className='page bt-page'>
-      <TopBar title='突破升级 · 1→50' subtitle={BT.meta.expansion + ' · 晋秩突破与最优冲级路线'} />
+      <TopBar showTitle={false} subtitle={BT.meta.expansion + ' · 晋秩突破与最优冲级路线'} />
 
       <View className='card'>
         <View className='card-head'>
