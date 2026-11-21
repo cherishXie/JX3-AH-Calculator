@@ -863,6 +863,12 @@
           { href: Route.href('/server-trends'), label: '区服趋势', icon: 'trend', path: '/server-trends' },
           { href: Route.href('/breakthrough'), label: '突破升级', icon: 'arrowUp', path: '/breakthrough' }
         ]
+      },
+      {
+        group: '工具', items: [
+          // 站外工具页：新标签打开，不参与路由高亮
+          { href: 'https://cherishxie.github.io/JW3-Work-Pages/', label: '剑网三工作台', icon: 'spark', external: true }
+        ]
       }
     ];
   }
@@ -891,10 +897,12 @@
     nav.forEach(function (g) {
       navHtml += '<div class="nav-group-title">' + U.esc(g.group) + '</div>';
       g.items.forEach(function (it) {
-        const active = path === it.path || (it.path !== '/' && path.indexOf(it.path + '/') === 0);
+        const active = !it.external && (path === it.path || (it.path !== '/' && path.indexOf(it.path + '/') === 0));
         navHtml += '<a class="nav-item' + (active ? ' active' : '') + '" href="' + it.href + '"' +
+          (it.external ? ' target="_blank" rel="noopener noreferrer"' : '') +
           (active ? ' aria-current="page"' : '') + '>' + icon(it.icon) +
           '<span class="label">' + U.esc(it.label) + '</span>' +
+          (it.external ? '<span class="nav-ext" aria-hidden="true">' + icon('external') + '</span>' : '') +
           (it.badge ? '<span class="nav-badge">' + U.esc(String(it.badge)) + '</span>' : '') + '</a>';
       });
     });
