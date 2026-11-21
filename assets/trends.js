@@ -30,6 +30,7 @@
     rawDays: Object.create(null),
     rawViews: Object.create(null),
     loading: Object.create(null),
+    failures: Object.create(null),
     loadingDays: Object.create(null),
     dayError: null,
     lastLoadedAt: 0,
@@ -433,6 +434,7 @@
     const promise = storageGet(key).then(function (hit) {
       if (hit && hit.hash === meta.hash && Array.isArray(hit.points)) {
         setPriceCache(serverId, meta.date, meta.hash, hit.points);
+        delete state.failures[key];
         clearViewCache();
         scheduleNotify();
         return hit.points;
@@ -441,6 +443,7 @@
         .then(function (doc) {
           const points = Array.isArray(doc && doc.points) ? doc.points : [];
           setPriceCache(serverId, meta.date, meta.hash, points);
+          delete state.failures[key];
           storageSet(key, { hash: meta.hash, points: points });
           state.dataVersion++;
           clearViewCache();
@@ -448,6 +451,7 @@
           return points;
         });
     }).catch(function (err) {
+      state.failures[key] = Date.now();
       state.dayError = '无法加载 ' + meta.date + ' 的走势数据：' + (err && err.message ? err.message : String(err));
       notify();
       throw err;
@@ -469,6 +473,7 @@
     const promise = storageGet(key).then(function (hit) {
       if (hit && hit.hash === meta.hash && hit.servers) {
         setServerCache(meta.date, meta.hash, hit.servers);
+        delete state.failures[key];
         clearViewCache();
         scheduleNotify();
         return hit.servers;
@@ -477,6 +482,7 @@
         .then(function (doc) {
           const servers = (doc && doc.servers) || {};
           setServerCache(meta.date, meta.hash, servers);
+          delete state.failures[key];
           storageSet(key, { hash: meta.hash, servers: servers });
           state.dataVersion++;
           clearViewCache();
@@ -484,6 +490,7 @@
           return servers;
         });
     }).catch(function (err) {
+      state.failures[key] = Date.now();
       state.dayError = '无法加载 ' + meta.date + ' 的区服走势数据：' + (err && err.message ? err.message : String(err));
       notify();
       throw err;
@@ -500,6 +507,12 @@
 
   function loadMeta(meta, mode, serverId) {
     return mode === 'server' ? loadServerDay(meta) : loadPriceSegment(serverId, meta);
+  }
+
+  function shouldAutoLoad(meta, mode, serverId) {
+    const key = mode === 'server' ? 'd|' + meta.date : 'p|' + serverId + '|' + meta.date;
+    const failedAt = Number(state.failures[key]) || 0;
+    return !failedAt || Date.now() - failedAt > 30000;
   }
 
   function clearViewCache() {
@@ -849,7 +862,9 @@
       if (!entry) missing.push(meta);
       else if (entry.hash !== meta.hash) stale.push(meta);
     });
-    stale.forEach(function (meta) { loadMeta(meta, mode, cacheServerId).catch(function () {}); });
+    stale.forEach(function (meta) {
+      if (shouldAutoLoad(meta, mode, cacheServerId)) loadMeta(meta, mode, cacheServerId).catch(function () {});
+    });
 
     const firstDate = allDates[0];
     const lastDate = allDates[allDates.length - 1];
@@ -861,7 +876,9 @@
     const placeholderTo = requestedTo != null ? hourText(requestedTo) : serverDateTo(selected[selected.length - 1]);
 
     if (missing.length) {
-      missing.forEach(function (meta) { loadMeta(meta, mode, cacheServerId).catch(function () {}); });
+      missing.forEach(function (meta) {
+        if (shouldAutoLoad(meta, mode, cacheServerId)) loadMeta(meta, mode, cacheServerId).catch(function () {});
+      });
     }
     const available = metas.filter(function (meta) {
       return mode === 'server' ? !!serverCacheEntry(meta.date) : !!priceCacheEntry(cacheServerId, meta.date);
@@ -869,6 +886,14 @@
     // 首次打开或新增日期时没有旧数据才进入整页加载；已有旧数据时先展示，
     // 新增/变化的日期在后台补拉，避免页面闪回加载态。
     if (missing.length && !available.length) {
+      const retryable = missing.some(function (meta) { return shouldAutoLoad(meta, mode, cacheServerId); });
+      if (!retryable && state.dayError) {
+        return {
+          status: 'error', error: state.dayError, index: state.manifest, mode: mode,
+          dates: selected, from: placeholderFrom, to: placeholderTo,
+          allFrom: serverDateFrom(allFromDay), allTo: serverDateTo(allToDay)
+        };
+      }
       const loaded = metas.length - missing.length;
       const bytesTotal = loadingBytes(metas, mode);
       const bytesLoaded = loadingBytes(available, mode);
@@ -1144,6 +1169,7 @@
     state.rawDays = Object.create(null);
     state.rawViews = Object.create(null);
     state.loading = Object.create(null);
+    state.failures = Object.create(null);
     state.loadingDays = Object.create(null);
     state.dayError = null;
     state.memoryStore = Object.create(null);
@@ -1158,6 +1184,7 @@
   function retry() {
     state.manifestError = null;
     state.dayError = null;
+    state.failures = Object.create(null);
     notify();
   }
   function invalidate() {

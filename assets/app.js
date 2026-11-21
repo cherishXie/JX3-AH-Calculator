@@ -2465,7 +2465,8 @@
     const skill = ctx.skill;
     const skillLabel = ctx.skillId === 'stone' ? '五行石' : (skill ? skill.name : '全部技艺');
     const typeLabel = ctx.type === 'material' ? '材料' : ctx.type === 'product' ? '产物' : ctx.type === 'stone' ? '五行石' : '全部类型';
-    const timeLabel = fromDate.slice(5) + ' ' + fromHour + ':00 – ' + toDate.slice(5) + ' ' + toHour + ':00';
+    const syncLabel = view.partial || view.stale ? ' · 更新中' : '';
+    const timeLabel = fromDate.slice(5) + ' ' + fromHour + ':00 – ' + toDate.slice(5) + ' ' + toHour + ':00' + syncLabel;
     const filterOpen = ui.trendFilterOpen;
     let html = '<section class="card trend-filter-card"><div class="card-body tight">' +
       '<button class="trend-filter-toggle" data-action="toggle-trend-filter" aria-expanded="' + (filterOpen ? 'true' : 'false') + '">' +
@@ -3389,6 +3390,7 @@
     }
     const failed = views.filter(function (v) { return v.status === 'error'; })[0];
     if (failed) return { status: 'error', error: failed.error || '物价历史加载失败', range: range };
+    const trendPartial = views.some(function (v) { return v.partial || v.stale; });
     const columns = ((views.filter(function (v) { return v.points && v.points.length; })[0] || { points: [] }).points || []).map(function (point) { return point.at; });
     const items = selection.selected;
     const itemDenom = items.length;
@@ -3478,7 +3480,7 @@
       globalUp: globalUp, globalDown: globalDown, lowCount: lowCount,
       selectedServer: selectedServer, selectedSkill: selectedSkill,
       detailReturns: detailReturns, skillGroups: groups,
-      serverCount: servers.length
+      serverCount: servers.length, partial: trendPartial
     };
     ctx.keywords = serverKeywordChips(ctx, p);
     return ctx;
@@ -3570,7 +3572,7 @@
       const total = ctx.selection && ctx.selection.all ? ctx.selection.all.length : serverCatalog().length;
       const scope = ready && !selected ? '未选物品' : (selected !== total ? '所选 ' + selected + ' 项物品' : '全部物品 ' + total + ' 项（含五行石）');
       const serverTotal = ctx.serverCount != null ? ctx.serverCount : (DATA.servers || []).length;
-      meta = '<p class="page-sub server-page-sub">' + (viewLabel ? viewLabel + ' · ' : '') + scope + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + ' · 缺失报价留空</p>';
+      meta = '<p class="page-sub server-page-sub">' + (viewLabel ? viewLabel + ' · ' : '') + scope + ' · ' + serverTotal + ' 服 · ' + ctx.range.label + (first ? ' ' + first + '–' + last : '') + (ctx.partial ? ' · 更新中' : '') + ' · 缺失报价留空</p>';
     }
     return '<div class="page-head"><div><h1 class="page-title">区服趋势</h1>' + meta + '</div></div>';
   }
