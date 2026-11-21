@@ -8,6 +8,7 @@ OUT="剑网三物价助手-minitool.zip"
 ZIP_LIMIT=$((10 * 1024 * 1024))
 
 node scripts/sync-breakthrough-model.mjs
+node scripts/build-minitool-history.mjs
 node scripts/check-minitool.mjs
 cp content/updates/minitool.json minitool/release.json
 

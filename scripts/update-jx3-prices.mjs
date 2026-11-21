@@ -286,6 +286,18 @@ async function main() {
     process.exitCode = 1;
   }
 
+  // 小工具离线包只带最近 7 天历史；行情更新后同步重建，避免离线路价过期。
+  try {
+    const historyBuild = spawnSync(process.execPath, ['scripts/build-minitool-history.mjs'], { cwd: ROOT, stdio: 'inherit' });
+    if (historyBuild.status !== 0) {
+      console.error('[error] 生成小工具离线路价历史失败');
+      process.exitCode = 1;
+    }
+  } catch (err) {
+    console.error(`[error] 生成小工具离线路价历史失败：${err.stack || err.message}`);
+    process.exitCode = 1;
+  }
+
   if (!NO_ZIP) {
     const zip = path.join(ROOT, '剑网三物价助手-minitool.zip');
     try { fs.rmSync(zip, { force: true }); } catch {}

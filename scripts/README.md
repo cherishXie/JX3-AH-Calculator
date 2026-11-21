@@ -43,6 +43,7 @@ node scripts/update-jx3-prices.mjs --dry-run
   - `assets/data.js`（含 `serverPrices`）
   - `miniapp/src/shared/catalog.json`
   - `minitool/assets/data.js`
+  - `minitool/assets/price-history.js`（小工具离线历史，最近 7 天）
   - `data/price-history/`（价格有变化时）
   - `data/price-trends/`（最近 7 天预计算走势，浏览器按区服/日期增量加载）
   - `剑网三物价助手-minitool.zip`
@@ -85,7 +86,7 @@ node scripts/price-history.mjs export --server 梦江南 --from 2026-11-20 --eff
 - 筛选栏默认全部技艺/全部类型并在滚动时固定，移动端可收起；提供涨跌红黑榜（前 10 + 全量）与区间涨跌热力图；各图表可下载 PNG；
 - 原始数据按节点折叠；展开时才按需读取原始日文件，可查看每个节点报价并导出原始/走势 CSV；行情条支持手动检查远程物价，dev 预览自动使用生产行情。
 
-该页面只存在于 Web 版；小红书离线小工具不加载历史 JSON。数据回归测试：
+Web 版按区服/日期增量读取预计算数据；小红书离线小工具把最近 7 天原始历史打进 `minitool/assets/price-history.js`，两者走势范围上限都是 7 天。数据回归测试：
 
 ```bash
 node scripts/test-price-trends.mjs

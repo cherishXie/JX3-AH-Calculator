@@ -50,7 +50,7 @@ git reset --hard origin/main >>"$LOG" 2>&1
 log "run price updater"
 ./scripts/update-prices.sh >>"$LOG" 2>&1
 
-git add assets/data.js miniapp/src/shared/catalog.json minitool/assets/data.js scripts/jx3-item-map.json data/price-history data/price-trends "剑网三物价助手-minitool.zip"
+git add assets/data.js miniapp/src/shared/catalog.json minitool/assets/data.js minitool/assets/price-history.js scripts/jx3-item-map.json data/price-history data/price-trends "剑网三物价助手-minitool.zip"
 if git diff --cached --quiet; then
   log "no price changes"
   exit 0

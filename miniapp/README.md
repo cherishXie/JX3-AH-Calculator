@@ -109,7 +109,7 @@ HOME=/tmp/tarohome npm run build:weapp
 - 除标注「配方已核验/名目已核验」外，配比、采集产出、精力均为可编辑示例，不是官方逐条数据。
 - 旧版本（90/100/130 级）数值不适用。
 - 详细来源见 Web 版 `README.md` 与小程序「设置 → 数据说明」。
-- 物价走势快照：`src/shared/trends.json`，由 `npm run sync:trends` 从 `data/price-history` 生成，最多 2 天/400KB，作为云端历史不可用时的兜底；云端历史保留 7 天。
+- 物价走势快照：`src/shared/trends.json`，由 `npm run sync:trends` 从 `data/price-history` 生成，最多 2 天且受主包体积预算自动收缩（当前 1 天 / 约 120KB），作为云端历史不可用时的兜底；云端历史保留 7 天，区服趋势最多查看最近 7 天。
 - 突破升级数据：`src/shared/breakthrough.json`，由 `node ../scripts/build-breakthrough-data.mjs` 生成——1036 条当前赛季配方（等级/经验/精力/材料/产出）、32 个晋秩门槛（8 技艺 × 30/35/40/45）、1355 件物品与 17 服拍卖价；突破材料与门槛来自 JX3BOX 攻略 109793，成就库交叉核验「完成40级突破」。经验门槛使用5个用户观测点分段插值、31级起沿末段趋势外推；采集单次经验仍为估算。每个技艺有独立的 49 行经验表，并标明估算状态。门槛可能影响制作次数、路线和收益。
 
 ---

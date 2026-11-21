@@ -1,15 +1,16 @@
 /* =========================================================================
    剑网三物价助手 · 物价历史读取与走势数据
    -------------------------------------------------------------------------
-   - 从 Pages 的 price-history/index.json + days/*.json 读取历史
+   - 从离线包内置的 price-history 数据读取历史（window.JX3PriceHistory）
    - 按区服回放 base + samples，得到每个节点的本服报价/基准价/有效价
    - 提供蜡烛图、散点图、节点原始数据所需的纯数据函数
-   该文件只服务 Web 版；小红书离线小工具不加载它。
+   - 与 Web 端对齐：最多保留最近 7 个自然日；不加载外部网络资源。
    ========================================================================= */
 (function () {
   'use strict';
 
   const DATA = window.JX3Data || {};
+  const MAX_DAYS = 7;
   const listeners = [];
   const state = {
     index: null,
@@ -112,6 +113,17 @@
   function beijingDateOf(ms) {
     const p = beijingParts(ms);
     return p.year + '-' + String(p.month).padStart(2, '0') + '-' + String(p.day).padStart(2, '0');
+  }
+  function shiftDate(date, delta) {
+    const ms = Date.parse(date + 'T00:00:00+08:00');
+    if (!Number.isFinite(ms)) return date;
+    return new Date(ms + delta * 86400000 + 8 * 3600000).toISOString().slice(0, 10);
+  }
+  function dayDistance(from, to) {
+    const a = Date.parse(from + 'T00:00:00+08:00');
+    const b = Date.parse(to + 'T00:00:00+08:00');
+    if (!Number.isFinite(a) || !Number.isFinite(b)) return 0;
+    return Math.round((b - a) / 86400000);
   }
   function hourText(ms) {
     const p = beijingParts(ms);
@@ -516,10 +528,17 @@
       loadIndex().catch(function () {});
       return { status: 'loading', index: null };
     }
-    const allDates = state.index.days.map(function (d) { return d.date; }).sort();
-    if (!allDates.length) {
+    const rawDates = state.index.days.map(function (d) { return d.date; }).filter(function (date) {
+      return /^\d{4}-\d{2}-\d{2}$/.test(String(date));
+    }).sort();
+    if (!rawDates.length) {
       return { status: 'ready', index: state.index, dates: [], points: [], from: '', to: '', allFrom: '', allTo: '' };
     }
+    // 与 Web 端一致：离线包最多保留最近 7 个自然日。
+    const maxDays = Math.min(MAX_DAYS, Math.max(1, Number(state.index.maxDays) || MAX_DAYS));
+    const latestDate = rawDates[rawDates.length - 1];
+    const earliestDate = shiftDate(latestDate, -(maxDays - 1));
+    const allDates = rawDates.filter(function (date) { return date >= earliestDate; });
     const firstDate = allDates[0];
     const lastDate = allDates[allDates.length - 1];
     let allFrom = firstDate + 'T00:00';
@@ -531,6 +550,8 @@
     let dayFrom = fromDay < firstDate ? firstDate : fromDay;
     let dayTo = toDay > lastDate ? lastDate : toDay;
     if (dayFrom > dayTo) { const tmp = dayFrom; dayFrom = dayTo; dayTo = tmp; }
+    if (dayDistance(dayFrom, dayTo) + 1 > maxDays) dayFrom = shiftDate(dayTo, -(maxDays - 1));
+    if (dayFrom < firstDate) dayFrom = firstDate;
     const dates = allDates.filter(function (date) { return date >= dayFrom && date <= dayTo; });
     const placeholderFrom = requestedFrom != null ? hourText(requestedFrom) : dayFrom + 'T00:00';
     const placeholderTo = requestedTo != null ? hourText(requestedTo) : dayTo + 'T23:00';
@@ -616,6 +637,7 @@
     refresh: refresh,
     retry: retry,
     state: state,
+    maxDays: MAX_DAYS,
     _test: {
       buildPoints: buildPoints,
       itemSeries: itemSeries,
@@ -629,7 +651,8 @@
       hourText: hourText,
       floorHourMs: floorHourMs,
       endOfHourMs: endOfHourMs,
-      slicePoints: slicePoints
+      slicePoints: slicePoints,
+      MAX_DAYS: MAX_DAYS
     }
   };
 })();

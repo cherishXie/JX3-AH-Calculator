@@ -20,7 +20,8 @@ const repo = path.resolve(here, '..', '..');
 const sourceDir = path.join(repo, 'data', 'price-history');
 const outFile = path.join(repo, 'miniapp', 'src', 'shared', 'trends.json');
 const MAX_DAYS = 2;
-const MAX_BYTES = 400 * 1024;
+// 主包代码质量预算 1.5MB；云端历史保留 7 天，内置兜底只保留能装下的天数。
+const MAX_BYTES = 240 * 1024;
 
 if (!fs.existsSync(path.join(sourceDir, 'index.json'))) {
   throw new Error('缺少 data/price-history/index.json');

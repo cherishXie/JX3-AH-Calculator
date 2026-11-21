@@ -15,8 +15,7 @@ import withTheme from '../../components/withTheme';
 const RANGE_OPTIONS = [
   { value: 'today', label: '今日' },
   { value: '3d', label: '近 3 日' },
-  { value: '7d', label: '近 7 日' },
-  { value: '30d', label: '近 30 日' }
+  { value: '7d', label: '近 7 日' }
 ];
 const RECENT_KEY = 'jx3-mp-server-items-v1';
 const QUICK_NAMES = ['羊皮', '骨头', '猫眼石', '鱼肉'];
@@ -177,7 +176,7 @@ function ServerTrends() {
             </View>
           </ScrollView>
           {!selectedIds.length ? <Text className='tiny dim'>至少选择一个区服后查看趋势。</Text> : null}
-          <Text className='tiny dim st-data-source'>{meta.sourceLabel} · {meta.points} 个节点 · {meta.updatedAt ? meta.updatedAt.slice(5, 16).replace('T', ' ') : '—'}</Text>
+          <Text className='tiny dim st-data-source'>{meta.sourceLabel} · 最多 7 天 · {meta.points} 个节点 · {meta.updatedAt ? meta.updatedAt.slice(5, 16).replace('T', ' ') : '—'}</Text>
         </View>
       </View>
 

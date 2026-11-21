@@ -2171,7 +2171,7 @@
       '<input class="input trend-date" type="date" value="' + U.esc(toDate) + '" min="' + U.esc(minDate) +
         '" max="' + U.esc(maxDate) + '" data-trend-range="to-date" aria-label="结束日期">' +
       '<select class="select trend-hour" data-trend-range="to-hour" aria-label="结束小时">' + trendHourOptions(toHour) + '</select>' +
-    '</div>';
+    '</div><span class="server-range-note">最多 7 天</span>';
     html += '<label class="trend-filter-field"><span>技艺</span><select class="select" data-filter="tskill" aria-label="技艺筛选">' +
       trendSkillOptions(ctx.skillId || 'all') + '</select></label>';
     if (ctx.skillId === 'stone') {
@@ -2856,7 +2856,8 @@
     return now.toISOString().slice(0, 10);
   }
   function serverRange(p) {
-    const days = ({ today: 1, '3d': 3, '7d': 7, '30d': 30 })[p.srange] || 1;
+    // 与 Web 端一致：离线路价历史最多 7 个自然日，旧链接 30d 按 7 日处理。
+    const days = p.srange === '30d' ? 7 : Math.min(7, ({ today: 1, '3d': 3, '7d': 7 })[p.srange] || 1);
     const latest = serverLatestDate();
     const base = Date.parse(latest + 'T12:00:00+08:00');
     const start = new Date(base - (days - 1) * 86400000 + 8 * 3600000).toISOString().slice(0, 10);
@@ -3261,9 +3262,8 @@
     html += '<div class="seg seg-sm server-range">' +
       '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
       '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
-      '<button class="' + (p.srange === '7d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
-      '<button class="' + (p.srange === '30d' ? 'active' : '') + '" data-server-range="30d">近 30 日</button>' +
-    '</div>';
+      '<button class="' + (p.srange === '7d' || p.srange === '30d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
+    '</div><span class="server-range-note">最多保留 7 天</span>';
     html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + serverCount + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
         '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (serverAll ? ' checked' : '') + '>全选</label>' +
@@ -3513,9 +3513,8 @@
     html += '<div class="seg seg-sm server-range">' +
       '<button class="' + (p.srange === '3d' || p.srange === '7d' || p.srange === '30d' ? '' : 'active') + '" data-server-range="today">今日</button>' +
       '<button class="' + (p.srange === '3d' ? 'active' : '') + '" data-server-range="3d">近 3 日</button>' +
-      '<button class="' + (p.srange === '7d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
-      '<button class="' + (p.srange === '30d' ? 'active' : '') + '" data-server-range="30d">近 30 日</button>' +
-    '</div>';
+      '<button class="' + (p.srange === '7d' || p.srange === '30d' ? 'active' : '') + '" data-server-range="7d">近 7 日</button>' +
+    '</div><span class="server-range-note">最多保留 7 天</span>';
     html += '<details class="trend-picker server-picker"' + serverOpen + '><summary class="trend-picker-summary"><span>区服 <em>多选</em></span><b>' + selectedServers.length + ' / ' + totalServers + '</b>' + icon('chevronDown') + '</summary>' +
       '<div class="trend-picker-panel"><div class="trend-picker-actions">' +
         '<label class="trend-check trend-check-all"><input type="checkbox" data-server-toggle-all' + (allProductSelected ? ' checked' : '') + '>全选</label>' +

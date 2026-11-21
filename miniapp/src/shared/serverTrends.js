@@ -2,7 +2,14 @@
 import { DATA } from './engine';
 import { trendItems, buildPoints } from './trends';
 
-const RANGE_DAYS = { today: 1, '3d': 3, '7d': 7, '30d': 30 };
+const RANGE_DAYS = { today: 1, '3d': 3, '7d': 7 };
+const MAX_DAYS = 7;
+
+/** 走势历史与 Web 端一致：最多最近 7 个自然日；旧 range 值按 7 日处理。 */
+export function normalizeRangeDays(range) {
+  if (range === '30d') return MAX_DAYS;
+  return Math.min(MAX_DAYS, RANGE_DAYS[range] || 1);
+}
 
 function median(values) {
   const list = (values || []).filter(function (v) { return Number.isFinite(v); }).sort(function (a, b) { return a - b; });
@@ -30,7 +37,7 @@ export function rangePoints(points, range) {
   const dates = [];
   points.forEach(function (p) { if (p.date && dates.indexOf(p.date) === -1) dates.push(p.date); });
   dates.sort();
-  const days = RANGE_DAYS[range] || 1;
+  const days = normalizeRangeDays(range);
   const keep = {};
   dates.slice(-days).forEach(function (d) { keep[d] = true; });
   return points.filter(function (p) { return keep[p.date]; });
