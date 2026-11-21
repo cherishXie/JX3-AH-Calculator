@@ -123,7 +123,7 @@ function Prices() {
           <View className='card-head'>
             <View className='flex1'>
               <Text className='card-title'>行情目录 · 672 项</Text>
-              <Text className='card-sub'>家园 / 强化 / 消耗品 · 只查价/记价，不参与配方收益</Text>
+              <Text className='card-sub'>672 项目录 · 只查价</Text>
             </View>
             <View className='card-tool'><Text className='badge badge-info'>打开 ›</Text></View>
           </View>
@@ -199,7 +199,7 @@ function Prices() {
               </View>
             </View>
           );
-        }) : <Empty title='没有匹配的物品' desc='调整搜索或筛选条件，或去生活技艺新增物品。' />}
+        }) : <Empty title='没有匹配的物品' desc='换个关键词或筛选条件。' />}
       </View>
 
       {items.length > visible.length ? (
@@ -208,14 +208,14 @@ function Prices() {
         </View>
       ) : null}
 
-      <Text className='data-note'>行情 {fmtTime(priceStamp)} · {priceSource} · 手动校准优先，自动同步不覆盖</Text>
+      <Text className='data-note'>行情 {fmtTime(priceStamp)} · {priceSource}</Text>
 
       {spreads.length ? (
         <View className='card'>
           <View className='card-head'>
             <View className='flex1'>
               <Text className='card-title'>跨服价差</Text>
-              <Text className='card-sub'>最高 / 最低价差 ≥ 12%，用于换服采购</Text>
+              <Text className='card-sub'>价差 ≥ 12%</Text>
             </View>
           </View>
           <View className='card-body' style={{ paddingTop: '4rpx' }}>
@@ -234,7 +234,7 @@ function Prices() {
         </View>
       ) : null}
 
-      <DataNote extra='手动校准只存本机，云端行情单独同步' />
+      <DataNote />
     </View>
   );
 }

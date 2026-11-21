@@ -232,8 +232,8 @@ function Trends() {
     return (
       <View className='page'>
         <TopBar showTitle={false} subtitle='本服历史报价 · 离线快照' />
-        <Empty title='暂无物价历史' desc='等待下一次物价快照生成后再同步小程序。' />
-        <DataNote extra='离线历史快照' />
+        <Empty title='暂无物价历史' desc='等待下次快照同步。' />
+        <DataNote />
       </View>
     );
   }
@@ -287,7 +287,7 @@ function Trends() {
       {isCustom ? (
         <View className='notice'>
           <Text className='ic'>!</Text>
-          <Text>自定义服务器没有拍卖历史，按快照基准价展示；切换到内置区服可看本服报价。</Text>
+          <Text>自定义服无历史，按基准价展示。</Text>
         </View>
       ) : null}
 
@@ -318,7 +318,7 @@ function Trends() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>区间涨跌榜</Text>
-            <Text className='card-sub'>按相对区间首点的涨跌幅绝对值排序</Text>
+            <Text className='card-sub'>按涨跌幅</Text>
           </View>
         </View>
         <View className='card-body' style={{ paddingTop: '4rpx' }}>
@@ -337,7 +337,7 @@ function Trends() {
                 </Text>
               </View>
             );
-          }) : <Empty title='当前筛选没有可比较的物品' desc='换一个类型、技艺或时间范围。' />}
+          }) : <Empty title='当前筛选没有可比较的物品' desc='调整筛选。' />}
         </View>
       </View>
 
@@ -345,7 +345,7 @@ function Trends() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>历史节点</Text>
-            <Text className='card-sub'>按时间倒序 · 显示当前关注物品的采用价</Text>
+            <Text className='card-sub'>当前物品 · 时间倒序</Text>
           </View>
         </View>
         <View className='card-body' style={{ paddingTop: '4rpx' }}>
@@ -367,7 +367,7 @@ function Trends() {
         </View>
       </View>
 
-      <DataNote extra={meta.kind === 'cloud' ? '云端历史 · 缓存 1 小时' : '离线历史快照 · 随小程序版本更新'} />
+      <DataNote />
     </View>
   );
 }

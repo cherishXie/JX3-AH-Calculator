@@ -67,7 +67,7 @@ export default function ServerTrendMini() {
       <View className='card-head'>
         <View className='flex1'>
           <Text className='card-title'>区服趋势</Text>
-          <Text className='card-sub'>{(state.servers || []).length} 服今日净广度 · 跨服找价差</Text>
+          <Text className='card-sub'>{(state.servers || []).length} 服净广度</Text>
         </View>
         {IS_WEAPP ? (
           <View className='card-tool' onClick={openServerTrends}>

@@ -127,7 +127,7 @@ function Rank() {
           })}
         </View>
       ) : (
-        <Empty title='没有匹配的配方' desc='换一个关键词、技艺，或清空筛选。' />
+        <Empty title='没有匹配的配方' desc='换个关键词或清空筛选。' />
       )}
 
       {filtered.length > visible.length ? (

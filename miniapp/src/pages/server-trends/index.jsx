@@ -154,8 +154,8 @@ function ServerTrends() {
     return (
       <View className='page'>
         <TopBar showTitle={false} subtitle='17 服净涨跌与物品跨服统计' />
-        <Empty title='暂无历史数据' desc='等待物价快照同步后再查看区服趋势。' />
-        <DataNote extra='区服趋势使用走势历史快照' />
+        <Empty title='暂无历史数据' desc='等待快照同步。' />
+        <DataNote />
       </View>
     );
   }
@@ -205,7 +205,7 @@ function ServerTrends() {
           </View>
 
           <View className='card'>
-            <View className='card-head'><View className='flex1'><Text className='card-title'>区服净广度热力图</Text><Text className='card-sub'>逐物品净涨跌 · 左右滑动查看全部节点</Text></View></View>
+            <View className='card-head'><View className='flex1'><Text className='card-title'>区服净广度热力图</Text><Text className='card-sub'>逐物品净涨跌</Text></View></View>
             <ScrollView scrollX className='st-heat-scroll' showScrollbar={false}>
               <View className='st-heat-table'>
                 <View className='st-heat-row'>
@@ -227,7 +227,7 @@ function ServerTrends() {
           </View>
 
           <View className='card'>
-            <View className='card-head'><View className='flex1'><Text className='card-title'>技艺 × 区服净广度</Text><Text className='card-sub'>按制造产物 / 采集材料分组 · 左右滑动查看</Text></View></View>
+            <View className='card-head'><View className='flex1'><Text className='card-title'>技艺 × 区服净广度</Text><Text className='card-sub'>制造 / 采集</Text></View></View>
             <ScrollView scrollX className='st-heat-scroll' showScrollbar={false}>
               <View className='st-heat-table'>
                 <View className='st-heat-row'>
@@ -249,7 +249,7 @@ function ServerTrends() {
           </View>
 
           <View className='card'>
-            <View className='card-head'><View className='flex1'><Text className='card-title'>区服净广度榜</Text><Text className='card-sub'>按净涨跌广度排序 · 覆盖不足仅作参考</Text></View></View>
+            <View className='card-head'><View className='flex1'><Text className='card-title'>区服净广度榜</Text><Text className='card-sub'>按净广度</Text></View></View>
             <View className='card-body' style={{ paddingTop: '4rpx' }}>
               {serverCtx.rank.map(function (s, i) {
                 return (
@@ -268,7 +268,7 @@ function ServerTrends() {
 
           {selectedServer ? (
             <View className='card'>
-              <View className='card-head'><View className='flex1'><Text className='card-title'>{selectedServer.name} · 主要变动</Text><Text className='card-sub'>覆盖 {selectedServer.comparable}/{serverCtx.items.length} 项 · 点击区服榜切换</Text></View></View>
+              <View className='card-head'><View className='flex1'><Text className='card-title'>{selectedServer.name} · 主要变动</Text><Text className='card-sub'>覆盖 {selectedServer.comparable}/{serverCtx.items.length} 项</Text></View></View>
               <View className='card-body st-movers'>
                 <View className='st-mover-col'>
                   <Text className='st-mover-title pos'>涨幅前 5</Text>
@@ -289,7 +289,7 @@ function ServerTrends() {
       ) : (
         <View>
           <View className='card'>
-            <View className='card-head'><View className='flex1'><Text className='card-title'>关注物品</Text><Text className='card-sub'>快速查看最近物品，或搜索名称/技艺</Text></View></View>
+            <View className='card-head'><View className='flex1'><Text className='card-title'>关注物品</Text><Text className='card-sub'>搜索物品</Text></View></View>
             <View className='card-body'>
               <ScrollView scrollX className='st-server-scroll' showScrollbar={false}>
                 <View className='st-server-chips'>
@@ -342,7 +342,7 @@ function ServerTrends() {
               </View>
 
               <View className='card'>
-                <View className='card-head'><View className='flex1'><Text className='card-title'>物品跨服统计</Text><Text className='card-sub'>按上涨区服数排序 · 点击切换</Text></View></View>
+                <View className='card-head'><View className='flex1'><Text className='card-title'>物品跨服统计</Text><Text className='card-sub'>按上涨服数</Text></View></View>
                 <View className='card-body' style={{ paddingTop: '4rpx' }}>
                   {itemCtx.ranking.slice(0, 18).map(function (r) {
                     return (
@@ -356,7 +356,7 @@ function ServerTrends() {
               </View>
 
               <View className='card'>
-                <View className='card-head'><View className='flex1'><Text className='card-title'>{itemCtx.item.name} · 区服明细</Text><Text className='card-sub'>起始价 / 当前价 / 涨跌幅</Text></View></View>
+                <View className='card-head'><View className='flex1'><Text className='card-title'>{itemCtx.item.name} · 区服明细</Text><Text className='card-sub'>起始 / 当前 / 涨跌</Text></View></View>
                 <View className='card-body' style={{ paddingTop: '4rpx' }}>
                   {itemCtx.stats.rows.map(function (row) {
                     return (
@@ -371,11 +371,11 @@ function ServerTrends() {
                 </View>
               </View>
             </View>
-          ) : <Empty title='当前筛选没有可比物品' desc='调整区服、时间或选择其他物品。' />}
+          ) : <Empty title='当前筛选没有可比物品' desc='调整筛选。' />}
         </View>
       )}
 
-      <DataNote extra={meta.kind === 'cloud' ? '区服趋势 · 云端历史缓存 1 小时' : '区服趋势 · 离线历史快照'} />
+      <DataNote />
     </View>
   );
 }

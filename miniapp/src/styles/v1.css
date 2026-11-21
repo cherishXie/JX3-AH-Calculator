@@ -447,3 +447,56 @@ page {
 .today-empty { padding: 28rpx 0 12rpx; }
 .today-empty .t { display: block; font-size: 30rpx; font-weight: 600; line-height: 42rpx; }
 .today-empty .s { display: block; font-size: 24rpx; color: var(--muted); line-height: 36rpx; margin: 8rpx 0 20rpx; }
+
+/* 突破升级：移动端紧凑排版 */
+.bt-head { padding: 8rpx 4rpx 18rpx; }
+.bt-head .t { display: block; font-size: 40rpx; font-weight: 700; line-height: 54rpx; }
+.bt-head .s { display: block; font-size: 24rpx; color: var(--muted); line-height: 34rpx; margin-top: 4rpx; }
+.bt-page .chips-scroll { margin-bottom: 16rpx; }
+.bt-page .seg { margin-bottom: 18rpx; }
+.bt-scenarios { display: flex; gap: 12rpx; margin-bottom: 18rpx; }
+.bt-page .bt-scenario {
+  flex: 1; min-width: 0; padding: 16rpx; margin: 0;
+  border-radius: 16rpx; background: var(--card);
+}
+.bt-page .bt-scenario .k { display: block; font-size: 24rpx; color: var(--muted); line-height: 34rpx; }
+.bt-page .bt-scenario .v { display: block; font-size: 34rpx; font-weight: 700; line-height: 46rpx; font-variant-numeric: tabular-nums; }
+.bt-page .bt-scenario .s { display: block; font-size: 22rpx; color: var(--muted-2); line-height: 30rpx; }
+.bt-main .nm, .bt-gate .nm { font-size: 30rpx; line-height: 40rpx; }
+.bt-main .ds, .bt-gate .ds { font-size: 24rpx; line-height: 34rpx; }
+.bt-band { width: 128rpx; }
+.bt-band text { font-size: 24rpx; line-height: 34rpx; }
+.bt-val { min-width: 118rpx; }
+.bt-val .v { font-size: 30rpx; line-height: 40rpx; }
+.bt-val .u { font-size: 24rpx; line-height: 32rpx; }
+.bt-row { padding: 18rpx 0; }
+.bt-line { padding: 10rpx 0; }
+.bt-line .n { font-size: 26rpx; line-height: 36rpx; }
+.bt-line .v { font-size: 26rpx; line-height: 36rpx; }
+.bt-detail-h { font-size: 24rpx; line-height: 34rpx; }
+.bt-detail { padding: 20rpx; }
+.bt-gate { padding: 18rpx; }
+.bt-gate-ic { width: 60rpx; height: 60rpx; }
+
+/* 8 技艺两行铺满，避免横向滚动后看不到选中项 */
+.skill-grid { display: flex; flex-wrap: wrap; gap: 12rpx; margin-bottom: 20rpx; }
+.skill-grid .chip { width: calc((100% - 36rpx) / 4); justify-content: center; padding: 0 8rpx; margin-right: 0; }
+
+/* 突破概览：一屏内看完总收益、关键数字与两阶段拆分 */
+.bt-summary {
+  padding: 24rpx 28rpx; margin-bottom: 20rpx;
+  background: var(--card); border: 1rpx solid var(--border); border-radius: 24rpx;
+}
+.bt-summary-lead { display: flex; align-items: baseline; gap: 8rpx; }
+.bt-summary-lead .k { font-size: 24rpx; color: var(--muted); }
+.bt-summary-lead .v { font-size: 56rpx; font-weight: 800; line-height: 66rpx; font-variant-numeric: tabular-nums; }
+.bt-summary-lead .u { font-size: 24rpx; color: var(--muted); }
+.bt-summary-facts { display: flex; flex-wrap: wrap; gap: 10rpx 22rpx; margin-top: 12rpx; font-size: 24rpx; color: var(--muted); }
+.bt-summary-facts .b { font-size: 28rpx; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.bt-summary-phases { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 14rpx; }
+.bt-phase-chip {
+  padding: 6rpx 12rpx; border-radius: 8rpx;
+  background: var(--panel); border: 1rpx solid var(--border);
+  font-size: 22rpx; color: var(--muted);
+}
+.bt-summary-hint { display: block; margin-top: 12rpx; font-size: 22rpx; color: var(--muted-2); line-height: 32rpx; }

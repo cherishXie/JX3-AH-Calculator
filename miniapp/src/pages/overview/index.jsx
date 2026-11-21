@@ -1,6 +1,6 @@
 import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
-import { View, Text, ScrollView } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
 import ServerBar from '../../components/ServerBar';
 import DataNote from '../../components/DataNote';
@@ -65,32 +65,30 @@ function Overview() {
 
       <View className='today-head'>
         <Text className='t'>各技艺收益排行</Text>
-        <Text className='s'>选一个技艺，只看本技艺的配方；{stats.total} 项参与计算 · {sourceText}</Text>
+        <Text className='s'>按技艺查看 · {stats.total} 项 · {sourceText}</Text>
       </View>
 
       <View className='today-price' onClick={openPrices}>
-        <Text>{stats.missing ? '缺价 ' + stats.missing + ' 项，收益会偏低' : '价格已更新 · 本服有报价 ' + (stats.market + stats.quote) + ' 项'}</Text>
+        <Text>{stats.missing ? '缺价 ' + stats.missing + ' 项' : '本服报价 ' + (stats.market + stats.quote) + ' 项'}</Text>
         <Text className='act'>{stats.missing ? '去补价 ›' : '校准 ›'}</Text>
       </View>
 
-      <ScrollView scrollX scrollWithAnimation scrollIntoView={'skill-' + skillId} className='chips-scroll'>
-        <View className='chips-inner'>
-          {DATA.skills.map(function (s) {
-            return (
-              <View id={'skill-' + s.id} key={s.id} className={'chip' + (skillId === s.id ? ' active' : '')}
-                onClick={function () { setSkillId(s.id); }}>
-                {s.name}
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+      <View className='skill-grid'>
+        {DATA.skills.map(function (s) {
+          return (
+            <View key={s.id} className={'chip' + (skillId === s.id ? ' active' : '')}
+              onClick={function () { setSkillId(s.id); }}>
+              {s.name}
+            </View>
+          );
+        })}
+      </View>
 
       <View className='card'>
         <View className='card-head'>
           <View className='flex1'>
             <Text className='card-title'>{currentSkill.name} · 收益排行</Text>
-            <Text className='card-sub'>{totalBySkill[skillId] || 0} 个可算配方 · 按每点精力收益排序</Text>
+            <Text className='card-sub'>{totalBySkill[skillId] || 0} 个配方 · 金/精力</Text>
           </View>
           <Text className='small dim' onClick={openFullRank}>完整 ›</Text>
         </View>
@@ -116,7 +114,7 @@ function Overview() {
           }) : (
             <View className='today-empty'>
               <Text className='t'>这个技艺暂无可算配方</Text>
-              <Text className='s'>可能是材料缺价，或本技艺没有可制造配方。去补价后再看。</Text>
+              <Text className='s'>材料缺价或本技艺暂无可算配方。</Text>
               <View className='btn btn-ghost btn-sm' onClick={openPrices}>去补价</View>
             </View>
           )}

@@ -222,7 +222,6 @@ function Recipe() {
           <View className='card-head'>
             <View className='flex1'>
               <Text className='page-h1'>{draft.id ? '编辑配方' : '新增配方'}</Text>
-              <Text className='card-sub'>修改后立即参与全站收益计算</Text>
             </View>
           </View>
           <View className='card-body'>
@@ -362,7 +361,7 @@ function Recipe() {
                     </View>
                   );
                 })}
-                <Text className='tiny dim'>单价统一在「价格」页维护；这里只填数量。</Text>
+                <Text className='tiny dim'>改数量；单价在行情页维护。</Text>
               </View>
             ) : null}
 
@@ -499,7 +498,7 @@ function Recipe() {
           <View className='kv'><Text className='k'>满 {fmtInt(state.settings.energyBudget)} 精力可做</Text><Text className='v'>{calc.energy > 0 ? Math.floor(state.settings.energyBudget / calc.energy) : 0} 次</Text></View>
           <View className='kv'><Text className='k'>毛利率</Text><Text className='v'>{calc.margin == null ? '—' : fmtPct(calc.margin, 1)}</Text></View>
           <Text className='tiny dim mt' style={{ display: 'block', lineHeight: '30rpx' }}>
-            成本 = 材料 + 手续费；利润 = 产值 − 成本；精力收益 = 利润 ÷ 精力。售价已扣 {fmtPct(state.settings.taxRate, 0)} 交易税；暴击额外产出与署名溢价未自动计入。
+            售价已扣 {fmtPct(state.settings.taxRate, 0)} 税；未计暴击与署名溢价。
           </Text>
           {recipe.note ? <Text className='tiny dim mt' style={{ display: 'block' }}>备注：{recipe.note}</Text> : null}
           <Text className='tiny dim mt' style={{ display: 'block' }}>来源：{recipe.origin || '示例配方'}</Text>

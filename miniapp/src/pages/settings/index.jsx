@@ -246,7 +246,7 @@ function Settings() {
       {showPanel ? (
         <View className='settings-panel'>
           <View className='card'>
-            <View className='card-head'><View className='flex1'><Text className='card-title'>外观</Text><Text className='card-sub'>切换后立即生效并保存</Text></View></View>
+            <View className='card-head'><View className='flex1'><Text className='card-title'>外观</Text></View></View>
             <View className='card-body'>
               <Seg value={state.settings.theme === 'dark' ? 'dark' : 'light'} options={THEME_OPTIONS} onChange={changeTheme} />
             </View>
@@ -288,7 +288,7 @@ function Settings() {
           </View>
 
           <View className='card'>
-            <View className='card-head'><View className='flex1'><Text className='card-title'>服务器</Text><Text className='card-sub'>{servers.length} 个 · 每个服务器一套价格</Text></View></View>
+            <View className='card-head'><View className='flex1'><Text className='card-title'>服务器</Text></View></View>
             <View className='card-body' style={{ paddingTop: '6rpx' }}>
               {servers.map(function (s) {
                 return (
@@ -377,7 +377,7 @@ function Settings() {
         </View>
       ) : null}
 
-      <View className='data-note'>小程序端使用 View 图表；数据与价格仅保存在本机，云端行情为可选公开数据。</View>
+      <View className='data-note'>价格与配置仅存本机</View>
     </View>
   );
 }
