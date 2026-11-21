@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · 9adc6a7
+
+update JX3BOX prices
+
 ## 2026-11-22 · 9289cff
 
 重新构建小程序突破模型产物
@@ -559,7 +563,3 @@ include mini program trends build
 ## 2026-11-20 · bc9ba3e
 
 update JX3BOX prices
-
-## 2026-11-20 · 6ccc443
-
-走势历史接入微信云
