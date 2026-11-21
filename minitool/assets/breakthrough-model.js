@@ -168,9 +168,10 @@ function createBreakthrough(BT, catalog, getState) {
     });
     const levels = experienceRows().map(function (xp) {
       let pick = null;
-      // 采集没有配方解锁等级（走地图采节点即可），所以不按等级门禁；
-      // 否则采金/庖丁这类最低配方 20/30 级的技艺，前 19 级直接无路线可算。
-      const levelOk = function (c) { return gather || c.r.l <= xp.from; };
+      // 采集点也有等级限制：只有当前等级已解锁的矿/草/兽才能采。
+      // 目录里采金最低 20 级、庖丁最低 20 级，所以 1–19 级确实无点可采（数据缺口），
+      // 庖丁的秒刷点由 GATHER_PLANS 单独指定，不走这个门禁。
+      const levelOk = function (c) { return gather ? num(c.r.level) <= xp.from : c.r.l <= xp.from; };
       const usable = candidates.filter(function (c) { return levelOk(c) && c.e.exp > 0 && c.e.energy > 0; });
       let available = usable.filter(function (c) { return strategy !== 'gold' || !c.e.missing; });
       // 采集：金币路线优先用有报价的采集动作；整级都没报价时仍给出精力路线（收益留空），

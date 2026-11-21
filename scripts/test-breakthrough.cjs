@@ -158,12 +158,13 @@ for (const server of catalog.servers) {
     assert.equal(r.totals.exp, 71730);
     assert.deepEqual(r.phases.map(p => p.exp), [36830, 34900]);
     for (const level of r.levels) if (level.econ) assert.equal(level.count, Math.ceil(level.need / level.econ.exp), 'new thresholds must drive actual crafting counts');
-    if (strategy === 'energy' && mode === 'mid') {
+    // 有实测秒刷点配置的技艺（庖丁）由 GATHER_PLANS 指定路线，这里不按目录点推算
+    if (strategy === 'energy' && mode === 'mid' && !(data.meta.gatherPlans || {})[skill.id]) {
       const pool = skill.type === 'gather' ? catalog.recipes.filter(x => x.kind === 'gather' && x.skillId === skill.id) : data.recipes.filter(x => x.s === skill.id);
       for (const level of r.levels) {
         // 精力→经验按实测比例：采集 40 精力=128 经验（3.2/精力），制造 1 精力=2 经验
         const rate = skill.type === 'gather' ? 3.2 : 2;
-        const possible = pool.filter(x => skill.type === 'gather' || x.l <= level.from).map(x => {
+        const possible = pool.filter(x => skill.type === 'gather' ? x.level <= level.from : x.l <= level.from).map(x => {
           const energy = skill.type === 'gather' ? x.energy : x.e;
           return Math.ceil(level.need / (energy * rate)) * energy;
         });
@@ -179,8 +180,9 @@ for (const server of catalog.servers) {
   const summary = model.summary('gold');
   let missingSeen = false;
   for (const row of summary) { if (!row.enough) missingSeen = true; else assert.equal(missingSeen, false); }
-  // 采集没有配方解锁等级，1–19 级同样可以用当前采集动作冲级，不应留下空档
-  for (const skill of ['caijin', 'paoding']) assert.equal(model.analyze(skill, 'energy').totals.missingLevels, 0, 'gather skills must cover all levels');
+  // 采集点有等级限制：采金目录最低 20 级，1–19 级无点可采；庖丁由实测秒刷点覆盖全等级
+  assert.equal(model.analyze('caijin', 'energy').totals.missingLevels, 19, 'caijin catalog starts at level 20');
+  assert.equal(model.analyze('paoding', 'energy').totals.missingLevels, 0, 'paoding plan covers every level');
 }
 // Both browser bundles must contain the exact same model and expose working adapters.
 const source = fs.readFileSync('miniapp/src/shared/breakthrough-model.js', 'utf8');
