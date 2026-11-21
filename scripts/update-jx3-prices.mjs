@@ -9,15 +9,21 @@
  *
  * - 默认更新 data.servers 中全部 17 个服务器
  * - 写入 data.serverPrices[serverId][itemId]
- * - 同步 Web、Taro 小程序、minitool 数据并重打小工具 zip
+ * - 同步 Web、Taro 小程序核心目录、minitool 数据并重打小工具 zip
+ * - Web 行情目录（1116 项）只进网页；小程序只同步 444 个生活技艺物品
+ * - --web-only：更新网页 + 小程序核心目录，但跳过小工具重建（价格机器人默认）
  * - Node 18+，零第三方依赖
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import { recordPriceSnapshot, shanghaiTimestamp } from './lib/price-history.mjs';
 import { buildPriceTrends } from './lib/price-trends.mjs';
+
+const require = createRequire(import.meta.url);
+const { buildMiniappCatalog, serializeMiniappCatalog, buildMarketCatalog, serializeMarketCatalog } = require('./lib/miniapp-catalog.cjs');
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const args = process.argv.slice(2);
@@ -58,9 +64,22 @@ function writeData(data) {
    ========================================================================= */
 `;
   fs.writeFileSync(path.join(ROOT, 'assets/data.js'), header + 'window.JX3Data = ' + json + ';\n');
+
+  // 小程序目录永远跟着网页价格更新，但只装生活技艺物品（444 项）；
+  // 672 个网页行情目录物品不进入主包。旧逻辑在 WEB_ONLY 时直接 return，
+  // 导致小程序目录和随后由它生成的云端行情长期停在旧版本。
+  const miniCore = buildMiniappCatalog(data);
+  fs.writeFileSync(path.join(ROOT, 'miniapp/src/shared/catalog.json'), serializeMiniappCatalog(miniCore));
+
+  // 672 项行情目录单独进微信分包，只查价/记价，不参与配方收益。
+  const marketCore = buildMarketCatalog(data);
+  const marketDir = path.join(ROOT, 'miniapp/src/market/data');
+  fs.mkdirSync(marketDir, { recursive: true });
+  fs.writeFileSync(path.join(marketDir, 'market-catalog.json'), serializeMarketCatalog(marketCore));
   if (WEB_ONLY) return;
-  fs.writeFileSync(path.join(ROOT, 'miniapp/src/shared/catalog.json'), json + '\n');
-  const mini = JSON.parse(json);
+
+  // 小工具仍展示物品来源/核验，保留 origin/verified；小程序主包版本为了体积不保留。
+  const mini = buildMiniappCatalog(data, { keepItemMeta: true });
   mini.meta.sources = (mini.meta.sources || []).map((s) => Object.assign({}, s, { url: '' }));
   if (mini.stoneMeta && Array.isArray(mini.stoneMeta.sources)) {
     mini.stoneMeta.sources = mini.stoneMeta.sources.map((s) => Object.assign({}, s, { url: '' }));
@@ -257,7 +276,9 @@ async function main() {
   data.meta.disclaimer = '制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。';
 
   writeData(data);
-  console.log(WEB_ONLY ? `已写入 assets/data.js（Web-only，${priceStamp}）` : `已写入 assets/data.js、miniapp/src/shared/catalog.json、minitool/assets/data.js（${priceStamp}）`);
+  console.log(WEB_ONLY
+    ? `已写入 assets/data.js + 小程序核心目录 ${miniCore.items.length} 项 + 行情目录 ${marketCore.items.length} 项（Web-only，跳过小工具，${priceStamp}）`
+    : `已写入 assets/data.js、小程序核心目录 ${miniCore.items.length} 项、行情目录 ${marketCore.items.length} 项、minitool/assets/data.js（${priceStamp}）`);
 
   try {
     const history = recordPriceSnapshot({

@@ -82,7 +82,10 @@ async function run(actions) {
     throw new Error('云端行情为空');
   }
 
-  const priceAt = stamp(payload.priceUpdatedAt, Date.now());
+  const priceAt = stamp(payload.priceUpdatedAt, 0);
+  if (!priceAt) {
+    throw new Error('云端行情缺少更新时间');
+  }
   const stoneAt = stamp(payload.stonePriceUpdatedAt, priceAt);
   const cleaned = {
     schema: 1,
@@ -92,6 +95,22 @@ async function run(actions) {
     serverPrices: serverPrices,
     stonePrices: stonePrices
   };
+
+  // 包内目录刚更新、云端文档还是旧版本时，旧行情不能覆盖新包内价。
+  // 等下一次价格机器人写入更新的 priceUpdatedAt 后再自动生效。
+  const catalogAt = Date.parse((DATA.meta && DATA.meta.priceUpdatedAt) || '');
+  const stale = Number.isFinite(catalogAt) && catalogAt > 0 && priceAt < catalogAt;
+  if (stale) {
+    return {
+      ok: true,
+      stale: true,
+      updatedAt: cleaned.priceUpdatedAt,
+      catalogAt: DATA.meta.priceUpdatedAt,
+      servers: Object.keys(serverPrices).length,
+      items: Object.keys(serverPrices).reduce(function (n, sid) { return n + Object.keys(serverPrices[sid]).length; }, 0),
+      stones: Object.keys(stonePrices).reduce(function (n, sid) { return n + Object.keys(stonePrices[sid]).length; }, 0)
+    };
+  }
 
   actions.applyMarketPrices(cleaned);
 

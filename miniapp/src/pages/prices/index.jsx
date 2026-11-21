@@ -9,7 +9,7 @@ import Toggle from '../../components/Toggle';
 import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
 import { useStore, getState } from '../../store';
-import { DATA, priceOf, statsOf, serverSpreads, skillOf, tierOf } from '../../shared/engine';
+import { DATA, priceOf, statsOf, serverSpreads, skillOf, tierOf, isMarketFresh } from '../../shared/engine';
 import StonePriceCard from '../../components/StonePriceCard';
 import { syncRemotePrices } from '../../shared/remotePrices';
 import { isCloudConfigured } from '../../shared/cloudConfig';
@@ -27,10 +27,11 @@ function Prices() {
   const stats = statsOf(state, state.serverId);
   const allSpreads = serverSpreads(state);
   const spreads = allSpreads.slice(0, 5);
-  const marketStamp = state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+  const marketFresh = isMarketFresh(state);
+  const marketStamp = marketFresh ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
   const seedStamp = Date.parse(DATA.meta.priceUpdatedAt || '');
   const priceStamp = Number.isFinite(marketStamp) ? marketStamp : seedStamp;
-  const priceSource = state.marketMeta ? '云端行情' : '包内示例';
+  const priceSource = marketFresh ? '云端行情' : (stats.quote ? '包内本服报价' : '包内示例');
 
   useDidShow(function () {
     if (isCloudConfigured()) syncRemotePrices(actions, true, getState());
@@ -69,7 +70,9 @@ function Prices() {
     const res = await syncRemotePrices(actions, true, getState());
     Taro.hideLoading();
     setSyncing(false);
-    if (res.ok) {
+    if (res.ok && res.stale) {
+      Taro.showToast({ title: '云端行情较旧，已用最新包内价', icon: 'none' });
+    } else if (res.ok) {
       Taro.showToast({ title: res.updatedAt ? '行情已更新' : '已是最新', icon: 'none' });
     } else if (res.skipped) {
       Taro.showToast({ title: '未配置云环境', icon: 'none' });
@@ -102,11 +105,23 @@ function Prices() {
 
   return (
     <View className='page'>
-      <TopBar title='价格库' subtitle='为本服填写材料与成品价格 · 示例价可直接计算' />
+      <TopBar title='价格库' subtitle='为本服填写材料与成品价格 · 包内报价与示例价均可计算' />
+
+      {process.env.TARO_ENV === 'weapp' ? (
+        <View className='card' onClick={function () { Taro.navigateTo({ url: '/market/pages/directory/index' }); }}>
+          <View className='card-head'>
+            <View className='flex1'>
+              <Text className='card-title'>行情目录</Text>
+              <Text className='card-sub'>672 项家园/强化/消耗品 · 只查价/记价，不参与配方收益</Text>
+            </View>
+            <View className='card-tool'><Text className='badge badge-info'>打开 ›</Text></View>
+          </View>
+        </View>
+      ) : null}
 
       <View className='kpi-grid'>
         <Kpi label='已校准' value={String(stats.user)} unit={'/ ' + stats.total + ' 项'} progress={stats.calibrated * 100} progressTone='green' meta='手动填入的本服价格' />
-        <Kpi label='行情/示例' value={String(stats.market + stats.seed)} unit='项' meta={'行情 ' + stats.market + ' · 示例 ' + stats.seed} />
+        <Kpi label='有报价' value={String(stats.market + stats.quote)} unit={'/ ' + stats.total + ' 项'} meta={'云端 ' + stats.market + ' · 本服 ' + stats.quote + ' · 示例 ' + stats.seed} />
         <Kpi label='缺价' value={String(stats.missing)} unit='项' meta='缺价按 0 计' tone={stats.missing ? 'warn' : ''} />
         <Kpi label='跨服价差' value={String(allSpreads.length)} unit='项' meta='最高/最低价差 ≥ 12%' />
       </View>
@@ -169,8 +184,8 @@ function Prices() {
                 </View>
                 <View style={{ textAlign: 'right' }}>
                   <PriceInput value={p.missing ? '' : p.v} onSave={function (v) { savePrice(it.id, v); }} />
-                  <Text className={'price-state ' + (p.missing ? 'missing' : p.user ? 'user' : p.market ? 'market' : '')}>
-                    {p.missing ? '缺价' : p.user ? '已校准' : p.market ? '行情' : '示例'}
+                  <Text className={'price-state ' + (p.missing ? 'missing' : p.user ? 'user' : p.market ? 'market' : p.quote ? 'quote' : '')}>
+                    {p.missing ? '缺价' : p.user ? '已校准' : p.market ? '云端' : p.quote ? '本服报价' : '示例'}
                   </Text>
                 </View>
               </View>

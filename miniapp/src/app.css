@@ -395,6 +395,7 @@ button::after { border: none; }
 
 /* 云端行情状态 */
 .price-state.market { color: var(--info); }
+.price-state.quote { color: var(--info); }
 
 /* 突破升级 */
 .bt-skill-scroll { width: 100%; white-space: nowrap; }
@@ -817,3 +818,66 @@ button::after { border: none; }
   font-weight: 500;
   opacity: 0.78;
 }
+
+/* 行情目录（672 项，微信分包）：只查价/记价，不参与配方收益 */
+.market-search {
+  height: 88rpx; padding: 0 24rpx; background: var(--panel);
+  border: 1rpx solid var(--border); border-radius: 12rpx;
+  color: var(--text); font-size: 28rpx; width: 100%;
+}
+.market-chips-scroll { width: 100%; white-space: nowrap; margin: 16rpx 0 4rpx; }
+.market-chips { display: inline-flex; align-items: center; padding: 4rpx 0; }
+.market-chip {
+  display: inline-flex; align-items: center; height: 88rpx; padding: 0 24rpx;
+  margin-right: 12rpx; border: 1rpx solid var(--border); border-radius: 44rpx;
+  background: var(--card); color: var(--muted); font-size: 26rpx; white-space: nowrap;
+}
+.market-chip.active { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 600; }
+.market-summary { margin-top: 10rpx; }
+.market-row {
+  display: flex; align-items: center; min-height: 112rpx; padding: 16rpx 0;
+  border-bottom: 1rpx solid rgba(148, 163, 184, 0.1);
+}
+.market-row:last-child { border-bottom: 0; }
+.market-row .main { flex: 1; min-width: 0; padding-right: 16rpx; }
+.market-row .nm {
+  display: block; font-size: 30rpx; font-weight: 600; line-height: 40rpx;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.market-row .ds { display: block; font-size: 24rpx; color: var(--muted); line-height: 32rpx; margin-top: 4rpx; }
+.market-row .val { text-align: right; flex-shrink: 0; }
+.market-row .v {
+  display: block; font-size: 32rpx; font-weight: 700; line-height: 40rpx;
+  font-variant-numeric: tabular-nums;
+}
+.market-row .src { display: block; font-size: 22rpx; color: var(--muted-2); margin-top: 2rpx; }
+.market-row .src.user { color: var(--positive); }
+.market-row .src.quote { color: var(--info); }
+.market-row .src.missing { color: var(--warning); }
+.market-sheet-mask {
+  position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 1000;
+  background: rgba(0, 0, 0, 0.55); display: flex; align-items: flex-end;
+}
+.market-sheet {
+  width: 100%; background: var(--card); border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx; padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid var(--border);
+}
+.market-sheet-title { display: block; font-size: 36rpx; font-weight: 600; line-height: 48rpx; }
+.market-sheet-sub { display: block; font-size: 24rpx; color: var(--muted); line-height: 32rpx; margin-top: 6rpx; }
+.market-sheet-now {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 20rpx; padding: 16rpx 20rpx; border-radius: 12rpx;
+  background: var(--panel); border: 1rpx solid var(--border); font-size: 24rpx;
+}
+.market-sheet-now .k { color: var(--muted); }
+.market-sheet-now .v { color: var(--text); font-weight: 600; }
+.market-sheet-input {
+  height: 96rpx; margin-top: 20rpx; padding: 0 24rpx;
+  background: var(--panel); border: 1rpx solid var(--border); border-radius: 12rpx;
+  color: var(--text); font-size: 36rpx; width: 100%;
+}
+.market-sheet-hint { display: block; margin-top: 12rpx; }
+.market-sheet-actions { display: flex; margin-top: 24rpx; }
+.market-sheet-actions .btn { flex: 1; height: 88rpx; margin-left: 16rpx; font-size: 26rpx; }
+.market-sheet-actions .btn:first-child { margin-left: 0; }

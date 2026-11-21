@@ -12,6 +12,11 @@ PAGES.push(
 
 if (IS_WEAPP) PAGES.push('pages/stones/index', 'pages/stone-formula/index', 'pages/trends/index', 'pages/server-trends/index');
 
+// 672 项行情目录只查价/记价，不参与配方收益；放微信分包，避免撑大主包。
+const SUB_PACKAGES = IS_WEAPP
+  ? [{ root: 'market', pages: ['pages/directory/index'] }]
+  : [];
+
 PAGES.push('pages/breakthrough/index', 'pages/recipe/index', 'pages/settings/index');
 
 const TAB_LIST = [
@@ -29,6 +34,7 @@ export default {
   // 微信代码质量「组件按需注入」：只注入页面实际用到的自定义组件。
   ...(IS_WEAPP ? { lazyCodeLoading: 'requiredComponents' } : {}),
   pages: PAGES,
+  ...(SUB_PACKAGES.length ? { subPackages: SUB_PACKAGES } : {}),
   window: {
     backgroundTextStyle: 'dark',
     navigationBarBackgroundColor: '#f5f5f5',

@@ -13,7 +13,7 @@ import { syncRemotePrices } from '../../shared/remotePrices';
 import { isCloudConfigured } from '../../shared/cloudConfig';
 import StoneMiniCard from '../../components/StoneMiniCard';
 import { useStore, getState } from '../../store';
-import { DATA, rowsOf, statsOf, simulate, median, avg, sortRows } from '../../shared/engine';
+import { DATA, rowsOf, statsOf, simulate, median, avg, sortRows, isMarketFresh } from '../../shared/engine';
 import { fmt, fmtTime, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
 
 function Overview() {
@@ -29,10 +29,11 @@ function Overview() {
   }, [state]);
 
   const stats = statsOf(state, state.serverId);
-  const marketStamp = state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+  const marketFresh = isMarketFresh(state);
+  const marketStamp = marketFresh ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
   const seedStamp = Date.parse(DATA.meta.priceUpdatedAt || '');
   const priceStamp = Number.isFinite(marketStamp) ? marketStamp : seedStamp;
-  const priceSource = state.marketMeta ? '云端行情' : '包内示例';
+  const priceSource = marketFresh ? '云端行情' : (stats.quote ? '包内本服报价' : '包内示例');
   const valid = rows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
   const best = valid.slice().sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; })[0];
   const med = median(valid.map(function (r) { return r.calc.perEnergy; }));
@@ -72,7 +73,7 @@ function Overview() {
         <Kpi label='盈利配方' value={String(positives)} unit={'/ ' + rows.length + ' 个'}
           meta={'亏损 ' + negatives + ' · 缺价 ' + missing} />
         <Kpi label='本服校准' value={String(Math.round(stats.calibrated * 100))} unit='%'
-          meta={stats.user + ' 项已校准 · ' + (stats.market ? stats.market + ' 项行情' : stats.seed + ' 项示例')} progress={stats.calibrated * 100} progressTone='warn' />
+          meta={stats.user + ' 项已校准 · ' + (stats.market + stats.quote ? (stats.market + stats.quote) + ' 项有报价' : stats.seed + ' 项示例')} progress={stats.calibrated * 100} progressTone='warn' />
         <Kpi label='满精力预估' value={fmt(sim.profit, 2)} unit='金'
           meta={'预算 ' + fmtInt(budget) + ' · 用尽 ' + fmtInt(sim.used)} tone='pos' />
       </View>
@@ -202,6 +203,7 @@ function Overview() {
           <View className='kv'><Text className='k'>行情时间</Text><Text className='v'>{fmtTime(priceStamp)}</Text></View>
           <View className='kv'><Text className='k'>行情来源</Text><Text className='v'>{priceSource}</Text></View>
           <View className='kv'><Text className='k'>云端行情</Text><Text className='v'>{stats.market} 项</Text></View>
+          <View className='kv'><Text className='k'>本服报价</Text><Text className='v'>{stats.quote} 项</Text></View>
           <View className='kv'><Text className='k'>示例价</Text><Text className='v'>{stats.seed} 项</Text></View>
           <View className='kv'><Text className='k'>缺少价格</Text><Text className={'v ' + (stats.missing ? 'neg' : 'pos')}>{stats.missing} 项</Text></View>
           <View className='progress'><View className='progress-fill warn' style={{ width: Math.round(stats.calibrated * 100) + '%' }} /></View>

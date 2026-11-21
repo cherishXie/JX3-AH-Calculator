@@ -136,6 +136,18 @@ if (app) {
   }
   pass('页面文件：js / json / wxml 完整');
 
+  const subs = app.subPackages || app.subpackages || [];
+  for (const sub of subs) {
+    const root = String(sub.root || '').replace(/\/$/, '');
+    for (const page of sub.pages || []) {
+      const rel = root + '/' + page;
+      for (const ext of ['js', 'json', 'wxml']) {
+        const file = path.join(dist, rel + '.' + ext);
+        if (!fs.existsSync(file)) fail('分包页面缺失：' + rel + '.' + ext);
+      }
+    }
+  }
+
   const title = app.window && app.window.navigationBarTitleText;
   if (title !== '精力做什么') fail('导航栏标题不是「精力做什么」：' + title);
   else pass('导航栏标题：精力做什么');
@@ -145,7 +157,23 @@ if (app) {
 }
 
 const files = walk(dist, []);
-const total = files.reduce((sum, file) => sum + fs.statSync(file).size, 0);
+const subs = (app && (app.subPackages || app.subpackages)) || [];
+const subRoots = subs.map(function (sub) { return String(sub.root || '').replace(/\/$/, '') + '/'; });
+function isSubFile(file) {
+  const rel = path.relative(dist, file).split(path.sep).join('/');
+  return subRoots.some(function (root) { return rel.indexOf(root) === 0; });
+}
+const mainFiles = files.filter(function (file) { return !isSubFile(file); });
+const total = mainFiles.reduce((sum, file) => sum + fs.statSync(file).size, 0);
+for (const sub of subs) {
+  const root = String(sub.root || '').replace(/\/$/, '');
+  const subFiles = files.filter(function (file) {
+    return path.relative(dist, file).split(path.sep).join('/').indexOf(root + '/') === 0;
+  });
+  const bytes = subFiles.reduce((sum, file) => sum + fs.statSync(file).size, 0);
+  if (bytes > 2 * 1024 * 1024) fail('分包 ' + root + ' 超过 2MB：' + mb(bytes));
+  else pass('分包 ' + root + '：' + mb(bytes) + '（上限 2 MB）');
+}
 // 开发者工具「代码质量」主包线：size/1024 > 1024*1.5（即 1,572,864 B）。
 // DevTools 的编译包会比 dist 文件合计少约 116 KB（生成 wxml/wxss/config 等），
 // 这里用 +120 KB 的代理预算做本地守卫，避免再次出现 1.61 MB 才被发现的情况。
