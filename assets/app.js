@@ -233,10 +233,10 @@
     return ts ? U.fmtTime(ts) : '—';
   }
   function dataRoot(path) {
-    // 预览版必须读自己那一份数据。之前 dev 读 '../' 会拿到生产根目录的
-    // data.js / version.json，和 dev 构建里的 catalogVersion 对不上，
-    // 于是反复提示“物品目录已变化”，刷新也修不好。
-    return './' + path;
+    // 预览版读生产根的数据：价格机器人只更新 main，dev 自己那份 data.js
+    // 只在 dev 部署时重建，读自己的会一直停在构建时间。
+    // 目录版本不一致的问题由 mergePriceData 在 dev 上容忍（只合并价格）。
+    return (isDevDeployment() ? '../' : './') + path;
   }
 
   function updateMarketStatus() {
@@ -352,7 +352,10 @@
     if (!next || !next.meta || !next.meta.priceUpdatedAt || !next.serverPrices) return false;
     // 行情更新会改 seedVersion 以触发下次整页加载迁移，但目录结构没变；
     // 页面内静默刷新只比较 catalogVersion，不能把价格修订误判成代码/结构更新。
-    if (DATA.meta.catalogVersion && next.meta.catalogVersion && next.meta.catalogVersion !== DATA.meta.catalogVersion) {
+    // 正式站：目录版本不同说明物品/配方增删了，热合并不安全，交给整页更新。
+    // 预览站：dev 的目录本来就领先/落后于 main，忽略这个差异，只把价格合并进来。
+    if (!isDevDeployment() && DATA.meta.catalogVersion && next.meta.catalogVersion &&
+        next.meta.catalogVersion !== DATA.meta.catalogVersion) {
       return false;
     }
     DATA.serverPrices = next.serverPrices || {};
