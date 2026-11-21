@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-11-21T23:08:46+08:00",
+  "updatedAt": "2026-11-22T01:32:42+08:00",
   "catalogVersion": "v3.8-market",
   "itemCount": 1116,
   "servers": [
@@ -135,6 +135,17 @@
       "itemCount": 1116,
       "compacted": false,
       "bytes": 432481
+    },
+    {
+      "date": "2026-11-22",
+      "file": "days/2026-11-22.json",
+      "points": 1,
+      "baseAt": "2026-11-22T01:32:42+08:00",
+      "lastAt": "2026-11-22T01:32:42+08:00",
+      "catalogVersion": "v3.8-market",
+      "itemCount": 1116,
+      "compacted": false,
+      "bytes": 179917
     }
   ]
 }
