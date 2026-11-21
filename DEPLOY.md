@@ -81,6 +81,18 @@ git push --force-with-lease -u origin main
    - 部署 Web 版到 GitHub Pages；
    - 上传小工具 zip 为 artifact，并随 Pages 发布到 `/downloads/jx3-minitool.zip`。
 
+### 首屏资源合并（弱网优化）
+
+GitHub Pages 走跨境线路，国内访问时单个请求可能卡住十几秒，所以首屏请求数比字节数更关键。
+`scripts/build-site.sh` 在构建 `_site/` 时会做一层合并，源码结构不变：
+
+- 10 个首屏脚本（`core` / `stones` / `charts` / `access-data` / `profit` / `landability` / `trends` / `app` / `pwa` / `install`）拼成 `_site/assets/app.bundle.js`；
+- `styles.css` + `pwa.css` + `install.css` 拼成 `_site/assets/app.bundle.css`；
+- `_site/index.html` 的 3 个样式表 / 11 个脚本标签被改写成 2 个 `defer` 脚本，并加上 `preconnect` 和 `preload`。
+
+因此 **新增首屏脚本必须同时改两处**：`index.html` 与 `build-site.sh` 的 `BUNDLE_SCRIPTS`（以及 `site/sw.js` 的 `SHELL`）。
+`assets/data.js` 故意不合并——价格机器人只更新它，SW 对它单独走网络优先。
+
 ## iPhone 添加到主屏幕
 
 - 必须用 **Safari** 打开 `https://cherishxie.github.io/JX3-AH-Calculator/`，微信/小红书/Chrome 的 iOS 内置浏览器不会显示“添加到主屏幕”。
