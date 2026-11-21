@@ -2463,8 +2463,17 @@
   }
   function trendDefaultItem(T, items, points) {
     if (!items.length) return '';
-    const preferred = items.filter(function (item) { return item.kind === 'product'; });
-    const candidates = preferred.length ? preferred : items;
+    // 目录扩容后有大量「产物」其实没有当前赛季配方（家园/消耗品等），
+    // 默认聚焦到这类物品会让「精力收益比」Tab 直接死胡同。优先选可制作产物。
+    const P = window.JX3Profit;
+    const craftable = function (item) {
+      return item.kind === 'product' && (!P || !P.recipeFor || !!P.recipeFor(item.id));
+    };
+    const preferred = items.filter(craftable);
+    const candidates = preferred.length ? preferred
+      : (items.filter(function (item) { return item.kind === 'product'; }).length
+        ? items.filter(function (item) { return item.kind === 'product'; })
+        : items);
     let bestKey = '';
     let bestChanges = -1;
     let bestChange = -1;
@@ -3037,7 +3046,19 @@
   }
   function trendProfitSection(ctx, p) {
     const P = window.JX3Profit;
-    const item = ctx.focusItem;
+    let item = ctx.focusItem;
+    // 默认聚焦的是「涨幅最高」的物品，可能是材料、五行石或没有赛季配方的产物。
+    // 这时回退到当前范围里第一个可制作产物，避免 Tab 一打开就是空态。
+    if (P && !item) {
+      item = (ctx.rankedItems || []).filter(function (it) {
+        return it && it.kind === 'product' && P.recipeFor(it.id);
+      })[0] || null;
+    } else if (P && item && (item.kind === 'stone' || !P.recipeFor(item.id))) {
+      const pool = (ctx.rankedItems || []).concat(ctx.selectedItems || []);
+      item = pool.filter(function (it) {
+        return it && it.kind === 'product' && P.recipeFor(it.id);
+      })[0] || item;
+    }
     if (!P || !item) {
       return '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' + emptyState('请选择一个产物', '制作收益只支持有当前赛季配方的产物。', '', 'filter') + '</div></section></div>';
     }
@@ -3627,8 +3648,14 @@
     // 分母只算「区间首末两端都有报价」的物品：没有价格的物品本来就产不出涨跌，
     // 用完整目录（1124）当分母会把每服覆盖率压到 10% 左右，所有区服都被判低覆盖、
     // 最强/最弱区服直接变成「样本不足」。这里先扫一遍得到真正可统计的清单。
+    // 分母用「全部内置区服」的并集，而不是已选区服：否则只选 1 服时，
+    // 可统计集合就等于它自己的可比集合，覆盖率会恒等于 100%，失去意义。
+    // 同一区间下各区服共用同一份日文件，这里不会额外产生网络请求。
+    const universeViews = (DATA.servers || []).map(function (s) {
+      return T.view(s.id, { from: range.from, to: range.to, mode: 'server' });
+    }).filter(function (v) { return v && v.status === 'ready'; });
     const observedKeys = new Set();
-    views.forEach(function (view) {
+    (universeViews.length ? universeViews : views).forEach(function (view) {
       const pts = (view && view.points) || [];
       if (pts.length < 2) return;
       const first = pts[0];
