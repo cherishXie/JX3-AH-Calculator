@@ -43,7 +43,7 @@
   }
 
   function needsAudit(path) {
-    return path === '/prices' || path === '/analysis' || path.indexOf('/skills') === 0;
+    return path === '/analysis' || path.indexOf('/skills') === 0;
   }
 
   function lazyLoadFailed(err) {
@@ -624,6 +624,18 @@
       counts[c] = (counts[c] || 0) + 1;
     });
     return counts;
+  }
+
+  function localPriceCounts() {
+    let quote = 0, vendor = 0, base = 0;
+    (Store.state.items || []).forEach(function (it) {
+      const price = Store.price(Store.state.serverId, it.id);
+      if (price.user) return;
+      if (price.quote) quote++;
+      else if ((accessOf(it.id) || {}).t === 'vendor' || (accessOf(it.id) || {}).v) vendor++;
+      else if (price.v > 0) base++;
+    });
+    return { quote: quote, vendor: vendor, base: base };
   }
   function currentServerUpdatedAt() {
     let ts = 0;
@@ -1751,9 +1763,10 @@
     const stats = Calc.stats(Store.state.serverId);
     const audit = auditServer(Store.state.serverId);
     const ac = audit && audit.items;
-    const quoteCount = ac ? ac.quote : localQuote;
-    const vendorCount = ac ? ac.vendor : localVendor;
-    const baseCount = ac ? ac.base : localBase;
+    const local = localPriceCounts();
+    const quoteCount = ac ? ac.quote : local.quote;
+    const vendorCount = ac ? ac.vendor : local.vendor;
+    const baseCount = ac ? ac.base : local.base;
     const missingCount = ac ? ac.missing : stats.missing;
     const allItems = filteredItems(p);
     const pageSize = 100;
