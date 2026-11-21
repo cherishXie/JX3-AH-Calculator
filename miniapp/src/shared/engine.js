@@ -55,7 +55,7 @@ export function seedState() {
       taxRate: 0.05,
       taxRateVersion: 1,
       theme: 'tech',
-      themeVersion: 1,
+      themeVersion: 2,
       themePicked: true
     },
     seq: { item: 1, recipe: 1 }
@@ -66,10 +66,10 @@ export function normalize(saved) {
   const base = seedState();
   const state = Object.assign(base, saved || {});
   state.settings = Object.assign({}, base.settings, state.settings || {});
-  if (!saved || !saved.settings || saved.settings.themeVersion !== 1) {
+  if (!saved || !saved.settings || saved.settings.themeVersion !== 2) {
     // 新用户默认科技风；已有用户保留他们主动选择的主题。
     if (!(saved && saved.settings && saved.settings.themePicked)) state.settings.theme = 'tech';
-    state.settings.themeVersion = 1;
+    state.settings.themeVersion = 2;
   }
   if (!saved || !saved.settings || saved.settings.taxRateVersion !== 1) {
     state.settings.taxRate = 0.05;

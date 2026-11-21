@@ -84,7 +84,7 @@ export const actions = {
       s.settings = s.settings || {};
       s.settings.theme = next;
       s.settings.themePicked = true;
-      s.settings.themeVersion = 1;
+      s.settings.themeVersion = 2;
     });
     return next;
   },
