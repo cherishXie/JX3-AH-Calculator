@@ -233,7 +233,10 @@
     return ts ? U.fmtTime(ts) : '—';
   }
   function dataRoot(path) {
-    return (isDevDeployment() ? '../' : './') + path;
+    // 预览版必须读自己那一份数据。之前 dev 读 '../' 会拿到生产根目录的
+    // data.js / version.json，和 dev 构建里的 catalogVersion 对不上，
+    // 于是反复提示“物品目录已变化”，刷新也修不好。
+    return './' + path;
   }
 
   function updateMarketStatus() {
@@ -306,6 +309,10 @@
   }
 
   function recoverFromCatalogChange() {
+    if (isDevDeployment()) {
+      showDataSync('error', '预览版数据目录不一致，请强制刷新（Shift + 刷新）');
+      return;
+    }
     var KEY = 'jx3-catalog-reload-at';
     var last = 0;
     try { last = Number(sessionStorage.getItem(KEY) || 0) || 0; } catch (err) { last = 0; }
@@ -781,6 +788,33 @@
     return '<div class="notice ' + (type === 'info' ? 'info' : '') + '">' + icon(type === 'info' ? 'info' : 'alert') +
       '<div>' + text + '</div></div>';
   }
+  // 图表卡片按 12 栅格排布，SVG 又是 viewBox + width:100%。宽度给准了，
+  // 放大比才接近 1，图内字号不会被整体放大。
+  function chartWidthForCard(cols) {
+    const vw = (typeof window !== 'undefined' && window.innerWidth) || 1280;
+    const sidebar = vw >= 1024 ? 220 : 0;
+    const content = Math.max(320, Math.min(1180, vw - sidebar) - 48);
+    if (vw <= 720) return Math.round(content);
+    const gap = 16;
+    const span = Math.min(12, Math.max(1, cols || 12));
+    return Math.round((content - 11 * gap) / 12 * span + gap * (span - 1));
+  }
+
+  // 日期档位切换：立即更新按钮选中态并给页面一个过渡，遮住重算/加载的空窗。
+  var rangeSwitchTimer = null;
+  function beginRangeSwitch(btn) {
+    var page = document.getElementById('page');
+    if (page) page.classList.add('is-range-switching');
+    if (btn && btn.parentNode) {
+      var sibs = btn.parentNode.querySelectorAll('button[data-filter="srange"]');
+      for (var i = 0; i < sibs.length; i++) sibs[i].classList.toggle('active', sibs[i] === btn);
+    }
+    clearTimeout(rangeSwitchTimer);
+    rangeSwitchTimer = setTimeout(function () {
+      if (page) page.classList.remove('is-range-switching');
+    }, 1500);
+  }
+
   function toast(message, type) {
     const root = $('#toast-root');
     const el = document.createElement('div');
@@ -1013,7 +1047,7 @@
       '</div></div>' +
       '<div class="card-body tight" id="chart-overview">' +
         Charts.barH(rankRows, {
-          palette: Charts.palette(ui.theme),
+          palette: Charts.palette(ui.theme), width: chartWidthForCard(8),
           unit: ' 金/精力',
           refLine: median,
           refLabel: '全站中位',
@@ -1094,7 +1128,7 @@
           Charts.diffBar(
             { label: '采集', value: avgPerEnergy(rows.filter(function (r) { return r.type === 'gather'; })) },
             { label: '制造', value: avgPerEnergy(rows.filter(function (r) { return r.type === 'craft'; })) },
-            { palette: Charts.palette(ui.theme) }
+            { palette: Charts.palette(ui.theme), width: chartWidthForCard(5) }
           ) +
           '<div class="flex" style="margin-top:4px"><a class="btn btn-sm" href="' + Route.href('/prices') + '">校准行情 ' + icon('arrowRight') + '</a>' +
           '<button class="btn btn-sm" data-action="toggle-server-menu">切换服务器</button></div>' +
@@ -1346,7 +1380,7 @@
         '<p class="card-sub">柱子为精力收益（金/精力），越高越好；负值表示越做越亏</p></div>' +
         '<div class="card-tools"><button class="icon-btn" data-action="export-chart" data-target="chart-stone-compare" aria-label="导出对比图">' + icon('download') + '</button></div></div>' +
         '<div class="card-body tight" id="chart-stone-compare">' + Charts.columns(chartItems, {
-          palette: Charts.palette(ui.theme), unit: '金/精力', labelWidth: 10,
+          palette: Charts.palette(ui.theme), width: chartWidthForCard(7), unit: '金/精力', labelWidth: 10,
           ariaLabel: '五行石快速合成与最优合成精力收益对比'
         }) + '</div>' +
         '<div class="card-foot"><div class="chart-legend">' +
@@ -1529,7 +1563,7 @@
         }).join('') +
         '</tbody></table></div></div>' +
         '<div class="stone-analysis-chart"><div class="tiny dim" style="margin-bottom:2px">5/6级快速 vs 最优 · 精力收益（金/精力）</div>' +
-        Charts.columns(chartItems, { palette: Charts.palette(ui.theme), unit: '金/精力', width: 760, height: 220, labelWidth: 10 }) +
+        Charts.columns(chartItems, { palette: Charts.palette(ui.theme), unit: '金/精力', width: chartWidthForCard(12), height: 220, labelWidth: 10 }) +
         '</div>' +
       '</div></div>' +
       '<div class="card-foot"><span>精力收益 = 单颗税后利润 ÷ 累计精力；7/8级只有爆率高于盈亏线才值得赌</span>' +
@@ -2276,7 +2310,7 @@
       '</div></div>' +
       '<div class="card-body tight" id="chart-analysis">' +
         Charts.barH(chartRows, {
-          palette: Charts.palette(ui.theme), unit: ' 金/精力', refLine: median,
+          palette: Charts.palette(ui.theme), width: chartWidthForCard(12), unit: ' 金/精力', refLine: median,
           refLabel: '可做中位', limit: 15, emptyText: '当前筛选没有可做配方', ariaLabel: '精力收益排行'
         }) +
       '</div>' +
@@ -2326,7 +2360,7 @@
           '</div>' +
           (ra && rb ? compareTable(ra, rb) + '<div class="hairline"></div>' +
             '<div class="tiny dim" style="margin-bottom:4px">精力收益对比（金/精力）</div>' +
-            Charts.diffBar({ label: ra.recipe.name, value: ra.calc.perEnergy || 0 }, { label: rb.recipe.name, value: rb.calc.perEnergy || 0 }, { palette: Charts.palette(ui.theme), aColor: Charts.color.craft, bColor: Charts.color.warning }) +
+            Charts.diffBar({ label: ra.recipe.name, value: ra.calc.perEnergy || 0 }, { label: rb.recipe.name, value: rb.calc.perEnergy || 0 }, { palette: Charts.palette(ui.theme), width: chartWidthForCard(7), aColor: Charts.color.craft, bColor: Charts.color.warning }) +
             '<div class="reading-guide" style="padding:4px 0 0">按当前成本口径与服务器价格计算；精力按满预算可做次数折算。</div>'
             : emptyState('暂无可对比的完整配方', '补齐价格或关闭「仅数据完整」。', '', 'compare')) +
         '</div></section>' +
@@ -5645,6 +5679,13 @@
       e.preventDefault();
       const key = filterBtn.getAttribute('data-filter');
       const value = filterBtn.getAttribute('data-value') || '';
+      // 今日/近 3 日/近 7 日会触发一次较重的重算 + 可能的日文件加载：
+      // 先把按钮状态和“切换中”反馈画出来，再让出这一帧去做计算，避免点了没反应。
+      if (key === 'srange') {
+        beginRangeSwitch(filterBtn);
+        window.requestAnimationFrame(function () { updateParams({ srange: value }); });
+        return;
+      }
       updateParams({ [key]: value });
       return;
     }
@@ -6377,6 +6418,11 @@
     if (!page) return;
     const previousScroll = window.scrollY;
     page.innerHTML = html;
+    // 新内容已经替换完，解除切换态，让过渡淡回清晰。
+    if (page.classList.contains('is-range-switching')) {
+      clearTimeout(rangeSwitchTimer);
+      page.classList.remove('is-range-switching');
+    }
     const pageEl = page.querySelector('.page');
     if (pageEl && pathChanged) pageEl.classList.add('page-enter');
     document.title = (isDevDeployment() ? '[DEV] ' : '') + title + ' · 剑网三物价助手 | JX3 生活技艺计算器';

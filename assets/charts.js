@@ -47,6 +47,15 @@
     return out;
   }
 
+  // 图表用固定 viewBox + CSS width:100%。若 viewBox 比容器窄，SVG 会整体放大，
+  // 字号跟着变大（桌面端尤其明显）。这里按当前视口估算容器宽度，让缩放比接近 1。
+  function fitWidth(ratio, maxWidth) {
+    const vw = (typeof window !== 'undefined' && window.innerWidth) || 1280;
+    const sidebar = vw >= 1024 ? 220 : 0;
+    const content = Math.max(300, Math.min(maxWidth || 1180, vw - sidebar) - 48);
+    return Math.round(Math.max(300, content * (ratio || 1)));
+  }
+
   function truncate(s, n) {
     s = String(s);
     return s.length > n ? s.slice(0, n - 1) + '…' : s;
@@ -69,10 +78,11 @@
   function barH(rows, opts) {
     opts = opts || {};
     const P = opts.palette || DARK;
-    const width = opts.width || 760;
+    const width = opts.width || fitWidth(opts.span || 0.66);
     const rowH = 32;
     const top = 26;
-    const left = opts.left || 166;
+    // 左列要同时放下名字和右侧的「技艺 · 状态」，166 会被长名字压住。
+    const left = opts.left || 190;
     const right = 74;
     const data = rows.slice(0, opts.limit || 10);
     if (!data.length) return emptyChart(width, 240, opts.emptyText || '当前筛选无数据', P);
@@ -108,7 +118,7 @@
         svg += '<rect x="0" y="' + (y - 2) + '" width="3" height="' + (rowH - 6) + '" fill="' + COLOR.peak + '" rx="1.5"/>';
       }
       svg += '<text x="10" y="' + (y + 14) + '" font-size="11" font-weight="500" fill="' + (isTop ? COLOR.peak : P.text) + '">' +
-        U.esc(truncate(d.label, 13)) + '</text>';
+        U.esc(truncate(d.label, 10)) + '</text>';
       svg += '<text x="' + (left - 10) + '" y="' + (y + 14) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
         U.esc(d.meta || '') + '</text>';
       svg += '<rect x="' + left + '" y="' + (y + 4) + '" width="' + barW.toFixed(1) + '" height="' + (rowH - 14) +
@@ -281,7 +291,7 @@
   function diffBar(a, b, opts) {
     opts = opts || {};
     const P = opts.palette || DARK;
-    const width = 380, height = 150;
+    const width = opts.width || fitWidth(opts.span || 0.58), height = 150;
     const ml = 68, mr = 20, mt = 20, mb = 24;
     const max = niceMax(Math.max(a.value, b.value, 0.001) * 1.12);
     const plotW = width - ml - mr;

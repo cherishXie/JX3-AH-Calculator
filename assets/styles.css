@@ -1121,7 +1121,9 @@ html.light #tooltip { background: #0f172a; border-color: #334155; }
 /* ------------------------------------------------------------------ */
 /* 组件补充（页面运行所需）                                            */
 /* ------------------------------------------------------------------ */
-#page { flex: 1; min-width: 0; }
+#page { flex: 1; min-width: 0; transition: opacity .16s ease; }
+/* 切换日期档位时的过渡：先压暗、重算完再淡回清晰，避免“点了没反应”的卡顿感 */
+#page.is-range-switching { opacity: .45; pointer-events: none; }
 #page:focus { outline: none; }
 
 .modal-scrim { z-index: 69; }
