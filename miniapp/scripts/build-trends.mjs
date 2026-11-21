@@ -18,13 +18,69 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..', '..');
 const sourceDir = path.join(repo, 'data', 'price-history');
+const catalogFile = path.join(repo, 'miniapp', 'src', 'shared', 'catalog.json');
 const outFile = path.join(repo, 'miniapp', 'src', 'shared', 'trends.json');
 const MAX_DAYS = 2;
+// 离线兜底只需要能画出一条趋势；云端历史保留完整节点。单日 20 个节点会把
+// 主包顶到 1.6MB+，只保留最近 8 个更新点 + 基准点，足够看方向与区间。
+const MAX_SAMPLES = 8;
 // 主包代码质量预算 1.5MB；云端历史保留 7 天，内置兜底只保留能装下的天数。
 const MAX_BYTES = 240 * 1024;
 
 if (!fs.existsSync(path.join(sourceDir, 'index.json'))) {
   throw new Error('缺少 data/price-history/index.json');
+}
+if (!fs.existsSync(catalogFile)) {
+  throw new Error('缺少小程序 catalog.json，请先运行 npm run sync:catalog');
+}
+
+const catalog = JSON.parse(fs.readFileSync(catalogFile, 'utf8'));
+const coreIds = new Set((catalog.items || []).map(function (item) { return item.id; }));
+const coreItemCount = coreIds.size;
+if (!coreItemCount) throw new Error('小程序 catalog 没有物品');
+
+// Web 历史已扩到 1116 项；小程序主包只装 444 个生活技艺物品。
+// 这里按 catalog 过滤，避免把 672 个行情目录物品塞进 trends.json。
+function filterBucket(bucket) {
+  const out = {};
+  Object.keys(bucket || {}).forEach(function (id) {
+    if (!coreIds.has(id)) return;
+    const n = Number(bucket[id]);
+    if (Number.isFinite(n) && n > 0) out[id] = n;
+  });
+  return out;
+}
+function filterServerBuckets(buckets) {
+  if (!buckets) return buckets;
+  const out = {};
+  Object.keys(buckets).forEach(function (sid) { out[sid] = filterBucket(buckets[sid]); });
+  return out;
+}
+function filterDay(day) {
+  if (!day) return day;
+  day.itemCount = coreItemCount;
+  day.catalogVersion = (catalog.meta && catalog.meta.catalogVersion) || day.catalogVersion;
+  if (day.base) {
+    day.base.catalogPrices = filterBucket(day.base.catalogPrices);
+    if (day.base.prices) day.base.prices = filterServerBuckets(day.base.prices);
+    if (day.base.quotes) day.base.quotes = filterServerBuckets(day.base.quotes);
+    // 小程序只读价格/覆盖来源；requested 是抓取日志，coverage 数组按 1116 项统计，
+    // 过滤后不再准确，直接去掉，避免主包和误读。
+    delete day.base.requested;
+    delete day.base.coverage;
+  }
+  day.samples = (day.samples || []).slice(-MAX_SAMPLES);
+  day.samples.forEach(function (sample) {
+    if (!sample) return;
+    if (sample.catalogPrices) sample.catalogPrices = filterBucket(sample.catalogPrices);
+    if (sample.prices) sample.prices = filterServerBuckets(sample.prices);
+    if (sample.quotes) sample.quotes = filterServerBuckets(sample.quotes);
+    delete sample.requested;
+    delete sample.coverage;
+  });
+  delete day.requested;
+  delete day.coverage;
+  return day;
 }
 
 const index = JSON.parse(fs.readFileSync(path.join(sourceDir, 'index.json'), 'utf8'));
@@ -36,7 +92,7 @@ function loadDays(count) {
   return picked.map(function (entry) {
     const file = path.join(sourceDir, entry.file || ('days/' + entry.date + '.json'));
     if (!fs.existsSync(file)) throw new Error('缺少历史文件 ' + file);
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
+    return filterDay(JSON.parse(fs.readFileSync(file, 'utf8')));
   });
 }
 
@@ -50,8 +106,8 @@ while (true) {
     schema: 1,
     generatedAt: index.updatedAt || new Date().toISOString(),
     updatedAt: index.updatedAt,
-    catalogVersion: index.catalogVersion,
-    itemCount: index.itemCount,
+    catalogVersion: (catalog.meta && catalog.meta.catalogVersion) || index.catalogVersion,
+    itemCount: coreItemCount,
     servers: index.servers || [],
     days: days
   };

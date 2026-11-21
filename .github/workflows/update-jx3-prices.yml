@@ -10,6 +10,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/update-jx3-prices.mjs'
+      - 'scripts/lib/miniapp-catalog.cjs'
+      - 'scripts/test-miniapp-catalog.cjs'
       - 'scripts/jx3-item-map.json'
       - '.github/workflows/update-jx3-prices.yml'
 
@@ -38,14 +40,17 @@ jobs:
           node scripts/test-price-history.mjs
           node scripts/test-price-trends.mjs
 
-      - name: Update prices and rebuild minitool zip
+      - name: Update prices and sync miniapp core catalog
         run: ./scripts/update-prices.sh --web-only
+
+      - name: Test miniapp core catalog
+        run: node scripts/test-miniapp-catalog.cjs
 
       - name: Commit changes
         run: |
           git config user.name "jx3-price-bot"
           git config user.email "jx3-price-bot@users.noreply.github.com"
-          git add assets/data.js miniapp/src/shared/catalog.json minitool/assets/data.js minitool/assets/price-history.js scripts/jx3-item-map.json data/price-history data/price-trends
+          git add assets/data.js miniapp/src/shared/catalog.json miniapp/src/market/data/market-catalog.json minitool/assets/data.js minitool/assets/price-history.js scripts/jx3-item-map.json data/price-history data/price-trends
           git add "剑网三物价助手-minitool.zip"
           if git diff --cached --quiet; then
             echo "No price changes"
@@ -85,7 +90,7 @@ jobs:
           git fetch origin dev
           git checkout -B dev origin/dev
           ./scripts/update-prices.sh --web-only
-          git add assets/data.js miniapp/src/shared/catalog.json minitool/assets/data.js minitool/assets/price-history.js scripts/jx3-item-map.json data/price-history data/price-trends
+          git add assets/data.js miniapp/src/shared/catalog.json miniapp/src/market/data/market-catalog.json minitool/assets/data.js minitool/assets/price-history.js scripts/jx3-item-map.json data/price-history data/price-trends
           if git diff --cached --quiet; then
             echo "No dev price changes"
           else

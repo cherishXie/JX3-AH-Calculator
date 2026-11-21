@@ -30,6 +30,7 @@ jobs:
           WX_APPSECRET: ${{ secrets.WX_APPSECRET }}
           TCB_ENV_ID: ${{ secrets.TCB_ENV_ID }}
         run: |
+          node scripts/test-miniapp-catalog.cjs
           if [ -z "$WX_APPID" ] || [ -z "$WX_APPSECRET" ] || [ -z "$TCB_ENV_ID" ]; then
             echo "WX_APPID / WX_APPSECRET / TCB_ENV_ID 未配置，跳过云同步。"
             exit 0

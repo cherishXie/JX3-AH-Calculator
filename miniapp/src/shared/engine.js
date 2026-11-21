@@ -137,6 +137,20 @@ export function seedPrice(serverId, item) {
   return round(canonical.base * jitter * skillFactor, 2);
 }
 
+/**
+ * 云端行情是否比包内目录新。
+ *
+ * 小程序升级后，本地 storage 里可能还留着上一版云端的 marketPrices；
+ * 如果只更新包内 catalog，旧云端价会继续覆盖新包内价。这里统一按
+ * marketMeta.priceUpdatedAt 与包内 priceUpdatedAt 比较，旧的直接忽略。
+ */
+export function isMarketFresh(state) {
+  const catalogAt = Number.isFinite(SEED_TS) ? SEED_TS : 0;
+  const marketAt = state && state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+  if (!catalogAt) return Number.isFinite(marketAt);
+  return Number.isFinite(marketAt) && marketAt >= catalogAt;
+}
+
 export function priceOf(state, itemId, serverId) {
   serverId = serverId || state.serverId;
   const item = findItem(state, itemId);
@@ -147,8 +161,8 @@ export function priceOf(state, itemId, serverId) {
   }
   const marketBucket = state.marketPrices && state.marketPrices[serverId];
   const market = marketBucket && marketBucket[itemId];
-  if (market != null && Number.isFinite(Number(market))) {
-    const mt = state.marketMeta ? Date.parse(state.marketMeta.priceUpdatedAt || '') : NaN;
+  if (market != null && Number.isFinite(Number(market)) && isMarketFresh(state)) {
+    const mt = Date.parse(state.marketMeta.priceUpdatedAt || '');
     return {
       v: Number(market), t: Number.isFinite(mt) ? mt : SEED_TS,
       user: false, seed: false, market: true, quote: true, missing: false
@@ -264,16 +278,19 @@ export function rowsOf(state, opts) {
 
 export function statsOf(state, serverId) {
   serverId = serverId || state.serverId;
-  let user = 0, market = 0, seed = 0, missing = 0;
+  let user = 0, market = 0, quote = 0, seed = 0, missing = 0;
   state.items.forEach(function (i) {
     const p = priceOf(state, i.id, serverId);
     if (p.user) user++;
     else if (p.market) market++;
+    // 包内 serverPrices 是 JX3BOX 本服报价；不能再算成「示例价」。
+    else if (p.quote) quote++;
     else if (p.v > 0) seed++;
     else missing++;
   });
   return {
-    total: state.items.length, user: user, market: market, seed: seed, missing: missing,
+    total: state.items.length, user: user, market: market, quote: quote,
+    quoted: market + quote, seed: seed, missing: missing,
     calibrated: state.items.length ? user / state.items.length : 0
   };
 }
