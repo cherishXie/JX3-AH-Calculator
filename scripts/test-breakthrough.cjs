@@ -160,11 +160,16 @@ for (const server of catalog.servers) {
     for (const level of r.levels) if (level.econ) assert.equal(level.count, Math.ceil(level.need / level.econ.exp), 'new thresholds must drive actual crafting counts');
     // 有实测秒刷点配置的技艺（庖丁）由 GATHER_PLANS 指定路线，这里不按目录点推算
     if (strategy === 'energy' && mode === 'mid' && !(data.meta.gatherPlans || {})[skill.id]) {
-      const pool = skill.type === 'gather' ? catalog.recipes.filter(x => x.kind === 'gather' && x.skillId === skill.id) : data.recipes.filter(x => x.s === skill.id);
+      const gatherLevels = data.meta.gatherLevels || {};
+      const gatherLevelOf = (x) => { for (const k of Object.keys(gatherLevels)) { if (String(x.name).indexOf(k) !== -1) return gatherLevels[k]; } return x.level; };
+      const extras = (skill.type === 'gather' ? ((data.meta.gatherExtras || {})[skill.id] || []) : []);
+      const pool = skill.type === 'gather'
+        ? catalog.recipes.filter(x => x.kind === 'gather' && x.skillId === skill.id).concat(extras)
+        : data.recipes.filter(x => x.s === skill.id);
       for (const level of r.levels) {
         // 精力→经验按实测比例：采集 40 精力=128 经验（3.2/精力），制造 1 精力=2 经验
         const rate = skill.type === 'gather' ? 3.2 : 2;
-        const possible = pool.filter(x => skill.type === 'gather' ? x.level <= level.from : x.l <= level.from).map(x => {
+        const possible = pool.filter(x => skill.type === 'gather' ? gatherLevelOf(x) <= level.from : x.l <= level.from).map(x => {
           const energy = skill.type === 'gather' ? x.energy : x.e;
           return Math.ceil(level.need / (energy * rate)) * energy;
         });
