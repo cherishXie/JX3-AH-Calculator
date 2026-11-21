@@ -9,6 +9,8 @@ function createBreakthrough(BT, catalog, getState) {
   const MODES = [{ key: 'low', label: '低收益比档' }, { key: 'mid', label: '中收益比档' }, { key: 'high', label: '高收益比档' }];
   const items = BT.items || [], recipes = BT.recipes || [];
   const byName = {}, byId = {}, indexByName = {}, producers = {};
+  const catalogByName = {};
+  (catalog.items || []).forEach(function (i) { if (i && i.name) catalogByName[i.name] = i; });
   (catalog.items || []).forEach(function (i) { byName[i.name] = i; byId[i.id] = i; });
   items.forEach(function (i, idx) { indexByName[i.n] = idx; });
   recipes.forEach(function (r) { (r.o || []).forEach(function (o) { (producers[o[0]] = producers[o[0]] || []).push(r); }); });
@@ -28,6 +30,18 @@ function createBreakthrough(BT, catalog, getState) {
   };
   const EXP_PER_ENERGY = META.expPerEnergy || {};
   const GATHER_EXP_PER_ENERGY = num(EXP_PER_ENERGY.gather) || 128 / 40;
+  // 目录里缺的采集点用完整配方结构合成，避免界面读取 materials/outputs 时报错
+  const synthGatherNode = function (name, energy, level, skillId) {
+    const e = num(energy) || 40;
+    // 产物按同名物品接上，才能算出产值与收益（否则这些等级收益为 null）
+    const item = catalogByName[name] || byName[name];
+    return {
+      id: 'gather:' + skillId + ':' + name, n: name, name: name, kind: 'gather', skillId: skillId,
+      level: num(level) || 1, energy: e, materials: [],
+      outputs: item ? [{ item: item.id, qty: 1, chance: 1 }] : [], fee: 0,
+      note: '采集点（实测）', verified: true, custom: false, origin: '用户实测采集点'
+    };
+  };
   const CRAFT_EXP_PER_ENERGY = num(EXP_PER_ENERGY.craft) || 2;
   const itemOf = function (idx) { return items[idx] || { n: '未知物品' }; };
   const skillMeta = function (id) { return (catalog.skills || []).find(function (s) { return s.id === id; }) || { id: id, name: id }; };
@@ -47,7 +61,11 @@ function createBreakthrough(BT, catalog, getState) {
   function gatherPrice(id, serverId) {
     const it = byId[id];
     const idx = it && indexByName[it.name];
-    if (idx != null) return priceOfIndex(idx, serverId);
+    if (idx != null) {
+      const hit = priceOfIndex(idx, serverId);
+      if (hit.v > 0) return hit;
+    }
+    // 突破报价表缺这个道具时，回退目录行情（含示例价），否则采集点收益会是 null
     const p = catalog.serverPrices && catalog.serverPrices[serverId];
     return p && p[id] > 0 ? { v: p[id], src: 'catalog-jx3box' } : { v: null, src: 'missing' };
   }
@@ -154,6 +172,7 @@ function createBreakthrough(BT, catalog, getState) {
     return { key: mode, min: lower, max: upper, count: pool.length, mean: pool.length ? pool.reduce(function (s, c) { return s + c.e.profit / c.e.energy; }, 0) / pool.length : null, pool: pool };
   }
   function analyze(skillId, strategy, mode) {
+    if (strategy === 'effort') strategy = 'energy';
     mode = MODES.some(function (m) { return m.key === mode; }) ? mode : 'high';
     // 精力/次数策略只生成一条路线，产量统一使用区间中点。
     if (strategy !== 'gold') mode = 'mid';
@@ -164,25 +183,22 @@ function createBreakthrough(BT, catalog, getState) {
     // 档位表示金/精力的数值区间，不表示产量；所有策略统一用产量中点。
     const table = costTable(serverId, basis, 'mid');
     const pool = gather ? (catalog.recipes || []).filter(function (r) { return r.kind === 'gather' && r.skillId === skillId; }) : recipes.filter(function (r) { return r.s === skillId; }).sort(function (a, b) { return a.l - b.l || String(a.n).localeCompare(String(b.n), 'zh-CN'); });
+    const gatherEcon = function (r) {
+      const outs = gatherOutputs(r, serverId), missing = outs.some(function (o) { return o.missing; });
+      const value = missing ? null : outs.reduce(function (s, o) { return s + o.sub; }, 0);
+      const gEnergy = num(r.energy);
+      const e = { exp: gEnergy > 0 ? gEnergy * GATHER_EXP_PER_ENERGY : 0, energy: gEnergy, matCost: 0, netValue: value, profit: value, missing: missing };
+      e.profitPerExp = value == null ? null : value / e.exp;
+      return e;
+    };
     const candidates = pool.map(function (r) {
-      let e;
-      if (gather) {
-        const outs = gatherOutputs(r, serverId), missing = outs.some(function (o) { return o.missing; });
-        const value = missing ? null : outs.reduce(function (s, o) { return s + o.sub; }, 0);
-        const gEnergy = num(r.energy);
-        e = { exp: gEnergy > 0 ? gEnergy * GATHER_EXP_PER_ENERGY : 0, energy: gEnergy, matCost: 0, netValue: value, profit: value, missing: missing };
-        e.profitPerExp = value == null ? null : value / e.exp;
-      } else e = recipeEcon(r, serverId, table, taxRate, 'mid');
-      return { r: r, e: e };
+      return { r: r, e: gather ? gatherEcon(r) : recipeEcon(r, serverId, table, taxRate, 'mid') };
     });
     // 目录缺失的采集点（例如采金·银矿）按实测等级与 40 精力合成，只用于算精力
     if (gather) {
       (GATHER_EXTRAS[skillId] || []).forEach(function (pt) {
-        const energy = num(pt.energy) || 40;
-        candidates.push({
-          r: { n: pt.name, name: pt.name, energy: energy, level: num(pt.level) || 1 },
-          e: { exp: energy * GATHER_EXP_PER_ENERGY, energy: energy, matCost: 0, netValue: null, profit: null, missing: true, profitPerExp: null }
-        });
+        const node = synthGatherNode(pt.name, pt.energy, pt.level || 1, skillId);
+        candidates.push({ r: node, e: gatherEcon(node) });
       });
     }
     const levels = experienceRows().map(function (xp) {
@@ -205,18 +221,31 @@ function createBreakthrough(BT, catalog, getState) {
         const hit = candidates.find(function (c) { return String((c.r && (c.r.n || c.r.name)) || '').indexOf(pt.name) !== -1; });
         if (hit) return hit;
         // 目录里没有这个采集点：按实测比例合成（经验 = 精力×3.2），收益标为缺价
-        const energy = num(pt.energy) || 40;
-        return { r: { n: pt.name, name: pt.name, energy: energy, level: 1 }, e: { exp: energy * GATHER_EXP_PER_ENERGY, energy: energy, matCost: 0, netValue: null, profit: null, missing: true, profitPerExp: null } };
+        const node = synthGatherNode(pt.name, pt.energy, pt.level || 1, skillId);
+        return { r: node, e: gatherEcon(node) };
       }).filter(function (c) { return c.e.exp > 0 && c.e.energy > 0; }) : null;
-      const band = (!planPool && strategy === 'gold') ? profitBand(available, mode) : null;
-      (planPool || (band ? band.pool : available)).forEach(function (c) {
-        function score(e) { const count = Math.ceil(xp.need / e.exp); if (strategy === 'effort') return count; if (strategy === 'energy') return count * e.energy; return -count * e.profit; }
+      // 金币最优：不再分低/中/高收益比档，直接在所有可用配方里比较总净花费
+      (planPool || available).forEach(function (c) {
+        // 采集按「当前最高可用采集点」走：经验/精力比固定 3.2，各点只差在掉率与价格，
+        // 按等级递进才符合实际刷点顺序（神农 25 级起紫苏、30 级起鱼腥草/黄花菜）。
+        if (gather) {
+          const levelOfNode = function (rr) { return gatherLevelOf(rr); };
+          if (!pick || levelOfNode(c.r) > levelOfNode(pick.r)) pick = c;
+          return;
+        }
+        function score(e) { const count = Math.ceil(xp.need / e.exp); if (strategy === 'energy') return count * e.energy; return -count * e.profit; }
         const tied = pick && Math.abs(score(c.e) - score(pick.e)) <= 1e-9;
-        const tieBetter = pick && (strategy === 'gold' ? c.e.energy / c.e.exp < pick.e.energy / pick.e.exp : strategy === 'energy' ? Math.ceil(xp.need / c.e.exp) < Math.ceil(xp.need / pick.e.exp) : Math.ceil(xp.need / c.e.exp) * c.e.energy < Math.ceil(xp.need / pick.e.exp) * pick.e.energy);
+        // 精力最优：次数相同时，优先用当前等级刚解锁的更高阶采集点（例如神农 25 级起采紫苏、30 级起采鱼腥草/黄花菜）
+        const levelOf = function (rr) { return gather ? gatherLevelOf(rr) : num(rr.l); };
+        const sameCount = pick && Math.ceil(xp.need / c.e.exp) === Math.ceil(xp.need / pick.e.exp);
+        const higherNode = pick && sameCount && c.e.energy === pick.e.energy && levelOf(c.r) > levelOf(pick.r);
+        const tieBetter = pick && (strategy === 'gold'
+          ? c.e.energy / c.e.exp < pick.e.energy / pick.e.exp
+          : (Math.ceil(xp.need / c.e.exp) < Math.ceil(xp.need / pick.e.exp) || higherNode));
         if (!pick || score(c.e) < score(pick.e) - 1e-9 || (tied && tieBetter)) pick = c;
       });
       const r = pick && pick.r, e = pick && pick.e, count = e ? Math.ceil(xp.need / e.exp) : null;
-      return { kind: 'level', from: xp.from, to: xp.to, need: xp.need, name: r ? (r.n || r.name) : band && available.length ? '本级该收益比档无样本' : '无符合等级的可用路线', level: r ? (gather ? r.level : r.l) : null, recipe: r, econ: e, band: band ? { key: mode, min: band.min, max: band.max, mean: band.mean, count: band.count } : null, exp: e ? e.exp : null, energy: e ? e.energy : null, count: count, matCost: e && e.matCost != null ? e.matCost * count : null, outValue: e && e.netValue != null ? e.netValue * count : null, profit: e && e.profit != null ? e.profit * count : null, totalEnergy: e ? e.energy * count : null };
+      return { kind: 'level', from: xp.from, to: xp.to, need: xp.need, name: r ? (r.n || r.name) : '无符合等级的可用路线', level: r ? (gather ? r.level : r.l) : null, recipe: r, econ: e, band: null, exp: e ? e.exp : null, energy: e ? e.energy : null, count: count, matCost: e && e.matCost != null ? e.matCost * count : null, outValue: e && e.netValue != null ? e.netValue * count : null, profit: e && e.profit != null ? e.profit * count : null, totalEnergy: e ? e.energy * count : null };
     });
     const gates = (BT.gates[skillId] || []).filter(function (g) { return GATE_LEVELS.indexOf(g.l) !== -1; }).map(function (g) { return gateInfo(g, serverId, basis, table); });
     const bands = [];

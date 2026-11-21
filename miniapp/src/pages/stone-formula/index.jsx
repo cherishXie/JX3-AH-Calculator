@@ -181,7 +181,7 @@ function StoneFormula() {
         <View className='card-head'>
           <View className='flex1'>
             <Text className='page-h1'>{draft.id ? '编辑五行石公式' : '新增五行石公式'}</Text>
-            <Text className='card-sub'>目标等级与保底等级必须出现在产出里；概率合计 ≤100%</Text>
+            <Text className='card-sub'>概率合计 ≤100%，目标/保底需在产出内</Text>
           </View>
         </View>
         <View className='card-body'>

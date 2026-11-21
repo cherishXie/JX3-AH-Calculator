@@ -1,7 +1,7 @@
 import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text, Input, ScrollView } from '@tarojs/components';
-import Taro from '@tarojs/taro';
+import Taro, { useRouter } from '@tarojs/taro';
 import ServerBar from '../../components/ServerBar';
 import Seg from '../../components/Seg';
 import Toggle from '../../components/Toggle';
@@ -15,9 +15,10 @@ const PAGE_SIZE = 30;
 
 function Rank() {
   const [state] = useStore();
+  const router = useRouter();
   const [q, setQ] = useState('');
   const [type, setType] = useState('all');
-  const [skillId, setSkillId] = useState('');
+  const [skillId, setSkillId] = useState((router.params && router.params.skill) || '');
   const [onlyComplete, setOnlyComplete] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [limit, setLimit] = useState(PAGE_SIZE);
@@ -126,7 +127,7 @@ function Rank() {
           })}
         </View>
       ) : (
-        <Empty title='没有匹配的配方' desc='换一个关键词、技艺，或清空筛选。' />
+        <Empty title='没有匹配的配方' desc='换个关键词或清空筛选。' />
       )}
 
       {filtered.length > visible.length ? (

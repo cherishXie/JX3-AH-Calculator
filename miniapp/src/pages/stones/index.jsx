@@ -64,7 +64,7 @@ function Stones() {
         </View>
       ) : (
         <View className='card'>
-          <View className='card-head'><View className='flex1'><Text className='card-title'>先填五行石价格</Text><Text className='card-sub'>有了 1–8 级价格，才能算出合到几级最赚</Text></View></View>
+          <View className='card-head'><View className='flex1'><Text className='card-title'>先填五行石价格</Text><Text className='card-sub'>需 1–8 级价格</Text></View></View>
         </View>
       )}
 
@@ -122,7 +122,7 @@ function Stones() {
             );
           })}
         </View>
-      ) : <Empty title='暂无合成方案' desc='补齐 1–6 级价格后自动出现。' />}
+      ) : <Empty title='暂无合成方案' desc='需 1–6 级价格。' />}
 
       <View className='stone-jack'>
         {[summary.be7, summary.be8].filter(Boolean).map(function (r) {
@@ -140,7 +140,7 @@ function Stones() {
         })}
       </View>
 
-      <DataNote extra='五行石价格与生活技艺价格库分开保存' />
+      <DataNote />
     </View>
   );
 }

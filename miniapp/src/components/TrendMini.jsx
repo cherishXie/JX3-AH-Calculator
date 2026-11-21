@@ -113,7 +113,7 @@ export default function TrendMini() {
       <View className='card-head'>
         <View className='flex1'>
           <Text className='card-title'>物价走势</Text>
-          <Text className='card-sub'>本服近 24 小时 · 常用材料均价</Text>
+          <Text className='card-sub'>近 24 小时 · 材料均价</Text>
         </View>
         {IS_WEAPP ? (
           <View className='card-tool' onClick={openTrends}>
@@ -189,7 +189,7 @@ export default function TrendMini() {
       )}
 
       <View className='card-foot'>
-        {meta.sourceLabel} · {meta.points} 个节点 · {meta.updatedAt ? meta.updatedAt.slice(5, 16).replace('T', ' ') : '—'} · 按最新快照对比 24 小时前
+        {meta.points} 个节点 · 对比 24 小时前
       </View>
     </View>
   );
