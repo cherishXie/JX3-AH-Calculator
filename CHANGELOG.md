@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · a50c820
+
+update JX3BOX prices
+
 ## 2026-11-21 · 9f8e13f
 
 update JX3BOX prices
@@ -470,11 +474,3 @@ align breakthrough calculations and automate Pages releases
 - 保留 30/35/40/45 级任务，新增逐级经验估算表并修正阶段边界。
 - 统一 Web、小工具、小程序计算模型并覆盖真实数据回归。
 - 推送后自动维护 CHANGELOG 与更新说明，验证并部署 GitHub Pages。
-
-## 2026-11-19 · 084cdf9
-
-update price schedule times and recovery audit
-
-## 2026-11-19 · 0b1cc50
-
-re-register price schedule under repository owner
