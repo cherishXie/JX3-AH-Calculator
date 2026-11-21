@@ -37,12 +37,14 @@ jobs:
         with:
           ref: main
           path: main
+          fetch-depth: 0
 
       - name: Checkout dev (preview)
         uses: actions/checkout@v4
         with:
           ref: dev
           path: dev
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
