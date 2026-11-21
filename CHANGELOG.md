@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-21 · 675b7b8
+
+update JX3BOX prices
+
 ## 2026-11-21 · 0980859
 
 update JX3BOX prices
@@ -461,7 +465,3 @@ add Excel craft-profit workbook and Pages price feed
 ## 2026-11-19 · 22e02e6
 
 show signed breakthrough profit and align design styles
-
-## 2026-11-19 · 9500739
-
-calibrate skill experience and separate energy and gold routes
