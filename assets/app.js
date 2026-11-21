@@ -803,20 +803,13 @@
     return Math.round((content - 11 * gap) / 12 * span + gap * (span - 1));
   }
 
-  // 重渲染过渡：先把页面压暗一帧，再做重算，避免“点了没反应”的卡顿感。
-  // 覆盖日期档位、物价/精力收益 Tab、侧边栏换模块三种入口。
-  var heavySwitchTimer = null;
-  function beginHeavySwitch(btn, activeSelector) {
-    var page = document.getElementById('page');
-    if (page) page.classList.add('is-range-switching');
-    if (btn && activeSelector && btn.parentNode) {
-      var sibs = btn.parentNode.querySelectorAll(activeSelector);
-      for (var i = 0; i < sibs.length; i++) sibs[i].classList.toggle('active', sibs[i] === btn);
-    }
-    clearTimeout(heavySwitchTimer);
-    heavySwitchTimer = setTimeout(function () {
-      if (page) page.classList.remove('is-range-switching');
-    }, 1500);
+  // 切换日期档位 / Tab 时：先把选中态画出来，再让出一帧做重算。
+  // 规范里筛选切换用 300ms 级的进入动画即可，不需要整页遮罩。
+  function markSwitchPending(btn, selector, activeClass) {
+    if (!btn || !btn.parentNode || !selector) return;
+    var sibs = btn.parentNode.querySelectorAll(selector);
+    var cls = activeClass || 'active';
+    for (var i = 0; i < sibs.length; i++) sibs[i].classList.toggle(cls, sibs[i] === btn);
   }
 
   function toast(message, type) {
@@ -5692,7 +5685,7 @@
       // 今日/近 3 日/近 7 日会触发一次较重的重算 + 可能的日文件加载：
       // 先把按钮状态和“切换中”反馈画出来，再让出这一帧去做计算，避免点了没反应。
       if (key === 'srange') {
-        beginHeavySwitch(filterBtn, 'button[data-filter="srange"]');
+        markSwitchPending(filterBtn, 'button[data-filter="srange"]', 'active');
         window.requestAnimationFrame(function () { updateParams({ srange: value }); });
         return;
       }
@@ -5716,7 +5709,7 @@
     if (trendTab) {
       var nextTab = trendTab.getAttribute('data-trend-tab') === 'profit' ? 'profit' : 'price';
       if (nextTab === ui.trendTab) return;
-      beginHeavySwitch(null);
+      markSwitchPending(trendTab, '[data-trend-tab]', 'on');
       window.requestAnimationFrame(function () { ui.trendTab = nextTab; render(); });
       return;
     }
@@ -6256,7 +6249,6 @@
     });
     window.addEventListener('hashchange', function () {
       if (!ui.booted) return;
-      beginHeavySwitch(null);
       window.requestAnimationFrame(function () { render(); });
     });
     window.addEventListener('resize', hideTip);
@@ -6432,11 +6424,6 @@
     if (!page) return;
     const previousScroll = window.scrollY;
     page.innerHTML = html;
-    // 新内容已经替换完，解除切换态，让过渡淡回清晰。
-    if (page.classList.contains('is-range-switching')) {
-      clearTimeout(rangeSwitchTimer);
-      page.classList.remove('is-range-switching');
-    }
     const pageEl = page.querySelector('.page');
     if (pageEl && pathChanged) pageEl.classList.add('page-enter');
     document.title = (isDevDeployment() ? '[DEV] ' : '') + title + ' · 剑网三物价助手 | JX3 生活技艺计算器';
