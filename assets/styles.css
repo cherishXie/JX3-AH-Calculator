@@ -566,9 +566,14 @@ table.data.compact tbody td { height: 38px; }
 table.data.compact { font-size: 12px; }
 
 .cell-main { display: flex; align-items: center; gap: 9px; min-width: 0; }
-.cell-main .txt { min-width: 0; }
-.cell-main .t1 { font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
-.cell-main .t2 { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+/* 首列必须能被压缩：td 是 white-space:nowrap，长副标题会把整列撑到 800px+，
+   把后面的数值列全部挤出可视区（表现为“这一行没数据”）。 */
+.cell-main .txt { min-width: 0; overflow: hidden; }
+.cell-main .t1 { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cell-main .t2 { font-size: 10.5px; color: var(--muted); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 行内说明图标：点击/聚焦才弹出说明，避免长文本撑宽首列 */
+.cell-main .tip-inline { margin-left: 6px; color: var(--muted-2); cursor: help; display: inline-flex; vertical-align: -2px; }
+.cell-main .tip-inline:hover, .cell-main .tip-inline:focus { color: var(--info); }
 .cell-sub { display: block; font-size: 10.5px; color: var(--muted); margin-top: 1px; }
 .cell-right { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
 
