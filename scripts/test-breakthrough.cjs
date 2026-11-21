@@ -111,19 +111,22 @@ assert.deepEqual(data.meta.expModel, experienceModel, 'regeneration must retain 
 {
   const model = createModel(data, catalog, () => ({ serverId: catalog.servers[0].id, settings: { basis: 'market', taxRate: .05 } }));
   const rows = model.experienceRows();
-  for (const [level, exp] of [[1, 250], [3, 510], [8, 1150], [11, 1370], [30, 1650]]) {
-    assert.equal(model.expToNext(level), exp, 'observed thresholds must be preserved exactly');
+  // 1→2 至 30→31 全部为用户实测值，不再有插值区间（“升到 N 级”的表行 = (N-1)→N）。
+  const MEASURED = [250, 390, 510, 640, 770, 890, 1030, 1150, 1280, 1360, 1370, 1390, 1400, 1410, 1420, 1430, 1440, 1450, 1500, 1510, 1520, 1530, 1540, 1550, 1600, 1610, 1620, 1630, 1640, 1650];
+  for (let level = 1; level <= 30; level++) {
+    assert.equal(model.expToNext(level), MEASURED[level - 1], 'measured threshold ' + level + ' must be exact');
     assert.equal(rows[level - 1].source, 'observed');
     assert.equal(rows[level - 1].estimated, false);
   }
-  assert.equal(model.expToNext(2), 380);
-  assert.equal(model.expToNext(4), 640);
-  assert.equal(model.expToNext(12), 1380);
+  assert.equal(model.expToNext(2), 390);
+  assert.equal(model.expToNext(12), 1390);
+  // 31 级起按末段 +10/级外推
   assert.equal(model.expToNext(31), 1660);
-  assert.equal(model.expToNext(49), 1930);
-  assert.equal(rows.filter(r => r.source === 'interpolated').length, 25);
+  assert.equal(model.expToNext(49), 1840);
+  assert.equal(rows.filter(r => r.source === 'interpolated').length, 0);
   assert.equal(rows.filter(r => r.source === 'extrapolated').length, 19);
-  assert.equal(rows[29].cumulative, 38330, '30→31 is distinct from reaching level 30');
+  assert.equal(rows[28].cumulative, 36830, '达到 30 级的累计经验');
+  assert.equal(rows[29].cumulative, 38480, '30→31 是独立一段');
   for (const strategy of ['energy', 'effort']) {
     const reference = model.analyze('duanzao', strategy, 'mid');
     for (const mode of ['low', 'high']) {
@@ -150,8 +153,8 @@ for (const server of catalog.servers) {
     const r = model.analyze(skill.id, strategy, mode);
     assert.equal(r.gates.length, 4);
     assert.equal(r.levels.length, 49);
-    assert.equal(r.totals.exp, 72480);
-    assert.deepEqual(r.phases.map(p => p.exp), [36680, 35800]);
+    assert.equal(r.totals.exp, 71730);
+    assert.deepEqual(r.phases.map(p => p.exp), [36830, 34900]);
     for (const level of r.levels) if (level.econ) assert.equal(level.count, Math.ceil(level.need / level.econ.exp), 'new thresholds must drive actual crafting counts');
     if (strategy === 'energy' && mode === 'mid') {
       const pool = skill.type === 'gather' ? catalog.recipes.filter(x => x.kind === 'gather' && x.skillId === skill.id) : data.recipes.filter(x => x.s === skill.id);
@@ -178,7 +181,7 @@ for (const base of ['assets', 'minitool/assets']) {
   const ctx = { window: { JX3Breakthrough: data, JX3Data: catalog, JX3Core: { Store: { state: { serverId: catalog.servers[0].id, settings: { basis: 'market', taxRate: .05 } } } } } };
   vm.runInNewContext(source, ctx);
   vm.runInNewContext(fs.readFileSync(`${base}/breakthrough.js`, 'utf8'), ctx);
-  assert.equal(ctx.window.JX3BT.analyze('duanzao', 'gold').totals.exp, 72480);
+  assert.equal(ctx.window.JX3BT.analyze('duanzao', 'gold').totals.exp, 71730);
   const bundle = { window: {} };
   vm.runInNewContext(fs.readFileSync(`${base}/breakthrough-data.js`, 'utf8'), bundle);
   assert.equal(JSON.stringify(bundle.window.JX3Breakthrough.meta.expModel), JSON.stringify(experienceModel));

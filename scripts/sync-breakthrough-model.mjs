@@ -10,7 +10,7 @@ for (const path of ['assets/breakthrough-model.js', 'minitool/assets/breakthroug
 
 // 只更新经验元数据，保留配方、物品索引、各服报价及报价时间。
 const expModel = JSON.parse(fs.readFileSync(new URL('miniapp/src/shared/experience-model.json', root)));
-const disclaimer = '突破任务为30/35/40/45级晋秩，无独立50级任务。经验门槛使用用户提供的5个观测点，点间插值、31级起末段线性外推，推算值取整到10；暂按八技艺共用门槛模拟，其余等级及技艺间差异尚未核实。采集单次经验仍为估算，任务脚本奖励未计入收益。';
+const disclaimer = '突破任务为30/35/40/45级晋秩，无独立50级任务。经验门槛使用用户实测的 1→2 至 30→31 逐级数值（30 个点），31 级起按末段每级 +10 线性外推、取整到 10；暂按八技艺共用门槛模拟，技艺间差异尚未核实。采集单次经验仍为估算，任务脚本奖励未计入收益。';
 for (const file of ['miniapp/src/shared/breakthrough.json', 'assets/breakthrough-data.js', 'minitool/assets/breakthrough-data.js']) {
   const url = new URL(file, root);
   const existing = fs.readFileSync(url, 'utf8');
