@@ -541,7 +541,3 @@ style: show hour select affordance
 ## 2026-11-20 · b180788
 
 refine trend filters, hour range and dev PWA updates
-
-## 2026-11-20 · 422877c
-
-update JX3BOX prices
