@@ -1543,6 +1543,26 @@ table.data.skill-table tbody td { padding-left: 6px; padding-right: 6px; }
 .bt-tab.active { background: var(--text); border-color: var(--text); color: var(--card); font-weight: 600; }
 html.light .bt-tab.active { color: #fff; background: #0f172a; border-color: #0f172a; }
 .bt-stratrow { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+/* 突破概览：一张紧凑卡代替 6 个 KPI + 两阶段表 */
+.bt-summary .card-body { padding: 12px 16px; }
+.bt-summary-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.bt-summary-row + .bt-summary-row { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-soft); }
+.bt-summary-lead { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.bt-summary-lead .k { font-size: 11px; color: var(--muted); }
+.bt-summary-lead strong { font-size: 22px; line-height: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.bt-summary-lead .u { font-size: 11px; color: var(--muted); }
+.bt-summary-facts { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12px; color: var(--muted); padding-top: 2px; }
+.bt-summary-facts b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.bt-chips { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.bt-chip { font-size: 11.5px; color: var(--muted); background: var(--accent); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+.bt-chip b { color: var(--text); font-weight: 600; }
+.bt-chip em { font-style: normal; font-variant-numeric: tabular-nums; }
+.bt-summary-hint { font-size: 11px; color: var(--muted-2); text-align: right; max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bt-val-sub { display: block; font-style: normal; font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 900px) {
+  .bt-summary-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .bt-summary-hint { max-width: 100%; text-align: left; white-space: normal; }
+}
 .bt-seg a { text-decoration: none; }
 .bt-seg a.active { }
 
