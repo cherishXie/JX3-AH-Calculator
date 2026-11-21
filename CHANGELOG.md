@@ -2,6 +2,12 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · edbaace
+
+恢复价格机器人定时更新
+
+- 接收 writeData 返回值，修复 miniCore/marketCore 未定义导致 00:06/00:36/01:06 连续失败\\n- 补录 2026-11-22 01:32 全服价格快照并刷新小程序目录/云端行情源数据\\n- 仅数据链路，不含 dev 的今日/分析 UI 改动
+
 ## 2026-11-22 · 397fc82
 
 神农采集点改用实测等级并补齐低阶点
@@ -545,7 +551,3 @@ rebuild minitool for release
 ## 2026-11-20 · 6853028
 
 default all trend filters, mobile collapse and price check
-
-## 2026-11-20 · 47f20a5
-
-update JX3BOX prices
