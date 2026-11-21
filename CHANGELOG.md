@@ -549,7 +549,3 @@ use separate environment for dev preview deploy
 ## 2026-11-20 · 583aabb
 
 hour-precision trend range and dev preview deploy
-
-## 2026-11-20 · 3a3df5b
-
-add price trend analysis
