@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "timezone": "Asia/Shanghai",
-  "generatedAt": "2026-11-22T13:08:48+08:00",
-  "sourceUpdatedAt": "2026-11-22T13:08:48+08:00",
+  "generatedAt": "2026-11-22T13:38:54+08:00",
+  "sourceUpdatedAt": "2026-11-22T13:38:54+08:00",
   "catalogVersion": "v3.8-market",
   "itemCount": 1116,
   "maxDays": 7,
@@ -140,12 +140,12 @@
     },
     {
       "date": "2026-11-22",
-      "points": 13,
+      "points": 14,
       "baseAt": "2026-11-22T01:32:42+08:00",
-      "lastAt": "2026-11-22T13:08:48+08:00",
-      "hash": "80dc4ee6534467bf",
-      "bytes": 283042,
-      "serverBytes": 45427,
+      "lastAt": "2026-11-22T13:38:54+08:00",
+      "hash": "dcb947f768d1aa3a",
+      "bytes": 286583,
+      "serverBytes": 46076,
       "dayFile": "days/2026-11-22.json",
       "serverFile": "servers/{server}/2026-11-22.json"
     }
