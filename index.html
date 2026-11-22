@@ -19,9 +19,6 @@
   <meta name="description" content="剑网3 苍生铸世 50 级生活技艺成本与精力收益计算器：服务器行情、配方编辑、材料成本、采集与制造精力收益对比。">
   <title>剑网三物价助手 · 剑网3 生活技艺成本与精力收益计算器</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E10600'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='white' font-family='PingFang SC, sans-serif'%3E账%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="assets/styles.css">
-  <link rel="stylesheet" href="assets/pwa.css">
-  <link rel="stylesheet" href="assets/install.css">
   <!-- 百度统计：统计站外访问量（PV/UV）。离线 PWA 与广告拦截环境不上报。 -->
   <script>
     var _hmt = _hmt || [];
@@ -429,16 +426,57 @@ html.light .boot-loader__retry:hover { background: #f1f5f9; }
     </div>
   </noscript>
 
-  <script src="assets/data.js"></script>
-  <script src="assets/core.js"></script>
-  <script src="assets/stones.js"></script>
-  <script src="assets/charts.js"></script>
-  <script src="assets/access-data.js"></script>
-  <script src="assets/profit.js"></script>
-  <script src="assets/landability.js"></script>
-  <script src="assets/trends.js"></script>
-  <script src="assets/app.js"></script>
-  <script src="assets/pwa.js" defer></script>
-  <script src="assets/install.js" defer></script>
+  <script>
+  (function () {
+    // 首屏资源优先走 jsDelivr；失败时逐个回退到 GitHub Pages 本地文件。
+    // 构建时把 __CDN_REF__ / __CDN_VERSION__ 替换成当前分支和提交号。
+    var ref = '__CDN_REF__';
+    var ver = '__CDN_VERSION__';
+    if (ref.indexOf('__CDN_') === 0) ref = 'dev';
+    if (ver.indexOf('__CDN_') === 0) ver = 'dev';
+    var base = 'https://cdn.jsdelivr.net/gh/cherishXie/JX3-AH-Calculator@' + ref + '/assets/';
+    window.__ASSET_CDN = base;
+    window.__ASSET_VERSION = ver;
+    ['styles.css', 'pwa.css', 'install.css'].forEach(function (file) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = base + file + '?v=' + ver;
+      link.onerror = function () {
+        link.onerror = null;
+        link.href = 'assets/' + file;
+      };
+      document.head.appendChild(link);
+    });
+    var files = ['data.js', 'core.js', 'stones.js', 'charts.js', 'access-data.js', 'profit.js', 'landability.js', 'trends.js', 'app.js', 'pwa.js', 'install.js'];
+    var index = 0;
+    var useCDN = true;
+    function loadFile(file, local) {
+      var script = document.createElement('script');
+      script.async = false;
+      script.src = local ? 'assets/' + file : base + file + '?v=' + (file === 'data.js' ? Date.now() : ver);
+      script.onload = function () {
+        script.remove();
+        index++;
+        next();
+      };
+      script.onerror = function () {
+        script.remove();
+        if (!local) {
+          useCDN = false;
+          loadFile(file, true);
+        } else {
+          index++;
+          next();
+        }
+      };
+      document.head.appendChild(script);
+    }
+    function next() {
+      if (index >= files.length) return;
+      loadFile(files[index], !useCDN);
+    }
+    next();
+  })();
+  </script>
 </body>
 </html>

@@ -51,12 +51,16 @@ jobs:
           node-version: '20'
 
       - name: Build production site
+        env:
+          CDN_REF: main
         run: |
           cd main
           ./scripts/build-minitool.sh
           ./scripts/build-site.sh
 
       - name: Build dev preview
+        env:
+          CDN_REF: dev
         run: |
           cd dev
           ./scripts/build-minitool.sh

@@ -97,6 +97,8 @@ jobs:
           node-version: '20'
 
       - name: Build production site
+        env:
+          CDN_REF: main
         run: |
           cd main
           ./scripts/build-minitool.sh
@@ -104,6 +106,8 @@ jobs:
 
       - name: Build dev preview
         continue-on-error: true
+        env:
+          CDN_REF: dev
         run: |
           cd dev
           ./scripts/build-site.sh

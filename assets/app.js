@@ -19,13 +19,30 @@
   const scriptPromises = Object.create(null);
   function loadScriptOnce(src) {
     if (scriptPromises[src]) return scriptPromises[src];
+    const local = src;
+    const cdn = window.__ASSET_CDN;
+    const version = window.__ASSET_VERSION || 'dev';
+    const remote = cdn && src.indexOf('assets/') === 0
+      ? cdn + src.slice(7) + '?v=' + version
+      : src;
     scriptPromises[src] = new Promise(function (resolve, reject) {
-      const el = document.createElement('script');
-      el.src = src;
-      el.async = true;
-      el.onload = function () { resolve(); };
-      el.onerror = function () { reject(new Error('脚本加载失败：' + src)); };
-      document.head.appendChild(el);
+      function load(url, isLocal) {
+        const el = document.createElement('script');
+        el.src = url;
+        el.async = true;
+        el.onload = function () { resolve(); };
+        el.onerror = function () {
+          el.remove();
+          if (!isLocal) {
+            window.__ASSET_CDN = '';
+            load(local, true);
+          } else {
+            reject(new Error('脚本加载失败：' + local));
+          }
+        };
+        document.head.appendChild(el);
+      }
+      load(remote, remote === local);
     });
     return scriptPromises[src];
   }
