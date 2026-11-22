@@ -543,7 +543,3 @@ ignore generated minitool release metadata
 ## 2026-11-20 · 0dc0090
 
 新增区服趋势
-
-## 2026-11-20 · fb424d6
-
-update JX3BOX prices (local cron)
