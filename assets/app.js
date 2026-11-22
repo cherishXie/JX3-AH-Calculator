@@ -592,12 +592,23 @@
   function gradeText(grade) {
     return grade === 'A' ? '可做' : grade === 'B' ? '谨慎' : grade === 'C' ? '不可做' : grade === 'G' ? '采集' : '';
   }
+  function gradeDefinition(grade) {
+    if (grade === 'A') return '可做：本服成品和一线材料都有有效报价，不需要用示例价补齐；按当前报价扣除材料、手续费和交易税后可以执行。';
+    if (grade === 'B') return '谨慎：报价基本完整，但样本少、波动大、利润薄或需要自产中间物；收益可能随行情变化，建议小批量试卖，并复查关键材料价格。';
+    if (grade === 'C') return '不可做：成品或关键材料缺少有效报价，或按当前报价为负收益；系统不会生成可执行收益，也不使用示例价补齐。';
+    if (grade === 'G') return '采集：采集产出直接挂交易行出售，不参与配方「可做/谨慎/不可做」判断。';
+    return '选择配方后，按本服报价和缺价情况生成判断。';
+  }
+  function gradeHelp(grade, extra) {
+    const tip = gradeDefinition(grade) + (extra ? ' · ' + extra : '');
+    return '<span class="info grade-info" data-tip="' + U.esc(tip) + '" aria-label="' + U.esc(gradeDefinition(grade)) + '">' + icon('info') + '</span>';
+  }
   function gradeBadge(grade, opts) {
     if (!grade) return '<span class="badge badge-neutral">—</span>';
     const cls = grade === 'A' ? 'badge-positive' : grade === 'B' ? 'badge-warning' : 'badge-neutral';
     const label = gradeText(grade);
-    const tip = opts && opts.title ? opts.title : (grade === 'A' ? '本服报价完整，可直接做' : grade === 'B' ? '薄市、波动或需自产，谨慎做' : '缺价或负收益，暂不可做');
-    return '<span class="badge ' + cls + '" title="' + U.esc(tip) + '">' + label + '</span>';
+    const tip = opts && opts.title ? opts.title : gradeDefinition(grade);
+    return '<span class="badge ' + cls + '" title="' + U.esc(tip) + '">' + label + gradeHelp(grade, opts && opts.title) + '</span>';
   }
   function auditRowsFor(sid, opts) {
     opts = opts || {};

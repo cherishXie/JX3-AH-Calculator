@@ -1,9 +1,9 @@
 /* =========================================================================
    剑网三物价助手 · 苍生铸世 50 级生活技艺数据
-   数据版本：v3.8-market（2026-11-21）
-   价格修订：2026-11-22T22:37:38+08:00 · JX3BOX 全服拍卖
-   配方：230 条制造 + 21 条采集
-   行情：1116 个物品 · 分类 10 个
+   数据版本：v3.9-cooking（2026-11-22）
+   价格修订：2026-11-22T22:41:02+08:00 · JX3BOX 全服拍卖
+   配方：281 条制造 + 21 条采集
+   行情：1117 个物品 · 分类 10 个
    五行石：1-8 级拍卖价 + 快速/最优合成 + 7/8 爆率盈亏线
    ========================================================================= */
 window.JX3Data = {
@@ -12,10 +12,10 @@ window.JX3Data = {
     "expansion": "苍生铸世",
     "levelCap": 50,
     "version": "苍生铸世 · 50 级",
-    "catalogVersion": "v3.8-market",
-    "seedVersion": "v3.8-market-2026-11-21",
-    "updatedAt": "2026-11-21",
-    "verifiedAt": "2026-11-21",
+    "catalogVersion": "v3.9-cooking",
+    "seedVersion": "v3.9-cooking-2026-11-22",
+    "updatedAt": "2026-11-22",
+    "verifiedAt": "2026-11-22",
     "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
     "sources": [
       {
@@ -122,122 +122,127 @@ window.JX3Data = {
         "label": "JX3BOX · 行情目录（家园/消耗品/强化等）",
         "url": "https://node.jx3box.com/item/search",
         "note": "2026-11-21 纳入 672 个有报价的生活技艺相关物品"
+      },
+      {
+        "label": "JX3BOX · 当前赛季烹饪配方",
+        "url": "https://node.jx3box.com/manufactures",
+        "note": "2026-11-22 补齐 1–50 级烹饪 89 条，含风语 33 条"
       }
     ],
     "scope": "收录 154 条当前版本制造配方 + 21 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
-    "priceUpdatedAt": "2026-11-22T22:37:38+08:00",
+    "priceUpdatedAt": "2026-11-22T22:41:02+08:00",
     "priceCoverage": {
       "updated": 745,
-      "total": 1116,
+      "total": 1117,
       "source": "JX3BOX 拍卖 · 17 个服务器",
       "filtered": 35,
-      "noQuote": 371
+      "noQuote": 372
     },
     "serverCoverage": {
       "s_mengjiangnan": {
         "updated": 745,
-        "total": 1116,
+        "total": 1117,
         "filtered": 35,
-        "noQuote": 371
+        "noQuote": 372
       },
       "s_pozhenzi": {
         "updated": 461,
-        "total": 1116,
+        "total": 1117,
         "filtered": 52,
-        "noQuote": 655
+        "noQuote": 656
       },
       "s_dielianhua": {
         "updated": 392,
-        "total": 1116,
+        "total": 1117,
         "filtered": 42,
-        "noQuote": 724
+        "noQuote": 725
       },
       "s_jiandan": {
         "updated": 418,
-        "total": 1116,
+        "total": 1117,
         "filtered": 51,
-        "noQuote": 698
+        "noQuote": 699
       },
       "s_youyuelun": {
         "updated": 487,
-        "total": 1116,
+        "total": 1117,
         "filtered": 54,
-        "noQuote": 629
+        "noQuote": 630
       },
       "s_longzheng": {
         "updated": 508,
-        "total": 1116,
-        "filtered": 47,
-        "noQuote": 608
+        "total": 1117,
+        "filtered": 48,
+        "noQuote": 609
       },
       "s_changancheng": {
         "updated": 431,
-        "total": 1116,
+        "total": 1117,
         "filtered": 41,
-        "noQuote": 685
+        "noQuote": 686
       },
       "s_douzhuang": {
         "updated": 456,
-        "total": 1116,
+        "total": 1117,
         "filtered": 51,
-        "noQuote": 660
+        "noQuote": 661
       },
       "s_qiankun": {
         "updated": 596,
-        "total": 1116,
+        "total": 1117,
         "filtered": 57,
-        "noQuote": 520
+        "noQuote": 521
       },
       "s_weiwo": {
-        "updated": 729,
-        "total": 1116,
+        "updated": 730,
+        "total": 1117,
         "filtered": 43,
         "noQuote": 387
       },
       "s_juedai": {
         "updated": 575,
-        "total": 1116,
+        "total": 1117,
         "filtered": 58,
-        "noQuote": 541
+        "noQuote": 542
       },
       "s_tianeping": {
         "updated": 726,
-        "total": 1116,
+        "total": 1117,
         "filtered": 60,
-        "noQuote": 390
+        "noQuote": 391
       },
       "s_feilong": {
         "updated": 375,
-        "total": 1116,
+        "total": 1117,
         "filtered": 62,
-        "noQuote": 741
+        "noQuote": 742
       },
       "s_jiutian": {
         "updated": 242,
-        "total": 1116,
+        "total": 1117,
         "filtered": 71,
-        "noQuote": 874
+        "noQuote": 875
       },
       "s_meijianxue": {
         "updated": 338,
-        "total": 1116,
+        "total": 1117,
         "filtered": 44,
-        "noQuote": 778
+        "noQuote": 779
       },
       "s_shanhai": {
         "updated": 260,
-        "total": 1116,
+        "total": 1117,
         "filtered": 24,
-        "noQuote": 856
+        "noQuote": 857
       },
       "s_aoxue": {
         "updated": 166,
-        "total": 1116,
+        "total": 1117,
         "filtered": 27,
-        "noQuote": 950
+        "noQuote": 951
       }
     },
-    "stonePriceUpdatedAt": "2026-11-22T22:37:38+08:00",
+    "stonePriceUpdatedAt": "2026-11-22T22:41:02+08:00",
     "stoneVerifiedAt": "2026-11-19",
     "categories": [
       {
@@ -1591,7 +1596,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1795010261,
       "gameKey": "5_89970",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -1982,7 +1987,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1795010197,
       "gameKey": "5_89969",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -2033,7 +2038,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1795009602,
       "gameKey": "5_89971",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -2152,7 +2157,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1795010139,
       "gameKey": "5_5270",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -2186,7 +2191,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1795009216,
       "gameKey": "5_5269",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -7624,9 +7629,9 @@ window.JX3Data = {
       "gameKey": "5_11521",
       "name": "辣酱肉片",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 0.03,
@@ -7640,9 +7645,9 @@ window.JX3Data = {
       "gameKey": "5_26232",
       "name": "煮烂的如意饺",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 40,
@@ -7656,9 +7661,9 @@ window.JX3Data = {
       "gameKey": "5_5232",
       "name": "戏凤饺",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 1.99,
@@ -7672,9 +7677,9 @@ window.JX3Data = {
       "gameKey": "5_5231",
       "name": "煮烂的戏凤饺子",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 2,
@@ -7688,9 +7693,9 @@ window.JX3Data = {
       "gameKey": "5_5230",
       "name": "盘龙饺",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 2,
@@ -7704,9 +7709,9 @@ window.JX3Data = {
       "gameKey": "5_5229",
       "name": "煮烂的盘龙饺子",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 2.59,
@@ -7720,9 +7725,9 @@ window.JX3Data = {
       "gameKey": "5_31050",
       "name": "百味宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 10000,
@@ -7736,9 +7741,9 @@ window.JX3Data = {
       "gameKey": "5_2304",
       "name": "杂味宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 9328.97,
@@ -7752,9 +7757,9 @@ window.JX3Data = {
       "gameKey": "5_31051",
       "name": "山河宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 488.99,
@@ -7768,9 +7773,9 @@ window.JX3Data = {
       "gameKey": "5_31052",
       "name": "汉宫宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 436.5,
@@ -7784,9 +7789,9 @@ window.JX3Data = {
       "gameKey": "5_31053",
       "name": "南山宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 517.98,
@@ -7800,9 +7805,9 @@ window.JX3Data = {
       "gameKey": "5_31054",
       "name": "东海宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 400.13,
@@ -7816,9 +7821,9 @@ window.JX3Data = {
       "gameKey": "5_31055",
       "name": "任侠宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 10000,
@@ -7832,9 +7837,9 @@ window.JX3Data = {
       "gameKey": "5_2299",
       "name": "没有酒的任侠餐",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 8252.52,
@@ -7848,9 +7853,9 @@ window.JX3Data = {
       "gameKey": "5_31056",
       "name": "兄弟宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 10000,
@@ -7864,9 +7869,9 @@ window.JX3Data = {
       "gameKey": "5_2300",
       "name": "不够兄弟的兄弟宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 8886.06,
@@ -7880,9 +7885,9 @@ window.JX3Data = {
       "gameKey": "5_31057",
       "name": "贵妃宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 300,
@@ -7896,9 +7901,9 @@ window.JX3Data = {
       "gameKey": "5_31058",
       "name": "欢庆宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 10000,
@@ -7912,9 +7917,9 @@ window.JX3Data = {
       "gameKey": "5_31059",
       "name": "三头宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 10000,
@@ -7928,9 +7933,9 @@ window.JX3Data = {
       "gameKey": "5_2305",
       "name": "不地道的三头宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 13353.66,
@@ -7944,9 +7949,9 @@ window.JX3Data = {
       "gameKey": "5_31060",
       "name": "洗尘宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 130.15,
@@ -7960,9 +7965,9 @@ window.JX3Data = {
       "gameKey": "5_31061",
       "name": "迎客宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 50.1,
@@ -7976,9 +7981,9 @@ window.JX3Data = {
       "gameKey": "5_31062",
       "name": "结缘宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "制造",
       "base": 342.66,
@@ -7992,9 +7997,9 @@ window.JX3Data = {
       "gameKey": "5_71268",
       "name": "风语·酸菜鱼",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 113.34,
@@ -8008,9 +8013,9 @@ window.JX3Data = {
       "gameKey": "5_71270",
       "name": "风语·白肉血肠",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 99.99,
@@ -8024,9 +8029,9 @@ window.JX3Data = {
       "gameKey": "5_2302",
       "name": "肥腻血肠",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 998.1,
@@ -8040,9 +8045,9 @@ window.JX3Data = {
       "gameKey": "5_71271",
       "name": "风语·红烧扣肉",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 82.39,
@@ -8056,9 +8061,9 @@ window.JX3Data = {
       "gameKey": "5_71272",
       "name": "风语·太后饼",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 101.28,
@@ -8072,9 +8077,9 @@ window.JX3Data = {
       "gameKey": "5_71273",
       "name": "风语·灌汤包",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 99,
@@ -8088,9 +8093,9 @@ window.JX3Data = {
       "gameKey": "5_71274",
       "name": "风语·骨肉相连",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 92.73,
@@ -8104,9 +8109,9 @@ window.JX3Data = {
       "gameKey": "5_71275",
       "name": "风语·炸酱面",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 120.04,
@@ -8120,9 +8125,9 @@ window.JX3Data = {
       "gameKey": "5_71276",
       "name": "风语·鱼香肉丝",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 39.1,
@@ -8136,9 +8141,9 @@ window.JX3Data = {
       "gameKey": "5_71278",
       "name": "风语·毛血旺",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 16.53,
@@ -8152,9 +8157,9 @@ window.JX3Data = {
       "gameKey": "5_71279",
       "name": "风语·栗子烧肉",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 33.2,
@@ -8168,9 +8173,9 @@ window.JX3Data = {
       "gameKey": "5_3505",
       "name": "不太香的栗子烧肉",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 2000,
@@ -8184,9 +8189,9 @@ window.JX3Data = {
       "gameKey": "5_71280",
       "name": "风语·煎饼果子",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 97.3,
@@ -8200,9 +8205,9 @@ window.JX3Data = {
       "gameKey": "5_3485",
       "name": "带酸味的包子",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 141.98,
@@ -8216,9 +8221,9 @@ window.JX3Data = {
       "gameKey": "5_71282",
       "name": "风语·白汁芦筋",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 88.83,
@@ -8232,9 +8237,9 @@ window.JX3Data = {
       "gameKey": "5_3236",
       "name": "咬不动的蹄筋",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 1088,
@@ -8248,9 +8253,9 @@ window.JX3Data = {
       "gameKey": "5_71283",
       "name": "风语·杂碎面",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 45.13,
@@ -8264,9 +8269,9 @@ window.JX3Data = {
       "gameKey": "5_2292",
       "name": "腻味的杂碎面",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 4382.22,
@@ -8280,9 +8285,9 @@ window.JX3Data = {
       "gameKey": "5_71284",
       "name": "风语·皮蛋瘦肉粥",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 87.6,
@@ -8296,9 +8301,9 @@ window.JX3Data = {
       "gameKey": "5_71286",
       "name": "风语·鱼片砂锅粥",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 94.69,
@@ -8312,9 +8317,9 @@ window.JX3Data = {
       "gameKey": "5_71287",
       "name": "风语·三鲜粥",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 124.62,
@@ -8328,9 +8333,9 @@ window.JX3Data = {
       "gameKey": "5_71288",
       "name": "风语·咸骨粥",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 90.08,
@@ -8344,9 +8349,9 @@ window.JX3Data = {
       "gameKey": "5_71289",
       "name": "风语·贡丸汤",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 899,
@@ -8360,9 +8365,9 @@ window.JX3Data = {
       "gameKey": "5_71290",
       "name": "风语·杂碎汤",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 20.09,
@@ -8376,9 +8381,9 @@ window.JX3Data = {
       "gameKey": "5_71291",
       "name": "风语·鱼头豆腐汤",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 75.11,
@@ -8392,9 +8397,9 @@ window.JX3Data = {
       "gameKey": "5_71294",
       "name": "风语·水晶芙蓉宴（通用）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 799.6,
@@ -8408,9 +8413,9 @@ window.JX3Data = {
       "gameKey": "5_71295",
       "name": "风语·玉笛谁家听落梅（外攻）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 432.99,
@@ -8424,9 +8429,9 @@ window.JX3Data = {
       "gameKey": "5_71296",
       "name": "风语·二十四桥明月夜（内攻）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 868.67,
@@ -8440,9 +8445,9 @@ window.JX3Data = {
       "gameKey": "5_71297",
       "name": "风语·鸳鸯烩珍宴（治疗）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 158,
@@ -8456,9 +8461,9 @@ window.JX3Data = {
       "gameKey": "5_71298",
       "name": "风语·蜀味烘焙宴（仇恨）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 43.28,
@@ -8472,9 +8477,9 @@ window.JX3Data = {
       "gameKey": "5_71299",
       "name": "风语·鸿门宴（防御）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 484.4,
@@ -8488,9 +8493,9 @@ window.JX3Data = {
       "gameKey": "5_2303",
       "name": "真正的鸿门宴",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "制造",
       "base": 11000,
@@ -8504,9 +8509,9 @@ window.JX3Data = {
       "gameKey": "5_71300",
       "name": "风语·团圆宴（恢复）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 4,
       "source": "制造",
       "base": 6.48,
@@ -8520,9 +8525,9 @@ window.JX3Data = {
       "gameKey": "5_89316",
       "name": "雁门猎风宴（外攻）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 1548.97,
@@ -8536,9 +8541,9 @@ window.JX3Data = {
       "gameKey": "5_89318",
       "name": "塞外暖羊宴（治疗）",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 1999.64,
@@ -8552,9 +8557,9 @@ window.JX3Data = {
       "gameKey": "5_89361",
       "name": "渝州酸辣粉",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 55,
@@ -8568,9 +8573,9 @@ window.JX3Data = {
       "gameKey": "5_89362",
       "name": "灵宝羊肉汤",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 99.41,
@@ -8584,9 +8589,9 @@ window.JX3Data = {
       "gameKey": "5_89363",
       "name": "蒸河鱼",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 131.5,
@@ -8600,9 +8605,9 @@ window.JX3Data = {
       "gameKey": "5_89364",
       "name": "羊肉烩面",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 171.06,
@@ -8616,9 +8621,9 @@ window.JX3Data = {
       "gameKey": "5_89365",
       "name": "酥油烙馍",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 222.8,
@@ -8632,9 +8637,9 @@ window.JX3Data = {
       "gameKey": "5_89366",
       "name": "曲香蒸肉",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "制造",
       "base": 555,
@@ -17784,9 +17789,9 @@ window.JX3Data = {
       "gameKey": "5_31983",
       "name": "青菜",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 0.63,
@@ -17800,9 +17805,9 @@ window.JX3Data = {
       "gameKey": "5_1830",
       "name": "郎官清",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 2,
       "source": "交易行",
       "base": 12.99,
@@ -17816,9 +17821,9 @@ window.JX3Data = {
       "gameKey": "5_31975",
       "name": "白糖",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 0.64,
@@ -17832,9 +17837,9 @@ window.JX3Data = {
       "gameKey": "5_1832",
       "name": "富水",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 3,
       "source": "交易行",
       "base": 9995,
@@ -17848,9 +17853,9 @@ window.JX3Data = {
       "gameKey": "5_31979",
       "name": "青瓜",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 3.59,
@@ -17864,9 +17869,9 @@ window.JX3Data = {
       "gameKey": "5_31981",
       "name": "红萝卜",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 10000,
@@ -17880,9 +17885,9 @@ window.JX3Data = {
       "gameKey": "5_31971",
       "name": "莲藕",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 0.59,
@@ -17896,9 +17901,9 @@ window.JX3Data = {
       "gameKey": "5_32007",
       "name": "黄酒",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 10000,
@@ -17912,9 +17917,9 @@ window.JX3Data = {
       "gameKey": "5_32008",
       "name": "秋露白",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 0.72,
@@ -17928,9 +17933,9 @@ window.JX3Data = {
       "gameKey": "5_32010",
       "name": "土窟春",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 10000,
@@ -17944,9 +17949,9 @@ window.JX3Data = {
       "gameKey": "5_32011",
       "name": "新丰酒",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 10000,
@@ -17960,9 +17965,9 @@ window.JX3Data = {
       "gameKey": "5_32012",
       "name": "若下",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 10000,
@@ -17976,9 +17981,9 @@ window.JX3Data = {
       "gameKey": "5_31980",
       "name": "粟米",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 0.63,
@@ -17992,9 +17997,9 @@ window.JX3Data = {
       "gameKey": "5_31982",
       "name": "蒜苗",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "pengren",
       "tier": 1,
       "source": "交易行",
       "base": 0.63,
@@ -18369,6 +18374,21 @@ window.JX3Data = {
       "priceSource": "auction",
       "verified": true,
       "origin": "JX3BOX 行情目录 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_x_5_32009",
+      "gameKey": "5_32009",
+      "name": "干和",
+      "category": "material",
+      "life": true,
+      "kind": "material",
+      "skillId": "pengren",
+      "tier": 1,
+      "source": "交易行",
+      "base": 0,
+      "verified": true,
+      "origin": "JX3BOX 烹饪配方 · 2026-11-22",
       "custom": false
     }
   ],
@@ -20110,9 +20130,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "宴席 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 20级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20127,7 +20147,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "lucai",
-          "qty": 11.5,
+          "qty": 10,
           "qtyMin": 10,
           "qtyMax": 13
         }
@@ -20154,9 +20174,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "特殊食品 · JX3BOX 当前版本配方 · 产出 10~13",
+      "note": "烹饪 · 1级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20171,7 +20191,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71293",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20198,9 +20218,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20215,7 +20235,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71292",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20242,9 +20262,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20259,9 +20279,17 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71281",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
-          "qtyMax": 3
+          "qtyMax": 3,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_3485",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
         }
       ],
       "materials": [
@@ -20286,9 +20314,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20303,7 +20331,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71277",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20330,9 +20358,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20374,9 +20402,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "宴席 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 18级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20428,7 +20456,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20443,7 +20471,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89969",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20470,9 +20498,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 5级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20487,7 +20515,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89970",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20514,9 +20542,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 3级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20531,7 +20559,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89971",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20558,9 +20586,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 4级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20575,7 +20603,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_5270",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20594,9 +20622,9 @@ window.JX3Data = {
           "qty": 1
         }
       ],
-      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 2级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20611,7 +20639,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_5269",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20626,9 +20654,9 @@ window.JX3Data = {
           "qty": 1
         }
       ],
-      "note": "烹饪材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 1级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20643,7 +20671,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_31013",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20666,9 +20694,9 @@ window.JX3Data = {
           "qty": 3
         }
       ],
-      "note": "回复类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20683,7 +20711,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_31012",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -20710,9 +20738,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "回复类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20760,7 +20788,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20812,7 +20840,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20854,9 +20882,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "宴席 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 5级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20904,7 +20932,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20921,7 +20949,15 @@ window.JX3Data = {
           "item": "m_m_5_26231",
           "qty": 1,
           "qtyMin": 1,
-          "qtyMax": 1
+          "qtyMax": 1,
+          "chance": 0.6499996185302734
+        },
+        {
+          "item": "m_x_5_26232",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.35000038146972656
         }
       ],
       "materials": [
@@ -20938,9 +20974,9 @@ window.JX3Data = {
           "qty": 2
         }
       ],
-      "note": "特殊食品 · JX3BOX 当前版本配方",
+      "note": "烹饪 · 3级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -20992,7 +21028,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21044,7 +21080,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21059,7 +21095,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71269",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21086,9 +21122,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "增强类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21140,7 +21176,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21155,7 +21191,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89348",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21178,9 +21214,9 @@ window.JX3Data = {
           "qty": 18
         }
       ],
-      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 36级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21195,7 +21231,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71285",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21222,9 +21258,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "辅助类食品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25615,7 +25651,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25667,7 +25703,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25719,7 +25755,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25771,7 +25807,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25823,7 +25859,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25875,7 +25911,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25927,7 +25963,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -25979,7 +26015,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -28906,7 +28942,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 13级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -29102,7 +29138,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 24级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -29230,7 +29266,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 32级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -29274,7 +29310,7 @@ window.JX3Data = {
       ],
       "note": "烹饪 · 34级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -29395,6 +29431,2290 @@ window.JX3Data = {
       "note": "锻造 · 42级 · JX3BOX 当前赛季配方",
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_357",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "辣酱肉片",
+      "level": 15,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_11521",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30824",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_359",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "戏凤饺",
+      "level": 3,
+      "tier": 3,
+      "energy": 37,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_5232",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.6499996185302734
+        },
+        {
+          "item": "m_x_5_5231",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.35000038146972656
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_5269",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_5270",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 3级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_360",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "盘龙饺",
+      "level": 3,
+      "tier": 3,
+      "energy": 37,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_5230",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.6499996185302734
+        },
+        {
+          "item": "m_x_5_5229",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.35000038146972656
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_5269",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_5270",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 3级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_371",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "百味宴",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31050",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_2304",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        },
+        {
+          "item": "m_x_5_31983",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_372",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "山河宴",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31051",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_1830",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_373",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "汉宫宴",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31052",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 10
+        },
+        {
+          "item": "m_x_5_31975",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31967",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_374",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "南山宴",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31053",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_1832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31968",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_375",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "东海宴",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31054",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 5
+        },
+        {
+          "item": "zasui",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31977",
+          "qty": 10
+        },
+        {
+          "item": "m_x_5_31979",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_376",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "任侠宴",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31055",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_2299",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_1830",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 10
+        },
+        {
+          "item": "m_x_5_31981",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_377",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "兄弟宴",
+      "level": 15,
+      "tier": 3,
+      "energy": 80,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31056",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_2300",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 5
+        },
+        {
+          "item": "m_x_5_31971",
+          "qty": 5
+        }
+      ],
+      "note": "烹饪 · 15级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_378",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "贵妃宴",
+      "level": 9,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31057",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_32007",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 5
+        },
+        {
+          "item": "m_x_5_31983",
+          "qty": 5
+        }
+      ],
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_379",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "欢庆宴",
+      "level": 9,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31058",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_32008",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 5
+        }
+      ],
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_380",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "三头宴",
+      "level": 9,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31059",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_2305",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_32009",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 10
+        },
+        {
+          "item": "m_x_5_31975",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31967",
+          "qty": 5
+        }
+      ],
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_381",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "洗尘宴",
+      "level": 9,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31060",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_32010",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "zasui",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31968",
+          "qty": 5
+        }
+      ],
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_382",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "迎客宴",
+      "level": 9,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31061",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_32011",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31977",
+          "qty": 5
+        },
+        {
+          "item": "m_x_5_31979",
+          "qty": 5
+        }
+      ],
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_383",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "结缘宴",
+      "level": 9,
+      "tier": 2,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31062",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_32012",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 5
+        },
+        {
+          "item": "m_x_5_31981",
+          "qty": 5
+        }
+      ],
+      "note": "烹饪 · 9级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_384",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·酸菜鱼",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71268",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31969",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_386",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·白肉血肠",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71270",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_2302",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_387",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·红烧扣肉",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71271",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 10
+        },
+        {
+          "item": "m_x_5_31975",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_388",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·太后饼",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71272",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30829",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_389",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·灌汤包",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71273",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31977",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_390",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·骨肉相连",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71274",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_391",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·炸酱面",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71275",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "zasui",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_392",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·鱼香肉丝",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71276",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30827",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31985",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_394",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·毛血旺",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71278",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30825",
+          "qty": 5
+        },
+        {
+          "item": "zasui",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_395",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·栗子烧肉",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71279",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_3505",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30824",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 5
+        },
+        {
+          "item": "m_x_5_31980",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_396",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·煎饼果子",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71280",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30823",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31968",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_398",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·白汁芦筋",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71282",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_3236",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30826",
+          "qty": 5
+        },
+        {
+          "item": "zasui",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_x_5_31975",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31970",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_399",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·杂碎面",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71283",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_2292",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "zasui",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_400",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·皮蛋瘦肉粥",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71284",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31977",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30829",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_402",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·鱼片砂锅粥",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71286",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31969",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_403",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·三鲜粥",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71287",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "zasui",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31969",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_31977",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_404",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·咸骨粥",
+      "level": 30,
+      "tier": 4,
+      "energy": 75,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71288",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 3
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 10
+        },
+        {
+          "item": "m_x_5_31982",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_405",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·贡丸汤",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71289",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30823",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 5
+        },
+        {
+          "item": "m_x_5_31983",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_406",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·杂碎汤",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71290",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "zasui",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31976",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_407",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·鱼头豆腐汤",
+      "level": 30,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71291",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30827",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31977",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 10
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_410",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·水晶芙蓉宴",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71294",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 20
+        },
+        {
+          "item": "zasui",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_31983",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_411",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·玉笛谁家听落梅",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71295",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31984",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_412",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·二十四桥明月夜",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71296",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31967",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_413",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·鸳鸯烩珍宴",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71297",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30825",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_31968",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_414",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·蜀味烘焙宴",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71298",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30826",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_31979",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_415",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·鸿门宴",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71299",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9499998092651367
+        },
+        {
+          "item": "m_x_5_2303",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.05000019073486328
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 15
+        },
+        {
+          "item": "zasui",
+          "qty": 20
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_31981",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_416",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "风语·团圆宴",
+      "level": 30,
+      "tier": 4,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71300",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_32014",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30823",
+          "qty": 20
+        },
+        {
+          "item": "zasui",
+          "qty": 20
+        },
+        {
+          "item": "m_x_5_31971",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_432",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "雁门猎风宴（外攻）",
+      "level": 21,
+      "tier": 3,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89316",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 7
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31978",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 21级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_434",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "塞外暖羊宴（治疗）",
+      "level": 27,
+      "tier": 3,
+      "energy": 120,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89318",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_1829",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89971",
+          "qty": 7
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30844",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 20
+        }
+      ],
+      "note": "烹饪 · 27级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_445",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "渝州酸辣粉",
+      "level": 38,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89361",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "lushui",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30843",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 18
+        }
+      ],
+      "note": "烹饪 · 38级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_446",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "灵宝羊肉汤",
+      "level": 40,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89362",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89168",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30875",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 40级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_447",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "蒸河鱼",
+      "level": 42,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89363",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89171",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 15
+        },
+        {
+          "item": "lushui",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30827",
+          "qty": 3
+        }
+      ],
+      "note": "烹饪 · 42级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_448",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "羊肉烩面",
+      "level": 44,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89364",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "lushui",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30874",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89171",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 18
+        }
+      ],
+      "note": "烹饪 · 44级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_449",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "酥油烙馍",
+      "level": 46,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89365",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89172",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31973",
+          "qty": 15
+        },
+        {
+          "item": "m_m_5_30845",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 46级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_cooking_450",
+      "kind": "craft",
+      "skillId": "pengren",
+      "name": "曲香蒸肉",
+      "level": 48,
+      "tier": 3,
+      "energy": 50,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89366",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89168",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_31974",
+          "qty": 15
+        },
+        {
+          "item": "lushui",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30824",
+          "qty": 1
+        }
+      ],
+      "note": "烹饪 · 48级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     }
   ],
@@ -34727,7 +37047,8 @@ window.JX3Data = {
       "m_x_5_2871": 2.99,
       "m_x_5_3573": 0.12,
       "m_x_5_3843": 2.09,
-      "m_x_5_3574": 2.19
+      "m_x_5_3574": 2.19,
+      "m_x_5_32009": 0.64
     },
     "s_juedai": {
       "fengwangjiang": 152.4,
