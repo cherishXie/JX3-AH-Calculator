@@ -2,6 +2,498 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · ca7388c
+
+补齐烹饪 89 条配方并增加判断解释
+
+## 2026-11-22 · 6f007b1
+
+价格机器人并发冲突时改在新 main 上重新抓价，避免 rebase 卡死
+
+## 2026-11-22 · 2904175
+
+update JX3BOX prices
+
+## 2026-11-22 · e27939c
+
+update JX3BOX prices
+
+## 2026-11-22 · 96e3a5c
+
+价格机器人提交时遇并发推送自动 rebase 重试
+
+## 2026-11-22 · 019b7a7
+
+趋势历史按云开发单次写入上限自动分片
+
+## 2026-11-22 · b60637b
+
+update JX3BOX prices
+
+## 2026-11-22 · 2b8574f
+
+update JX3BOX prices
+
+## 2026-11-22 · 89322fe
+
+update JX3BOX prices
+
+## 2026-11-22 · 3131040
+
+update JX3BOX prices
+
+## 2026-11-22 · 877e414
+
+update JX3BOX prices
+
+## 2026-11-22 · 2dd7fab
+
+update JX3BOX prices
+
+## 2026-11-22 · f6b8746
+
+update JX3BOX prices
+
+## 2026-11-22 · 9852ea5
+
+update JX3BOX prices
+
+## 2026-11-22 · 9ff2add
+
+update JX3BOX prices
+
+## 2026-11-22 · 78e0d4a
+
+update JX3BOX prices
+
+## 2026-11-22 · debe338
+
+update JX3BOX prices
+
+## 2026-11-22 · e58813a
+
+update JX3BOX prices
+
+## 2026-11-22 · 84aa6e4
+
+update JX3BOX prices
+
+## 2026-11-22 · ed2e4e3
+
+update JX3BOX prices
+
+## 2026-11-22 · 75f6e99
+
+update JX3BOX prices
+
+## 2026-11-22 · 657576b
+
+update JX3BOX prices
+
+## 2026-11-22 · be1ae27
+
+update JX3BOX prices
+
+## 2026-11-22 · 9579284
+
+update JX3BOX prices
+
+## 2026-11-22 · 991c8ad
+
+update JX3BOX prices
+
+## 2026-11-22 · 4e6bf2e
+
+update JX3BOX prices
+
+## 2026-11-22 · d048a45
+
+update JX3BOX prices
+
+## 2026-11-22 · bcd9f23
+
+update JX3BOX prices
+
+## 2026-11-22 · 16baace
+
+update JX3BOX prices
+
+## 2026-11-22 · 61ce0a7
+
+update JX3BOX prices
+
+## 2026-11-22 · e5cfe1f
+
+update JX3BOX prices
+
+## 2026-11-22 · 255d3b3
+
+update JX3BOX prices
+
+## 2026-11-22 · 12547ab
+
+update JX3BOX prices
+
+## 2026-11-22 · c62eb0a
+
+update JX3BOX prices
+
+## 2026-11-22 · 3ea218c
+
+update JX3BOX prices
+
+## 2026-11-22 · ccd05a5
+
+update JX3BOX prices
+
+## 2026-11-22 · 6c9612d
+
+update JX3BOX prices
+
+## 2026-11-22 · 87e06ab
+
+update JX3BOX prices
+
+## 2026-11-22 · 3469235
+
+update JX3BOX prices
+
+## 2026-11-22 · f304e46
+
+update JX3BOX prices
+
+## 2026-11-22 · 609f9d1
+
+update JX3BOX prices
+
+## 2026-11-22 · 8f111d0
+
+update JX3BOX prices
+
+## 2026-11-22 · 242fc74
+
+update JX3BOX prices
+
+## 2026-11-22 · 7c675b8
+
+update JX3BOX prices
+
+## 2026-11-22 · 2c4d6b4
+
+update JX3BOX prices
+
+## 2026-11-22 · 8b57d80
+
+update JX3BOX prices
+
+## 2026-11-22 · 9dbb16f
+
+update JX3BOX prices
+
+## 2026-11-22 · 9adc6a7
+
+update JX3BOX prices
+
+## 2026-11-22 · 74ed45b
+
+小程序头像与启动图换成科技风
+
+- 用 tech-xhs-image 的视觉 DNA 重做头像、9:16 启动图与 5:4/16:9 分享卡
+- 启动引导页浮层改为玻璃卡 + 橘色按钮，顶部加同色淡出
+- 同步公众平台上传图与主包启动图（69KB）
+
+## 2026-11-22 · 7eddba8
+
+未选主题用户迁移到科技风
+
+## 2026-11-22 · e0842b1
+
+更新科技风主题包体积
+
+## 2026-11-22 · 21ae98a
+
+上线科技风主题并压缩突破概览
+
+- 从 tech-xhs-image 提炼流体渐变、磨砂玻璃、橘色强调与涨跌语义\\n- 新用户默认科技风，已有用户保留原主题；我的可切换亮色/暗色/科技风\\n- H5/小红书 TabBar 跟随科技风；微信原生 TabBar 深色底 + 橘色选中\\n- 突破页概览压成单卡，关键数字与两阶段拆分一屏看完\\n- 主包 1.43MB；verify:weapp 通过
+
+## 2026-11-22 · 9289cff
+
+重新构建小程序突破模型产物
+
+## 2026-11-22 · 7155371
+
+突破概览压缩为单卡；两条路线都展示收益；补全采集点产物报价
+
+## 2026-11-22 · 4a3fbe7
+
+精简小程序文案并同步突破路线
+
+- 全局数据注脚、空状态、卡片副标题改为短标签，移除重复说明\\n- 突破页同步网页最新单路线，取消低/中/高三档；经验 1→30 实测/31+ 外推，采集 40 精力=128 经验\\n- 突破概览压成一张紧凑卡，技艺改为 4 列两行；移除八技艺横评与长模型说明\\n- 主包 1.42MB；verify:weapp 与 test-breakthrough 通过
+
+## 2026-11-22 · f5f90e1
+
+移动端界面改版，底部 Tab 与大卡片布局
+
+## 2026-11-22 · 4f4cb67
+
+update JX3BOX prices
+
+## 2026-11-22 · 74440ee
+
+update JX3BOX prices
+
+## 2026-11-22 · ac76648
+
+修复庖丁点击崩溃；金币策略改为不分档的最优路线；采集按已解锁最高采集点走
+
+## 2026-11-22 · 70dc145
+
+采集产出不再标可做，采集点只在全部列表展示
+
+## 2026-11-22 · edbaace
+
+恢复价格机器人定时更新
+
+- 接收 writeData 返回值，修复 miniCore/marketCore 未定义导致 00:06/00:36/01:06 连续失败\\n- 补录 2026-11-22 01:32 全服价格快照并刷新小程序目录/云端行情源数据\\n- 仅数据链路，不含 dev 的今日/分析 UI 改动
+
+## 2026-11-22 · cd3976f
+
+修复行情定时更新并改为按技艺排行
+
+- 今日移除今天最赚 Hero，改为 8 个技艺 chips 切换，单技艺前 12 名；完整排行带技艺参数\\n- 修复价格机器人 writeData 返回值未接收导致 miniCore/marketCore 未定义，00:06/00:36/01:06 定时任务连续失败\\n- 补录 2026-11-22 01:32 全服价格快照，刷新小程序目录、market 目录与走势\\n- 主包 1.43MB；verify:weapp 通过
+
+## 2026-11-22 · 397fc82
+
+神农采集点改用实测等级并补齐低阶点
+
+## 2026-11-22 · 498f6ad
+
+采金采集点改用实测等级（铜矿1/锡矿3/铅锌5/铁矿7/银矿9/青石30/金沙30）
+
+## 2026-11-22 · 882ad25
+
+恢复采集点等级门禁（庖丁秒刷点单独指定）
+
+## 2026-11-22 · 5fb14bd
+
+采集不按配方等级门禁、缺价给精力路线；庖丁按实测秒刷点分配路线
+
+## 2026-11-22 · 9bdfae6
+
+突破升级按实测精力经验比重算（采集 40 精力=128 经验，制造 1 精力=2 经验）
+
+## 2026-11-22 · d3a72f0
+
+修复我的黑屏并重组今日与行情
+
+- 今日/分析/五行石/我的 4 Tab；今日合并行情，优先展示收益排行，底部固定全部物品行情入口\\n- 全部物品行情改为二级页；完整收益排行拆为 pages/rank\\n- 分析 Tab 内嵌物价走势/区服趋势迷你卡，并保留突破升级入口\\n- 修复我的页 useEffect/router 未定义导致的黑屏；页面底色透明并由主题窗口接管，避免 Tab 切换露黑底；新增页面错误边界\\n- 12 个主包页面 + 0.19MB 行情分包；verify:weapp 通过，主包 1.54MB
+
+## 2026-11-22 · 5a17bcc
+
+突破经验表补充 40 精力/128 经验折算
+
+## 2026-11-22 · a70c17b
+
+突破升级经验门槛改用 1→30 逐级实测表，31 级起外推
+
+## 2026-11-21 · e6d7e63
+
+记录 4 Tab 上线与行情 Tab 变更
+
+## 2026-11-21 · 621b5da
+
+将小程序核心目录与云端行情接入价格机器人
+
+- --web-only 同步 444 项核心目录与 672 项行情目录数据，不再跳过小程序\\n- build-remote-prices 从最新核心目录生成云端 payload\\n- 云端旧行情不覆盖新包内价，并增加核心目录校验\\n- 仅合入数据链路，不含 dev 的 4 Tab UI 重构
+
+## 2026-11-21 · 6ef5a20
+
+重构小程序 4 Tab 界面并将排行改为行情
+
+- 今日/行情/五行石/我的 4 Tab；收益排行改为二级页\\n- 行情移植网页版筛选、搜索、批量录入、跨服价差与分页，672 项行情目录独立分包\\n- 正文 30rpx、可点区域 ≥88rpx、主按钮 96rpx；重做今日/五行石/我的\\n- 主包 1.52MB + 行情目录分包 0.19MB，verify:weapp 通过
+
+## 2026-11-21 · 11c7c7c
+
+更新小程序行情目录交付状态
+
+## 2026-11-21 · 46fe78e
+
+小程序加入行情目录分包并同步最新物价
+
+- 672 项家园/强化/消耗品进微信 market 分包，只查价/记价，不参与收益\\n- 同步网页 23:08 行情：核心 444 项 / 3305 条本服报价\\n- 修复 web-only 跳过小程序目录、云端旧价覆盖新包内价\\n- 补网页模块移植审核与 8 屏设计稿
+
+## 2026-11-21 · d4dc76a
+
+update JX3BOX prices
+
+## 2026-11-21 · 849bdcc
+
+update JX3BOX prices
+
+## 2026-11-21 · 24ff76e
+
+侧边栏新增工具分组与剑网三工作台外链
+
+## 2026-11-21 · 84ff18f
+
+update JX3BOX prices
+
+## 2026-11-21 · f9c535a
+
+update JX3BOX prices
+
+## 2026-11-21 · f6cbb7c
+
+生活技艺行内说明改为图标提示，修复首列过宽把数值列挤出屏幕
+
+## 2026-11-21 · 6f7a5f2
+
+update JX3BOX prices
+
+## 2026-11-21 · 29d8c5a
+
+update JX3BOX prices
+
+## 2026-11-21 · b031575
+
+精力收益比 Tab 默认聚焦可制作产物，避免一打开就是空态
+
+## 2026-11-21 · ba2ef3d
+
+update JX3BOX prices
+
+## 2026-11-21 · 717ccae
+
+update JX3BOX prices
+
+## 2026-11-21 · d964706
+
+部署检出完整历史；网页更新说明改为按最近提交自动生成
+
+## 2026-11-21 · bd85be1
+
+部署检出完整历史，保证网页更新说明能取到最近提交
+
+## 2026-11-21 · ab18472
+
+网页更新说明默认从最近提交自动生成，避免每版弹同一段
+
+## 2026-11-21 · 0ed5af8
+
+区服趋势覆盖率改用可统计物品，修正全物品下全员低覆盖与样本不足
+
+## 2026-11-21 · ea96aea
+
+style: 切换筛选去掉整页遮罩，改为选中态即时生效 + 内容进入动画
+
+## 2026-11-21 · e1287d1
+
+update JX3BOX prices
+
+## 2026-11-21 · 753dad9
+
+价格机器人同步更新 dev 预览的行情数据
+
+## 2026-11-21 · d5f2fc7
+
+价格机器人同步更新 dev 预览的行情数据
+
+## 2026-11-21 · 33faa7d
+
+dev 恢复读取 main 行情，合并时容忍目录版本差异
+
+## 2026-11-21 · 1ecc97f
+
+行情状态条移入顶栏；Tab 与侧边栏切换加过渡
+
+## 2026-11-21 · 4afc3bd
+
+dev 预览读自身数据；图表按卡片宽度渲染并修标签重叠；日期档位切换加过渡
+
+## 2026-11-21 · 7a445f5
+
+update JX3BOX prices
+
+## 2026-11-21 · da4de38
+
+目录变化自动重载；顶部状态条/检查物价归位；统一卡片与 Tab 间距
+
+## 2026-11-21 · 98c97ff
+
+物价走势物品数改为「有数据 / 全部目录」统一口径
+
+## 2026-11-21 · b194d28
+
+物价走势与区服趋势筛选栏统一（日期预设/类型/技艺/指定产物/刷新）
+
+## 2026-11-21 · 0a37bce
+
+走势请求加入空闲超时与自动重试，避免加载卡死；补 text-size-adjust
+
+## 2026-11-21 · a5c841c
+
+SW 预缓存改用条件请求，首访少下一遍首屏资源
+
+## 2026-11-21 · 51642f6
+
+首屏加载进度与网络诊断
+
+## 2026-11-21 · 71bdc7e
+
+物价走势日期选择支持历史范围
+
+## 2026-11-21 · 1bf1289
+
+行情页首屏不阻塞审计数据
+
+## 2026-11-21 · 761ba21
+
+总览行情计数与走势默认 1 天缓存
+
+## 2026-11-21 · f07ef67
+
+update JX3BOX prices
+
+## 2026-11-21 · 45897e8
+
+行情分类与市场目录扩展
+
+## 2026-11-21 · e95931e
+
+首屏脚本与样式合并、data.js 延迟加载，清理 .bak 下载副本
+
+## 2026-11-21 · cbb6195
+
+物价兜底改为 schedule 并修复走势页加载
+
+## 2026-11-21 · a46219b
+
+补齐 50 级配方次级产物与 444 个核心物品
+
+## 2026-11-21 · 542c2fa
+
+核心目录扩容至 230 条配方与 414 个物品
+
+## 2026-11-21 · fae5e13
+
+update JX3BOX prices
+
+## 2026-11-21 · 45be4ab
+
+update JX3BOX prices
+
+## 2026-11-21 · 6285bac
+
+update JX3BOX prices
+
+## 2026-11-21 · 3010640
+
+update JX3BOX prices
+
+## 2026-11-21 · ddeaf3d
+
+update JX3BOX prices
+
 ## 2026-11-21 · c809110
 
 release: 走势数据增量加载、7 天口径与三端同步
@@ -57,443 +549,3 @@ update JX3BOX prices
 ## 2026-11-21 · 0980859
 
 update JX3BOX prices
-
-## 2026-11-21 · a50c820
-
-update JX3BOX prices
-
-## 2026-11-21 · 9f8e13f
-
-update JX3BOX prices
-
-## 2026-11-21 · 835fc87
-
-update JX3BOX prices
-
-## 2026-11-21 · 27e495d
-
-update JX3BOX prices
-
-## 2026-11-21 · 56bff37
-
-update JX3BOX prices
-
-## 2026-11-21 · 69875f6
-
-update JX3BOX prices
-
-## 2026-11-21 · ddb08bc
-
-update JX3BOX prices
-
-## 2026-11-21 · e389d70
-
-开启组件按需注入并加入代码质量校验
-
-## 2026-11-21 · 616439a
-
-压缩启动图以通过 1.5MB 代码质量线
-
-## 2026-11-21 · 16fff51
-
-分析页行情三看、Tab 进度条与 Q 版启动图
-
-## 2026-11-21 · 6d9d24f
-
-update JX3BOX prices
-
-## 2026-11-21 · 0d147a6
-
-按最新代码重建并提供 1.0.5 包
-
-## 2026-11-21 · 3eb9188
-
-行情自动同步与云端时间优先
-
-## 2026-11-21 · d9f9a2e
-
-release: 本服可做判断上线，更新小程序与小工具
-
-## 2026-11-21 · c667422
-
-精力收益改用可做/谨慎/不可做
-
-## 2026-11-21 · e25bdef
-
-精力收益审计融入原模块
-
-## 2026-11-21 · 07fff9f
-
-update JX3BOX prices
-
-## 2026-11-21 · 832ced2
-
-更新说明前置历史加载优化
-
-## 2026-11-21 · cf9cd27
-
-物价走势加载进度与缓存
-
-## 2026-11-21 · fdd9f9b
-
-移植制作收益、落地校验与离线走势模块
-
-## 2026-11-21 · 76ccafd
-
-标注薄价待样本与时效
-
-## 2026-11-21 · 531519a
-
-价格库跨服参考折叠为本服独立视图
-
-## 2026-11-21 · 5ed7844
-
-报价可信度与本服可落地收益
-
-## 2026-11-21 · f7ee802
-
-制作收益落地校验与物价/精力收益 Tab
-
-## 2026-11-21 · 60fa90e
-
-update JX3BOX prices
-
-## 2026-11-20 · ad3b121
-
-update JX3BOX prices
-
-## 2026-11-20 · 60d2f5c
-
-update JX3BOX prices
-
-## 2026-11-20 · e7db24e
-
-release: 区服趋势与物品视角上线
-
-## 2026-11-20 · 7f7b383
-
-style: 区服趋势标题与说明精简
-
-## 2026-11-20 · efc7f4d
-
-修正区服趋势更新说明
-
-## 2026-11-20 · db6f6b8
-
-区服趋势清空区服时的空态处理
-
-## 2026-11-20 · f03d21f
-
-小程序新增区服趋势与物品视角
-
-## 2026-11-20 · 92567e3
-
-style: 区服趋势字号对齐设计规范
-
-## 2026-11-20 · a5e099e
-
-物品搜索下拉即时过滤
-
-## 2026-11-20 · 80ba228
-
-区服趋势上线，补齐物品视角与搜索
-
-## 2026-11-20 · 69e4267
-
-新增区服趋势
-
-## 2026-11-20 · deb2e14
-
-物品搜索与快速查看优化
-
-## 2026-11-20 · cf545c7
-
-小程序启动引导页与可配置倒计时
-
-## 2026-11-20 · 084ac7d
-
-update JX3BOX prices
-
-## 2026-11-20 · 580237f
-
-区服趋势物品榜展示优化
-
-## 2026-11-20 · 034b519
-
-统一区服趋势物品口径与搜索
-
-## 2026-11-20 · 308198a
-
-区服趋势物品视角
-
-## 2026-11-20 · b7181b9
-
-区服趋势更新说明
-
-## 2026-11-20 · 8ca4b7f
-
-ignore generated minitool release metadata
-
-## 2026-11-20 · 1f010fb
-
-分通道更新提示（网页/小程序/小工具）
-
-## 2026-11-20 · 0dc0090
-
-新增区服趋势
-
-## 2026-11-20 · fb424d6
-
-update JX3BOX prices (local cron)
-
-## 2026-11-20 · 664f0e6
-
-sync latest price data for theme build
-
-## 2026-11-20 · 5a872eb
-
-update JX3BOX prices
-
-## 2026-11-20 · 3e0723b
-
-小程序支持亮暗主题，默认亮色
-
-## 2026-11-20 · d7d5eac
-
-restore release notes for mini program trends
-
-## 2026-11-20 · 64d3244
-
-update mini program page count
-
-## 2026-11-20 · cc73b86
-
-行情同步与移动端更新检查
-
-## 2026-11-20 · 221103f
-
-rebuild mini program bundles for cloud trends
-
-## 2026-11-20 · ad802b1
-
-include mini program trends build
-
-## 2026-11-20 · bc9ba3e
-
-update JX3BOX prices
-
-## 2026-11-20 · 6ccc443
-
-走势历史接入微信云
-
-## 2026-11-20 · 67b2619
-
-行情同步与移动端更新检查
-
-## 2026-11-20 · 8c90bf2
-
-update JX3BOX prices
-
-## 2026-11-20 · 6b40e29
-
-小程序新增物价走势与云环境
-
-## 2026-11-20 · 59ab312
-
-物价走势正式发布
-
-## 2026-11-20 · ba92301
-
-rebuild minitool for release
-
-## 2026-11-20 · c81d27c
-
-物价走势正式发布
-
-## 2026-11-20 · 6853028
-
-default all trend filters, mobile collapse and price check
-
-## 2026-11-20 · 47f20a5
-
-update JX3BOX prices
-
-## 2026-11-20 · 41c0887
-
-update JX3BOX prices
-
-## 2026-11-20 · e5690f5
-
-align trend counts, sticky filters and node lists
-
-## 2026-11-20 · 4d318aa
-
-link trend charts, rank board and image export
-
-## 2026-11-20 · 873617e
-
-preserve trend chart scroll and explain index axis
-
-## 2026-11-20 · c0aaad3
-
-unify item filters and index price axis
-
-## 2026-11-20 · 74cd89a
-
-update JX3BOX prices
-
-## 2026-11-20 · 90d08d6
-
-price box plot, item colors and price range filter
-
-## 2026-11-20 · 02846ae
-
-multi-item trend charts and heatmap
-
-## 2026-11-20 · 9387559
-
-新增通用数据图规范（去行业术语）
-
-## 2026-11-20 · 12d96d5
-
-use actual data hour bounds
-
-## 2026-11-20 · 3fb0398
-
-style: balance trend chart and node panel
-
-## 2026-11-20 · 6f3bb93
-
-keep production service worker out of dev preview
-
-## 2026-11-20 · 82376b6
-
-style: show hour select affordance
-
-## 2026-11-20 · b180788
-
-refine trend filters, hour range and dev PWA updates
-
-## 2026-11-20 · 422877c
-
-update JX3BOX prices
-
-## 2026-11-20 · 9bd884e
-
-note stable dev preview deployment
-
-## 2026-11-20 · 97c50b3
-
-preserve dev preview during main deployments
-
-## 2026-11-20 · 74273ba
-
-use separate environment for dev preview deploy
-
-## 2026-11-20 · 583aabb
-
-hour-precision trend range and dev preview deploy
-
-## 2026-11-20 · 3a3df5b
-
-add price trend analysis
-
-## 2026-11-20 · 612f2ad
-
-update JX3BOX prices
-
-## 2026-11-20 · 0ae9725
-
-update JX3BOX prices
-
-## 2026-11-20 · 9e8441b
-
-update JX3BOX prices (local cron)
-
-## 2026-11-20 · 80ae140
-
-手机端服务器下拉溢出屏幕导致名称被裁切
-
-## 2026-11-20 · b1c43be
-
-接入百度统计记录站外访问量
-
-## 2026-11-20 · 34de97e
-
-update JX3BOX prices
-
-## 2026-11-20 · 543f58c
-
-cache-bust Excel workbook downloads
-
-## 2026-11-20 · 3262074
-
-add Excel download menu to web
-
-## 2026-11-20 · 51a3a49
-
-make price history scripts executable
-
-## 2026-11-20 · 3c4d05c
-
-hint effective export for unquoted items
-
-## 2026-11-20 · 32c383e
-
-keep compacted history queries honest
-
-## 2026-11-20 · 04bb258
-
-clarify price history delta semantics
-
-## 2026-11-20 · 9ff25b8
-
-add price history JSON store and query tool
-
-## 2026-11-20 · f3a4d6a
-
-show separate market check time
-
-## 2026-11-20 · 2bbffdf
-
-update JX3BOX prices
-
-## 2026-11-20 · e1d46fa
-
-allow forced local price update
-
-## 2026-11-20 · 4431edd
-
-trigger prices every 30 minutes
-
-## 2026-11-20 · 6a3eed1
-
-switch prices to hourly Cloudflare schedule
-
-## 2026-11-20 · 8b233b2
-
-update JX3BOX prices
-
-## 2026-11-20 · b1f7eb0
-
-add file picker to WPS price refresh command
-
-## 2026-11-19 · f19901c
-
-repair release notes json
-
-## 2026-11-19 · b6c3d2a
-
-support inline-string price sheets in Excel patcher
-
-## 2026-11-19 · 228d13e
-
-refresh Excel prices in WPS without Power Query
-
-## 2026-11-19 · 4b13c60
-
-update JX3BOX prices (manual)
-
-## 2026-11-19 · e7e8910
-
-use native Excel Web Query for price refresh
