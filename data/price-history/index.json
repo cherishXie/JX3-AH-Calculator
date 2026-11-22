@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-11-22T23:31:40+08:00",
+  "updatedAt": "2026-11-23T00:07:39+08:00",
   "catalogVersion": "v3.9-cooking",
   "itemCount": 1117,
   "servers": [
@@ -146,6 +146,17 @@
       "itemCount": 1117,
       "compacted": false,
       "bytes": 557423
+    },
+    {
+      "date": "2026-11-23",
+      "file": "days/2026-11-23.json",
+      "points": 1,
+      "baseAt": "2026-11-23T00:07:39+08:00",
+      "lastAt": "2026-11-23T00:07:39+08:00",
+      "catalogVersion": "v3.9-cooking",
+      "itemCount": 1117,
+      "compacted": false,
+      "bytes": 179214
     }
   ]
 }
