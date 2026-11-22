@@ -499,7 +499,3 @@ update JX3BOX prices
 ## 2026-11-21 · f7ee802
 
 制作收益落地校验与物价/精力收益 Tab
-
-## 2026-11-21 · 60fa90e
-
-update JX3BOX prices
