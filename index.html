@@ -448,35 +448,40 @@ html.light .boot-loader__retry:hover { background: #f1f5f9; }
       };
       document.head.appendChild(link);
     });
-    var files = ['data.js', 'core.js', 'stones.js', 'charts.js', 'access-data.js', 'profit.js', 'landability.js', 'trends.js', 'app.js', 'pwa.js', 'install.js'];
-    var index = 0;
     var useCDN = true;
-    function loadFile(file, local) {
+    function loadFile(file, local, done) {
       var script = document.createElement('script');
       script.async = false;
       script.src = local ? 'assets/' + file : (file === 'data.js' ? dataBase : codeBase) + file + '?v=' + (file === 'data.js' ? Date.now() : ver);
-      script.onload = function () {
-        script.remove();
-        index++;
-        next();
-      };
+      script.onload = function () { script.remove(); done(); };
       script.onerror = function () {
         script.remove();
         if (!local) {
           useCDN = false;
-          loadFile(file, true);
+          loadFile(file, true, done);
         } else {
-          index++;
-          next();
+          done();
         }
       };
       document.head.appendChild(script);
     }
-    function next() {
-      if (index >= files.length) return;
-      loadFile(files[index], !useCDN);
+    function loadGroup(files, done) {
+      var left = files.length;
+      if (!left) return done();
+      files.forEach(function (file) {
+        loadFile(file, !useCDN, function () {
+          left--;
+          if (left === 0) done();
+        });
+      });
     }
-    next();
+    loadGroup(['data.js'], function () {
+      loadGroup(['core.js', 'stones.js', 'charts.js', 'access-data.js', 'profit.js', 'landability.js', 'trends.js'], function () {
+        loadGroup(['app.js'], function () {
+          loadGroup(['pwa.js', 'install.js'], function () {});
+        });
+      });
+    });
   })();
   </script>
 </body>
