@@ -434,13 +434,14 @@ html.light .boot-loader__retry:hover { background: #f1f5f9; }
     var ver = '__CDN_VERSION__';
     if (ref.indexOf('__CDN_') === 0) ref = 'dev';
     if (ver.indexOf('__CDN_') === 0) ver = 'dev';
-    var base = 'https://cdn.jsdelivr.net/gh/cherishXie/JX3-AH-Calculator@' + ref + '/assets/';
-    window.__ASSET_CDN = base;
+    var codeBase = 'https://cdn.jsdelivr.net/gh/cherishXie/JX3-AH-Calculator@' + ver + '/assets/';
+    var dataBase = 'https://cdn.jsdelivr.net/gh/cherishXie/JX3-AH-Calculator@' + ref + '/assets/';
+    window.__ASSET_CDN = codeBase;
     window.__ASSET_VERSION = ver;
     ['styles.css', 'pwa.css', 'install.css'].forEach(function (file) {
       var link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = base + file + '?v=' + ver;
+      link.href = codeBase + file + '?v=' + ver;
       link.onerror = function () {
         link.onerror = null;
         link.href = 'assets/' + file;
@@ -453,7 +454,7 @@ html.light .boot-loader__retry:hover { background: #f1f5f9; }
     function loadFile(file, local) {
       var script = document.createElement('script');
       script.async = false;
-      script.src = local ? 'assets/' + file : base + file + '?v=' + (file === 'data.js' ? Date.now() : ver);
+      script.src = local ? 'assets/' + file : (file === 'data.js' ? dataBase : codeBase) + file + '?v=' + (file === 'data.js' ? Date.now() : ver);
       script.onload = function () {
         script.remove();
         index++;

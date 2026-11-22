@@ -60,7 +60,7 @@
   }
 
   function needsAudit(path) {
-    return path === '/analysis' || path.indexOf('/skills') === 0;
+    return path === '/analysis';
   }
 
   function lazyLoadFailed(err) {
@@ -6439,6 +6439,14 @@
       return render();
     }
     if (needsAudit(route.path) && !window.JX3Audit) {
+      const page = document.getElementById('page');
+      const label = route.path === '/analysis' ? '精力收益分析' : '生活技艺';
+      if (page) {
+        page.innerHTML = '<div class="page"><div class="page-head"><div><h1 class="page-title">' + label + '</h1>' +
+          '<p class="page-sub">正在载入判断数据…</p></div></div><div class="card"><div class="card-body">' +
+          '<div class="skeleton" style="width:100%;height:120px"></div></div></div></div>';
+      }
+      document.title = (isDevDeployment() ? '[DEV] ' : '') + label + ' · 剑网三物价助手 | JX3 生活技艺计算器';
       ensureAudit().then(render).catch(lazyLoadFailed);
       return;
     }
@@ -6517,6 +6525,11 @@
     const pageEl = page.querySelector('.page');
     if (pageEl && pathChanged) pageEl.classList.add('page-enter');
     document.title = (isDevDeployment() ? '[DEV] ' : '') + title + ' · 剑网三物价助手 | JX3 生活技艺计算器';
+    if (route.path.indexOf('/skills') === 0 && !window.JX3Audit) {
+      ensureAudit().then(function () {
+        if (Route.parse().path.indexOf('/skills') === 0) render();
+      }).catch(function () { /* 判断数据是增强项，不阻塞技艺页 */ });
+    }
     const sb = document.getElementById('sidebar');
     if (sb) sb.classList.remove('open');
     if (window.innerWidth <= 768) {
