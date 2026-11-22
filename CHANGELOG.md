@@ -2,6 +2,18 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · ca7388c
+
+补齐烹饪 89 条配方并增加判断解释
+
+## 2026-11-22 · 6f007b1
+
+价格机器人并发冲突时改在新 main 上重新抓价，避免 rebase 卡死
+
+## 2026-11-22 · 2904175
+
+update JX3BOX prices
+
 ## 2026-11-22 · e27939c
 
 update JX3BOX prices
@@ -535,9 +547,5 @@ update JX3BOX prices
 update JX3BOX prices
 
 ## 2026-11-21 · 0980859
-
-update JX3BOX prices
-
-## 2026-11-21 · a50c820
 
 update JX3BOX prices
