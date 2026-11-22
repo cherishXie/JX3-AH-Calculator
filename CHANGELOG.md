@@ -499,7 +499,3 @@ update JX3BOX prices
 ## 2026-11-20 · 60d2f5c
 
 update JX3BOX prices
-
-## 2026-11-20 · e7db24e
-
-release: 区服趋势与物品视角上线
