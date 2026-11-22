@@ -79,12 +79,12 @@ export const actions = {
   },
 
   setTheme: function (theme) {
-    const next = theme === 'dark' ? 'dark' : 'light';
+    const next = theme === 'dark' ? 'dark' : theme === 'tech' ? 'tech' : 'light';
     commit(function (s) {
       s.settings = s.settings || {};
       s.settings.theme = next;
       s.settings.themePicked = true;
-      s.settings.themeVersion = 1;
+      s.settings.themeVersion = 2;
     });
     return next;
   },

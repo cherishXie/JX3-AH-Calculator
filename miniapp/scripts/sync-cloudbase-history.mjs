@@ -10,6 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildHistoryDocs, queryOf } from './lib/history-chunks.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..', '..');
@@ -18,7 +19,7 @@ const APPID = (process.env.WX_APPID || '').trim();
 const SECRET = (process.env.WX_APPSECRET || '').trim();
 const ENV_ID = (process.env.TCB_ENV_ID || '').trim();
 const RETENTION_DAYS = 7;
-const MAX_DAY_BYTES = 900 * 1024;
+const DRY_RUN = process.env.DRY_RUN === '1';
 
 if (!APPID || !SECRET || !ENV_ID) {
   console.log('WX_APPID / WX_APPSECRET / TCB_ENV_ID 未配置，跳过趋势历史同步。');
@@ -41,8 +42,17 @@ for (const entry of picked) {
   if (!fs.existsSync(file)) throw new Error('缺少历史文件 ' + file);
   const day = JSON.parse(fs.readFileSync(file, 'utf8'));
   const bytes = Buffer.byteLength(JSON.stringify(day));
-  if (bytes > MAX_DAY_BYTES) throw new Error(entry.date + ' 历史超过 900KB，请先压缩');
   days.push({ date: entry.date, day: day, bytes: bytes });
+}
+
+// 本地自检：只看分片结果，不请求微信接口
+if (DRY_RUN) {
+  for (const item of days) {
+    const docs = buildHistoryDocs(item.date, item.day);
+    console.log('[dry-run] ' + item.date + ' → ' + docs.length + ' 篇 · ' +
+      docs.map(function (d) { return d.id + '(' + Math.round(Buffer.byteLength(queryOf(d.id, d.data)) / 1024) + 'KB)'; }).join(' '));
+  }
+  process.exit(0);
 }
 
 async function postJson(url, body) {
@@ -69,7 +79,7 @@ if (!tokenJson.access_token) throw new Error('获取 access_token 失败：' + J
 const token = tokenJson.access_token;
 
 async function setDoc(docId, data) {
-  const query = 'db.collection("prices").doc("' + docId + '").set({data:' + JSON.stringify(data) + '})';
+  const query = queryOf(docId, data);
   const out = await postJson(
     'https://api.weixin.qq.com/tcb/databaseupdate?access_token=' + encodeURIComponent(token),
     { env: ENV_ID, query: query }
@@ -81,7 +91,9 @@ async function setDoc(docId, data) {
 }
 
 for (const item of days) {
-  await setDoc('history_' + item.date, item.day);
+  const docs = buildHistoryDocs(item.date, item.day);
+  if (docs.length > 1) console.log('  ' + item.date + ' 超过单次上限，拆成 ' + docs.length + ' 篇');
+  for (const doc of docs) await setDoc(doc.id, doc.data);
 }
 
 const meta = {

@@ -29,7 +29,8 @@ export function isTabPage() {
 }
 
 export function getTheme(state) {
-  return state && state.settings && state.settings.theme === 'dark' ? 'dark' : 'light';
+  const t = state && state.settings && state.settings.theme;
+  return t === 'dark' || t === 'tech' ? t : 'light';
 }
 
 function safe(fn) {
@@ -48,12 +49,13 @@ function safe(fn) {
  * 并让 `page` 本身保持透明（见 app.css），由窗口底色兜底。
  */
 export function applyTheme(theme) {
-  const light = theme !== 'dark';
+  const light = theme === 'light';
+  const tech = theme === 'tech';
   const mini = process.env.TARO_ENV === 'weapp';
-  const bg = light ? '#f5f5f5' : '#020817';
-  const tabBg = light ? '#ffffff' : '#0f172a';
+  const bg = light ? '#f5f5f5' : tech ? '#120d2a' : '#020817';
+  const tabBg = light ? '#ffffff' : tech ? '#120d2a' : '#0f172a';
   const fg = light ? '#0f172a' : '#f8fafc';
-  const muted = light ? '#64748b' : '#94a3b8';
+  const muted = light ? '#64748b' : tech ? 'rgba(255,255,255,0.62)' : '#94a3b8';
   if (mini) {
     safe(function () {
       Taro.setNavigationBarColor({
@@ -73,7 +75,7 @@ export function applyTheme(theme) {
     safe(function () {
       Taro.setTabBarStyle({
         color: muted,
-        selectedColor: light ? '#1D6FE0' : '#5B9CFF',
+        selectedColor: light ? '#1D6FE0' : tech ? '#FD7B4C' : '#5B9CFF',
         backgroundColor: tabBg,
         borderStyle: light ? 'white' : 'black'
       });
@@ -82,6 +84,7 @@ export function applyTheme(theme) {
   if (typeof document !== 'undefined') {
     try {
       document.body.style.backgroundColor = bg;
+      document.body.classList.toggle('theme-tech', tech);
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', bg);
     } catch (e) { /* H5 环境才更新 */ }

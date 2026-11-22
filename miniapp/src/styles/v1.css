@@ -500,3 +500,157 @@ page {
   font-size: 22rpx; color: var(--muted);
 }
 .bt-summary-hint { display: block; margin-top: 12rpx; font-size: 22rpx; color: var(--muted-2); line-height: 32rpx; }
+
+/* ==========================================================================
+   科技风主题：提取自 tech-xhs-image 的视觉 DNA
+   深蓝→紫→洋红→青流体底 + 磨砂玻璃卡 + 橘色强调 + 高对比数字
+   ========================================================================== */
+.theme-root.theme-tech {
+  --bg: #120d2a;
+  --card: rgba(255, 255, 255, 0.075);
+  --panel: rgba(255, 255, 255, 0.055);
+  --accent: rgba(255, 255, 255, 0.06);
+  --accent-2: rgba(255, 255, 255, 0.09);
+  --text: #ffffff;
+  --text-2: rgba(255, 255, 255, 0.82);
+  --muted: rgba(255, 255, 255, 0.62);
+  --muted-2: rgba(255, 255, 255, 0.44);
+  --muted-3: rgba(255, 255, 255, 0.3);
+  --border: rgba(255, 255, 255, 0.16);
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --positive: #4ade80;
+  --danger: #ff5c7a;
+  --warning: #f5b301;
+  --info: #4e8cf0;
+  --peak: #b36bff;
+  --accent-blue: #fd7b4c;
+  background-color: #120d2a;
+  background-image:
+    radial-gradient(42% 26% at 100% 0%, rgba(96, 20, 44, 0.42), transparent 70%),
+    radial-gradient(60% 44% at 101% 42%, rgba(235, 92, 156, 0.46), transparent 66%),
+    radial-gradient(52% 34% at 52% 56%, rgba(214, 126, 64, 0.30), transparent 64%),
+    radial-gradient(66% 58% at -2% 30%, rgba(30, 98, 180, 0.55), transparent 68%),
+    radial-gradient(66% 42% at 0% 96%, rgba(12, 112, 132, 0.48), transparent 64%),
+    radial-gradient(62% 42% at 100% 100%, rgba(110, 64, 214, 0.55), transparent 64%),
+    linear-gradient(120deg, #101d4c 0%, #1c1238 50%, #130b2c 100%);
+  background-attachment: fixed;
+}
+.theme-tech .page { background: transparent; }
+.theme-tech .card,
+.theme-tech .rank-list,
+.theme-tech .stone-levels,
+.theme-tech .stone-jack,
+.theme-tech .bt-summary,
+.theme-tech .me-group {
+  background: linear-gradient(158deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.045) 50%, rgba(255, 255, 255, 0.07));
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24rpx 70rpx rgba(0, 0, 0, 0.28), inset 0 1rpx 0 rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(24rpx) saturate(1.12);
+  backdrop-filter: blur(24rpx) saturate(1.12);
+}
+.theme-tech .card-title,
+.theme-tech .today-head .t,
+.theme-tech .bt-head .t,
+.theme-tech .hero-name,
+.theme-tech .analysis-card .t,
+.theme-tech .me-profile .name {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.theme-tech .today-head .t,
+.theme-tech .bt-head .t { font-size: 44rpx; }
+.theme-tech .card-sub,
+.theme-tech .today-head .s,
+.theme-tech .bt-head .s { color: rgba(255, 255, 255, 0.62); }
+.theme-tech .today-rank-row .nm,
+.theme-tech .rank-row .nm,
+.theme-tech .me-row .t,
+.theme-tech .analysis-card .t { font-weight: 700; }
+.theme-tech .today-rank-row .v,
+.theme-tech .rank-row .v,
+.theme-tech .hero-number .n,
+.theme-tech .bt-summary-lead .v { font-weight: 800; font-variant-numeric: tabular-nums; }
+.theme-tech .chip.active,
+.theme-tech .seg-item.active,
+.theme-tech .rank-filter.active,
+.theme-tech .skill-tab.active,
+.theme-tech .bt-skill-tab.active {
+  background: #fd7b4c; border-color: #fd7b4c; color: #1a1020;
+  box-shadow: 0 8rpx 24rpx rgba(253, 123, 76, 0.28);
+}
+.theme-tech .btn-primary,
+.theme-tech .btn-primary-lg,
+.theme-tech .market-fab {
+  background: linear-gradient(135deg, #fd7b4c, #ff9a6b);
+  border-color: #fd7b4c; color: #1a1020;
+  box-shadow: 0 16rpx 44rpx rgba(253, 123, 76, 0.28);
+}
+.theme-tech .btn-primary-lg { color: #1a1020; }
+.theme-tech .market-fab .count { color: rgba(26, 16, 32, 0.72); }
+.theme-tech .btn-ghost,
+.theme-tech .picker,
+.theme-tech .picker-sm,
+.theme-tech .input,
+.theme-tech .input-sm,
+.theme-tech .textarea,
+.theme-tech .price-box,
+.theme-tech .server-pill,
+.theme-tech .server-pill-lg,
+.theme-tech .icon-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+.theme-tech .server-pill-lg .nm { color: #fff; }
+.theme-tech .hero-card {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05) 48%, rgba(253, 123, 76, 0.08));
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 30rpx 80rpx rgba(0, 0, 0, 0.3);
+}
+.theme-tech .hero-tag { background: rgba(74, 222, 128, 0.16); color: #4ade80; }
+.theme-tech .hero-source { color: rgba(255, 255, 255, 0.56); }
+.theme-tech .price-strip {
+  background: rgba(245, 179, 1, 0.08);
+  border-color: rgba(245, 179, 1, 0.22);
+}
+.theme-tech .today-price {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.62);
+}
+.theme-tech .today-price .act { color: #fd7b4c; }
+.theme-tech .me-avatar {
+  background: linear-gradient(140deg, rgba(253, 123, 76, 0.4), rgba(179, 107, 255, 0.25));
+  color: #fff;
+}
+.theme-tech .me-profile {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.theme-tech .me-row .ic { background: rgba(255, 255, 255, 0.08); }
+.theme-tech .analysis-ic.blue { background: rgba(78, 140, 240, 0.16); }
+.theme-tech .analysis-ic.purple { background: rgba(179, 107, 255, 0.16); }
+.theme-tech .analysis-ic.green { background: rgba(74, 222, 128, 0.14); }
+.theme-tech .data-note,
+.theme-tech .card-foot,
+.theme-tech .settings-note { color: rgba(255, 255, 255, 0.44); }
+.theme-tech .divider { background: rgba(255, 255, 255, 0.12); }
+.theme-tech .tab-loading-bar { background: linear-gradient(90deg, #fd7b4c, #ff9a6b); }
+
+/* H5 / 小红书端 TabBar 跟随科技风（微信端用原生 TabBar 颜色） */
+body.theme-tech .taro-tabbar__tabbar { background: #120d2a !important; border-top: 1rpx solid rgba(255,255,255,.12); }
+body.theme-tech .weui-tabbar__item,
+body.theme-tech .weui-tabbar__label,
+body.theme-tech .weui-tabbar__icon { color: rgba(255,255,255,.55) !important; }
+body.theme-tech .weui-tabbar__item.weui-bar__item_on .weui-tabbar__label,
+body.theme-tech .weui-tabbar__item.weui-bar__item_on .weui-tabbar__icon { color: #fd7b4c !important; }
+
+body.theme-tech .weui-tabbar { background-color: #120d2a !important; }
+body.theme-tech .weui-tabbar:before { border-top-color: rgba(255,255,255,.12) !important; }
+body.theme-tech .weui-tabbar__label { color: rgba(255,255,255,.55) !important; }
+body.theme-tech .weui-tabbar__item.weui-bar__item_on .weui-tabbar__label { color: #fd7b4c !important; }
+
+body.theme-tech .weui-tabbar__item.weui-bar__item_on .weui-tabbar__icon img {
+  filter: hue-rotate(160deg) saturate(1.35) brightness(1.12);
+}

@@ -12,7 +12,7 @@ import { applyTheme } from '../../shared/theme';
 import release from '../../shared/release.json';
 
 const IS_WEAPP = process.env.TARO_ENV === 'weapp';
-const THEME_OPTIONS = [{ value: 'light', label: '亮色' }, { value: 'dark', label: '暗色' }];
+const THEME_OPTIONS = [{ value: 'light', label: '亮色' }, { value: 'dark', label: '暗色' }, { value: 'tech', label: '科技风' }];
 
 function Settings() {
   const [state, actions] = useStore();
@@ -38,7 +38,7 @@ function Settings() {
   function changeTheme(value) {
     actions.setTheme(value);
     applyTheme(value);
-    Taro.showToast({ title: value === 'light' ? '已切换为亮色' : '已切换为暗色', icon: 'none' });
+    Taro.showToast({ title: value === 'light' ? '已切换为亮色' : value === 'dark' ? '已切换为暗色' : '已切换为科技风', icon: 'none' });
   }
 
   function copyText(text, okText) {

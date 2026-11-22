@@ -60,6 +60,8 @@ jobs:
           fi
 
       - name: Build and sync cloud prices
+        # 小程序云同步失败不应阻塞价格提交后的 dev 同步与小工具上传
+        continue-on-error: true
         env:
           WX_APPID: ${{ secrets.WX_APPID }}
           WX_APPSECRET: ${{ secrets.WX_APPSECRET }}
