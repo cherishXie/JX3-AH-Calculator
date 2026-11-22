@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "timezone": "Asia/Shanghai",
-  "generatedAt": "2026-11-23T02:38:44+08:00",
-  "sourceUpdatedAt": "2026-11-23T02:38:44+08:00",
+  "generatedAt": "2026-11-23T03:08:27+08:00",
+  "sourceUpdatedAt": "2026-11-23T03:08:27+08:00",
   "catalogVersion": "v3.9-cooking",
   "itemCount": 1117,
   "maxDays": 7,
@@ -151,12 +151,12 @@
     },
     {
       "date": "2026-11-23",
-      "points": 3,
+      "points": 4,
       "baseAt": "2026-11-23T00:08:38+08:00",
-      "lastAt": "2026-11-23T02:38:44+08:00",
-      "hash": "0240b35cad4c7b51",
-      "bytes": 191550,
-      "serverBytes": 34214,
+      "lastAt": "2026-11-23T03:08:27+08:00",
+      "hash": "45325e5856c2e210",
+      "bytes": 203761,
+      "serverBytes": 35731,
       "dayFile": "days/2026-11-23.json",
       "serverFile": "servers/{server}/2026-11-23.json"
     }
