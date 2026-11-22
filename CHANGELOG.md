@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · 657576b
+
+update JX3BOX prices
+
 ## 2026-11-22 · 9579284
 
 update JX3BOX prices
@@ -499,11 +503,3 @@ update JX3BOX prices
 ## 2026-11-20 · e7db24e
 
 release: 区服趋势与物品视角上线
-
-## 2026-11-20 · 7f7b383
-
-style: 区服趋势标题与说明精简
-
-## 2026-11-20 · efc7f4d
-
-修正区服趋势更新说明
