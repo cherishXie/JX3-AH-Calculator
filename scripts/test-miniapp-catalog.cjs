@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * 校验小程序核心目录：必须是 444 个生活技艺物品，且 251 条配方的材料/产物全部可解析。
+ * 校验小程序核心目录：结构正确、配方引用可解析、磁盘文件与网页数据一致。
+ * 物品/配方数量不做硬编码（会随版本增长），只保底量级防止目录塌缩。
  * 用法：node scripts/test-miniapp-catalog.cjs
  */
 'use strict';
@@ -22,10 +23,11 @@ const catalog = buildMiniappCatalog(web);
 const market = buildMarketCatalog(web);
 const errors = [];
 
-if (catalog.items.length !== 444) errors.push('物品应为 444，实际 ' + catalog.items.length);
-if (catalog.recipes.length !== 251) errors.push('配方应为 251，实际 ' + catalog.recipes.length);
+if (catalog.items.length < 400) errors.push('核心物品过少：' + catalog.items.length);
+if (catalog.recipes.length < 250) errors.push('配方过少：' + catalog.recipes.length);
 if (catalog.servers.length !== 17) errors.push('服务器应为 17，实际 ' + catalog.servers.length);
-if (market.items.length !== 672) errors.push('行情目录应为 672，实际 ' + market.items.length);
+if (market.items.length < 400) errors.push('行情目录物品过少：' + market.items.length);
+if (!catalog.items.length) errors.push('核心目录为空');
 if (market.meta.marketOnly !== true) errors.push('行情目录 meta.marketOnly 应为 true');
 if (!/-directory$/.test(market.meta.catalogVersion)) errors.push('行情目录版本应带 -directory：' + market.meta.catalogVersion);
 if (catalog.meta.excludedMarketItems !== web.items.length - catalog.items.length) {
