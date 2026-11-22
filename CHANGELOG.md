@@ -2,6 +2,18 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · 019b7a7
+
+趋势历史按云开发单次写入上限自动分片
+
+## 2026-11-22 · b60637b
+
+update JX3BOX prices
+
+## 2026-11-22 · 2b8574f
+
+update JX3BOX prices
+
 ## 2026-11-22 · 89322fe
 
 update JX3BOX prices
@@ -10,7 +22,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · 877e414
+
+update JX3BOX prices
+
 ## 2026-11-22 · 2dd7fab
+
+update JX3BOX prices
+
+## 2026-11-22 · f6b8746
 
 update JX3BOX prices
 
@@ -18,7 +38,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · 9ff2add
+
+update JX3BOX prices
+
 ## 2026-11-22 · 78e0d4a
+
+update JX3BOX prices
+
+## 2026-11-22 · debe338
 
 update JX3BOX prices
 
@@ -26,7 +54,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · 84aa6e4
+
+update JX3BOX prices
+
 ## 2026-11-22 · ed2e4e3
+
+update JX3BOX prices
+
+## 2026-11-22 · 75f6e99
 
 update JX3BOX prices
 
@@ -34,7 +70,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · be1ae27
+
+update JX3BOX prices
+
 ## 2026-11-22 · 9579284
+
+update JX3BOX prices
+
+## 2026-11-22 · 991c8ad
 
 update JX3BOX prices
 
@@ -42,7 +86,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · d048a45
+
+update JX3BOX prices
+
 ## 2026-11-22 · bcd9f23
+
+update JX3BOX prices
+
+## 2026-11-22 · 16baace
 
 update JX3BOX prices
 
@@ -50,7 +102,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · e5cfe1f
+
+update JX3BOX prices
+
 ## 2026-11-22 · 255d3b3
+
+update JX3BOX prices
+
+## 2026-11-22 · 12547ab
 
 update JX3BOX prices
 
@@ -58,7 +118,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · 3ea218c
+
+update JX3BOX prices
+
 ## 2026-11-22 · ccd05a5
+
+update JX3BOX prices
+
+## 2026-11-22 · 6c9612d
 
 update JX3BOX prices
 
@@ -66,7 +134,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · 3469235
+
+update JX3BOX prices
+
 ## 2026-11-22 · f304e46
+
+update JX3BOX prices
+
+## 2026-11-22 · 609f9d1
 
 update JX3BOX prices
 
@@ -74,7 +150,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · 242fc74
+
+update JX3BOX prices
+
 ## 2026-11-22 · 7c675b8
+
+update JX3BOX prices
+
+## 2026-11-22 · 2c4d6b4
 
 update JX3BOX prices
 
@@ -82,9 +166,35 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-22 · 9dbb16f
+
+update JX3BOX prices
+
 ## 2026-11-22 · 9adc6a7
 
 update JX3BOX prices
+
+## 2026-11-22 · 74ed45b
+
+小程序头像与启动图换成科技风
+
+- 用 tech-xhs-image 的视觉 DNA 重做头像、9:16 启动图与 5:4/16:9 分享卡
+- 启动引导页浮层改为玻璃卡 + 橘色按钮，顶部加同色淡出
+- 同步公众平台上传图与主包启动图（69KB）
+
+## 2026-11-22 · 7eddba8
+
+未选主题用户迁移到科技风
+
+## 2026-11-22 · e0842b1
+
+更新科技风主题包体积
+
+## 2026-11-22 · 21ae98a
+
+上线科技风主题并压缩突破概览
+
+- 从 tech-xhs-image 提炼流体渐变、磨砂玻璃、橘色强调与涨跌语义\\n- 新用户默认科技风，已有用户保留原主题；我的可切换亮色/暗色/科技风\\n- H5/小红书 TabBar 跟随科技风；微信原生 TabBar 深色底 + 橘色选中\\n- 突破页概览压成单卡，关键数字与两阶段拆分一屏看完\\n- 主包 1.43MB；verify:weapp 通过
 
 ## 2026-11-22 · 9289cff
 
@@ -427,59 +537,3 @@ update JX3BOX prices
 ## 2026-11-21 · 9f8e13f
 
 update JX3BOX prices
-
-## 2026-11-21 · 835fc87
-
-update JX3BOX prices
-
-## 2026-11-21 · 27e495d
-
-update JX3BOX prices
-
-## 2026-11-21 · 56bff37
-
-update JX3BOX prices
-
-## 2026-11-21 · 69875f6
-
-update JX3BOX prices
-
-## 2026-11-21 · ddb08bc
-
-update JX3BOX prices
-
-## 2026-11-21 · e389d70
-
-开启组件按需注入并加入代码质量校验
-
-## 2026-11-21 · 616439a
-
-压缩启动图以通过 1.5MB 代码质量线
-
-## 2026-11-21 · 16fff51
-
-分析页行情三看、Tab 进度条与 Q 版启动图
-
-## 2026-11-21 · 6d9d24f
-
-update JX3BOX prices
-
-## 2026-11-21 · 0d147a6
-
-按最新代码重建并提供 1.0.5 包
-
-## 2026-11-21 · 3eb9188
-
-行情自动同步与云端时间优先
-
-## 2026-11-21 · d9f9a2e
-
-release: 本服可做判断上线，更新小程序与小工具
-
-## 2026-11-21 · c667422
-
-精力收益改用可做/谨慎/不可做
-
-## 2026-11-21 · e25bdef
-
-精力收益审计融入原模块
