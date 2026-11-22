@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-11-22T22:38:54+08:00",
-  "catalogVersion": "v3.8-market",
-  "itemCount": 1116,
+  "updatedAt": "2026-11-22T22:41:02+08:00",
+  "catalogVersion": "v3.9-cooking",
+  "itemCount": 1117,
   "servers": [
     {
       "id": "s_mengjiangnan",
@@ -139,13 +139,13 @@
     {
       "date": "2026-11-22",
       "file": "days/2026-11-22.json",
-      "points": 23,
+      "points": 24,
       "baseAt": "2026-11-22T01:32:42+08:00",
-      "lastAt": "2026-11-22T22:38:54+08:00",
-      "catalogVersion": "v3.8-market",
-      "itemCount": 1116,
+      "lastAt": "2026-11-22T22:41:02+08:00",
+      "catalogVersion": "v3.9-cooking",
+      "itemCount": 1117,
       "compacted": false,
-      "bytes": 529105
+      "bytes": 529934
     }
   ]
 }
