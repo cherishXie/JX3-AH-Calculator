@@ -529,7 +529,3 @@ update JX3BOX prices
 ## 2026-11-21 · ddeaf3d
 
 update JX3BOX prices
-
-## 2026-11-21 · c809110
-
-release: 走势数据增量加载、7 天口径与三端同步
