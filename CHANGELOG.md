@@ -539,7 +539,3 @@ update JX3BOX prices
 ## 2026-11-20 · 8ca4b7f
 
 ignore generated minitool release metadata
-
-## 2026-11-20 · 1f010fb
-
-分通道更新提示（网页/小程序/小工具）
