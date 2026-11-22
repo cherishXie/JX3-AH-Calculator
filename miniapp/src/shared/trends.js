@@ -360,11 +360,24 @@ async function fetchCloudData() {
     throw new Error('云端趋势索引不存在');
   }
   const picked = meta.days.slice(-7);
-  const docs = await Promise.all(picked.map(function (entry) {
-    return db.collection('prices').doc('history_' + entry.date).get()
-      .then(function (res) { return res.data; })
-      .catch(function () { return null; });
-  }));
+  const fetchDay = async function (date) {
+    try {
+      const res = await db.collection('prices').doc('history_' + date).get();
+      const day = res && res.data;
+      if (!day) return null;
+      // 单日样本过多时云端会拆成 history_DATE_s0..N，这里拼回去
+      if (Number(day.chunks) > 0) {
+        const parts = await Promise.all(Array.from({ length: Number(day.chunks) }, function (_, i) {
+          return db.collection('prices').doc('history_' + date + '_s' + i).get()
+            .then(function (r) { return r && r.data; })
+            .catch(function () { return null; });
+        }));
+        day.samples = parts.reduce(function (all, part) { return part && Array.isArray(part.samples) ? all.concat(part.samples) : all; }, []);
+      }
+      return day;
+    } catch (e) { return null; }
+  };
+  const docs = await Promise.all(picked.map(function (entry) { return fetchDay(entry.date); }));
   const days = docs.filter(function (day) { return day && day.base; });
   if (!days.length) throw new Error('云端趋势节点为空');
   const data = {
