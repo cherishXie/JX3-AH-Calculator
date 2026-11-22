@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-22 · ccd05a5
+
+update JX3BOX prices
+
 ## 2026-11-22 · 87e06ab
 
 update JX3BOX prices
@@ -539,7 +543,3 @@ ignore generated minitool release metadata
 ## 2026-11-20 · 1f010fb
 
 分通道更新提示（网页/小程序/小工具）
-
-## 2026-11-20 · 0dc0090
-
-新增区服趋势
