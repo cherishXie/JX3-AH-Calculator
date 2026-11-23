@@ -1683,11 +1683,15 @@
         const sAvgAB = avgOf(sValidAB);
         const sAvgAll = avgOf(sValidAll);
         const showAllAvg = sAvgAll != null && (sAvgAB == null || Math.abs(sAvgAll - sAvgAB) > 0.05);
+        const allTone = sAvgAll > 0 ? 'pos' : sAvgAll < 0 ? 'neg' : '';
+        const avgTip = '外部数值：只统计「可做/谨慎」配方，不含不可做、缺价和低样本。' +
+          '括号内数值：全部配方的平均值，包含不可做项，仅作对照；不可做可能来自高价挂单、低流动性或负收益。';
         navHtml += '<button class="skill-item' + (s.id === skillId ? ' active' : '') + '" data-action="go-skill" data-skill="' + s.id + '">' +
           skillIcon(s, 'sm') +
           '<div class="meta"><div class="nm">' + U.esc(s.name) + '</div><div class="ds">' + sRowsAll.length + ' 个' + (s.type === 'gather' ? '采集点' : '配方') + '</div></div>' +
           '<div class="val"><b class="' + (sAvgAB > 0 ? 'pos' : sAvgAB < 0 ? 'neg' : '') + '">' + (sAvgAB == null ? '—' : U.fmt(sAvgAB, 1)) + '</b>' +
-            '<span>金/精力</span>' + (showAllAvg ? '<em>(' + U.fmt(sAvgAll, 1) + ')</em>' : '') + '</div>' +
+            '<span>金/精力</span>' + (showAllAvg ? '<em class="' + allTone + '">(' + U.fmt(sAvgAll, 1) + ')</em>' : '') +
+            '<span class="info skill-avg-info" data-tip="' + U.esc(avgTip) + '" aria-label="' + U.esc(avgTip) + '">' + icon('info') + '</span></div>' +
         '</button>';
       });
       navHtml += '</div></div>';
