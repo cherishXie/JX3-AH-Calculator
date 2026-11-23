@@ -509,7 +509,3 @@ update JX3BOX prices
 ## 2026-11-21 · 24ff76e
 
 侧边栏新增工具分组与剑网三工作台外链
-
-## 2026-11-21 · 84ff18f
-
-update JX3BOX prices
