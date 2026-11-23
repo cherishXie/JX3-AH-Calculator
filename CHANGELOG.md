@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-23 · c9c04ab
+
+update JX3BOX prices
+
 ## 2026-11-23 · 03ff9f4
 
 update JX3BOX prices
@@ -509,11 +513,3 @@ update JX3BOX prices
 ## 2026-11-21 · f6cbb7c
 
 生活技艺行内说明改为图标提示，修复首列过宽把数值列挤出屏幕
-
-## 2026-11-21 · 6f7a5f2
-
-update JX3BOX prices
-
-## 2026-11-21 · 29d8c5a
-
-update JX3BOX prices
