@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-24 · f7207e5
+
+update JX3BOX prices
+
 ## 2026-11-24 · c7e2c95
 
 update JX3BOX prices
@@ -469,7 +473,3 @@ update JX3BOX prices
 修复行情定时更新并改为按技艺排行
 
 - 今日移除今天最赚 Hero，改为 8 个技艺 chips 切换，单技艺前 12 名；完整排行带技艺参数\\n- 修复价格机器人 writeData 返回值未接收导致 miniCore/marketCore 未定义，00:06/00:36/01:06 定时任务连续失败\\n- 补录 2026-11-22 01:32 全服价格快照，刷新小程序目录、market 目录与走势\\n- 主包 1.43MB；verify:weapp 通过
-
-## 2026-11-22 · 397fc82
-
-神农采集点改用实测等级并补齐低阶点
