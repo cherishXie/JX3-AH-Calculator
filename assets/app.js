@@ -630,7 +630,9 @@
 
   function rowGrade(row) {
     const a = row && row.recipe ? auditRecipe(Store.state.serverId, row.recipe.id) : null;
-    return a ? a.grade : 'C';
+    // auditRecipe 返回的是原始审计记录：本服字段是 gl，跨服字段是 g。
+    // 不能读取 a.grade，否则所有行都会落到 C，默认筛选会变成空列表。
+    return a ? (a.gl || a.grade || a.g || 'C') : 'C';
   }
   function showAllGrades(p) { return p && p.all === '1'; }
   function gradeToggle(key, showAll) {
