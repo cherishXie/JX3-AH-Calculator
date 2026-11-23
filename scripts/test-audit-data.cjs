@@ -28,7 +28,7 @@ const SID = 's_mengjiangnan';
 const server = A.servers[SID];
 const recipeByName = (name) => (D.recipes || []).find((r) => r.name === name);
 
-assert.equal(A.meta.snapshots, 78, '快照数应为 78');
+assert.equal(A.meta.snapshots, 86, '快照数应为 86');
 assert.equal(JSON.stringify(server.counts), JSON.stringify({ A: 19, B: 16, C: 283, feasible: 210, positive: 119 }));
 assert.equal(JSON.stringify(server.countsLocal), JSON.stringify({ A: 24, B: 12, C: 282, feasible: 211, positive: 120 }));
 assert.equal(A.servers.s_mengjiangnan.items.quote, 726);
@@ -66,8 +66,8 @@ const rows = Object.entries(server.recipes).map(([id, r]) => {
   return { id, name: rec.name || id, skill: rec.skillId || '', grade: r.gl, perE: r.p, medianPerE: r.mp, profit: r.pr, energy: r.e, outCov: r.oc, selfCraft: r.sc };
 });
 const plan = L.plan(rows, 3000, { includeSelfCraft: false, localOnly: true });
-assert.equal(plan.energyUsed, 2997);
-assert.ok(plan.profit > 41500 && plan.profit < 43000, '本服混合组合利润 ' + plan.profit);
+assert.equal(plan.energyUsed, 2991);
+assert.ok(plan.profit > 42500 && plan.profit < 44000, '本服混合组合利润 ' + plan.profit);
 
 const forge = L.plan(rows.filter((r) => r.skill === 'duanzao'), 3000, { includeSelfCraft: false, localOnly: true });
 assert.equal(forge.energyUsed, 860);

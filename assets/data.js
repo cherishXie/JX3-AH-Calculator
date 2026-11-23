@@ -1,10 +1,9 @@
 /* =========================================================================
-   剑网三物价助手 · 苍生铸世 50 级生活技艺数据
-   数据版本：v3.9-cooking（2026-11-22）
+   剑网三物价助手 · 苍生铸世 50 级生活技艺与行情数据
+   数据版本：v3.9-medicine（2026-11-22）
    价格修订：2026-11-23T08:08:17+08:00 · JX3BOX 全服拍卖
-   配方：281 条制造 + 21 条采集
+   配方：318 条制造 + 21 条采集
    行情：1117 个物品 · 分类 10 个
-   五行石：1-8 级拍卖价 + 快速/最优合成 + 7/8 爆率盈亏线
    ========================================================================= */
 window.JX3Data = {
   "meta": {
@@ -12,8 +11,8 @@ window.JX3Data = {
     "expansion": "苍生铸世",
     "levelCap": 50,
     "version": "苍生铸世 · 50 级",
-    "catalogVersion": "v3.9-cooking",
-    "seedVersion": "v3.9-cooking-2026-11-22",
+    "catalogVersion": "v3.9-medicine",
+    "seedVersion": "v3.9-medicine-2026-11-22",
     "updatedAt": "2026-11-22",
     "verifiedAt": "2026-11-22",
     "disclaimer": "制造配方与采集产出名称来自 JX3BOX 当前版本数据；采集按目标材料 + 稀有副产物掉率折算期望产值，稀有掉率为示例。各服务器价格由 scripts/update-jx3-prices.mjs 从 JX3BOX 拍卖自动更新；样本不足、无报价或异常高值回退梦江南示例价，请以本服交易行为准。",
@@ -127,6 +126,11 @@ window.JX3Data = {
         "label": "JX3BOX · 当前赛季烹饪配方",
         "url": "https://node.jx3box.com/manufactures",
         "note": "2026-11-22 补齐 1–50 级烹饪 89 条，含风语 33 条"
+      },
+      {
+        "label": "JX3BOX · 当前赛季制药配方",
+        "url": "https://node.jx3box.com/manufactures",
+        "note": "2026-11-22 补齐 1–50 级制药 62 条，含风语 28 条"
       }
     ],
     "scope": "收录 154 条当前版本制造配方 + 21 条按材料拆分的当前版本采集点（神农/采金/庖丁）",
@@ -2631,7 +2635,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1795009958,
       "gameKey": "5_89973",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -2817,7 +2821,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1794997034,
       "gameKey": "5_89974",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -2901,7 +2905,7 @@ window.JX3Data = {
       "priceSource": "auction",
       "priceAt": 1795010315,
       "gameKey": "5_89972",
-      "category": "material",
+      "category": "consumable",
       "life": true
     },
     {
@@ -10429,9 +10433,9 @@ window.JX3Data = {
       "gameKey": "5_31099",
       "name": "金针·烟",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 12.64,
@@ -10445,9 +10449,9 @@ window.JX3Data = {
       "gameKey": "5_31103",
       "name": "佳·纳元丹",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 7.13,
@@ -10461,9 +10465,9 @@ window.JX3Data = {
       "gameKey": "5_31104",
       "name": "逍遥散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 39.5,
@@ -10477,9 +10481,9 @@ window.JX3Data = {
       "gameKey": "5_31105",
       "name": "中品风身丸",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 299.7,
@@ -10493,9 +10497,9 @@ window.JX3Data = {
       "gameKey": "5_31106",
       "name": "忘情水",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 5.14,
@@ -10509,9 +10513,9 @@ window.JX3Data = {
       "gameKey": "5_31107",
       "name": "化功散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 49.9,
@@ -10525,9 +10529,9 @@ window.JX3Data = {
       "gameKey": "5_31108",
       "name": "健胃散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 99.46,
@@ -10540,10 +10544,10 @@ window.JX3Data = {
       "id": "m_x_5_40538",
       "gameKey": "5_40538",
       "name": "鉴影散",
-      "category": "material",
-      "life": false,
+      "category": "consumable",
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 44.74,
@@ -10557,9 +10561,9 @@ window.JX3Data = {
       "gameKey": "5_71242",
       "name": "风语·上品玉璃散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 80,
@@ -10573,9 +10577,9 @@ window.JX3Data = {
       "gameKey": "5_71243",
       "name": "风语·上品破秽散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 123.87,
@@ -10589,9 +10593,9 @@ window.JX3Data = {
       "gameKey": "5_71244",
       "name": "风语·上品凝神散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 120.72,
@@ -10605,9 +10609,9 @@ window.JX3Data = {
       "gameKey": "5_71245",
       "name": "风语·上品活气散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 116.2,
@@ -10621,9 +10625,9 @@ window.JX3Data = {
       "gameKey": "5_71246",
       "name": "风语·上品亢龙散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 120.04,
@@ -10637,9 +10641,9 @@ window.JX3Data = {
       "gameKey": "5_71247",
       "name": "风语·上品展凤散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 106,
@@ -10653,9 +10657,9 @@ window.JX3Data = {
       "gameKey": "5_71248",
       "name": "风语·上品益气散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 114.33,
@@ -10669,9 +10673,9 @@ window.JX3Data = {
       "gameKey": "5_71249",
       "name": "风语·上品长恨散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 150.33,
@@ -10685,9 +10689,9 @@ window.JX3Data = {
       "gameKey": "5_71250",
       "name": "风语·中品玉璃散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 911,
@@ -10701,9 +10705,9 @@ window.JX3Data = {
       "gameKey": "5_71251",
       "name": "风语·中品破秽散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 72.26,
@@ -10717,9 +10721,9 @@ window.JX3Data = {
       "gameKey": "5_71252",
       "name": "风语·中品凝神散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 88.32,
@@ -10733,9 +10737,9 @@ window.JX3Data = {
       "gameKey": "5_71253",
       "name": "风语·中品活气散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 57.24,
@@ -10749,9 +10753,9 @@ window.JX3Data = {
       "gameKey": "5_71254",
       "name": "风语·中品亢龙散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 69.52,
@@ -10765,9 +10769,9 @@ window.JX3Data = {
       "gameKey": "5_71255",
       "name": "风语·中品展凤散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 73.56,
@@ -10781,9 +10785,9 @@ window.JX3Data = {
       "gameKey": "5_71256",
       "name": "风语·中品益气散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 90,
@@ -10797,9 +10801,9 @@ window.JX3Data = {
       "gameKey": "5_71257",
       "name": "风语·中品长恨散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 55.6,
@@ -10813,9 +10817,9 @@ window.JX3Data = {
       "gameKey": "5_71259",
       "name": "风语·上品轻身丹",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 93.08,
@@ -10829,9 +10833,9 @@ window.JX3Data = {
       "gameKey": "5_71260",
       "name": "风语·上品聚魂丹",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 104.71,
@@ -10845,9 +10849,9 @@ window.JX3Data = {
       "gameKey": "5_71261",
       "name": "风语·上品大力丸",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 112.08,
@@ -10861,9 +10865,9 @@ window.JX3Data = {
       "gameKey": "5_71262",
       "name": "风语·上品静心丸",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 4,
       "source": "制造",
       "base": 106.88,
@@ -10877,9 +10881,9 @@ window.JX3Data = {
       "gameKey": "5_71263",
       "name": "风语·中品健体丸",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 99.94,
@@ -10893,9 +10897,9 @@ window.JX3Data = {
       "gameKey": "5_71264",
       "name": "风语·中品轻身丹",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 88,
@@ -10909,9 +10913,9 @@ window.JX3Data = {
       "gameKey": "5_71265",
       "name": "风语·中品聚魂丹",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 711,
@@ -10925,9 +10929,9 @@ window.JX3Data = {
       "gameKey": "5_89341",
       "name": "渝州摧锋散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 100.38,
@@ -10941,9 +10945,9 @@ window.JX3Data = {
       "gameKey": "5_89342",
       "name": "函谷疾咏散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 55,
@@ -10957,9 +10961,9 @@ window.JX3Data = {
       "gameKey": "5_89343",
       "name": "中原破阵散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 109,
@@ -10973,9 +10977,9 @@ window.JX3Data = {
       "gameKey": "5_89344",
       "name": "河洛生息散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 150.2,
@@ -10989,9 +10993,9 @@ window.JX3Data = {
       "gameKey": "5_89345",
       "name": "云州固阵散",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 128.82,
@@ -11005,9 +11009,9 @@ window.JX3Data = {
       "gameKey": "5_89724",
       "name": "引元丹",
       "category": "consumable",
-      "life": false,
+      "life": true,
       "kind": "product",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "制造",
       "base": 400.1,
@@ -18237,9 +18241,9 @@ window.JX3Data = {
       "gameKey": "5_40562",
       "name": "砭石",
       "category": "material",
-      "life": false,
+      "life": true,
       "kind": "material",
-      "skillId": "",
+      "skillId": "zhiyao",
       "tier": 3,
       "source": "交易行",
       "base": 10000,
@@ -21275,7 +21279,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "jieyuan_dan",
-          "qty": 1.5,
+          "qty": 1,
           "qtyMin": 1,
           "qtyMax": 2
         }
@@ -21302,9 +21306,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "特殊药品 · JX3BOX 当前版本配方 · 产出 1~2",
+      "note": "制药 · 8级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21319,7 +21323,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89324",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21346,9 +21350,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 18级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21363,7 +21367,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71241",
-          "qty": 3.5,
+          "qty": 3,
           "qtyMin": 3,
           "qtyMax": 4
         }
@@ -21390,9 +21394,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 3~4",
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21407,7 +21411,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71240",
-          "qty": 3.5,
+          "qty": 3,
           "qtyMin": 3,
           "qtyMax": 4
         }
@@ -21434,9 +21438,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "回复类药品 · JX3BOX 当前版本配方 · 产出 3~4",
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21451,7 +21455,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71266",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21478,9 +21482,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21532,7 +21536,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21547,7 +21551,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71267",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21574,9 +21578,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21618,9 +21622,9 @@ window.JX3Data = {
           "qty": 1
         }
       ],
-      "note": "特殊药品 · JX3BOX 当前版本配方",
+      "note": "制药 · 45级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21635,7 +21639,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_31100",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21662,9 +21666,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "特殊药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 7级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21679,7 +21683,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89973",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21706,9 +21710,9 @@ window.JX3Data = {
           "qty": 5
         }
       ],
-      "note": "医术材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 3级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21723,7 +21727,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89974",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21750,9 +21754,9 @@ window.JX3Data = {
           "qty": 5
         }
       ],
-      "note": "医术材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 4级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21767,7 +21771,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "yaoyin",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -21794,9 +21798,9 @@ window.JX3Data = {
           "qty": 5
         }
       ],
-      "note": "医术材料 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 2级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21848,7 +21852,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21882,9 +21886,9 @@ window.JX3Data = {
           "qty": 4
         }
       ],
-      "note": "特殊药品 · JX3BOX 当前版本配方",
+      "note": "制药 · 48级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21899,7 +21903,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_31102",
-          "qty": 7.5,
+          "qty": 5,
           "qtyMin": 5,
           "qtyMax": 10
         }
@@ -21926,9 +21930,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "特殊药品 · JX3BOX 当前版本配方 · 产出 5~10",
+      "note": "制药 · 1级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -21972,7 +21976,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -22024,7 +22028,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -22076,7 +22080,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -22091,7 +22095,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89340",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -22118,9 +22122,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "增强类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 25级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -22172,7 +22176,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -22187,7 +22191,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_71258",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -22214,9 +22218,9 @@ window.JX3Data = {
           "qty": 20
         }
       ],
-      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -22231,7 +22235,7 @@ window.JX3Data = {
       "outputs": [
         {
           "item": "m_m_5_89327",
-          "qty": 2.5,
+          "qty": 2,
           "qtyMin": 2,
           "qtyMax": 3
         }
@@ -22254,9 +22258,9 @@ window.JX3Data = {
           "qty": 10
         }
       ],
-      "note": "辅助类药品 · JX3BOX 当前版本配方 · 产出 2~3",
+      "note": "制药 · 22级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-18",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -27173,7 +27177,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -27225,7 +27229,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -27277,7 +27281,7 @@ window.JX3Data = {
       ],
       "note": "制药 · 50级 · JX3BOX 当前赛季配方",
       "verified": true,
-      "origin": "JX3BOX 技艺助手 · 2026-11-21",
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
     },
     {
@@ -31713,6 +31717,1622 @@ window.JX3Data = {
         }
       ],
       "note": "烹饪 · 48级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_364",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "鉴影散",
+      "level": 6,
+      "tier": 4,
+      "energy": 40,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_40538",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 1
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_x_5_40562",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 6级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_367",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品玉璃散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71242",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30834",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31997",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_368",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品破秽散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71243",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31998",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_369",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品凝神散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71244",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 10
+        },
+        {
+          "item": "shaoyao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31999",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_370",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品活气散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71245",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "shaoyao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_371",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品亢龙散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71246",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 10
+        },
+        {
+          "item": "shanhu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_372",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品展凤散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71247",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 1
+        },
+        {
+          "item": "shanhu",
+          "qty": 10
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_373",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品益气散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71248",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_374",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品长恨散",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71249",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31997",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_375",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品玉璃散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71250",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30831",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30833",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31998",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_376",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品破秽散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71251",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30832",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30833",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30834",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31999",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_377",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品凝神散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71252",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30833",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30834",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_378",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品活气散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71253",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30834",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_379",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品亢龙散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71254",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30835",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 5
+        },
+        {
+          "item": "shaoyao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_380",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品展凤散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71255",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30836",
+          "qty": 5
+        },
+        {
+          "item": "shaoyao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_404",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "渝州摧锋散",
+      "level": 42,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89341",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31999",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 42级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_405",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "函谷疾咏散",
+      "level": 32,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89342",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 2
+        },
+        {
+          "item": "shanhu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89974",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 32级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_406",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "中原破阵散",
+      "level": 38,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89343",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30842",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 2
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "yaoyin",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 38级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_407",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "河洛生息散",
+      "level": 40,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89344",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 40级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_408",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "云州固阵散",
+      "level": 28,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89345",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 2
+        },
+        {
+          "item": "m_m_5_30833",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31998",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 28级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_409",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "引元丹",
+      "level": 35,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_89724",
+          "qty": 3,
+          "qtyMin": 3,
+          "qtyMax": 5
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_89168",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_30842",
+          "qty": 6
+        },
+        {
+          "item": "m_m_5_30843",
+          "qty": 6
+        },
+        {
+          "item": "yaoyin",
+          "qty": 2
+        }
+      ],
+      "note": "制药 · 35级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_381",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品益气散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71256",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "shaoyao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 5
+        },
+        {
+          "item": "shanhu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31997",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_382",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品长恨散",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71257",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30838",
+          "qty": 5
+        },
+        {
+          "item": "shanhu",
+          "qty": 5
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31998",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_384",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品轻身丹",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71259",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_385",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品聚魂丹",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71260",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "fengwangjiang",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30832",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30833",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_386",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品大力丸",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71261",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30855",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30833",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30834",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_387",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·上品静心丸",
+      "level": 30,
+      "tier": 4,
+      "energy": 90,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71262",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30853",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_30834",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 4
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 20
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_388",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品健体丸",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71263",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "shanhu",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31997",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_389",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品轻身丹",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71264",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 5
+        },
+        {
+          "item": "shaoyao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31998",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_390",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风语·中品聚魂丹",
+      "level": 30,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_71265",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30831",
+          "qty": 5
+        },
+        {
+          "item": "shaoyao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89167",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31999",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 30级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_351",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "金针·烟",
+      "level": 6,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31099",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30834",
+          "qty": 5
+        },
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30831",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30849",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 6级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_355",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "佳·纳元丹",
+      "level": 5,
+      "tier": 3,
+      "energy": 20,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31103",
+          "qty": 6,
+          "qtyMin": 6,
+          "qtyMax": 8
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30838",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30834",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89974",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31999",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 5级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_356",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "逍遥散",
+      "level": 9,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31104",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "shanhu",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30835",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30849",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6646",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 9级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_357",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "风身丸",
+      "level": 10,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31105",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "gancao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30836",
+          "qty": 5
+        },
+        {
+          "item": "shaoyao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_89973",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_6648",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 10级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_358",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "忘情水",
+      "level": 11,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31106",
+          "qty": 1,
+          "qtyMin": 1,
+          "qtyMax": 2
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30831",
+          "qty": 5
+        },
+        {
+          "item": "shaoyao",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30849",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31995",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 11级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_359",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "化功散",
+      "level": 13,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31107",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30832",
+          "qty": 5
+        },
+        {
+          "item": "m_m_5_30838",
+          "qty": 5
+        },
+        {
+          "item": "shanhu",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30847",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31996",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 13级 · JX3BOX 当前赛季配方",
+      "verified": true,
+      "origin": "JX3BOX 技艺助手 · 2026-11-22",
+      "custom": false
+    },
+    {
+      "id": "m_medicine_360",
+      "kind": "craft",
+      "skillId": "zhiyao",
+      "name": "健胃散",
+      "level": 15,
+      "tier": 3,
+      "energy": 60,
+      "fee": 0,
+      "outputs": [
+        {
+          "item": "m_x_5_31108",
+          "qty": 2,
+          "qtyMin": 2,
+          "qtyMax": 3
+        }
+      ],
+      "materials": [
+        {
+          "item": "m_m_5_30833",
+          "qty": 5
+        },
+        {
+          "item": "shanhu",
+          "qty": 5
+        },
+        {
+          "item": "gancao",
+          "qty": 10
+        },
+        {
+          "item": "m_m_5_30848",
+          "qty": 1
+        },
+        {
+          "item": "m_m_5_31997",
+          "qty": 10
+        }
+      ],
+      "note": "制药 · 15级 · JX3BOX 当前赛季配方",
       "verified": true,
       "origin": "JX3BOX 技艺助手 · 2026-11-22",
       "custom": false
