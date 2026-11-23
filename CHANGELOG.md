@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-24 · 0925b5c
+
+update JX3BOX prices
+
 ## 2026-11-24 · e97eaa9
 
 update JX3BOX prices
@@ -453,11 +457,3 @@ update JX3BOX prices
 ## 2026-11-22 · 4f4cb67
 
 update JX3BOX prices
-
-## 2026-11-22 · 74440ee
-
-update JX3BOX prices
-
-## 2026-11-22 · ac76648
-
-修复庖丁点击崩溃；金币策略改为不分档的最优路线；采集按已解锁最高采集点走
