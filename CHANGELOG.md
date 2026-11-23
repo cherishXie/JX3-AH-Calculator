@@ -453,7 +453,3 @@ update JX3BOX prices
 ## 2026-11-22 · f5f90e1
 
 移动端界面改版，底部 Tab 与大卡片布局
-
-## 2026-11-22 · 4f4cb67
-
-update JX3BOX prices
