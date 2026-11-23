@@ -635,9 +635,10 @@
     return a ? (a.gl || a.grade || a.g || 'C') : 'C';
   }
   function showAllGrades(p) { return p && p.all === '1'; }
-  function gradeToggle(key, showAll) {
+  function gradeToggle(key, showAll, defaultAll) {
+    const abValue = defaultAll ? '0' : '';
     return '<div class="seg seg-sm" role="group" aria-label="可做筛选">' +
-      '<button class="' + (!showAll ? 'active' : '') + '" data-filter="' + key + '" data-value="">可做/谨慎</button>' +
+      '<button class="' + (!showAll ? 'active' : '') + '" data-filter="' + key + '" data-value="' + abValue + '">可做/谨慎</button>' +
       '<button class="' + (showAll ? 'active' : '') + '" data-filter="' + key + '" data-value="1">全部</button></div>';
   }
   function gradeWarning(showAll) {
@@ -1642,7 +1643,8 @@
     if (!C.skillOf(skillId) || !DATA.skills.some(function (s) { return s.id === skillId; })) skillId = 'shennong';
     const sk = skill(skillId);
     const basis = currentBasis(p);
-    const showAll = p.all === '1';
+    // 生活技艺是查找入口，默认展示全部配方；收益分析/总览仍默认只看可做/谨慎。
+    const showAll = p.all !== '0';
     const allRows = Calc.rows({ serverId: Store.state.serverId, basis: basis }).map(function (r) {
       return Object.assign({}, r, { grade: r.type === 'gather' ? 'G' : rowGrade(r) });
     });
@@ -1685,16 +1687,16 @@
 
     let html = '<div class="page">';
     html += '<div class="page-head"><div><h1 class="page-title">生活技艺</h1>' +
-      '<p class="page-sub">采集 3 · 制造 5 · 苍生铸世 50 级 · 当前收录 ' + DATA.recipes.filter(function (r) { return r.kind === 'craft'; }).length + ' 条制造配方 + ' + DATA.recipes.filter(function (r) { return r.kind === 'gather'; }).length + ' 个当前版本采集点（JX3BOX）。</p></div>' +
+      '<p class="page-sub">采集 3 · 制造 5 · 苍生铸世 50 级 · 当前收录 ' + DATA.recipes.filter(function (r) { return r.kind === 'craft'; }).length + ' 条制造配方 + ' + DATA.recipes.filter(function (r) { return r.kind === 'gather'; }).length + ' 个当前版本采集点（JX3BOX）。默认展示全部配方，切换「可做/谨慎」只看可落地项。</p></div>' +
       '<div class="page-tools">' +
         '<div class="seg" role="group" aria-label="成本口径">' +
           '<button class="' + (basis === 'market' ? 'active' : '') + '" data-filter="basis" data-value="" title="材料按本服市场价计算">市场价</button>' +
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
-        gradeToggle('all', showAll) +
+        gradeToggle('all', showAll, true) +
         '<a class="btn" href="' + Route.href('/prices') + '">' + icon('database') + '<span class="txt">行情</span></a>' +
-      '</div></div>' + gradeWarning(showAll);
+      '</div></div>' + (p.all === '1' ? gradeWarning(true) : '');
 
     html += '<div class="grid"><aside class="col-3"><div class="skill-nav-wrap">' + navHtml + '</div></aside><div class="col-9 flex-col" style="min-width:0">';
 
