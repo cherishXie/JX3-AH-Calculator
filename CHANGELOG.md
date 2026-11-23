@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-23 · 03ff9f4
+
+update JX3BOX prices
+
 ## 2026-11-23 · 4246eef
 
 update JX3BOX prices
@@ -513,7 +517,3 @@ update JX3BOX prices
 ## 2026-11-21 · 29d8c5a
 
 update JX3BOX prices
-
-## 2026-11-21 · b031575
-
-精力收益比 Tab 默认聚焦可制作产物，避免一打开就是空态
