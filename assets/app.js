@@ -1673,12 +1673,21 @@
       DATA.skills.filter(function (s) { return s.type === g.type; }).forEach(function (s) {
         const sRowsAll = allRows.filter(function (r) { return r.recipe.skillId === s.id; });
         const sRows = sRowsAll.filter(function (r) { return showAll || r.grade === 'A' || r.grade === 'B' || r.grade === 'G'; });
-        const sValid = sRows.filter(function (r) { return !r.calc.missing; });
-        const sAvg = sValid.length ? sValid.reduce(function (sum, r) { return sum + r.calc.perEnergy; }, 0) / sValid.length : null;
+        const sValidAll = sRowsAll.filter(function (r) { return !r.calc.missing; });
+        const sValidAB = sRowsAll.filter(function (r) {
+          return !r.calc.missing && (r.grade === 'A' || r.grade === 'B' || r.grade === 'G');
+        });
+        const avgOf = function (rows) {
+          return rows.length ? rows.reduce(function (sum, r) { return sum + r.calc.perEnergy; }, 0) / rows.length : null;
+        };
+        const sAvgAB = avgOf(sValidAB);
+        const sAvgAll = avgOf(sValidAll);
+        const showAllAvg = sAvgAll != null && (sAvgAB == null || Math.abs(sAvgAll - sAvgAB) > 0.05);
         navHtml += '<button class="skill-item' + (s.id === skillId ? ' active' : '') + '" data-action="go-skill" data-skill="' + s.id + '">' +
           skillIcon(s, 'sm') +
           '<div class="meta"><div class="nm">' + U.esc(s.name) + '</div><div class="ds">' + sRowsAll.length + ' 个' + (s.type === 'gather' ? '采集点' : '配方') + '</div></div>' +
-          '<div class="val"><b class="' + (sAvg > 0 ? 'pos' : sAvg < 0 ? 'neg' : '') + '">' + (sAvg == null ? '—' : U.fmt(sAvg, 1)) + '</b><span>金/精力</span></div>' +
+          '<div class="val"><b class="' + (sAvgAB > 0 ? 'pos' : sAvgAB < 0 ? 'neg' : '') + '">' + (sAvgAB == null ? '—' : U.fmt(sAvgAB, 1)) + '</b>' +
+            '<span>金/精力</span>' + (showAllAvg ? '<em>(' + U.fmt(sAvgAll, 1) + ')</em>' : '') + '</div>' +
         '</button>';
       });
       navHtml += '</div></div>';

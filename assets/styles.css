@@ -2260,3 +2260,5 @@ html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fa
 .badge .grade-info { margin-left: 4px; display: inline-flex; align-items: center; vertical-align: -2px; cursor: help; opacity: 0.72; }
 .badge .grade-info svg { width: 11px; height: 11px; }
 .badge:hover .grade-info { opacity: 1; }
+
+.skill-item .val em { display: block; margin-top: 1px; font-style: normal; font-size: 9.5px; color: var(--muted-2); font-variant-numeric: tabular-nums; }
