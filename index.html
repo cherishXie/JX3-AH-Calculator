@@ -435,7 +435,7 @@ html.light .boot-loader__retry:hover { background: #f1f5f9; }
     if (ref.indexOf('__CDN_') === 0) ref = 'dev';
     if (ver.indexOf('__CDN_') === 0) ver = 'dev';
     var codeBase = 'https://cdn.jsdelivr.net/gh/cherishXie/JX3-AH-Calculator@' + ver + '/assets/';
-    var dataBase = 'https://cdn.jsdelivr.net/gh/cherishXie/JX3-AH-Calculator@' + ref + '/assets/';
+    var dataBase = codeBase;
     window.__ASSET_CDN = codeBase;
     window.__ASSET_VERSION = ver;
     ['styles.css', 'pwa.css', 'install.css'].forEach(function (file) {
