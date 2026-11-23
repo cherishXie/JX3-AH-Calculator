@@ -2267,3 +2267,20 @@ html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fa
 .skill-item .val em.neg { color: var(--danger); }
 .skill-item .val .skill-avg-info { display: inline-flex; align-items: center; justify-content: flex-end; margin-top: 2px; color: var(--muted-2); cursor: help; }
 .skill-item .val .skill-avg-info svg { width: 10px; height: 10px; }
+
+/* 生活技艺左侧双均值：两行紧凑布局，避免一行一个数字把卡片撑高 */
+.skill-item { padding: 7px 9px; gap: 8px; }
+.skill-item .val { width: 96px; min-width: 96px; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; line-height: 1.2; }
+.skill-item .val-main { display: flex; align-items: center; justify-content: flex-end; gap: 2px; width: 100%; white-space: nowrap; }
+.skill-item .val b { display: inline-block; font-size: 12px; line-height: 1.2; }
+.skill-item .val .unit { font-size: 9px; line-height: 1.2; color: var(--muted); }
+.skill-item .val .skill-avg-info { margin: 0 0 0 1px; line-height: 1; }
+.skill-item .val .skill-avg-info svg { width: 10px; height: 10px; }
+.skill-item .val em { font-size: 9.5px; line-height: 1.2; margin: 0; }
+.skill-item .val em.pos { color: var(--positive); }
+.skill-item .val em.neg { color: var(--danger); }
+
+@media (max-width: 760px) {
+  .skill-item { min-width: 210px; }
+  .skill-item .val { display: flex; width: 84px; min-width: 84px; }
+}

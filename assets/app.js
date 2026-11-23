@@ -1689,9 +1689,10 @@
         navHtml += '<button class="skill-item' + (s.id === skillId ? ' active' : '') + '" data-action="go-skill" data-skill="' + s.id + '">' +
           skillIcon(s, 'sm') +
           '<div class="meta"><div class="nm">' + U.esc(s.name) + '</div><div class="ds">' + sRowsAll.length + ' 个' + (s.type === 'gather' ? '采集点' : '配方') + '</div></div>' +
-          '<div class="val"><b class="' + (sAvgAB > 0 ? 'pos' : sAvgAB < 0 ? 'neg' : '') + '">' + (sAvgAB == null ? '—' : U.fmt(sAvgAB, 1)) + '</b>' +
-            '<span>金/精力</span>' + (showAllAvg ? '<em class="' + allTone + '">(' + U.fmt(sAvgAll, 1) + ')</em>' : '') +
+          '<div class="val"><div class="val-main"><b class="' + (sAvgAB > 0 ? 'pos' : sAvgAB < 0 ? 'neg' : '') + '">' + (sAvgAB == null ? '—' : U.fmt(sAvgAB, 1)) + '</b>' +
+            '<span class="unit">金/精力</span>' +
             '<span class="info skill-avg-info" data-tip="' + U.esc(avgTip) + '" aria-label="' + U.esc(avgTip) + '">' + icon('info') + '</span></div>' +
+            (showAllAvg ? '<em class="' + allTone + '">(' + U.fmt(sAvgAll, 1) + ')</em>' : '') + '</div>' +
         '</button>';
       });
       navHtml += '</div></div>';
