@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "timezone": "Asia/Shanghai",
-  "updatedAt": "2026-11-23T08:08:17+08:00",
-  "catalogVersion": "v3.9-cooking",
+  "updatedAt": "2026-11-23T09:38:43+08:00",
+  "catalogVersion": "v3.9-medicine",
   "itemCount": 1117,
   "servers": [
     {
@@ -150,13 +150,13 @@
     {
       "date": "2026-11-23",
       "file": "days/2026-11-23.json",
-      "points": 9,
+      "points": 10,
       "baseAt": "2026-11-23T00:08:38+08:00",
-      "lastAt": "2026-11-23T08:08:17+08:00",
-      "catalogVersion": "v3.9-cooking",
+      "lastAt": "2026-11-23T09:38:43+08:00",
+      "catalogVersion": "v3.9-medicine",
       "itemCount": 1117,
       "compacted": false,
-      "bytes": 251860
+      "bytes": 257044
     }
   ]
 }
