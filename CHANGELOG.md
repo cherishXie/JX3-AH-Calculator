@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-23 · 741cc4c
+
+update JX3BOX prices
+
 ## 2026-11-23 · 21abfc2
 
 style: 压缩生活技艺双均值卡片高度
@@ -529,7 +533,3 @@ update JX3BOX prices
 ## 2026-11-21 · ea96aea
 
 style: 切换筛选去掉整页遮罩，改为选中态即时生效 + 内容进入动画
-
-## 2026-11-21 · e1287d1
-
-update JX3BOX prices
