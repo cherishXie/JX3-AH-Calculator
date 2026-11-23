@@ -60,7 +60,7 @@
   }
 
   function needsAudit(path) {
-    return path === '/analysis';
+    return path === '/overview' || path === '/' || path === '/skills' || path.indexOf('/skills/') === 0 || path === '/analysis';
   }
 
   function lazyLoadFailed(err) {
@@ -627,6 +627,26 @@
     const tip = opts && opts.title ? opts.title : gradeDefinition(grade);
     return '<span class="badge ' + cls + '" title="' + U.esc(tip) + '">' + label + gradeHelp(grade, opts && opts.title) + '</span>';
   }
+
+  function rowGrade(row) {
+    const a = row && row.recipe ? auditRecipe(Store.state.serverId, row.recipe.id) : null;
+    // auditRecipe 返回的是原始审计记录：本服字段是 gl，跨服字段是 g。
+    // 不能读取 a.grade，否则所有行都会落到 C，默认筛选会变成空列表。
+    return a ? (a.gl || a.grade || a.g || 'C') : 'C';
+  }
+  function showAllGrades(p) { return p && p.all === '1'; }
+  function gradeToggle(key, showAll, defaultAll) {
+    const abValue = defaultAll ? '0' : '';
+    return '<div class="seg seg-sm" role="group" aria-label="可做筛选">' +
+      '<button class="' + (!showAll ? 'active' : '') + '" data-filter="' + key + '" data-value="' + abValue + '">可做/谨慎</button>' +
+      '<button class="' + (showAll ? 'active' : '') + '" data-filter="' + key + '" data-value="1">全部</button></div>';
+  }
+  function gradeWarning(showAll) {
+    return showAll ? notice('已显示「不可做」配方：这些配方可能来自高价挂单、低流动性或缺价回退，不能当作实际可成交收益。默认只计算可做与谨慎。', 'info') : '';
+  }
+  function visibleGradeRows(rows, showAll) {
+    return showAll ? rows.slice() : rows.filter(function (r) { return r.grade === 'A' || r.grade === 'B' || r.grade === 'G'; });
+  }
   function auditRowsFor(sid, opts) {
     opts = opts || {};
     const crossServer = !!opts.crossServer;
@@ -993,7 +1013,11 @@
   /* 总览                                                               */
   /* ------------------------------------------------------------------ */
   function renderOverview(p) {
-    const rows = currentRows(p);
+    const allRows = currentRows(p).map(function (r) {
+      return Object.assign({}, r, { grade: r.type === 'gather' ? 'G' : rowGrade(r) });
+    });
+    const showAll = p.all === '1';
+    const rows = visibleGradeRows(allRows, showAll);
     const filtered = filterRows(rows, p);
     const sorted = sortRows(filtered.filter(function (r) { return !r.calc.missing; }), 'perEnergy', 'desc');
     const validAll = rows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
@@ -1045,8 +1069,9 @@
         '<span class="badge badge-outline" title="可在设置中修改默认成本口径">成本口径：' + (currentBasis(p) === 'min' ? '取最低' : '市场价') + '</span>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
         '<span class="badge badge-outline">' + icon('clock') + ' 核验 ' + U.esc(DATA.meta.verifiedAt) + '</span>' +
+        gradeToggle('all', showAll) +
         '<a class="btn" href="' + Route.href('/prices') + '">' + icon('refreshPrice') + '<span class="txt">校准行情</span></a>' +
-      '</div></div>';
+      '</div></div>' + gradeWarning(showAll);
 
     html += '<div class="kpi-grid">' +
       '<div class="kpi"><div class="kpi-label">最优精力收益 <span class="info" data-tip="按当前筛选与成本口径，收益最高且数据完整的配方">' + icon('info') + '</span></div>' +
@@ -1618,13 +1643,18 @@
     if (!C.skillOf(skillId) || !DATA.skills.some(function (s) { return s.id === skillId; })) skillId = 'shennong';
     const sk = skill(skillId);
     const basis = currentBasis(p);
-    const rows = Calc.rows({ serverId: Store.state.serverId, basis: basis })
-      .filter(function (r) { return r.recipe.skillId === skillId; });
+    // 生活技艺是查找入口，默认展示全部配方；收益分析/总览仍默认只看可做/谨慎。
+    const showAll = p.all !== '0';
+    const allRows = Calc.rows({ serverId: Store.state.serverId, basis: basis }).map(function (r) {
+      return Object.assign({}, r, { grade: r.type === 'gather' ? 'G' : rowGrade(r) });
+    });
+    const rows = allRows.filter(function (r) { return r.recipe.skillId === skillId && (showAll || r.grade === 'A' || r.grade === 'B' || r.grade === 'G'); });
     const filtered = sortRows(filterRows(rows, p), p.sort || 'perEnergy', p.dir || 'desc');
     const allValid = rows.filter(function (r) { return !r.calc.missing; });
     const avg = allValid.length ? allValid.reduce(function (s, r) { return s + r.calc.perEnergy; }, 0) / allValid.length : null;
     const best = Calc.bestOf(rows);
-    const verifiedCount = rows.filter(function (r) { return r.recipe.verified; }).length;
+    const skillAll = allRows.filter(function (r) { return r.recipe.skillId === skillId; });
+    const verifiedCount = skillAll.filter(function (r) { return r.recipe.verified; }).length;
     const missingRows = rows.filter(function (r) { return r.calc.missing; }).length;
     const onlyProfit = p.only === 'profit';
     const q = p.q || '';
@@ -1641,13 +1671,28 @@
         '<span class="spacer"></span><span>' + DATA.skills.filter(function (s) { return s.type === g.type; }).length + '</span></div>';
       navHtml += '<div class="skill-list">';
       DATA.skills.filter(function (s) { return s.type === g.type; }).forEach(function (s) {
-        const sRows = Calc.rows({ serverId: Store.state.serverId, basis: basis }).filter(function (r) { return r.recipe.skillId === s.id; });
-        const sValid = sRows.filter(function (r) { return !r.calc.missing; });
-        const sAvg = sValid.length ? sValid.reduce(function (sum, r) { return sum + r.calc.perEnergy; }, 0) / sValid.length : null;
+        const sRowsAll = allRows.filter(function (r) { return r.recipe.skillId === s.id; });
+        const sRows = sRowsAll.filter(function (r) { return showAll || r.grade === 'A' || r.grade === 'B' || r.grade === 'G'; });
+        const sValidAll = sRowsAll.filter(function (r) { return !r.calc.missing; });
+        const sValidAB = sRowsAll.filter(function (r) {
+          return !r.calc.missing && (r.grade === 'A' || r.grade === 'B' || r.grade === 'G');
+        });
+        const avgOf = function (rows) {
+          return rows.length ? rows.reduce(function (sum, r) { return sum + r.calc.perEnergy; }, 0) / rows.length : null;
+        };
+        const sAvgAB = avgOf(sValidAB);
+        const sAvgAll = avgOf(sValidAll);
+        const showAllAvg = sAvgAll != null && (sAvgAB == null || Math.abs(sAvgAll - sAvgAB) > 0.05);
+        const allTone = sAvgAll > 0 ? 'pos' : sAvgAll < 0 ? 'neg' : '';
+        const avgTip = '外部数值：只统计「可做/谨慎」配方，不含不可做、缺价和低样本。' +
+          '括号内数值：全部配方的平均值，包含不可做项，仅作对照；不可做可能来自高价挂单、低流动性或负收益。';
         navHtml += '<button class="skill-item' + (s.id === skillId ? ' active' : '') + '" data-action="go-skill" data-skill="' + s.id + '">' +
           skillIcon(s, 'sm') +
-          '<div class="meta"><div class="nm">' + U.esc(s.name) + '</div><div class="ds">' + sRows.length + ' 个' + (s.type === 'gather' ? '采集点' : '配方') + '</div></div>' +
-          '<div class="val"><b class="' + (sAvg > 0 ? 'pos' : sAvg < 0 ? 'neg' : '') + '">' + (sAvg == null ? '—' : U.fmt(sAvg, 1)) + '</b><span>金/精力</span></div>' +
+          '<div class="meta"><div class="nm">' + U.esc(s.name) + '</div><div class="ds">' + sRowsAll.length + ' 个' + (s.type === 'gather' ? '采集点' : '配方') + '</div></div>' +
+          '<div class="val"><div class="val-main"><b class="' + (sAvgAB > 0 ? 'pos' : sAvgAB < 0 ? 'neg' : '') + '">' + (sAvgAB == null ? '—' : U.fmt(sAvgAB, 1)) + '</b>' +
+            '<span class="unit">金/精力</span>' +
+            '<span class="info skill-avg-info" data-tip="' + U.esc(avgTip) + '" aria-label="' + U.esc(avgTip) + '">' + icon('info') + '</span></div>' +
+            (showAllAvg ? '<em class="' + allTone + '">(' + U.fmt(sAvgAll, 1) + ')</em>' : '') + '</div>' +
         '</button>';
       });
       navHtml += '</div></div>';
@@ -1656,15 +1701,16 @@
 
     let html = '<div class="page">';
     html += '<div class="page-head"><div><h1 class="page-title">生活技艺</h1>' +
-      '<p class="page-sub">采集 3 · 制造 5 · 苍生铸世 50 级 · 当前收录 ' + DATA.recipes.filter(function (r) { return r.kind === 'craft'; }).length + ' 条制造配方 + ' + DATA.recipes.filter(function (r) { return r.kind === 'gather'; }).length + ' 个当前版本采集点（JX3BOX）。</p></div>' +
+      '<p class="page-sub">采集 3 · 制造 5 · 苍生铸世 50 级 · 当前收录 ' + DATA.recipes.filter(function (r) { return r.kind === 'craft'; }).length + ' 条制造配方 + ' + DATA.recipes.filter(function (r) { return r.kind === 'gather'; }).length + ' 个当前版本采集点（JX3BOX）。默认展示全部配方，切换「可做/谨慎」只看可落地项。</p></div>' +
       '<div class="page-tools">' +
         '<div class="seg" role="group" aria-label="成本口径">' +
           '<button class="' + (basis === 'market' ? 'active' : '') + '" data-filter="basis" data-value="" title="材料按本服市场价计算">市场价</button>' +
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
+        gradeToggle('all', showAll, true) +
         '<a class="btn" href="' + Route.href('/prices') + '">' + icon('database') + '<span class="txt">行情</span></a>' +
-      '</div></div>';
+      '</div></div>' + (p.all === '1' ? gradeWarning(true) : '');
 
     html += '<div class="grid"><aside class="col-3"><div class="skill-nav-wrap">' + navHtml + '</div></aside><div class="col-9 flex-col" style="min-width:0">';
 
@@ -1677,10 +1723,10 @@
       '</div></div>' +
       '<div class="card-body" style="padding-bottom:0">' +
         '<div class="skill-stats">' +
-          '<div class="skill-stat"><b>' + rows.length + '</b><span>' + (sk.type === 'gather' ? '采集点' : '配方') + '</span></div>' +
+          '<div class="skill-stat"><b>' + skillAll.length + '</b><span>' + (sk.type === 'gather' ? '采集点' : '配方') + '</span></div>' +
           '<div class="skill-stat"><b class="' + (avg > 0 ? 'pos' : avg < 0 ? 'neg' : '') + '">' + (avg == null ? '—' : U.fmt(avg, 2)) + '</b><span>平均精力收益 金/精力</span></div>' +
           '<div class="skill-stat"><b>' + (best ? U.fmt(best.calc.perEnergy, 2) : '—') + '</b><span>最优 ' + (best ? U.esc(best.recipe.name) : '—') + '</span></div>' +
-          '<div class="skill-stat"><b>' + verifiedCount + ' / ' + rows.length + '</b><span>已核验配方</span></div>' +
+          '<div class="skill-stat"><b>' + verifiedCount + ' / ' + skillAll.length + '</b><span>已核验配方</span></div>' +
         '</div>' +
         '<div class="flex toolbar-wrap" style="margin-top:14px">' +
           '<div class="search-box">' + icon('search') + '<input class="input" type="search" placeholder="搜索配方 / 产物" value="' + U.esc(q) + '" data-search="q" data-fkey="search" aria-label="搜索配方或产物"></div>' +
@@ -2307,19 +2353,19 @@
 
     let html = '<div class="page">';
     html += '<div class="page-head"><div><h1 class="page-title">精力收益分析</h1>' +
-      '<p class="page-sub">按本服报价判断能不能做；默认只看可做，切「全部」看缺价项。</p></div>' +
+      '<p class="page-sub">按本服报价判断能不能做；默认只看可做/谨慎，切「全部」才显示不可做。</p></div>' +
       '<div class="page-tools">' +
         '<div class="seg" role="group" aria-label="成本口径">' +
           '<button class="' + (basis === 'market' ? 'active' : '') + '" data-filter="basis" data-value="" title="材料按本服市场价计算">市场价</button>' +
           '<button class="' + (basis === 'min' ? 'active' : '') + '" data-filter="basis" data-value="min" title="材料取市场价与自制成本较低者；不把自制中间产物的精力计入本配方">取最低（仅成本）</button>' +
         '</div>' +
         '<div class="seg seg-sm" role="group" aria-label="可做筛选">' +
-          '<button class="' + (landFilter === 'ab' ? 'active' : '') + '" data-filter="land" data-value="ab" title="只看可做配方，采集保留">可做</button>' +
-          '<button class="' + (landFilter === 'all' ? 'active' : '') + '" data-filter="land" data-value="all" title="包含缺价与亏损项">全部</button>' +
+          '<button class="' + (landFilter === 'ab' ? 'active' : '') + '" data-filter="land" data-value="ab" title="只看可做/谨慎配方，采集保留">可做/谨慎</button>' +
+          '<button class="' + (landFilter === 'all' ? 'active' : '') + '" data-filter="land" data-value="all" title="包含不可做、缺价与亏损项">全部（含不可做）</button>' +
         '</div>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
         '<button class="btn" data-action="export-csv" data-csv="analysis">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
-      '</div></div>';
+      '</div></div>' + gradeWarning(landFilter === 'all');
 
     html += '<div class="kpi-grid">' +
       '<div class="kpi"><div class="kpi-label">本服最高可做</div><div class="kpi-value">' + (best ? U.fmt(best.calc.perEnergy, 2) : '—') + '<span class="kpi-unit">金/精力</span></div>' +
@@ -3069,14 +3115,28 @@
       return '<button class="' + (s.id === selected ? 'on' : '') + '" data-profit-skill="' + U.esc(s.id) + '">' + U.esc(s.name) + '</button>';
     }).join('') + '</div>';
   }
-  function profitTop10Html(skillId, point, kind, focusItemId) {
+  function profitTop10Html(skillId, point, kind, focusItemId, showAll, toggleKey) {
     const P = window.JX3Profit;
     if (!P || !point) return '';
+    if (!window.JX3Audit) {
+      ensureAudit().then(render).catch(function () {});
+      return '<section class="card col-12 profit-top10-card"><div class="card-head"><div><h2 class="card-title">同技艺 Top10</h2><p class="card-sub">正在载入可做判断…</p></div></div><div class="card-body"><div class="skeleton" style="width:100%;height:110px"></div></div></section>';
+    }
     const skill = skillId || (profitSkillList()[0] && profitSkillList()[0].id);
-    const rows = P.skillTop(skill, point, currentTaxRate(), 10);
-    let html = '<section class="card col-12 profit-top10-card"><div class="card-head"><div><h2 class="card-title">同技艺 Top10 · ' + U.esc(profitSkillName(skill)) + '</h2><p class="card-sub">只统计当前区服、当前节点可做的产物</p></div><div class="card-tools">' + profitSkillTabs(skill, skill) + '</div></div>';
+    const allRows = P.skillTop(skill, point, currentTaxRate(), 10);
+    const rows = showAll ? allRows : allRows.filter(function (ev) {
+      const ar = auditRecipe(Store.state.serverId, ev.recipe.id);
+      return ar && (ar.gl === 'A' || ar.gl === 'B');
+    });
+    const key = toggleKey || 'sall';
+    let html = '<section class="card col-12 profit-top10-card"><div class="card-head"><div><h2 class="card-title">同技艺 Top10 · ' + U.esc(profitSkillName(skill)) + '</h2><p class="card-sub">默认只统计可做/谨慎；切「全部」才会显示不可做</p></div><div class="card-tools">' +
+      '<div class="seg seg-sm" role="group" aria-label="Top10 可做筛选">' +
+        '<button class="' + (!showAll ? 'active' : '') + '" data-filter="' + key + '" data-value="">可做/谨慎</button>' +
+        '<button class="' + (showAll ? 'active' : '') + '" data-filter="' + key + '" data-value="1">全部</button>' +
+      '</div>' + profitSkillTabs(skill, skill) + '</div></div>';
+    if (showAll) html += gradeWarning(true);
     if (!rows.length) {
-      html += '<div class="card-body">' + emptyState('当前技艺没有可做产物', '一线材料缺报价或无产出报价时不会进入榜单。', '', 'chart') + '</div></section>';
+      html += '<div class="card-body">' + emptyState('当前技艺没有可做/谨慎产物', '切「全部」查看不可做项，或先校准材料价格。', '', 'chart') + '</div></section>';
       return html;
     }
     html += '<div class="profit-table-wrap"><table class="data compact profit-table"><thead><tr><th class="num">#</th><th>产物</th><th>可做</th><th class="num">精力收益</th><th class="num">单次利润</th><th class="num">总精力</th><th>路径</th><th>关键瓶颈</th></tr></thead><tbody>';
@@ -3084,7 +3144,7 @@
       const self = ev.chain.filter(function (r) { return !r.root && r.path === '含自造'; })[0];
       const bottleneck = self ? (P.item(self.itemId) || {}).name || '—' : '—';
       const ar = auditRecipe(Store.state.serverId, ev.recipe.id);
-      html += '<tr data-profit-pick="' + U.esc('item:' + ev.item.id) + '" data-profit-kind="' + kind + '"><td class="num dim">' + (i + 1) + '</td><td>' + U.esc(ev.item.name) + '</td><td>' + gradeBadge(ar ? ar.g : '', { title: ar && ar.sc ? '条件可做：含自产' : '' }) + '</td><td class="num pos">' + U.fmt(ev.perEnergy, 2) + '</td><td class="num ' + (ev.profit >= 0 ? 'pos' : 'neg') + '">' + profitSigned(ev.profit) + '</td><td class="num">' + U.fmt(ev.energy, 0) + '</td><td>' + U.esc(ev.path) + '</td><td class="dim">' + U.esc(bottleneck) + '</td></tr>';
+      html += '<tr data-profit-pick="' + U.esc('item:' + ev.item.id) + '" data-profit-kind="' + kind + '"><td class="num dim">' + (i + 1) + '</td><td>' + U.esc(ev.item.name) + '</td><td>' + gradeBadge(ar ? ar.gl : '', { title: ar && ar.sc ? '条件可做：含自产' : '' }) + '</td><td class="num pos">' + U.fmt(ev.perEnergy, 2) + '</td><td class="num ' + (ev.profit >= 0 ? 'pos' : 'neg') + '">' + profitSigned(ev.profit) + '</td><td class="num">' + U.fmt(ev.energy, 0) + '</td><td>' + U.esc(ev.path) + '</td><td class="dim">' + U.esc(bottleneck) + '</td></tr>';
     });
     html += '</tbody></table></div><div class="profit-note">按当前节点可算精力收益排序；可做等级见「可做」列；同分按总精力升序。</div></section>';
     return html;
@@ -3147,11 +3207,11 @@
     // top10 point
     const point = (latest && latest.point) || (lastOk && lastOk.point) || ctx.points[ctx.points.length - 1];
     const skill = ui.profitSkill || item.skillId || (profitSkillList()[0] || {}).id;
-    html += profitTop10Html(skill, point, 'trend', item.id);
+    html += profitTop10Html(skill, point, 'trend', item.id, p && p.tall === '1', 'tall');
     html += '</div>';
     return html;
   }
-  function serverItemProfitSection(ctx) {
+  function serverItemProfitSection(ctx, p) {
     const P = window.JX3Profit;
     const item = ctx.item;
     if (!P || !item) return '';
@@ -3193,7 +3253,7 @@
       }).join('') + '</tbody></table></div><div class="profit-note">其余 ' + (cross.total - cross.feasibleCount) + ' 服因成品/一线材料无报价，未生成可做收益。</div></section>';
     }
     const topPoint = curPoint || (ctx.servers[0] && ctx.servers[0].points && ctx.servers[0].points[ctx.servers[0].points.length - 1]);
-    html += profitTop10Html(ui.profitSkill || item.skillId, topPoint, 'server', item.id);
+    html += profitTop10Html(ui.profitSkill || item.skillId, topPoint, 'server', item.id, p && p.sall === '1', 'sall');
     html += '</div>';
     return html;
   }
@@ -4314,7 +4374,7 @@
       '<button role="tab" aria-selected="' + (ui.serverItemTab !== 'profit' ? 'true' : 'false') + '" class="' + (ui.serverItemTab !== 'profit' ? 'on' : '') + '" data-server-item-tab="price">物价</button>' +
       '<button role="tab" aria-selected="' + (ui.serverItemTab === 'profit' ? 'true' : 'false') + '" class="' + (ui.serverItemTab === 'profit' ? 'on' : '') + '" data-server-item-tab="profit">精力收益比</button></div>';
     if (ui.serverItemTab === 'profit') {
-      html += serverItemProfitSection(ctx);
+      html += serverItemProfitSection(ctx, p);
     } else {
       html += serverItemKpi(ctx);
       html += '<div class="grid section-gap">' + serverItemChart(ctx) + serverItemRanking(ctx, p) + '</div>';
@@ -4347,7 +4407,7 @@
     html += '<div class="grid section-gap">' + serverDetail(ctx) + '</div>';
     if (ctx.selectedServer && ctx.selectedServer.points && ctx.selectedServer.points.length) {
       const lastPoint = ctx.selectedServer.points[ctx.selectedServer.points.length - 1];
-      html += '<div class="grid section-gap">' + profitTop10Html(ui.profitSkill || (profitSkillList()[0] || {}).id, lastPoint, 'server', '') + '</div>';
+      html += '<div class="grid section-gap">' + profitTop10Html(ui.profitSkill || (profitSkillList()[0] || {}).id, lastPoint, 'server', '', p.sall === '1', 'sall') + '</div>';
     }
     html += dataFoot();
     return html + '</div>';
@@ -6440,7 +6500,8 @@
     }
     if (needsAudit(route.path) && !window.JX3Audit) {
       const page = document.getElementById('page');
-      const label = route.path === '/analysis' ? '精力收益分析' : '生活技艺';
+      const label = route.path === '/analysis' ? '精力收益分析' : (route.path.indexOf('/skills') === 0 ? '生活技艺' : '总览');
+      try { renderShell(route.path, p); } catch (err) { /* shell 会在数据到达后重绘 */ }
       if (page) {
         page.innerHTML = '<div class="page"><div class="page-head"><div><h1 class="page-title">' + label + '</h1>' +
           '<p class="page-sub">正在载入判断数据…</p></div></div><div class="card"><div class="card-body">' +
