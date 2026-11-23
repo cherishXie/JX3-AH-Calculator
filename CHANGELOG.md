@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-23 · 467cfa9
+
+update JX3BOX prices
+
 ## 2026-11-23 · 46cf915
 
 update JX3BOX prices
@@ -491,9 +495,3 @@ update JX3BOX prices
 ## 2026-11-21 · e6d7e63
 
 记录 4 Tab 上线与行情 Tab 变更
-
-## 2026-11-21 · 621b5da
-
-将小程序核心目录与云端行情接入价格机器人
-
-- --web-only 同步 444 项核心目录与 672 项行情目录数据，不再跳过小程序\\n- build-remote-prices 从最新核心目录生成云端 payload\\n- 云端旧行情不覆盖新包内价，并增加核心目录校验\\n- 仅合入数据链路，不含 dev 的 4 Tab UI 重构
