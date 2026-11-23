@@ -2,7 +2,35 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-23 · 21abfc2
+
+style: 压缩生活技艺双均值卡片高度
+
+## 2026-11-23 · af296d2
+
+技艺双均值增加颜色与说明
+
+## 2026-11-23 · 87cb93a
+
+生活技艺显示可做与全部双均值
+
+## 2026-11-23 · a38d684
+
+update JX3BOX prices
+
 ## 2026-11-23 · 55274a2
+
+update JX3BOX prices
+
+## 2026-11-23 · 023194e
+
+生活技艺默认展示全部配方
+
+## 2026-11-23 · 9ed6a64
+
+修复可做筛选读取错误审计字段
+
+## 2026-11-23 · cbd8078
 
 update JX3BOX prices
 
@@ -10,7 +38,27 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-23 · 27584de
+
+CDN 数据固定到部署提交，避免分支缓存旧数据
+
+## 2026-11-23 · 84558b9
+
+同步制药配方与最新行情数据
+
+## 2026-11-23 · c4d9e4c
+
+补齐制药风语配方并默认过滤不可做
+
+## 2026-11-23 · e5552f6
+
+update JX3BOX prices
+
 ## 2026-11-23 · 18bc82f
+
+update JX3BOX prices
+
+## 2026-11-23 · 9798f02
 
 update JX3BOX prices
 
@@ -18,7 +66,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-23 · 60c3c2e
+
+update JX3BOX prices
+
 ## 2026-11-23 · 3b397a2
+
+update JX3BOX prices
+
+## 2026-11-23 · 75ab74c
 
 update JX3BOX prices
 
@@ -26,7 +82,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-23 · 2670fa1
+
+update JX3BOX prices
+
 ## 2026-11-23 · eb02c9c
+
+update JX3BOX prices
+
+## 2026-11-23 · 62081d8
 
 update JX3BOX prices
 
@@ -34,7 +98,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-23 · e8b6077
+
+update JX3BOX prices
+
 ## 2026-11-23 · 83f377e
+
+update JX3BOX prices
+
+## 2026-11-23 · 6236260
 
 update JX3BOX prices
 
@@ -42,7 +114,15 @@ update JX3BOX prices
 
 update JX3BOX prices
 
+## 2026-11-23 · 0b62d83
+
+update JX3BOX prices
+
 ## 2026-11-23 · a96a3c1
+
+update JX3BOX prices
+
+## 2026-11-22 · 0e27cfe
 
 update JX3BOX prices
 
@@ -453,75 +533,3 @@ style: 切换筛选去掉整页遮罩，改为选中态即时生效 + 内容进�
 ## 2026-11-21 · e1287d1
 
 update JX3BOX prices
-
-## 2026-11-21 · 753dad9
-
-价格机器人同步更新 dev 预览的行情数据
-
-## 2026-11-21 · d5f2fc7
-
-价格机器人同步更新 dev 预览的行情数据
-
-## 2026-11-21 · 33faa7d
-
-dev 恢复读取 main 行情，合并时容忍目录版本差异
-
-## 2026-11-21 · 1ecc97f
-
-行情状态条移入顶栏；Tab 与侧边栏切换加过渡
-
-## 2026-11-21 · 4afc3bd
-
-dev 预览读自身数据；图表按卡片宽度渲染并修标签重叠；日期档位切换加过渡
-
-## 2026-11-21 · 7a445f5
-
-update JX3BOX prices
-
-## 2026-11-21 · da4de38
-
-目录变化自动重载；顶部状态条/检查物价归位；统一卡片与 Tab 间距
-
-## 2026-11-21 · 98c97ff
-
-物价走势物品数改为「有数据 / 全部目录」统一口径
-
-## 2026-11-21 · b194d28
-
-物价走势与区服趋势筛选栏统一（日期预设/类型/技艺/指定产物/刷新）
-
-## 2026-11-21 · 0a37bce
-
-走势请求加入空闲超时与自动重试，避免加载卡死；补 text-size-adjust
-
-## 2026-11-21 · a5c841c
-
-SW 预缓存改用条件请求，首访少下一遍首屏资源
-
-## 2026-11-21 · 51642f6
-
-首屏加载进度与网络诊断
-
-## 2026-11-21 · 71bdc7e
-
-物价走势日期选择支持历史范围
-
-## 2026-11-21 · 1bf1289
-
-行情页首屏不阻塞审计数据
-
-## 2026-11-21 · 761ba21
-
-总览行情计数与走势默认 1 天缓存
-
-## 2026-11-21 · f07ef67
-
-update JX3BOX prices
-
-## 2026-11-21 · 45897e8
-
-行情分类与市场目录扩展
-
-## 2026-11-21 · e95931e
-
-首屏脚本与样式合并、data.js 延迟加载，清理 .bak 下载副本
