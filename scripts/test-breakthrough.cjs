@@ -117,11 +117,16 @@ assert.deepEqual(data.meta.expModel, experienceModel, 'regeneration must retain 
   }
   assert.equal(model.expToNext(2), 390);
   assert.equal(model.expToNext(12), 1390);
-  // 31 级起按末段 +10/级外推
-  assert.equal(model.expToNext(31), 1660);
-  assert.equal(model.expToNext(49), 1840);
+  // 30 级起采集/制造分表：采集（庖丁）30→50 合计 35,840，制造（烹饪）48,580
+  assert.equal(model.expToNext(31), 1660, 'gather 31→32');
+  assert.equal(model.expToNext(49), 1940, 'gather 49→50');
+  assert.equal(model.expToNext(31, 'craft'), 2290, 'craft 31→32');
+  assert.equal(model.expToNext(49, 'craft'), 2580, 'craft 49→50');
+  const sumFrom30 = (kind) => model.experienceRows(kind).filter(r => r.from >= 30).reduce((s, r) => s + r.need, 0);
+  assert.equal(sumFrom30('gather'), 35840, 'gather 30→50 total');
+  assert.equal(sumFrom30('craft'), 48580, 'craft 30→50 total');
   assert.equal(rows.filter(r => r.source === 'interpolated').length, 0);
-  assert.equal(rows.filter(r => r.source === 'extrapolated').length, 19);
+  assert.equal(rows.filter(r => r.source === 'extrapolated').length, 0, '30→50 now observed');
   assert.equal(rows[28].cumulative, 36830, '达到 30 级的累计经验');
   assert.equal(rows[29].cumulative, 38480, '30→31 是独立一段');
   for (const strategy of ['energy', 'effort']) {
@@ -148,11 +153,17 @@ for (const server of catalog.servers) {
   const model = createModel(data, catalog, () => state);
   for (const skill of catalog.skills) for (const strategy of ['gold', 'energy', 'effort']) for (const mode of ['low', 'mid', 'high']) {
     const r = model.analyze(skill.id, strategy, mode);
+    const gather = skill.type === 'gather';
+    const expectedExp = gather ? 72670 : 85410;
+    const expectedPhase2 = gather ? 35840 : 48580;
     assert.equal(r.gates.length, 4);
     assert.equal(r.levels.length, 49);
-    assert.equal(r.totals.exp, 71730);
-    assert.deepEqual(r.phases.map(p => p.exp), [36830, 34900]);
-    for (const level of r.levels) if (level.econ) assert.equal(level.count, Math.ceil(level.need / level.econ.exp), 'new thresholds must drive actual crafting counts');
+    assert.equal(r.totals.exp, expectedExp);
+    assert.deepEqual(r.phases.map(p => p.exp), [36830, expectedPhase2]);
+    for (const level of r.levels) if (level.econ) {
+      assert.equal(level.count, Math.ceil(level.need / level.exp), 'new thresholds must drive actual crafting counts');
+      if (gather && level.from >= 30) assert.equal(level.exp, level.energy * 2, '30 级后采集 1 精力 = 2 经验');
+    }
     // 有实测秒刷点配置的技艺（庖丁）由 GATHER_PLANS 指定路线，这里不按目录点推算
     if (strategy === 'energy' && mode === 'mid' && !(data.meta.gatherPlans || {})[skill.id]) {
       const gatherLevels = data.meta.gatherLevels || {};
@@ -162,8 +173,8 @@ for (const server of catalog.servers) {
         ? catalog.recipes.filter(x => x.kind === 'gather' && x.skillId === skill.id).concat(extras)
         : data.recipes.filter(x => x.s === skill.id);
       for (const level of r.levels) {
-        // 精力→经验按实测比例：采集 40 精力=128 经验（3.2/精力），制造 1 精力=2 经验
-        const rate = skill.type === 'gather' ? 3.2 : 2;
+        // 精力→经验按实测比例：采集 30 级前 40 精力=128 经验（3.2/精力），30 级后 1 精力=2 经验；制造 1 精力=2 经验
+        const rate = skill.type === 'gather' ? (level.from >= 30 ? 2 : 3.2) : 2;
         const usable = pool.filter(x => skill.type === 'gather' ? gatherLevelOf(x) <= level.from : x.l <= level.from);
         if (!usable.length) continue;
         if (skill.type === 'gather') {
@@ -196,7 +207,7 @@ for (const base of ['assets', 'minitool/assets']) {
   const ctx = { window: { JX3Breakthrough: data, JX3Data: catalog, JX3Core: { Store: { state: { serverId: catalog.servers[0].id, settings: { basis: 'market', taxRate: .05 } } } } } };
   vm.runInNewContext(source, ctx);
   vm.runInNewContext(fs.readFileSync(`${base}/breakthrough.js`, 'utf8'), ctx);
-  assert.equal(ctx.window.JX3BT.analyze('duanzao', 'gold').totals.exp, 71730);
+  assert.equal(ctx.window.JX3BT.analyze('duanzao', 'gold').totals.exp, 85410);
   const bundle = { window: {} };
   vm.runInNewContext(fs.readFileSync(`${base}/breakthrough-data.js`, 'utf8'), bundle);
   assert.equal(JSON.stringify(bundle.window.JX3Breakthrough.meta.expModel), JSON.stringify(experienceModel));

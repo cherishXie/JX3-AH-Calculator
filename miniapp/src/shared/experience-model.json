@@ -1,10 +1,10 @@
 {
   "method": "piecewise-linear",
-  "extrapolation": "last-segment-linear",
+  "extrapolation": "none",
   "roundTo": 10,
-  "observedAt": "2026-11-22",
-  "source": "用户提供的游戏内 1→2 至 30→31 逐级实测经验表；31 级以后仍为外推",
-  "description": "1→2 至 30→31 使用用户实测的 30 个逐级数值，不再插值；31→50 按末段（29→30 与 30→31 的 +10）线性外推，推算值取整到 10",
+  "observedAt": "2026-11-25",
+  "source": "用户提供的 1→2 至 30→31 逐级实测表，以及 2026-11-25 提供的 30→50 采集/制造经验表（庖丁/烹饪）",
+  "description": "1→2 至 29→30 为八技艺共用实测；30→50 分采集/制造两张实测表（采集 30→50 合计 35,840、制造 48,580），30 级后统一 1 精力=2 经验。制造表 41→42 至 48→49 有 8 行被贴纸遮挡，按合计 48,580 与相邻 640 差值推定（44→45 取 2,500 以对齐合计）",
   "observations": [
     {
       "level": 1,
@@ -126,5 +126,51 @@
       "level": 30,
       "exp": 1650
     }
-  ]
+  ],
+  "categories": {
+    "gather": [
+      { "level": 30, "exp": 1650 },
+      { "level": 31, "exp": 1660 },
+      { "level": 32, "exp": 1670 },
+      { "level": 33, "exp": 1680 },
+      { "level": 34, "exp": 1690 },
+      { "level": 35, "exp": 1710 },
+      { "level": 36, "exp": 1750 },
+      { "level": 37, "exp": 1760 },
+      { "level": 38, "exp": 1780 },
+      { "level": 39, "exp": 1790 },
+      { "level": 40, "exp": 1800 },
+      { "level": 41, "exp": 1810 },
+      { "level": 42, "exp": 1820 },
+      { "level": 43, "exp": 1830 },
+      { "level": 44, "exp": 1840 },
+      { "level": 45, "exp": 1900 },
+      { "level": 46, "exp": 1910 },
+      { "level": 47, "exp": 1920 },
+      { "level": 48, "exp": 1930 },
+      { "level": 49, "exp": 1940 }
+    ],
+    "craft": [
+      { "level": 30, "exp": 2190 },
+      { "level": 31, "exp": 2290 },
+      { "level": 32, "exp": 2300 },
+      { "level": 33, "exp": 2310 },
+      { "level": 34, "exp": 2320 },
+      { "level": 35, "exp": 2390 },
+      { "level": 36, "exp": 2400 },
+      { "level": 37, "exp": 2410 },
+      { "level": 38, "exp": 2420 },
+      { "level": 39, "exp": 2430 },
+      { "level": 40, "exp": 2440 },
+      { "level": 41, "exp": 2450 },
+      { "level": 42, "exp": 2460 },
+      { "level": 43, "exp": 2470 },
+      { "level": 44, "exp": 2500 },
+      { "level": 45, "exp": 2540 },
+      { "level": 46, "exp": 2550 },
+      { "level": 47, "exp": 2560 },
+      { "level": 48, "exp": 2570 },
+      { "level": 49, "exp": 2580 }
+    ]
+  }
 }

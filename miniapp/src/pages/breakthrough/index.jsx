@@ -107,9 +107,9 @@ function Breakthrough() {
         <View className='card-head' onClick={function () { setShowExperience(!showExperience); }}>
           <View className='flex1'>
             <Text className='card-title'>逐级经验 {showExperience ? '⌃' : '⌄'}</Text>
-            <Text className='card-sub'>1→30 实测 · 31+ 外推</Text>
+            <Text className='card-sub'>1→30 共用实测 · 30→50 采集/制造分表</Text>
           </View>
-          <Text className='badge badge-info'>30 级实测</Text>
+          <Text className='badge badge-info'>30→50 分表</Text>
         </View>
         {showExperience ? (
           <ScrollView scrollY style={{ height: '560rpx' }}>
@@ -189,7 +189,7 @@ function Breakthrough() {
         </View>
       </View>
 
-      <DataNote extra='经验 1→30 实测 · 31+ 外推' />
+      <DataNote extra='经验 1→30 共用实测 · 30→50 采集/制造分表' />
     </View>
   );
 }

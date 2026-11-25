@@ -10,7 +10,7 @@ for (const path of ['assets/breakthrough-model.js', 'minitool/assets/breakthroug
 
 // 只更新经验元数据，保留配方、物品索引、各服报价及报价时间。
 const expModel = JSON.parse(fs.readFileSync(new URL('miniapp/src/shared/experience-model.json', root)));
-const disclaimer = '突破任务为30/35/40/45级晋秩，无独立50级任务。经验门槛使用用户实测的 1→2 至 30→31 逐级数值（30 个点），31 级起按末段每级 +10 线性外推、取整到 10；精力→经验按实测比例换算（采集 40 精力=128 经验，制造 1 精力=2 经验），不再使用旧的单次经验估算。庖丁按实测秒刷点：1–30 级用西湖草龟/成都雌鹿，30–50 级用黑山羊。暂按八技艺共用门槛模拟，技艺间差异尚未核实；任务脚本奖励未计入收益。';
+const disclaimer = '突破任务为30/35/40/45级晋秩，无独立50级任务。1→30 级使用用户实测的共用逐级经验表；30→50 级分采集/制造两张实测表（采集 30→50 合计 35,840、制造 48,580）。30 级后采集与制造统一按 1 精力=2 经验换算（30 级前采集仍按 40 精力=128 经验），不再使用旧的单次经验估算。庖丁按实测秒刷点：1–30 级用西湖草龟/成都雌鹿，30–50 级用黑山羊。制造表 41→42 至 48→49 有 8 行被贴纸遮挡，按合计与相邻 640 差值推定；任务脚本奖励未计入收益。';
 for (const file of ['miniapp/src/shared/breakthrough.json', 'assets/breakthrough-data.js', 'minitool/assets/breakthrough-data.js']) {
   const url = new URL(file, root);
   const existing = fs.readFileSync(url, 'utf8');
@@ -18,8 +18,8 @@ for (const file of ['miniapp/src/shared/breakthrough.json', 'assets/breakthrough
   const offset = existing.indexOf(marker);
   const data = JSON.parse(offset < 0 ? existing : existing.slice(offset + marker.length).trim().replace(/;$/, ''));
   data.meta.expModel = expModel;
-  // 精力→经验换算：采集 40 精力 = 128 经验，制造 1 精力 = 2 经验。
-  data.meta.expPerEnergy = { gather: 3.2, craft: 2 };
+  // 精力→经验换算：采集 30 级前 40 精力 = 128 经验，30 级后 1 精力 = 2 经验；制造 1 精力 = 2 经验。
+  data.meta.expPerEnergy = { gather: 3.2, gatherFrom30: 2, craft: 2 };
   // 采金采集点等级（用户实测，覆盖目录旧值）；银矿目录里没有，单独补一条
   data.meta.gatherLevels = {
     // 采金

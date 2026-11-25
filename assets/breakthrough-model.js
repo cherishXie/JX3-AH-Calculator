@@ -30,6 +30,11 @@ function createBreakthrough(BT, catalog, getState) {
   };
   const EXP_PER_ENERGY = META.expPerEnergy || {};
   const GATHER_EXP_PER_ENERGY = num(EXP_PER_ENERGY.gather) || 128 / 40;
+  // 30 级以后采集与制造统一为 1 精力 = 2 经验（2026-11-25 用户实测图）。
+  const GATHER_EXP_PER_ENERGY_FROM30 = num(EXP_PER_ENERGY.gatherFrom30) || 2;
+  function gatherExpPerEnergyAt(level) {
+    return level >= 30 ? GATHER_EXP_PER_ENERGY_FROM30 : GATHER_EXP_PER_ENERGY;
+  }
   // 目录里缺的采集点用完整配方结构合成，避免界面读取 materials/outputs 时报错
   const synthGatherNode = function (name, energy, level, skillId) {
     const e = num(energy) || 40;
@@ -103,25 +108,49 @@ function createBreakthrough(BT, catalog, getState) {
   }
   const expModel = META.expModel || { base: 500, step: 25 };
   const observations = (expModel.observations || []).slice().sort(function (a, b) { return a.level - b.level; });
-  if (expModel.method === 'piecewise-linear' && (observations.length < 2 || observations.some(function (p, i) { return !Number.isInteger(p.level) || p.level < 1 || p.level >= CAP || !Number.isFinite(p.exp) || p.exp <= 0 || (i > 0 && (p.level === observations[i - 1].level || p.exp < observations[i - 1].exp)); }))) throw new Error('Invalid experience observations');
-  function experienceAt(level) {
+  // 30→50 级采集与制造的经验表不同（2026-11-25 用户实测图）：
+  // 采集（庖丁）30→50 合计 35,840，制造（烹饪）48,580；1→30 级暂共用实测表。
+  const categoryObservations = {
+    gather: (expModel.categories && expModel.categories.gather || []).slice().sort(function (a, b) { return a.level - b.level; }),
+    craft: (expModel.categories && expModel.categories.craft || []).slice().sort(function (a, b) { return a.level - b.level; })
+  };
+  function validObservations(list, label) {
+    if (!list.length) return;
+    const invalid = list.some(function (p, i) {
+      return !Number.isInteger(p.level) || p.level < 1 || p.level >= CAP || !Number.isFinite(p.exp) || p.exp <= 0 ||
+        (i > 0 && (p.level === list[i - 1].level || p.exp < list[i - 1].exp));
+    });
+    if (invalid) throw new Error('Invalid experience observations' + (label ? ' (' + label + ')' : ''));
+  }
+  if (expModel.method === 'piecewise-linear') {
+    if (observations.length < 2) throw new Error('Invalid experience observations');
+    validObservations(observations, '');
+    validObservations(categoryObservations.gather, 'gather');
+    validObservations(categoryObservations.craft, 'craft');
+  }
+  function experienceAt(level, kind) {
     if (!Number.isInteger(level) || level < 1 || level >= CAP) return { need: null, source: 'unavailable', estimated: true };
     if (expModel.method !== 'piecewise-linear') return { need: Math.max(1, Math.round(num(expModel.base) + num(expModel.step) * (level - 1))), source: 'estimated', estimated: true };
-    const observed = observations.find(function (p) { return p.level === level; });
+    // 30 级起按技艺类别取对应表；1–29 级没有分类数据，继续用共用实测表。
+    const category = categoryObservations[kind];
+    const useCategory = !!(category && category.length && level >= category[0].level && level <= category[category.length - 1].level);
+    const table = useCategory ? category : observations;
+    const observed = table.find(function (p) { return p.level === level; });
     if (observed) return { need: observed.exp, source: 'observed', estimated: false };
-    let upper = observations.findIndex(function (p) { return p.level > level; });
+    let upper = table.findIndex(function (p) { return p.level > level; });
     const extrapolated = upper < 0 || upper === 0;
-    if (upper < 0) upper = observations.length - 1;
+    if (upper < 0) upper = table.length - 1;
     if (upper === 0) upper = 1;
-    const a = observations[upper - 1], b = observations[upper];
+    const a = table[upper - 1], b = table[upper];
     const estimate = a.exp + (b.exp - a.exp) * (level - a.level) / (b.level - a.level);
     const step = num(expModel.roundTo) || 1;
     return { need: Math.max(1, Math.round(estimate / step) * step), source: extrapolated ? 'extrapolated' : 'interpolated', estimated: true };
   }
-  function expToNext(level) { return experienceAt(level).need; }
-  function experienceRows() {
+  function expToNext(level, kind) { return experienceAt(level, kind || 'gather').need; }
+  function experienceRows(kind) {
+    const type = kind || 'gather';
     let cumulative = 0;
-    return Array.from({ length: CAP - 1 }, function (_, i) { const point = experienceAt(i + 1); cumulative += point.need; return { from: i + 1, to: i + 2, need: point.need, cumulative: cumulative, source: point.source, estimated: point.estimated }; });
+    return Array.from({ length: CAP - 1 }, function (_, i) { const point = experienceAt(i + 1, type); cumulative += point.need; return { from: i + 1, to: i + 2, need: point.need, cumulative: cumulative, source: point.source, estimated: point.estimated }; });
   }
   function gateInfo(g, serverId, basis, table) {
     const entries = (g.r || []).map(function (m) {
@@ -180,6 +209,7 @@ function createBreakthrough(BT, catalog, getState) {
     const basis = state.settings && state.settings.basis || 'market';
     const taxRate = Math.max(0, Math.min(1, num(state.settings && state.settings.taxRate)));
     const meta = skillMeta(skillId), gather = meta.type === 'gather';
+    const expKind = gather ? 'gather' : 'craft';
     // 档位表示金/精力的数值区间，不表示产量；所有策略统一用产量中点。
     const table = costTable(serverId, basis, 'mid');
     const pool = gather ? (catalog.recipes || []).filter(function (r) { return r.kind === 'gather' && r.skillId === skillId; }) : recipes.filter(function (r) { return r.s === skillId; }).sort(function (a, b) { return a.l - b.l || String(a.n).localeCompare(String(b.n), 'zh-CN'); });
@@ -201,7 +231,7 @@ function createBreakthrough(BT, catalog, getState) {
         candidates.push({ r: node, e: gatherEcon(node) });
       });
     }
-    const levels = experienceRows().map(function (xp) {
+    const levels = experienceRows(expKind).map(function (xp) {
       let pick = null;
       // 采集点也有等级限制：只有当前等级已解锁的矿/草/兽才能采。
       // 目录里采金最低 20 级、庖丁最低 20 级，所以 1–19 级确实无点可采（数据缺口），
@@ -244,8 +274,11 @@ function createBreakthrough(BT, catalog, getState) {
           : (Math.ceil(xp.need / c.e.exp) < Math.ceil(xp.need / pick.e.exp) || higherNode));
         if (!pick || score(c.e) < score(pick.e) - 1e-9 || (tied && tieBetter)) pick = c;
       });
-      const r = pick && pick.r, e = pick && pick.e, count = e ? Math.ceil(xp.need / e.exp) : null;
-      return { kind: 'level', from: xp.from, to: xp.to, need: xp.need, name: r ? (r.n || r.name) : '无符合等级的可用路线', level: r ? (gather ? r.level : r.l) : null, recipe: r, econ: e, band: null, exp: e ? e.exp : null, energy: e ? e.energy : null, count: count, matCost: e && e.matCost != null ? e.matCost * count : null, outValue: e && e.netValue != null ? e.netValue * count : null, profit: e && e.profit != null ? e.profit * count : null, totalEnergy: e ? e.energy * count : null };
+      const r = pick && pick.r, e = pick && pick.e;
+      // 采集：30 级前按 40 精力=128 经验，30 级后统一 1 精力=2 经验。
+      const actionExp = e ? (gather ? e.energy * gatherExpPerEnergyAt(xp.from) : e.exp) : null;
+      const count = e ? Math.ceil(xp.need / actionExp) : null;
+      return { kind: 'level', from: xp.from, to: xp.to, need: xp.need, name: r ? (r.n || r.name) : '无符合等级的可用路线', level: r ? (gather ? r.level : r.l) : null, recipe: r, econ: e, band: null, exp: actionExp, energy: e ? e.energy : null, count: count, matCost: e && e.matCost != null ? e.matCost * count : null, outValue: e && e.netValue != null ? e.netValue * count : null, profit: e && e.profit != null ? e.profit * count : null, totalEnergy: e ? e.energy * count : null };
     });
     const gates = (BT.gates[skillId] || []).filter(function (g) { return GATE_LEVELS.indexOf(g.l) !== -1; }).map(function (g) { return gateInfo(g, serverId, basis, table); });
     const bands = [];
@@ -261,7 +294,7 @@ function createBreakthrough(BT, catalog, getState) {
     routes.push({ kind: 'max', level: CAP, name: '50 级 · 满级（无独立突破任务）' });
     const totals = aggregate(levels, gates);
     const phases = [{ from: 1, to: 30 }, { from: 30, to: CAP }].map(function (p) { return Object.assign({}, p, aggregate(levels.filter(function (r) { return r.from >= p.from && r.from < p.to; }), gates.filter(function (g) { return p.from === 1 ? g.level === 30 : g.level > 30; }))); });
-    return { kind: gather ? 'gather' : 'craft', skillId: skillId, strategy: strategy, mode: mode, meta: meta, levels: levels, experience: experienceRows(), routes: routes, gates: gates, phases: phases, totals: totals, enough: strategy === 'gold' ? totals.total != null : !totals.missingLevels };
+    return { kind: gather ? 'gather' : 'craft', skillId: skillId, strategy: strategy, mode: mode, meta: meta, levels: levels, experience: experienceRows(expKind), routes: routes, gates: gates, phases: phases, totals: totals, enough: strategy === 'gold' ? totals.total != null : !totals.missingLevels };
   }
   function summary(strategy, mode) {
     return SKILL_IDS.map(function (id) { const r = analyze(id, strategy, mode); return Object.assign({ skillId: id, name: r.meta.name, color: r.meta.color, type: r.meta.type, enough: r.enough }, r.totals); }).sort(function (a, b) { const key = strategy === 'energy' ? 'energy' : strategy === 'effort' ? 'crafts' : 'netCost'; if (a[key] == null) return b[key] == null ? 0 : 1; if (b[key] == null) return -1; return a[key] - b[key]; });

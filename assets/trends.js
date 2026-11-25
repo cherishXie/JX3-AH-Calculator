@@ -840,15 +840,19 @@
         applyDelta(quotes, point.quotes);
         applyDelta(stones, point.stones);
       }
+      // 区服模式没有「目录基准价 / 本服报价」之分，prices 与 quotes 内容相同；
+      // 共用同一份快照，避免每个点做 4 次深拷贝（点数 × 17 服时开销明显）。
+      const snapshotQuotes = clone(quotes);
+      const snapshotStones = clone(stones);
       points.push({
         at: point.at,
         date: meta.date,
         kind: index === 0 ? 'base' : 'update',
         source: point.source || '',
-        quotes: clone(quotes),
-        stones: clone(stones),
-        prices: clone(quotes),
-        stonePrices: clone(stones),
+        quotes: snapshotQuotes,
+        stones: snapshotStones,
+        prices: snapshotQuotes,
+        stonePrices: snapshotStones,
         coverage: point.coverage || null,
         requested: [],
         changed: 0,
@@ -1036,7 +1040,26 @@
   /* ------------------------------------------------------------------ */
   /* 目录与图表纯函数                                                    */
   /* ------------------------------------------------------------------ */
+  // iOS Safari（JavaScriptCore）里 String#localeCompare 带 locale 参数时每次都会
+  // 新建 collator，比复用 Intl.Collator 慢几十倍。目录排序一次会调用几千次比较，
+  // 这里统一复用同一个 collator。
+  const nameCollator = (function () {
+    try {
+      return typeof Intl !== 'undefined' && Intl.Collator ? new Intl.Collator('zh-CN') : null;
+    } catch (err) {
+      return null;
+    }
+  })();
+  function compareName(a, b) {
+    const x = String(a && a.name != null ? a.name : '');
+    const y = String(b && b.name != null ? b.name : '');
+    return nameCollator ? nameCollator.compare(x, y) : x.localeCompare(y, 'zh-CN');
+  }
+  // 目录只增不改：同一筛选条件的排序结果直接复用，避免每次调用都 slice+sort。
+  const itemsCache = Object.create(null);
   function items(type, skillId, category) {
+    const cacheKey = String(type || 'all') + '|' + String(skillId || '') + '|' + String(category || '');
+    if (itemsCache[cacheKey]) return itemsCache[cacheKey];
     let list = catalog.slice();
     if (type === 'material' || type === 'product' || type === 'stone') {
       list = list.filter(function (item) { return item.kind === type; });
@@ -1057,8 +1080,9 @@
       if (a.skillOrder !== b.skillOrder) return a.skillOrder - b.skillOrder;
       if (a.kind !== b.kind) return a.kind === 'product' ? -1 : 1;
       if (a.tier !== b.tier) return b.tier - a.tier;
-      return String(a.name).localeCompare(String(b.name), 'zh-CN');
+      return compareName(a, b);
     });
+    itemsCache[cacheKey] = list;
     return list;
   }
 

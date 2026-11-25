@@ -2209,7 +2209,7 @@
 
 
     if (!r.enough) html += '<div class="section-gap">' + notice('无法完整核算：' + (t.missingLevels ? t.missingLevels + ' 个等级缺少可用配方。' : '') + r.gates.filter(function (g) { return g.missing; }).map(function (g) { return g.level + ' 级任务缺价：' + g.missingItems.map(function (i) { return i.name + '×' + i.qty; }).join('、'); }).join('；') + ' 缺失费用不按 0 计算，总收益暂不提供。', 'warn') + '</div>';
-    html += '<div class="grid section-gap"><section class="card col-12"><details class="bt-experience"><summary class="card-head"><div class="card-head-main"><h2 class="card-title">' + U.esc(r.meta.name) + ' · 逐级所需经验</h2><p class="card-sub">1→2 至 30→31 用户实测 · 31 级起外推 · 展开查看 49 级门槛。</p></div><span class="badge badge-outline">30 级实测</span></summary><div class="table-wrap bt-exp-table"><table class="data compact"><thead><tr><th>升级</th><th class="num">所需经验</th><th class="num">累计经验（模拟）</th><th>来源</th></tr></thead><tbody>' + r.experience.map(function (xp) { return '<tr><td>' + xp.from + '→' + xp.to + '</td><td class="num">' + U.fmtInt(xp.need) + '</td><td class="num">' + U.fmtInt(xp.cumulative) + '</td><td><span class="badge ' + (xp.source === 'observed' ? 'badge-positive' : xp.source === 'extrapolated' ? 'badge-warning' : 'badge-outline') + '">' + ({ observed: '用户观测', interpolated: '插值', extrapolated: '外推' }[xp.source] || '估算') + '</span></td></tr>'; }).join('') + '</tbody></table></div><div class="card-foot">1→2 至 30→31 为用户逐级实测（共 30 个点，1→30 累计 36,830，30→31 为 1,650）；31 级起按末段每级 +10 外推、取整到 10。精力→经验按实测换算：采集 40 精力 = 128 经验、制造 1 精力 = 2 经验，路线中的次数与精力已按此重算。暂按八技艺共用门槛模拟，尚未核实技艺间差异。</div></details></section></div>';
+    html += '<div class="grid section-gap"><section class="card col-12"><details class="bt-experience"><summary class="card-head"><div class="card-head-main"><h2 class="card-title">' + U.esc(r.meta.name) + ' · 逐级所需经验</h2><p class="card-sub">1→30 共用实测 · 30→50 采集/制造分表 · 展开查看 49 级门槛。</p></div><span class="badge badge-outline">30→50 分表</span></summary><div class="table-wrap bt-exp-table"><table class="data compact"><thead><tr><th>升级</th><th class="num">所需经验</th><th class="num">累计经验</th><th>来源</th></tr></thead><tbody>' + r.experience.map(function (xp) { return '<tr><td>' + xp.from + '→' + xp.to + '</td><td class="num">' + U.fmtInt(xp.need) + '</td><td class="num">' + U.fmtInt(xp.cumulative) + '</td><td><span class="badge ' + (xp.source === 'observed' ? 'badge-positive' : xp.source === 'extrapolated' ? 'badge-warning' : 'badge-outline') + '">' + ({ observed: '用户观测', interpolated: '插值', extrapolated: '外推' }[xp.source] || '估算') + '</span></td></tr>'; }).join('') + '</tbody></table></div><div class="card-foot">1→30 为八技艺共用实测（1→30 累计 36,830，30→31 采集 1,650 / 制造 2,190）；30→50 采集（庖丁）合计 35,840、制造（烹饪）48,580。30 级后采集与制造统一 1 精力 = 2 经验（30 级前采集仍按 40 精力 = 128 经验），路线中的次数与精力已按此重算。制造表 41→42 至 48→49 有 8 行被贴纸遮挡，已按合计 48,580 与相邻 640 差值推定。</div></details></section></div>';
 
     // 概览压成一张紧凑卡：关键数字一行，两阶段拆分一行，提示一行
     var phaseChips = r.phases.map(function (ph) {
@@ -2254,7 +2254,7 @@
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div><h2 class="card-title">八技艺横评</h2><p class="card-sub">' + (strategy === 'gold' ? '按合计收益（净花费）从高到低排序' : '按总精力从少到多排序') + '</p></div></div><div class="table-wrap"><table class="data compact"><thead><tr><th>#</th><th>技艺</th><th class="num">总精力</th><th class="num">次数</th>' + (strategy === 'gold' ? '<th class="num">突破材料</th><th class="num">合计收益</th>' : '') + '</tr></thead><tbody>' + sum.map(function (x, i) { return '<tr class="clickable" data-bt-skill="' + U.esc(x.skillId) + '" tabindex="0"><td>' + (x.enough ? i + 1 : '待补全') + '</td><td>' + U.esc(x.name) + '</td><td class="num">' + U.fmtInt(x.energy) + '</td><td class="num">' + U.fmtInt(x.crafts) + '</td>' + (strategy === 'gold' ? '<td class="num">' + U.fmt(x.gateCost, 0) + '</td><td class="num">' + btProfit(x.total) + '</td>' : '') + '</tr>'; }).join('') + '</tbody></table></div></section></div>';
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
-      notice('经验模型：' + U.esc(meta.expModel.description) + '。暂按八技艺共用门槛，非观测等级及技艺间差异尚未核实，可能影响制作次数、路线及收益；采集经验按 ' + U.fmtInt(meta.gatherExp) + ' 估算。突破材料与门槛来自 JX3BOX 攻略与成就库，配方数据来自技艺接口，优先使用本服脚本 JX3BOX 报价，无报价不使用手动价、示例价或跨服回退；产出按拍卖价成交估算，未计市场深度与暴击，量产会压低实际成交价。', 'info') +
+      notice('经验模型：' + U.esc(meta.expModel.description) + '。1→30 为八技艺共用实测，30→50 已按采集/制造分表；30 级后采集与制造统一 1 精力 = 2 经验（30 级前采集按 40 精力 = 128 经验）。突破材料与门槛来自 JX3BOX 攻略与成就库，配方数据来自技艺接口，优先使用本服脚本 JX3BOX 报价，无报价不使用手动价、示例价或跨服回退；产出按拍卖价成交估算，未计市场深度与暴击，量产会压低实际成交价。', 'info') +
       '<p class="tiny dim">数据版本 ' + U.esc(meta.version) + ' · 目录报价 ' + U.esc(String(DATA.meta.priceUpdatedAt || '')) + ' · 突破报价 ' + U.esc(String(meta.priceUpdatedAt || '')) + ' · 参考：' +
       '<a href="https://www.jx3box.com/bps/109793" target="_blank" rel="noopener">JX3BOX 生活技艺升级攻略 ' + icon('external') + '</a></p>' +
       '</div></section></div>';
@@ -3511,9 +3511,14 @@
       label: days === 1 ? '今日' : '近 ' + days + ' 日'
     };
   }
+  // 目录在一次页面生命周期内不变，只取一次；排序结果由 trends.js 的 items 缓存。
+  let serverCatalogCache = null;
   function serverCatalog() {
-    const T = window.JX3Trends;
-    return T ? T.items('all', '') : [];
+    if (!serverCatalogCache) {
+      const T = window.JX3Trends;
+      serverCatalogCache = T ? T.items('all', '') : [];
+    }
+    return serverCatalogCache;
   }
 
   /* ------------------------------------------------------------------ */
@@ -3734,7 +3739,14 @@
     if (!servers.length || !selection.selected.length) {
       return { status: 'ready', range: range, selection: selection, servers: [], columns: [], rank: [], globalReturns: [], lowCount: 0, serverCount: servers.length };
     }
-    const views = servers.map(function (s) { return T.view(s.id, { from: range.from, to: range.to, mode: 'server' }); });
+    // 同一次计算里 17 个已选区服 + 17 个全服兜底用的是同一批 (区服, 区间)：
+    // 先在局部复用，避免 trends.js 的 6 条 view 缓存被反复挤出、每条都重放一遍。
+    const viewById = Object.create(null);
+    const views = servers.map(function (s) {
+      const view = T.view(s.id, { from: range.from, to: range.to, mode: 'server' });
+      viewById[s.id] = view;
+      return view;
+    });
     const loading = views.filter(function (v) { return v.status === 'loading'; });
     if (loading.length) {
       const first = loading[0] || {};
@@ -3757,7 +3769,7 @@
     // 可统计集合就等于它自己的可比集合，覆盖率会恒等于 100%，失去意义。
     // 同一区间下各区服共用同一份日文件，这里不会额外产生网络请求。
     const universeViews = (DATA.servers || []).map(function (s) {
-      return T.view(s.id, { from: range.from, to: range.to, mode: 'server' });
+      return viewById[s.id] || T.view(s.id, { from: range.from, to: range.to, mode: 'server' });
     }).filter(function (v) { return v && v.status === 'ready'; });
     const observedKeys = new Set();
     (universeViews.length ? universeViews : views).forEach(function (view) {
@@ -3978,6 +3990,13 @@
     if (Math.abs(value) < 0.0005) return '';
     return 'background:' + (value > 0 ? 'rgba(69,212,131,' : 'rgba(244,63,94,') + alpha.toFixed(3) + ')';
   }
+  // 指定产物多选项：选择器展开时才生成（首屏不需要 1000+ 个节点）。
+  function serverProductOptionsHtml(items, selectedItemSet) {
+    return (items || []).map(function (item) {
+      return '<label class="trend-check" data-server-product-item data-server-product-text="' + U.esc([item.name, item.skillName, item.tierName].join(' ')) + '"><input type="checkbox" data-server-product-toggle="' + U.esc(item.key) + '"' + (selectedItemSet.has(item.key) ? ' checked' : '') + '>' +
+        '<span class="trend-dot" style="--c:' + U.esc(item.color || '#64748B') + '"></span><span class="nm">' + U.esc(item.name) + '</span><span class="tier">' + U.esc(item.tierName || item.skillName) + '</span></label>';
+    }).join('') || '<span class="tiny dim">没有匹配的物品</span>';
+  }
   function serverFilterCard(ctx, p) {
     const range = ctx.range;
     const selection = ctx.selection;
@@ -3990,10 +4009,11 @@
     const serverOpen = ui.serverPickerOpen ? ' open' : '';
     const totalItems = allItems.length;
     const productQuery = String(ui.serverProductQuery || '').trim();
-    const productList = allItems.filter(function (item) {
+    // 选择器收起时先不渲染 1000+ 个复选项，展开时再由 toggle 处理器补上。
+    const productList = ui.serverProductPickerOpen ? allItems.filter(function (item) {
       if (!productQuery) return true;
       return U.includes([item.name, item.skillName, item.tierName].join(' '), productQuery);
-    });
+    }) : [];
     const serverCount = selectedServers.length;
     const totalServers = (DATA.servers || []).length;
     const selectedCount = selection.selected.length;
@@ -4022,11 +4042,8 @@
         '<button class="btn btn-sm" data-action="server-product-none">清空</button>' +
         '<span class="tiny dim">已选 ' + selectedCount + ' / ' + totalItems + '</span>' +
       '</div><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索材料 / 产物 / 五行石" value="' + U.esc(ui.serverProductQuery || '') + '" data-server-product-search data-fkey="server-product-search" aria-label="搜索指定产物"></div>' +
-      '<div class="trend-picker-list">' +
-        (productList.map(function (item) {
-          return '<label class="trend-check" data-server-product-item data-server-product-text="' + U.esc([item.name, item.skillName, item.tierName].join(' ')) + '"><input type="checkbox" data-server-product-toggle="' + U.esc(item.key) + '"' + (selectedItemSet.has(item.key) ? ' checked' : '') + '>' +
-            '<span class="trend-dot" style="--c:' + U.esc(item.color || '#64748B') + '"></span><span class="nm">' + U.esc(item.name) + '</span><span class="tier">' + U.esc(item.tierName || item.skillName) + '</span></label>';
-        }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
+      '<div class="trend-picker-list" data-server-product-list>' +
+        (ui.serverProductPickerOpen ? serverProductOptionsHtml(productList, selectedItemSet) : '') +
       '</div></div></details>';
     html += '<button class="btn btn-sm" data-action="server-refresh" title="重新拉取最新走势">' + icon('refresh') + '刷新</button>';
     html += '<button class="btn btn-sm" data-action="server-reset">重置</button>';
@@ -4208,10 +4225,15 @@
     ui.serverRecentItems = keys;
     serverRecentSave(keys);
   }
+  // 物品颜色只和它在完整目录中的位置有关：一次建表，避免排行榜每行 findIndex + 全目录排序。
+  let serverItemColorMap = null;
   function serverItemColor(item) {
-    const all = serverCatalog();
-    const index = all.findIndex(function (x) { return x.key === item.key; });
-    return trendItemColor(index < 0 ? 0 : index);
+    if (!item) return '#64748B';
+    if (!serverItemColorMap) {
+      serverItemColorMap = new Map();
+      serverCatalog().forEach(function (x, index) { serverItemColorMap.set(x.key, trendItemColor(index)); });
+    }
+    return serverItemColorMap.get(item.key) || '#64748B';
   }
   function serverItemMeta(item) {
     if (!item) return '';
@@ -4234,6 +4256,13 @@
       }).join('') +
       '<span class="server-quick-note">最近 ' + SERVER_RECENT_MAX + ' 个 · 全部 ' + all.length + ' 项</span></div>';
   }
+  // 物品多选项：选择器展开时才生成（首屏不需要 1000+ 个节点）。
+  function serverItemOptionsHtml(items, selectedKey) {
+    return (items || []).map(function (item) {
+      return '<button type="button" class="server-item-option' + (selectedKey && selectedKey === item.key ? ' on' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc([item.name, item.skillName, item.tierName, item.kind].join(' ')) + '">' +
+        '<span class="nm">' + U.esc(item.name) + '</span><span class="meta">' + U.esc(serverItemMeta(item)) + '</span></button>';
+    }).join('') || '<span class="tiny dim">没有匹配的物品</span>';
+  }
   function serverItemFilterCard(ctx, p) {
     const all = ctx.selection.all;
     const selectedServers = serverSelectedServers(p);
@@ -4242,10 +4271,10 @@
     const serverOpen = ui.serverPickerOpen ? ' open' : '';
     const itemOpen = ui.serverItemPickerOpen ? ' open' : '';
     const query = String(ui.serverItemQuery || '').trim();
-    const itemList = all.filter(function (item) {
+    const itemList = ui.serverItemPickerOpen ? all.filter(function (item) {
       if (!query) return true;
       return serverSearchMatch([item.name, item.skillName, item.tierName, item.kind].join(' '), query);
-    });
+    }) : [];
     const selectedItem = ctx.item;
     const allProductSelected = selectedServers.length === totalServers;
     const itemMeta = serverItemMeta(selectedItem);
@@ -4266,13 +4295,10 @@
             '<span class="server-dot" style="--c:' + U.esc(trendItemColor(index)) + '"></span><span class="nm">' + U.esc(s.name) + '</span><span class="tier">' + U.esc(s.region || '') + '</span></label>';
         }).join('') +
       '</div></div></details>';
-    html += '<details class="trend-picker server-item-picker"' + itemOpen + '><summary class="trend-picker-summary"><span>物品</span><b>' + (selectedItem ? U.esc(selectedItem.name) : '选择物品') + '</b>' + icon('chevronDown') + '</summary>' +
-      '<div class="trend-picker-panel server-item-panel"><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品 / 技艺 / 类型" title="支持模糊搜索，回车选择第一项" value="' + U.esc(ui.serverItemQuery || '') + '" data-server-item-search data-fkey="server-item-search" aria-label="搜索物品"></div><div class="server-search-hint"><span data-server-item-count>' + itemList.length + '</span> 个匹配 · 支持模糊搜索 · 回车选择第一项</div>' +
-      '<div class="trend-picker-list">' +
-        (itemList.map(function (item) {
-          return '<button type="button" class="server-item-option' + (selectedItem && selectedItem.key === item.key ? ' on' : '') + '" data-server-item-pick="' + U.esc(item.key) + '" data-server-item-text="' + U.esc([item.name, item.skillName, item.tierName, item.kind].join(' ')) + '">' +
-            '<span class="nm">' + U.esc(item.name) + '</span><span class="meta">' + U.esc(serverItemMeta(item)) + '</span></button>';
-        }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
+    html += '<details class="trend-picker server-item-picker"' + itemOpen + ' data-selected-key="' + U.esc(selectedItem ? selectedItem.key : '') + '"><summary class="trend-picker-summary"><span>物品</span><b>' + (selectedItem ? U.esc(selectedItem.name) : '选择物品') + '</b>' + icon('chevronDown') + '</summary>' +
+      '<div class="trend-picker-panel server-item-panel"><div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品 / 技艺 / 类型" title="支持模糊搜索，回车选择第一项" value="' + U.esc(ui.serverItemQuery || '') + '" data-server-item-search data-fkey="server-item-search" aria-label="搜索物品"></div><div class="server-search-hint"><span data-server-item-count>' + (ui.serverItemPickerOpen ? itemList.length : all.length) + '</span> 个匹配 · 支持模糊搜索 · 回车选择第一项</div>' +
+      '<div class="trend-picker-list" data-server-item-list>' +
+        (ui.serverItemPickerOpen ? serverItemOptionsHtml(itemList, selectedItem ? selectedItem.key : '') : '') +
       '</div></div></details>';
     html += '<button class="btn btn-sm" data-action="server-refresh" title="重新拉取最新走势">' + icon('refresh') + '刷新</button>';
     html += '<button class="btn btn-sm" data-action="server-item-reset">重置</button>';
@@ -5890,7 +5916,16 @@
     const serverView = e.target.closest('[data-server-view]');
     if (serverView) {
       const view = serverView.getAttribute('data-server-view');
-      updateParams(view === 'item' ? { sview: 'item' } : { sview: '', sitem: '' });
+      // 物品视角的重算在手机上可能超过一帧：先把 tab 选中态画出来，再让出这一帧，
+      // 否则用户点下去会先看到界面“僵住”。
+      markSwitchPending(serverView, '[data-server-view]', 'on');
+      const siblings = serverView.parentNode ? serverView.parentNode.querySelectorAll('[data-server-view]') : [];
+      for (let i = 0; i < siblings.length; i++) {
+        siblings[i].setAttribute('aria-selected', siblings[i] === serverView ? 'true' : 'false');
+      }
+      window.requestAnimationFrame(function () {
+        updateParams(view === 'item' ? { sview: 'item' } : { sview: '', sitem: '' });
+      });
       return;
     }
     const itemPick = e.target.closest('[data-server-item-pick]');
@@ -6348,7 +6383,21 @@
       }
       if (e.target && e.target.classList && e.target.classList.contains('server-item-picker')) {
         ui.serverItemPickerOpen = !!e.target.open;
-        if (!e.target.open) {
+        if (e.target.open) {
+          // 收起时不渲染 1000+ 个选项，展开这一帧再补上。
+          const list = e.target.querySelector('[data-server-item-list]');
+          if (list && !list.getAttribute('data-filled')) {
+            const selection = serverItemSelection(params());
+            const q = String(ui.serverItemQuery || '').trim();
+            const items = q ? selection.all.filter(function (item) {
+              return serverSearchMatch([item.name, item.skillName, item.tierName, item.kind].join(' '), q);
+            }) : selection.all;
+            list.innerHTML = serverItemOptionsHtml(items, e.target.getAttribute('data-selected-key') || '');
+            list.setAttribute('data-filled', '1');
+            const count = e.target.querySelector('[data-server-item-count]');
+            if (count) count.textContent = String(items.length);
+          }
+        } else {
           ui.serverItemQuery = '';
           const input = e.target.querySelector('[data-server-item-search]');
           if (input) input.value = '';
@@ -6357,7 +6406,19 @@
       }
       if (e.target && e.target.classList && e.target.classList.contains('server-product-picker')) {
         ui.serverProductPickerOpen = !!e.target.open;
-        if (!e.target.open) {
+        if (e.target.open) {
+          const list = e.target.querySelector('[data-server-product-list]');
+          if (list && !list.getAttribute('data-filled')) {
+            const selection = serverItemSelection(params());
+            const q = String(ui.serverProductQuery || '').trim();
+            const items = q ? selection.all.filter(function (item) {
+              return U.includes([item.name, item.skillName, item.tierName].join(' '), q);
+            }) : selection.all;
+            const checked = new Set(selection.selected.map(function (item) { return item.key; }));
+            list.innerHTML = serverProductOptionsHtml(items, checked);
+            list.setAttribute('data-filled', '1');
+          }
+        } else {
           ui.serverProductQuery = '';
           const input = e.target.querySelector('[data-server-product-search]');
           if (input) input.value = '';
@@ -6638,9 +6699,19 @@
       checkDataUpdate: function (force) { checkForDataUpdate(force !== false); }
     };
     if (window.JX3Trends && window.JX3Trends.onUpdate) {
+      let trendRenderTimer = 0;
       window.JX3Trends.onUpdate(function () {
         if (!ui.booted) return;
-        if (Route.parse().path === '/trends' || Route.parse().path === '/server-trends') render();
+        const path = Route.parse().path;
+        if (path !== '/trends' && path !== '/server-trends') return;
+        // 首次进入 7 日区间会连续补拉多个日文件，每个文件都 notify 一次；
+        // 合并成一次重绘，避免同一屏连续重算多遍。
+        if (trendRenderTimer) return;
+        trendRenderTimer = setTimeout(function () {
+          trendRenderTimer = 0;
+          const now = Route.parse().path;
+          if (now === '/trends' || now === '/server-trends') render();
+        }, 80);
       });
     }
     bindEvents();
