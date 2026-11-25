@@ -10,6 +10,7 @@ import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
 import { useStore } from '../../store';
 import { DATA, rowsOf } from '../../shared/engine';
+import { gradeOf, isVisibleGrade } from '../../shared/landability';
 import { fmt, fmtInt } from '../../shared/format';
 
 const PAGE_SIZE = 30;
@@ -21,6 +22,7 @@ function Rank() {
   const [type, setType] = useState('all');
   const [skillId, setSkillId] = useState((router.params && router.params.skill) || '');
   const [onlyComplete, setOnlyComplete] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const [limit, setLimit] = useState(PAGE_SIZE);
 
   const rows = useMemo(function () {
@@ -30,6 +32,7 @@ function Rank() {
   const filtered = useMemo(function () {
     const keyword = q.trim().toLowerCase();
     const list = rows.filter(function (r) {
+      if (!showAll && !isVisibleGrade(gradeOf(r.recipe, state.serverId).grade)) return false;
       if (type !== 'all' && r.type !== type) return false;
       if (skillId && r.recipe.skillId !== skillId) return false;
       if (onlyComplete && r.calc.missing) return false;
@@ -40,7 +43,7 @@ function Rank() {
       if (a.calc.missing !== b.calc.missing) return a.calc.missing ? 1 : -1;
       return b.calc.perEnergy - a.calc.perEnergy;
     });
-  }, [rows, q, type, skillId, onlyComplete]);
+  }, [rows, q, type, skillId, onlyComplete, showAll, state.serverId]);
 
   const visible = filtered.slice(0, limit);
   const profitable = filtered.filter(function (r) { return !r.calc.missing && r.calc.profit > 0; }).length;
@@ -90,7 +93,7 @@ function Rank() {
         <Toggle label='只看有报价（排除缺价）' value={onlyComplete} onChange={function (v) { setOnlyComplete(v); setLimit(PAGE_SIZE); }} />
       </View>
 
-      <Section title='配方列表' sub={visible.length + ' / ' + filtered.length} right={<Text className='v2-more' onClick={function () { setQ(''); setType('all'); setSkillId(''); setOnlyComplete(false); setLimit(PAGE_SIZE); }}>重置</Text>}>
+      <Section title='配方列表' sub={visible.length + ' / ' + filtered.length} right={<Text className='v2-more' onClick={function () { setQ(''); setType('all'); setSkillId(''); setOnlyComplete(false); setShowAll(false); setLimit(PAGE_SIZE); }}>重置</Text>}>
         <View className='v2-rows'>
           {visible.map(function (r, i) {
             const w = maxPer > 0 && r.calc.perEnergy > 0 ? Math.max(6, Math.round((r.calc.perEnergy / maxPer) * 100)) : 0;
@@ -99,7 +102,10 @@ function Rank() {
                 {w ? <View className='v2-bar' style={{ width: w + '%' }} /> : null}
                 <Text className={'v2-no' + (i === 0 ? ' top' : '')}>{i + 1}</Text>
                 <View className='v2-row-main'>
-                  <Text className='v2-row-nm'>{r.recipe.name}</Text>
+                  <View className='v2-flex' style={{ gap: '8rpx' }}>
+                    <Text className='v2-row-nm'>{r.recipe.name}</Text>
+                    <Text className={'v2-tag ' + gradeOf(r.recipe, state.serverId).cls}>{gradeOf(r.recipe, state.serverId).label}</Text>
+                  </View>
                   <Text className='v2-row-ds'>{r.skill.name} · {r.tier.name} · {fmtInt(r.calc.energy)} 精力 · 利润 {fmt(r.calc.profit, 0)}</Text>
                 </View>
                 <View className='v2-row-val'>

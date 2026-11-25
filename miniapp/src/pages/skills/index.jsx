@@ -13,6 +13,7 @@ import DataNote from '../../components/DataNote';
 import { useStore } from '../../store';
 import { DATA, priceOf, rowsOf, filterRows, sortRows, findItem } from '../../shared/engine';
 import { fmt, fmtInt, fmtPct, fmtSigned } from '../../shared/format';
+import { gradeOf, isVisibleGrade, gradeCounts } from '../../shared/landability';
 
 function Skills() {
   const [state, actions] = useStore();
@@ -22,6 +23,7 @@ function Skills() {
   const [tier, setTier] = useState('');
   const [onlyProfit, setOnlyProfit] = useState(false);
   const [onlyComplete, setOnlyComplete] = useState(false);
+  const [showAll, setShowAll] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
 
   useDidShow(function () {
@@ -37,15 +39,20 @@ function Skills() {
     return rowsOf(state, { serverId: state.serverId, basis: state.settings.basis });
   }, [state]);
   const rows = allRows.filter(function (r) { return r.recipe.skillId === sk.id; });
-  const filtered = sortRows(filterRows(rows, {
+  const grades = gradeCounts(rows, state.serverId);
+  const graded = rows.filter(function (r) { return showAll || isVisibleGrade(gradeOf(r.recipe, state.serverId).grade); });
+  const filtered = sortRows(filterRows(graded, {
     q: q, tier: tier, onlyProfit: onlyProfit, complete: onlyComplete
   }), 'perEnergy', 'desc');
   const complete = rows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
-  const doable = complete.filter(function (r) { return r.calc.profit > 0; });
+  const doable = complete.filter(function (r) {
+    const g = gradeOf(r.recipe, state.serverId).grade;
+    return g === 'A' || g === 'B' || g === 'G';
+  });
   const avgDoable = doable.length ? doable.reduce(function (s, r) { return s + r.calc.perEnergy; }, 0) / doable.length : null;
   const avgAll = complete.length ? complete.reduce(function (s, r) { return s + r.calc.perEnergy; }, 0) / complete.length : null;
-  const best = complete.slice().sort(function (x, y) { return y.calc.perEnergy - x.calc.perEnergy; })[0];
-  const missingRows = rows.filter(function (r) { return r.calc.missing; }).length;
+  const best = doable.slice().sort(function (x, y) { return y.calc.perEnergy - x.calc.perEnergy; })[0];
+  const missingRows = graded.filter(function (r) { return r.calc.missing; }).length;
 
   const tierNames = ['全部品阶'].concat(DATA.tiers.map(function (t) { return t.name; }));
   const tierIdx = tier ? DATA.tiers.findIndex(function (t) { return String(t.id) === String(tier); }) + 1 : 0;
@@ -109,7 +116,7 @@ function Skills() {
         <View className='v2-h1' style={{ fontSize: '50rpx' }}>{sk.name}</View>
         <View className='v2-hero-sub v2-clamp2'>{sk.desc || '按本服物价计算材料成本与精力收益。'}</View>
         <View className='v2-tiny' style={{ marginTop: '8rpx' }}>
-          {rows.length} 个{sk.type === 'gather' ? '采集点' : '配方'} · 可做 {doable.length} 个 · {missingRows ? '缺价 ' + missingRows + ' 个' : '数据齐全'}
+          {rows.length} 个{sk.type === 'gather' ? '采集点' : '配方'} · 可做 {grades.A} · 谨慎 {grades.B} · 采集 {grades.G} · 不可做 {grades.C} · {missingRows ? '缺价 ' + missingRows + ' 个' : '数据齐全'}
         </View>
       </View>
 
@@ -143,7 +150,11 @@ function Skills() {
         sub={filtered.length + ' 条 · 按金/精力排序'}
         right={<Text className='v2-more' onClick={resetFilter}>重置</Text>}
       >
-        <View className='v2-rows'>
+        <View className='v2-chip-row'>
+          <View className={'v2-chip' + (showAll ? ' on' : '')} onClick={function () { setShowAll(true); }}>全部 {rows.length}</View>
+          <View className={'v2-chip' + (showAll ? '' : ' on')} onClick={function () { setShowAll(false); }}>可做 / 谨慎 {grades.A + grades.B + grades.G}</View>
+        </View>
+        <View className='v2-rows' style={{ marginTop: '8rpx' }}>
           {filtered.map(function (r, i) {
             const c = r.calc;
             const w = maxPer > 0 && c.perEnergy > 0 ? Math.max(6, Math.round((c.perEnergy / maxPer) * 100)) : 0;
@@ -156,6 +167,7 @@ function Skills() {
                     <Text className='v2-row-nm'>{r.recipe.name}</Text>
                     {r.recipe.custom ? <Text className='v2-tag hot'>自定义</Text> : null}
                     {r.recipe.verified ? <Text className='v2-tag pos'>已核验</Text> : null}
+                    <Text className={'v2-tag ' + gradeOf(r.recipe, state.serverId).cls}>{gradeOf(r.recipe, state.serverId).label}</Text>
                   </View>
                   <Text className='v2-row-ds'>{r.outputNames} · {r.tier.name} · 成本 {fmt(c.totalCost, 0)} · {fmtInt(c.energy)} 精力</Text>
                 </View>

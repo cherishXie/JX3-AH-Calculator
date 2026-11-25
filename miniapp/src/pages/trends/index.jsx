@@ -9,6 +9,7 @@ import Kpi from '../../components/Kpi';
 import Seg from '../../components/Seg';
 import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
+import ItemPicker from '../../components/ItemPicker';
 import { useStore } from '../../store';
 import { DATA } from '../../shared/engine';
 import {
@@ -42,8 +43,8 @@ function drawChart(series, theme) {
       const info = res && res[0];
       if (!info || !info.node) return;
       const canvas = info.node;
-      const width = Math.max(1, info.width);
-      const height = Math.max(1, info.height);
+      const width = Math.max(1, Number(info.width) || 0);
+      const height = Math.max(1, Number(info.height) || 0);
       const dpr = (Taro.getSystemInfoSync().pixelRatio) || 2;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -157,6 +158,9 @@ function Trends() {
   const [trendData, setTrendData] = useState(getTrendData());
   const [meta, setMeta] = useState(getTrendMeta());
   const [loading, setLoading] = useState(false);
+  const [showItemPicker, setShowItemPicker] = useState(false);
+  const [rankFilter, setRankFilter] = useState('all');
+  const [rankLimit, setRankLimit] = useState(30);
 
   useEffect(function () {
     let alive = true;
@@ -281,16 +285,11 @@ function Trends() {
               <Text>{skillOptions[skillIdx]}</Text><Text className='v2-muted'>⌄</Text>
             </View>
           </Picker>
-          <Picker mode='selector' range={allItems.map(function (i) { return i.name; })} value={focusIdx}
-            onChange={function (e) {
-              const item = allItems[Number(e.detail.value)];
-              if (item) setFocusKey(item.key);
-            }}>
-            <View className='v2-input' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Text style={{ maxWidth: '240rpx', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{focusItem ? focusItem.name : '选择物品'}</Text>
-              <Text className='v2-muted'>⌄</Text>
-            </View>
-          </Picker>
+          <View className='v2-input' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+            onClick={function () { setShowItemPicker(true); }}>
+            <Text style={{ maxWidth: '240rpx', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{focusItem ? focusItem.name : '选择物品'}</Text>
+            <Text className='v2-muted'>搜索 ⌄</Text>
+          </View>
         </View>
         <View className='v2-tiny' style={{ marginTop: '10rpx' }}>快照 {meta.updatedAt ? meta.updatedAt.slice(0, 16).replace('T', ' ') : '—'} · 数据 {meta.catalogVersion}</View>
       </View>
@@ -316,9 +315,18 @@ function Trends() {
         <View className='v2-tiny' style={{ marginTop: '8rpx' }}>不覆盖价格库里的手动校准；先在本服行情改价，曲线只反映历史快照。</View>
       </Section>
 
-      <Section title='区间涨跌榜' sub={'按涨跌幅 · ' + ranked.length + ' 项'}>
-        <View className='v2-rows'>
-          {ranked.slice(0, 20).map(function (row, i) {
+      <Section title='区间涨跌榜' sub={'按涨跌幅 · 涨 ' + ranked.filter(function (r) { return r.summary.changePct > 0; }).length + ' / 跌 ' + ranked.filter(function (r) { return r.summary.changePct < 0; }).length}>
+        <View className='v2-chip-row'>
+          <View className={'v2-chip' + (rankFilter === 'all' ? ' on' : '')} onClick={function () { setRankFilter('all'); setRankLimit(30); }}>全部 {ranked.length}</View>
+          <View className={'v2-chip' + (rankFilter === 'up' ? ' on' : '')} onClick={function () { setRankFilter('up'); setRankLimit(30); }}>上涨 {ranked.filter(function (r) { return r.summary.changePct > 0; }).length}</View>
+          <View className={'v2-chip' + (rankFilter === 'down' ? ' on' : '')} onClick={function () { setRankFilter('down'); setRankLimit(30); }}>下跌 {ranked.filter(function (r) { return r.summary.changePct < 0; }).length}</View>
+        </View>
+        <View className='v2-rows' style={{ marginTop: '8rpx' }}>
+          {ranked.filter(function (r) {
+            if (rankFilter === 'up') return r.summary.changePct > 0;
+            if (rankFilter === 'down') return r.summary.changePct < 0;
+            return true;
+          }).slice(0, rankLimit).map(function (row, i) {
             const change = row.summary.changePct;
             return (
               <View className={'v2-row' + (focusItem && row.item.key === focusItem.key ? ' active' : '')} key={row.item.key}
@@ -337,6 +345,16 @@ function Trends() {
           })}
           {!ranked.length ? <Empty title='当前筛选没有可比较的物品' desc='调整筛选。' /> : null}
         </View>
+        {ranked.filter(function (r) {
+          if (rankFilter === 'up') return r.summary.changePct > 0;
+          if (rankFilter === 'down') return r.summary.changePct < 0;
+          return true;
+        }).length > rankLimit ? (
+          <View hoverClass='v2-pressed' hoverStayTime={80} className='v2-btn ghost block' style={{ marginTop: '14rpx' }}
+            onClick={function () { setRankLimit(rankLimit + 30); }}>
+            加载更多 · {Math.min(rankLimit, ranked.length)} / {ranked.length}
+          </View>
+        ) : null}
       </Section>
 
       <Section title='历史节点' sub='当前物品 · 时间倒序' action='复制 CSV' onAction={copyNodes}>
@@ -360,6 +378,15 @@ function Trends() {
       </Section>
 
       <DataNote />
+
+      <ItemPicker
+        open={showItemPicker}
+        title='选择物品'
+        items={allItems.map(function (i) { return { id: i.key, name: i.name, sub: i.skillName + (i.tierName ? ' · ' + i.tierName : '') }; })}
+        value={focusKey}
+        onSelect={function (it) { setFocusKey(it.id); setShowItemPicker(false); }}
+        onClose={function () { setShowItemPicker(false); }}
+      />
     </View>
   );
 }

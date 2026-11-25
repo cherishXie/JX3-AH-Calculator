@@ -36,6 +36,8 @@ function Breakthrough() {
 
   const t = result.totals;
   const isGather = result.meta.type === 'gather';
+  const phase3050 = result.phases && result.phases[1];
+  const phase3050Energy = phase3050 && phase3050.exp != null ? Math.round(phase3050.exp / 2) : null;
   const taxRate = state.settings.taxRate;
 
   function toggle(key) {
@@ -80,14 +82,14 @@ function Breakthrough() {
         <View className='bt-summary-lead'>
           <Text className='k'>{strategy === 'gold' ? '合计收益' : '总精力'}</Text>
           <Text className={'v ' + (strategy === 'gold' && t.total > 0 ? 'pos' : strategy === 'gold' && t.total < 0 ? 'neg' : '')}>
-            {strategy === 'gold' ? fmtWan(t.total, 2) : fmtInt(t.energy)}
+            {strategy === 'gold' ? (result.enough ? fmtWan(t.total, 2) : '—') : fmtInt(t.energy)}
           </Text>
           <Text className='u'>{strategy === 'gold' ? '金' : '精力'}</Text>
         </View>
         <View className='bt-summary-facts'>
           <Text><Text className='b'>{fmtInt(t.exp)}</Text> 经验</Text>
           <Text><Text className='b'>{fmtInt(t.crafts)}</Text> 次</Text>
-          {strategy === 'gold' ? <Text>升级 <Text className='b'>{fmtWan(t.profit, 2)}</Text> 金</Text> : null}
+          {strategy === 'gold' ? <Text>升级 <Text className='b'>{t.profit == null ? '—' : fmtWan(t.profit, 2)}</Text> 金</Text> : null}
           {strategy === 'gold' ? <Text>突破 <Text className='b'>{fmtWan(t.gateCost, 2)}</Text> 金</Text> : null}
         </View>
         <View className='bt-summary-phases'>
@@ -103,11 +105,19 @@ function Breakthrough() {
         {BT.meta.hints && BT.meta.hints[skillId] ? <Text className='bt-summary-hint'>{BT.meta.hints[skillId]}</Text> : null}
       </View>
 
+      <View className='v2-card-pad' style={{ marginBottom: '20rpx', background: 'var(--card)', border: '1rpx solid var(--border)' }}>
+        <View className='v2-tiny' style={{ marginBottom: '6rpx' }}>30→50 级经验表（{isGather ? '采集' : '制造'}）</View>
+        <View className='v2-kv'><Text className='k'>合计经验</Text><Text className='v'>{phase3050 && phase3050.exp != null ? fmtInt(phase3050.exp) : '—'} 经验</Text></View>
+        <View className='v2-kv'><Text className='k'>按 1 精力 = 2 经验折算</Text><Text className='v'>{phase3050Energy == null ? '—' : fmtInt(phase3050Energy)} 精力</Text></View>
+        <View className='v2-kv'><Text className='k'>按单次配方取整的实际路线</Text><Text className='v'>{phase3050 && phase3050.energy != null ? fmtInt(phase3050.energy) : '—'} 精力</Text></View>
+        <View className='v2-tiny' style={{ marginTop: '6rpx' }}>30 级后采集与制造统一 1 精力=2 经验；30 级前采集仍按 40 精力=128 经验。上表已按 2026-11-25 实测表校准。</View>
+      </View>
+
       <View className='card'>
         <View className='card-head' onClick={function () { setShowExperience(!showExperience); }}>
           <View className='flex1'>
             <Text className='card-title'>逐级经验 {showExperience ? '⌃' : '⌄'}</Text>
-            <Text className='card-sub'>1→30 共用实测 · 30→50 采集/制造分表</Text>
+            <Text className='card-sub'>1→30 共用实测 · 30→50 采集/制造分表 · 30 后 1 精力=2 经验</Text>
           </View>
           <Text className='badge badge-info'>30→50 分表</Text>
         </View>
@@ -115,10 +125,12 @@ function Breakthrough() {
           <ScrollView scrollY style={{ height: '560rpx' }}>
             <View className='card-body'>
               {result.experience.map(function (xp) {
+                const ratio = isGather && xp.from < 30 ? 3.2 : 2;
                 return (
                   <View className='bt-line' key={xp.from}>
                     <Text>{xp.from}→{xp.to}</Text>
                     <Text>{fmtInt(xp.need)} 经验</Text>
+                    <Text className='tiny dim'>≈{fmtInt(xp.need / ratio)} 精力</Text>
                     <Text className={'badge ' + (xp.source === 'observed' ? 'badge-positive' : xp.source === 'extrapolated' ? 'badge-warning' : 'badge-outline')}>
                       {{ observed: '实测', interpolated: '插值', extrapolated: '外推' }[xp.source] || '估算'}
                     </Text>
@@ -189,7 +201,7 @@ function Breakthrough() {
         </View>
       </View>
 
-      <DataNote extra='经验 1→30 共用实测 · 30→50 采集/制造分表' />
+      <DataNote extra={'经验 1→30 共用实测 · 30→50 采集/制造分表 · 30 后 1 精力=2 经验'} />
     </View>
   );
 }

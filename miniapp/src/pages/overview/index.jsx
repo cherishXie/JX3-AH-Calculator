@@ -11,6 +11,7 @@ import { isCloudConfigured } from '../../shared/cloudConfig';
 import { useStore, getState } from '../../store';
 import { DATA, rowsOf, statsOf, simulate, isMarketFresh } from '../../shared/engine';
 import { stoneSummary } from '../../shared/stones';
+import { gradeOf, visibleByGrade, gradeCounts } from '../../shared/landability';
 import { fmt, fmtInt, fmtPct, fmtWan } from '../../shared/format';
 
 const IS_WEAPP = process.env.TARO_ENV === 'weapp';
@@ -20,6 +21,7 @@ function Overview() {
   const [state, actions] = useStore();
   const [budget, setBudget] = useState(state.settings.energyBudget || 3000);
   const [type, setType] = useState('all');
+  const [showAll, setShowAll] = useState(false);
 
   useDidShow(function () {
     if (isCloudConfigured()) syncRemotePrices(actions, true, getState());
@@ -30,16 +32,20 @@ function Overview() {
   }, [state]);
 
   const stats = statsOf(state, state.serverId);
+  const scopedRows = useMemo(function () {
+    return showAll ? rows : visibleByGrade(rows, state.serverId);
+  }, [rows, showAll, state.serverId]);
+  const grades = useMemo(function () { return gradeCounts(rows, state.serverId); }, [rows, state.serverId]);
   const complete = useMemo(function () {
-    return rows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
-  }, [rows]);
+    return scopedRows.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; });
+  }, [scopedRows]);
   const valid = useMemo(function () {
     return complete.slice().sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; });
   }, [complete]);
   const best = valid[0] || null;
   const positives = complete.filter(function (r) { return r.calc.profit > 0; }).length;
   const negatives = complete.filter(function (r) { return r.calc.profit < 0; }).length;
-  const missing = rows.filter(function (r) { return r.calc.missing; }).length;
+  const missing = scopedRows.filter(function (r) { return r.calc.missing; }).length;
   const median = useMemo(function () {
     if (!complete.length) return null;
     const vals = complete.map(function (r) { return r.calc.perEnergy; }).sort(function (a, b) { return a - b; });
@@ -47,7 +53,7 @@ function Overview() {
     return vals.length % 2 ? vals[mid] : (vals[mid - 1] + vals[mid]) / 2;
   }, [complete]);
 
-  const sim = useMemo(function () { return simulate(rows, budget); }, [rows, budget]);
+  const sim = useMemo(function () { return simulate(scopedRows, budget); }, [scopedRows, budget]);
   const typeRows = useMemo(function () {
     return valid.filter(function (r) { return type === 'all' || r.type === type; }).slice(0, 10);
   }, [valid, type]);
@@ -58,9 +64,9 @@ function Overview() {
       const list = complete.filter(function (r) { return r.recipe.skillId === s.id; });
       const avg = list.length ? list.reduce(function (sum, r) { return sum + r.calc.perEnergy; }, 0) / list.length : null;
       const top = list.slice().sort(function (a, b) { return b.calc.perEnergy - a.calc.perEnergy; })[0] || null;
-      return { skill: s, count: rows.filter(function (r) { return r.recipe.skillId === s.id; }).length, avg: avg, top: top };
+      return { skill: s, count: scopedRows.filter(function (r) { return r.recipe.skillId === s.id; }).length, avg: avg, top: top };
     }).sort(function (a, b) { return (b.avg == null ? -1e9 : b.avg) - (a.avg == null ? -1e9 : a.avg); });
-  }, [complete, rows]);
+  }, [complete, scopedRows]);
   const maxSkillAvg = Math.max.apply(null, skillStats.map(function (x) { return Math.max(0, x.avg || 0); }).concat([1]));
 
   const marketFresh = isMarketFresh(state);
@@ -119,7 +125,7 @@ function Overview() {
       <StatGrid
         items={[
           { k: '最优精力收益', v: best ? fmt(best.calc.perEnergy, 2) : '—', u: '金/精力', m: best ? best.recipe.name : '缺价' },
-          { k: '盈利配方', v: positives, u: '/ ' + rows.length, m: '亏损 ' + negatives + ' · 缺价 ' + missing, tone: positives ? 'v2-pos' : '' },
+          { k: '盈利配方', v: positives, u: '/ ' + scopedRows.length, m: '亏损 ' + negatives + ' · 缺价 ' + missing, tone: positives ? 'v2-pos' : '' },
           { k: '行情校准', v: Math.round(stats.calibrated * 100), u: '%', m: '已校准 ' + stats.user + ' / ' + stats.total + ' 项' },
           { k: '满精力预估', v: fmtWan(sim.profit, 2), u: '金', m: '精确 ' + fmt(sim.profit, 2) + ' · 用尽 ' + fmtInt(sim.used), tone: 'v2-pos' }
         ]}
@@ -167,7 +173,11 @@ function Overview() {
         </View>
       </Section>
 
-      <Section title='现在做什么最赚' sub='Top 10 · 金/精力 · 已排除缺价' action='完整排行' onAction={openRank}>
+      <Section title='现在做什么最赚' sub={'Top 10 · 金/精力 · 已排除缺价 · 可做 ' + grades.A + ' / 谨慎 ' + grades.B} action='完整排行' onAction={openRank}>
+        <View className='v2-chip-row'>
+          <View className={'v2-chip' + (showAll ? '' : ' on')} onClick={function () { setShowAll(false); }}>可做 / 谨慎</View>
+          <View className={'v2-chip' + (showAll ? ' on' : '')} onClick={function () { setShowAll(true); }}>全部（含不可做）</View>
+        </View>
         <View className='v2-chip-row'>
           <View hoverClass='v2-pressed' hoverStayTime={80} className={'v2-chip' + (type === 'all' ? ' on' : '')} onClick={function () { setType('all'); }}>全部</View>
           <View hoverClass='v2-pressed' hoverStayTime={80} className={'v2-chip' + (type === 'craft' ? ' on' : '')} onClick={function () { setType('craft'); }}>制造</View>
@@ -181,7 +191,10 @@ function Overview() {
                 <View className='v2-bar' style={{ width: w + '%' }} />
                 <Text className={'v2-no' + (i === 0 ? ' top' : '')}>{i + 1}</Text>
                 <View className='v2-row-main'>
-                  <Text className='v2-row-nm'>{r.recipe.name}</Text>
+                  <View className='v2-flex' style={{ gap: '8rpx' }}>
+                    <Text className='v2-row-nm'>{r.recipe.name}</Text>
+                    <Text className={'v2-tag ' + gradeOf(r.recipe, state.serverId).cls}>{gradeOf(r.recipe, state.serverId).label}</Text>
+                  </View>
                   <Text className='v2-row-ds'>{r.skill.name} · {fmtInt(r.calc.energy)} 精力 · 单次 {fmt(r.calc.profit, 2)} 金</Text>
                 </View>
                 <View className='v2-row-val'>
@@ -193,6 +206,11 @@ function Overview() {
           })}
           {!typeRows.length ? <View className='v2-empty'><View className='t'>暂无完整数据</View><View className='s'>去行情页补几个材料价格。</View></View> : null}
         </View>
+        {showAll ? (
+          <View className='v2-tiny' style={{ marginTop: '10rpx' }}>
+            含不可做：可能来自高价挂单、低流动性或缺价回退，不能当作实际可成交收益。
+          </View>
+        ) : null}
       </Section>
 
       <Section title='哪个技艺更划算' sub='配方等权平均 · 含采集与制造' action='去技艺页' onAction={openSkills}>

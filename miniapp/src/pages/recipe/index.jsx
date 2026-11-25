@@ -8,6 +8,7 @@ import StatGrid from '../../components/StatGrid';
 import PriceInput from '../../components/PriceInput';
 import DataNote from '../../components/DataNote';
 import Empty from '../../components/Empty';
+import ItemPicker from '../../components/ItemPicker';
 import { useStore } from '../../store';
 import { DATA, findItem, findRecipe, calcRecipe, priceOf, skillOf, tierOf } from '../../shared/engine';
 import { fmt, fmtInt, fmtSigned, fmtPct, fmtWan } from '../../shared/format';
@@ -44,6 +45,7 @@ function Recipe() {
   const [currentId, setCurrentId] = useState(params.id || null);
   const [draft, setDraft] = useState(function () { return isNew ? makeDraft(state, params.skill || 'shennong', null) : null; });
   const [errors, setErrors] = useState([]);
+  const [picker, setPicker] = useState(null);
 
   const recipe = currentId ? findRecipe(state, currentId) : null;
   const calc = recipe ? calcRecipe(state, recipe, { serverId: state.serverId, basis: state.settings.basis }) : null;
@@ -300,18 +302,10 @@ function Recipe() {
               return (
                 <View className='item-block' key={i}>
                   <View className='item-line'>
-                    <Picker mode='selector' range={['＋ 新建物品…'].concat(outChoices.map(labelOf))} value={o.item === '__new__' ? 0 : itemIndex(outChoices, o.item) + 1}
-                      onChange={function (e) {
-                        const idx = Number(e.detail.value);
-                        if (idx === 0) updateOutput(i, { item: '__new__' });
-                        else {
-                          const it = outChoices[idx - 1];
-                          updateOutput(i, { item: it.id });
-                          if (!draft.id) setDraft(function (prev) { return Object.assign({}, prev, { tier: it.tier }); });
-                        }
-                      }}>
-                      <View className='picker'><Text>{o.item === '__new__' ? '＋ 新建物品…' : (findItem(state, o.item) ? labelOf(findItem(state, o.item)) : '选择产物')}</Text><Text className='arrow'>⌄</Text></View>
-                    </Picker>
+                    <View className='picker' onClick={function () { setPicker({ kind: 'output', index: i }); }}>
+                      <Text>{o.item === '__new__' ? '＋ 新建物品…' : (findItem(state, o.item) ? labelOf(findItem(state, o.item)) : '选择产物')}</Text>
+                      <Text className='arrow'>搜索 ⌄</Text>
+                    </View>
                   </View>
                   {o.item === '__new__' ? (
                     <Input className='input input-sm mt' value={o.newName || ''} placeholder='新产物名称'
@@ -340,14 +334,10 @@ function Recipe() {
                   return (
                     <View className='item-block' key={i}>
                       <View className='item-line'>
-                        <Picker mode='selector' range={['＋ 新建物品…'].concat(matChoices.map(labelOf))} value={m.item === '__new__' ? 0 : itemIndex(matChoices, m.item) + 1}
-                          onChange={function (e) {
-                            const idx = Number(e.detail.value);
-                            if (idx === 0) updateMaterial(i, { item: '__new__' });
-                            else updateMaterial(i, { item: matChoices[idx - 1].id });
-                          }}>
-                          <View className='picker'><Text>{m.item === '__new__' ? '＋ 新建物品…' : (it ? labelOf(it) : '选择材料')}</Text><Text className='arrow'>⌄</Text></View>
-                        </Picker>
+                        <View className='picker' onClick={function () { setPicker({ kind: 'material', index: i }); }}>
+                          <Text>{m.item === '__new__' ? '＋ 新建物品…' : (it ? labelOf(it) : '选择材料')}</Text>
+                          <Text className='arrow'>搜索 ⌄</Text>
+                        </View>
                       </View>
                       {m.item === '__new__' ? (
                         <Input className='input input-sm mt' value={m.newName || ''} placeholder='新材料名称'
@@ -374,6 +364,33 @@ function Recipe() {
             </View>
           </View>
         </View>
+        <ItemPicker
+          open={!!picker}
+          title={picker && picker.kind === 'output' ? '选择产物' : '选择材料'}
+          items={(picker && picker.kind === 'output' ? outChoices : matChoices).map(function (it) {
+            return { id: it.id, name: it.name, sub: tierOf(it.tier).name + ' · ' + (it.kind === 'product' ? '成品' : '材料') };
+          })}
+          value={picker ? (picker.kind === 'output' ? draft.outputs[picker.index].item : draft.materials[picker.index].item) : ''}
+          allowNew
+          newLabel='新建物品'
+          onNew={function () {
+            if (!picker) return;
+            if (picker.kind === 'output') updateOutput(picker.index, { item: '__new__' });
+            else updateMaterial(picker.index, { item: '__new__' });
+            setPicker(null);
+          }}
+          onSelect={function (it) {
+            if (!picker) return;
+            if (picker.kind === 'output') {
+              updateOutput(picker.index, { item: it.id });
+              if (!draft.id) setDraft(function (prev) { return Object.assign({}, prev, { tier: it.tier }); });
+            } else {
+              updateMaterial(picker.index, { item: it.id });
+            }
+            setPicker(null);
+          }}
+          onClose={function () { setPicker(null); }}
+        />
         <DataNote />
       </View>
     );

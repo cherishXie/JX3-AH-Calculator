@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 /**
- * 把 Web 的本服落地审计压成小程序可用的轻量 JSON。
+ * 把 Web 的本服落地审计压成小程序可用的「评级表」。
+ *
+ * 输出只保留每个配方在每个区服的最终评级（A/B/C）与是否含自产（sc），
+ * 不重复存名称/数值；318 个配方 × 17 个区服约 20KB，可以进主包。
+ * 采集配方不进审计，统一记为 G（采集不参与可做判断）。
+ *
  *   node scripts/build-miniapp-landability.mjs
  */
 import fs from 'node:fs';
@@ -20,48 +25,47 @@ run('assets/audit-data.js');
 
 const D = sandbox.window.JX3Data;
 const A = sandbox.window.JX3Audit;
-const L = sandbox.window.JX3Landability;
-const recipeById = Object.create(null);
-(D.recipes || []).forEach((r) => { recipeById[r.id] = r; });
-const itemById = Object.create(null);
-(D.items || []).forEach((i) => { itemById[i.id] = i; });
+
+// 与小程序 catalog 同序；采集配方用 G，其余默认 C。
+const recipes = D.recipes || [];
+const ids = recipes.map((r) => r.id);
+const index = Object.create(null);
+ids.forEach((id, i) => { index[id] = i; });
+const base = recipes.map((r) => (r.kind === 'gather' ? 'G' : 'C'));
 
 const out = {
   meta: {
     generatedAt: A.meta.generatedAt,
     snapshots: A.meta.snapshots,
     source: 'web-audit',
-    policy: '本服购买优先；A+B 限售，不含自产'
+    policy: '本服购买优先；A+B 限售，不含自产',
+    note: '每服一条与 ids 等长的评级串：A/B/C/G；sc 串为 1 表示需自产'
   },
+  ids,
   servers: {}
 };
 
 for (const [sid, server] of Object.entries(A.servers || {})) {
-  const rows = Object.entries(server.recipes || {}).map(([id, rec]) => {
-    const r = recipeById[id] || {};
-    return {
-      id, name: r.name || id, skill: r.skillId || '',
-      grade: rec.gl || rec.g, perE: rec.p, medianPerE: rec.mp,
-      profit: rec.pr, energy: rec.e, selfCraft: !!rec.sc
-    };
-  }).filter((r) => r.name && r.name !== r.id);
-  const top = rows.filter((r) => (r.grade === 'A' || r.grade === 'B') && r.perE > 0)
-    .sort((a, b) => (b.perE || -1e9) - (a.perE || -1e9))
-    .slice(0, 5)
-    .map((r) => ({ id: r.id, name: r.name, skill: r.skill, grade: r.grade, perE: r.perE, profit: r.profit, energy: r.energy, selfCraft: r.selfCraft }));
-  const plan = L.plan(rows, 3000, { includeSelfCraft: false, localOnly: true });
+  const grades = base.slice();
+  const selfCraft = new Array(ids.length).fill('0');
+  let covered = 0;
+  for (const [id, rec] of Object.entries(server.recipes || {})) {
+    const i = index[id];
+    if (i == null) continue;
+    const g = String(rec.gl || rec.g || 'C')[0];
+    if (g === 'A' || g === 'B' || g === 'C') grades[i] = g;
+    if (rec.sc) selfCraft[i] = '1';
+    covered++;
+  }
   out.servers[sid] = {
     name: server.name,
     counts: server.countsLocal || server.counts,
-    top,
-    plan: {
-      profit: plan.profit, energyUsed: plan.energyUsed, budget: plan.budget,
-      energyIdle: plan.energyIdle,
-      allocations: plan.allocations.slice(0, 5).map((a) => ({ name: a.name, skill: a.skill, grade: a.grade, count: a.count, energy: a.energy, profit: a.profit, cap: a.cap }))
-    }
+    covered,
+    g: grades.join(''),
+    sc: selfCraft.join('')
   };
 }
 
 const target = path.join(ROOT, 'miniapp', 'src', 'shared', 'landability.json');
 fs.writeFileSync(target, JSON.stringify(out) + '\n');
-console.log('wrote', target, Object.keys(out.servers).length, 'servers', (fs.statSync(target).size / 1024).toFixed(1) + 'KB', out.meta.snapshots, 'snapshots');
+console.log('wrote', target, ids.length, 'recipes', Object.keys(out.servers).length, 'servers', (fs.statSync(target).size / 1024).toFixed(1) + 'KB', out.meta.snapshots, 'snapshots');

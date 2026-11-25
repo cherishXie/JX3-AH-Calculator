@@ -92,7 +92,7 @@ cat dist/weapp/app.json    # navigationBarTitleText 应为「精力做什么」
 
 - `npm run verify:weapp` 已内置：组件按需注入、主包 1.5MB 代理预算、图片/音频 200KB、启动图 120KB、无 wx.request。
 - 开发者工具 **代码质量 → 重新扫描** 全绿后再上传；主包按 **1.5MB** 判定（硬上限 2MB）。
-- 当前基准：主包约 **1.55MB**（1,546,xxx B），启动图 **94KB**；新增素材先压到 100KB 以内。
+- 当前基准：主包约 **1.58MB**（1,546,xxx B），启动图 **94KB**；新增素材先压到 100KB 以内。
 
 ## 4. 导入微信开发者工具
 
@@ -256,7 +256,7 @@ wechatide -c DSH get_simulator_console --project "$(pwd)" --command "grep -i err
 是。改名、五行石页改的都是 `miniapp/src`，必须 `npm run build:weapp` 才会进入 `dist/weapp`。
 
 **Q：构建体积多大？**
-微信编译包约 **1.55 MB**（13 页 / 5 Tab，在 1.5MB+120KB 代理预算内），小红书约 **1.5 MB**（8 页 / 4 Tab），都低于 2 MB；头像 18 KB。
+微信编译包约 **1.58 MB**（13 页 / 5 Tab，在 1.5MB+120KB 代理预算内），小红书约 **1.5 MB**（8 页 / 4 Tab），都低于 2 MB；头像 18 KB。
 
 **Q：`sitemap.json` 要配吗？**
 官方全局配置文档已标注 `sitemap.json` 下线，当前不需要配置；开发者工具若提示可忽略。

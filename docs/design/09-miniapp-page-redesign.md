@@ -219,4 +219,5 @@
 - 新增/重写：`pages/overview`（总览）、`pages/skills`（首次注册的一级页）、`pages/prices`、`pages/analysis`（完整收益分析）、`pages/stones`、`pages/settings`、`pages/rank`；二级页 `pages/recipe`、`pages/breakthrough`、`pages/trends` 同步换成 v2 头图与卡片。
 - 新增共享组件：`PageHeader`、`Section`、`StatGrid`、`Sheet`；`Toggle` 改为 88rpx 整行开关；新增 `styles/v2.css` 设计层。
 - 交互与视觉细则、Before/After 表、真机待验证项见 [10-miniapp-ui-refactor.md](./10-miniapp-ui-refactor.md)。
-- 验证：`build:weapp` / `build:xhs` 通过，`verify:weapp` 13 页 / 5 Tab / 10 图标 / 主包 1.55MB（1.5MB+120KB 代理预算内）。
+- 验证：`build:weapp` / `build:xhs` 通过，`verify:weapp` 13 页 / 5 Tab / 10 图标 / 主包约 1.58MB（1.5MB+120KB 代理预算内）。
+- 2026-11-25 补：同步网页审计评级（A/B/C）、技艺/今日/排行/分析的默认与切换、物品搜索选择器、30→50 经验/精力双口径、涨跌榜上涨/下跌/全部。

@@ -9,34 +9,10 @@ import DataNote from '../../components/DataNote';
 import { useStore } from '../../store';
 import { DATA, rowsOf, median, simulate, sortRows } from '../../shared/engine';
 import { fmt, fmtInt, fmtPct, fmtSigned, fmtWan } from '../../shared/format';
+import { gradeOf as auditGrade, LANDABILITY_META } from '../../shared/landability';
 
 const BUDGETS = [500, 1000, 3000, 6000];
 const PAGE_SIZE = 20;
-
-function outputCoverage(recipe) {
-  if (!recipe.outputs || !recipe.outputs.length) return 0;
-  let min = 99;
-  recipe.outputs.forEach(function (o) {
-    let n = 0;
-    DATA.servers.forEach(function (s) {
-      const bag = DATA.serverPrices && DATA.serverPrices[s.id];
-      if (bag && bag[o.item] != null) n++;
-    });
-    if (n < min) min = n;
-  });
-  return min === 99 ? 0 : min;
-}
-
-function gradeOf(row) {
-  if (row.type === 'gather') return { grade: 'G', label: '采集', cls: 'info', reason: '采集点不做可做判断', cov: null };
-  const c = row.calc;
-  const cov = outputCoverage(row.recipe);
-  if (c.missing) return { grade: 'C', label: '缺价', cls: 'warn', reason: '材料或产物缺报价', cov: cov };
-  if (!(c.profit > 0)) return { grade: 'C', label: '亏损', cls: 'neg', reason: '当前本服价下利润为负', cov: cov };
-  if (cov < 4) return { grade: 'C', label: '薄市', cls: 'warn', reason: '成品仅 ' + cov + ' 服有报价', cov: cov };
-  if (cov >= 8) return { grade: 'A', label: '可做', cls: 'pos', reason: '报价完整、成品覆盖 ' + cov + ' 服', cov: cov };
-  return { grade: 'B', label: '谨慎', cls: 'warn', reason: '成品仅 ' + cov + ' 服有报价', cov: cov };
-}
 
 function Analysis() {
   const [state] = useStore();
@@ -51,8 +27,9 @@ function Analysis() {
 
   const rows = useMemo(function () {
     return rowsOf(state, { serverId: state.serverId, basis: state.settings.basis }).map(function (r) {
-      const g = gradeOf(r);
-      return Object.assign({}, r, { land: g });
+      const g = auditGrade(r.recipe, state.serverId);
+      const reason = g.grade === 'C' && r.calc.missing ? '材料或产物缺价' : g.reason;
+      return Object.assign({}, r, { land: Object.assign({}, g, { reason: reason }) });
     });
   }, [state]);
 
@@ -128,7 +105,7 @@ function Analysis() {
         <View className='v2-kicker'>本服可做判断 · A/B/C 评级</View>
         <View className='v2-h1'>精力<Text style={{ color: '#fd7b4c' }}>收益分析</Text></View>
         <View className='v2-hero-sub'>
-          先判断能不能做，再比每点精力赚多少。评级用 17 服报价覆盖 + 本服利润近似网页审计。
+          先判断能不能做，再比每点精力赚多少。评级来自与网页同源的本服落地审计（缺价、覆盖、波动、自产），默认只看可做/谨慎。
         </View>
       </View>
 
@@ -338,13 +315,14 @@ function Analysis() {
         </View>
       </Section>
 
-      <Section title='评级口径' sub='与网页端审计的差异说明'>
+      <Section title='评级口径' sub='与网页端共用同一份落地审计'>
         <View className='v2-card-pad' style={{ background: 'var(--card)', border: '1rpx solid var(--border)' }}>
-          <View className='v2-kv'><Text className='k'>A 可做</Text><Text className='v'>利润 &gt; 0 且成品覆盖 ≥ 8 服</Text></View>
-          <View className='v2-kv'><Text className='k'>B 谨慎</Text><Text className='v'>利润 &gt; 0 且成品覆盖 4–7 服</Text></View>
-          <View className='v2-kv'><Text className='k'>C 不可做</Text><Text className='v'>缺价 / 亏损 / 成品覆盖 &lt; 4 服</Text></View>
+          <View className='v2-kv'><Text className='k'>A 可做</Text><Text className='v'>报价完整、流动性够，可按当前价执行</Text></View>
+          <View className='v2-kv'><Text className='k'>B 谨慎</Text><Text className='v'>样本少/波动大/利润薄，或需要自产中间物</Text></View>
+          <View className='v2-kv'><Text className='k'>C 不可做</Text><Text className='v'>缺价、负收益、成品覆盖不足；默认不展示</Text></View>
+          <View className='v2-kv'><Text className='k'>G 采集</Text><Text className='v'>采集产出直接出售，不参与可做判断</Text></View>
           <View className='v2-tiny' style={{ marginTop: '10rpx' }}>
-            网页端用 14 天审计的报价持续性、波动率与自产判断；小程序用 17 服报价覆盖 + 当前利润近似，结果更及时但更保守/宽松会随行情变化。以交易行实际成交为准。
+            评级由网页同源审计生成（{LANDABILITY_META.snapshots} 个快照 / {LANDABILITY_META.generatedAt ? LANDABILITY_META.generatedAt.slice(0, 10) : '—'}）；审计未覆盖的新配方按不可做处理。金额与精力仍按当前本服价格实时计算，评级不随单次改价即时重算。
           </View>
         </View>
       </Section>
