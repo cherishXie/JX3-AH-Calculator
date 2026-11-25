@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-25 · 011183c
+
+update JX3BOX prices
+
 ## 2026-11-25 · 057032f
 
 update JX3BOX prices
@@ -367,9 +371,5 @@ CDN 首屏并行加载并完善回退
 价格机器人并发冲突时改在新 main 上重新抓价，避免 rebase 卡死
 
 ## 2026-11-22 · 2904175
-
-update JX3BOX prices
-
-## 2026-11-22 · e27939c
 
 update JX3BOX prices
