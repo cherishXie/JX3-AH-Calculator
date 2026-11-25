@@ -6,6 +6,7 @@ import { PRICE_AUTO_SYNC_MS } from './shared/cloudConfig';
 import { applyTheme, getTheme } from './shared/theme';
 import './app.css';
 import './styles/v1.css';
+import './styles/v2.css';
 
 function setupMiniUpdate() {
   if (process.env.TARO_ENV !== 'weapp' || !Taro.getUpdateManager) return;

@@ -48,7 +48,7 @@ export default function TopBar(props) {
         </View>
         <View
           className='icon-btn'
-          onClick={function () { Taro.navigateTo({ url: '/pages/settings/index' }); }}
+          onClick={function () { Taro.switchTab({ url: '/pages/settings/index' }); }}
         >
           ⚙
         </View>

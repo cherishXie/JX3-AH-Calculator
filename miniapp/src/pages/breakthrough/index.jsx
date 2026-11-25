@@ -2,7 +2,7 @@ import withTheme from '../../components/withTheme';
 import { useMemo, useState } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { useRouter } from '@tarojs/taro';
-import ServerBar from '../../components/ServerBar';
+import PageHeader from '../../components/PageHeader';
 import Seg from '../../components/Seg';
 import DataNote from '../../components/DataNote';
 import Empty from '../../components/Empty';
@@ -11,7 +11,7 @@ import { DATA } from '../../shared/engine';
 import {
   analyze, strategyLabel, formatRange, itemOf, gatherOutputs, BT
 } from '../../shared/breakthrough';
-import { fmt, fmtInt, fmtSigned } from '../../shared/format';
+import { fmt, fmtInt, fmtSigned, fmtWan } from '../../shared/format';
 
 const STRATEGIES = [
   { value: 'gold', label: '金币优先' },
@@ -43,7 +43,7 @@ function Breakthrough() {
 
   return (
     <View className='page bt-page'>
-      <ServerBar />
+      <PageHeader />
 
       <View className='bt-head'>
         <Text className='t'>{result.meta.name} · 1→50</Text>
@@ -67,22 +67,22 @@ function Breakthrough() {
         <View className='bt-summary-lead'>
           <Text className='k'>{strategy === 'gold' ? '合计收益' : '总精力'}</Text>
           <Text className={'v ' + (strategy === 'gold' && t.total > 0 ? 'pos' : strategy === 'gold' && t.total < 0 ? 'neg' : '')}>
-            {strategy === 'gold' ? fmtSigned(t.total, 0) : fmtInt(t.energy)}
+            {strategy === 'gold' ? fmtWan(t.total, 2) : fmtInt(t.energy)}
           </Text>
           <Text className='u'>{strategy === 'gold' ? '金' : '精力'}</Text>
         </View>
         <View className='bt-summary-facts'>
           <Text><Text className='b'>{fmtInt(t.exp)}</Text> 经验</Text>
           <Text><Text className='b'>{fmtInt(t.crafts)}</Text> 次</Text>
-          {strategy === 'gold' ? <Text>升级 <Text className='b'>{fmtSigned(t.profit, 0)}</Text> 金</Text> : null}
-          {strategy === 'gold' ? <Text>突破 <Text className='b'>{fmt(t.gateCost, 0)}</Text> 金</Text> : null}
+          {strategy === 'gold' ? <Text>升级 <Text className='b'>{fmtWan(t.profit, 2)}</Text> 金</Text> : null}
+          {strategy === 'gold' ? <Text>突破 <Text className='b'>{fmtWan(t.gateCost, 2)}</Text> 金</Text> : null}
         </View>
         <View className='bt-summary-phases'>
           {result.phases.map(function (ph) {
             return (
               <Text key={ph.from} className='bt-phase-chip'>
                 {ph.from}→{ph.to} · {fmtInt(ph.energy)} 精力 · {fmtInt(ph.crafts)} 次
-                {strategy === 'gold' ? ' · ' + fmtSigned(ph.total, 0) + ' 金' : ''}
+                {strategy === 'gold' ? ' · ' + fmtWan(ph.total, 2) + ' 金' : ''}
               </Text>
             );
           })}

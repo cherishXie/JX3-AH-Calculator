@@ -2,7 +2,7 @@
 
 > 目标：把 `miniapp/` 的 Taro 构建产物发布成微信小程序 **「精力做什么」**。
 >
-> 本仓库里已经完成：**改名、导航栏标题、微信构建（12 页 / 5 Tab）、五行石模块与公式编辑、AppID、头像、真实模拟器验收**。
+> 本仓库里已经完成：**改名、导航栏标题、微信构建（13 页 / 5 Tab）、五行石模块与公式编辑、AppID、头像、真实模拟器验收**。
 > 只有你能完成：**注册/认证、ICP 备案、上传提审与发布**（需要你的登录态与确认）。
 
 ---
@@ -26,7 +26,7 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| `miniapp/dist/weapp/` | 微信小程序构建产物（12 页 / 5 Tab），可直接导入开发者工具 |
+| `miniapp/dist/weapp/` | 微信小程序构建产物（13 页 / 5 Tab），可直接导入开发者工具 |
 | `miniapp/project.config.json` | 项目配置，AppID 已填入，`libVersion: 3.18.0` |
 | `wechat/screenshots/wechat-real-stones.png` | 微信模拟器真实截图（五行石页） |
 | `wechat/screenshots/wechat-real-stone-formula.png` | 微信模拟器真实截图（公式编辑页） |
@@ -71,7 +71,7 @@ npm run build:weapp
 npm run verify:weapp
 ```
 
-当前 AppID 已写入 `project.config.json`；只有换小程序时才需要 `npm run set-appid -- wx你的AppID` 再重新构建。`verify:weapp` 会检查 AppID、12 页、5 Tab、10 个 81×81 图标、主包 ≤2MB、无 wx.request。
+当前 AppID 已写入 `project.config.json`；只有换小程序时才需要 `npm run set-appid -- wx你的AppID` 再重新构建。`verify:weapp` 会检查 AppID、13 页、5 Tab、10 个 81×81 图标、主包 ≤2MB、无 wx.request。
 
 `npm run set-appid` 会同时写入 `project.config.json` 和已构建的 `dist/weapp/project.config.json`；不想用脚本时，也可以手动编辑 `project.config.json` 的 `appid` 字段后重新构建。
 
@@ -256,7 +256,7 @@ wechatide -c DSH get_simulator_console --project "$(pwd)" --command "grep -i err
 是。改名、五行石页改的都是 `miniapp/src`，必须 `npm run build:weapp` 才会进入 `dist/weapp`。
 
 **Q：构建体积多大？**
-微信编译包约 **1.55 MB**（12 页 / 5 Tab，已过 1.5MB 代码质量线），小红书约 **1.1 MB**（7 页 / 4 Tab），都低于 2 MB；头像 42 KB。
+微信编译包约 **1.55 MB**（13 页 / 5 Tab，在 1.5MB+120KB 代理预算内），小红书约 **1.5 MB**（8 页 / 4 Tab），都低于 2 MB；头像 18 KB。
 
 **Q：`sitemap.json` 要配吗？**
 官方全局配置文档已标注 `sitemap.json` 下线，当前不需要配置；开发者工具若提示可忽略。

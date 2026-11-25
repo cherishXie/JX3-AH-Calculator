@@ -1,8 +1,10 @@
 import withTheme from '../../components/withTheme';
 import { useState } from 'react';
 import { View, Text, Input, Picker, Textarea } from '@tarojs/components';
-import Taro from '@tarojs/taro';
+import Taro, { useDidShow } from '@tarojs/taro';
 import Seg from '../../components/Seg';
+import PageHeader from '../../components/PageHeader';
+import Section from '../../components/Section';
 import { useStore } from '../../store';
 import { DATA } from '../../shared/engine';
 import { fmtTime } from '../../shared/format';
@@ -26,6 +28,16 @@ function Settings() {
   const [importText, setImportText] = useState('');
   const [syncing, setSyncing] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
+
+  useDidShow(function () {
+    try {
+      const section = Taro.getStorageSync('settingsSection');
+      if (section === 'data') {
+        setShowPanel(true);
+        Taro.removeStorageSync('settingsSection');
+      }
+    } catch (e) {}
+  });
 
   const servers = state.servers || [];
   const notes = (release && release.notes) || [];
@@ -189,66 +201,120 @@ function Settings() {
   }
 
   return (
-    <View className='page'>
-      <View className='me-profile'>
-        <View className='me-avatar'>{(server.name || '梦').slice(0, 1)}</View>
-        <View className='flex1'>
-          <Text className='n'>{server.name}</Text>
-          <Text className='s'>{(server.region || '自定义')} · 行情 {updateText}</Text>
-        </View>
-        <Picker mode='selector' range={serverRange} value={serverIdx}
-          onChange={function (e) {
-            const next = servers[Number(e.detail.value)];
-            if (next) {
-              actions.setServer(next.id);
-              Taro.showToast({ title: '已切换到 ' + next.name, icon: 'none' });
-            }
-          }}>
-          <View className='btn btn-sm btn-ghost'>切换</View>
-        </Picker>
+    <View className='v2-page'>
+      <PageHeader
+        meta={'行情 ' + updateText}
+        actions={
+          <View hoverClass='v2-pressed' hoverStayTime={80} className='v2-icon-btn' onClick={syncCloud}>{syncing ? '…' : '↻'}</View>
+        }
+      />
+
+      <View className='v2-hero'>
+        <View className='v2-kicker'>我的 · 本机数据</View>
+        <View className='v2-h1'>{server.name}</View>
+        <View className='v2-hero-sub'>{server.region || '自定义'} · 行情 {updateText} · {state.items.length} 物品 / {state.recipes.length} 配方</View>
       </View>
 
-      <View className='me-group-title'>价格与行情</View>
-      <View className='me-group'>
+      <View className='v2-card-pad' style={{ marginTop: '18rpx', background: 'var(--card)', border: '1rpx solid var(--border)' }}>
+        <View className='v2-flex'>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <View className='v2-row-nm'>当前区服</View>
+            <View className='v2-row-ds'>切换后所有收益、行情与走势按该服重算</View>
+          </View>
+          <Picker mode='selector' range={serverRange} value={serverIdx}
+            onChange={function (e) {
+              const next = servers[Number(e.detail.value)];
+              if (next) {
+                actions.setServer(next.id);
+                Taro.showToast({ title: '已切换到 ' + next.name, icon: 'none' });
+              }
+            }}>
+            <View hoverClass='v2-pressed' hoverStayTime={80} className='v2-btn sm ghost'>切换</View>
+          </Picker>
+        </View>
+      </View>
+
+      <Section title='分析中心' sub='精力收益、走势、区服与突破'>
+        <View className='v2-rows'>
+          <View className='v2-row' onClick={function () { go('/pages/analysis/index'); }}>
+            <View className='v2-row-main'>
+              <Text className='v2-row-nm'>精力收益分析</Text>
+              <Text className='v2-row-ds'>可做/谨慎/不可做 · 组合 · 双制品对比</Text>
+            </View>
+            <Text className='v2-row-chev'>›</Text>
+          </View>
+          {IS_WEAPP ? (
+            <View className='v2-row' onClick={function () { go('/pages/trends/index'); }}>
+              <View className='v2-row-main'>
+                <Text className='v2-row-nm'>物价走势</Text>
+                <Text className='v2-row-ds'>本服历史节点 · 涨跌榜 · 单品曲线</Text>
+              </View>
+              <Text className='v2-row-chev'>›</Text>
+            </View>
+          ) : null}
+          {IS_WEAPP ? (
+            <View className='v2-row' onClick={function () { go('/pages/server-trends/index'); }}>
+              <View className='v2-row-main'>
+                <Text className='v2-row-nm'>区服趋势</Text>
+                <Text className='v2-row-ds'>17 服净广度 · 区服榜 · 跨服涨跌</Text>
+              </View>
+              <Text className='v2-row-chev'>›</Text>
+            </View>
+          ) : null}
+          <View className='v2-row' onClick={function () { go('/pages/breakthrough/index'); }}>
+            <View className='v2-row-main'>
+              <Text className='v2-row-nm'>突破升级 1→50</Text>
+              <Text className='v2-row-ds'>8 技艺 · 30/35/40/45 晋秩 · 三种排序</Text>
+            </View>
+            <Text className='v2-row-chev'>›</Text>
+          </View>
+        </View>
+      </Section>
+
+      <Section title='价格与行情' sub='本机价格空间'>
         {IS_WEAPP ? (
-          <View className='me-row' onClick={function () { go('/market/pages/directory/index'); }}>
-            <View className='ic purple'>目</View><Text className='l'>行情目录</Text><Text className='r'>672 项</Text><Text className='chev'>›</Text>
+          <View className='v2-row' onClick={function () { go('/market/pages/directory/index'); }}>
+            <View className='v2-row-main'>
+              <Text className='v2-row-nm'>行情目录</Text>
+              <Text className='v2-row-ds'>672 项家园 / 强化 / 消耗品</Text>
+            </View>
+            <Text className='v2-row-chev'>›</Text>
           </View>
         ) : null}
-        <View className='me-row' onClick={function () { Taro.navigateTo({ url: '/pages/prices/index' }); }}>
-          <View className='ic blue'>价</View><Text className='l'>价格库</Text><Text className='r'>{state.items.length} 项</Text><Text className='chev'>›</Text>
+        <View className='v2-row' onClick={function () { Taro.switchTab({ url: '/pages/prices/index' }); }}>
+          <View className='v2-row-main'>
+            <Text className='v2-row-nm'>行情校准</Text>
+            <Text className='v2-row-ds'>{state.items.length} 项 · 搜索 / 改价 / 批量录入</Text>
+          </View>
+          <Text className='v2-row-chev'>›</Text>
         </View>
-        <View className='me-row' onClick={function () { go('/pages/trends/index'); }}>
-          <View className='ic blue'>走</View><Text className='l'>物价走势</Text><Text className='r'>本服历史</Text><Text className='chev'>›</Text>
-        </View>
-        <View className='me-row' onClick={function () { go('/pages/server-trends/index'); }}>
-          <View className='ic purple'>区</View><Text className='l'>区服趋势</Text><Text className='r'>17 服</Text><Text className='chev'>›</Text>
-        </View>
-      </View>
+      </Section>
 
-      <View className='me-group-title'>成长</View>
-      <View className='me-group'>
-        <View className='me-row' onClick={function () { go('/pages/breakthrough/index'); }}>
-          <View className='ic green'>升</View><Text className='l'>突破升级 1→50</Text><Text className='r'>最优路线</Text><Text className='chev'>›</Text>
+      <Section title='设置' sub='外观 · 精力 · 服务器 · 备份'>
+        <View className='v2-rows'>
+          <View className='v2-row' onClick={function () { setShowPanel(!showPanel); }}>
+            <View className='v2-row-main'>
+              <Text className='v2-row-nm'>设置与数据</Text>
+              <Text className='v2-row-ds'>{state.settings.energyBudget} 精力 · 税 {Math.round((state.settings.taxRate || 0) * 100)}% · {state.settings.theme === 'tech' ? '科技风' : state.settings.theme === 'dark' ? '暗色' : '亮色'}</Text>
+            </View>
+            <Text className='v2-row-chev'>{showPanel ? '⌃' : '›'}</Text>
+          </View>
+          <View className='v2-row' onClick={function () { setShowPanel(true); }}>
+            <View className='v2-row-main'>
+              <Text className='v2-row-nm'>数据说明与版本</Text>
+              <Text className='v2-row-ds'>更新说明 · 数据来源 · 免责声明</Text>
+            </View>
+            <Text className='v2-row-chev'>›</Text>
+          </View>
         </View>
-      </View>
-
-      <View className='me-group-title'>设置</View>
-      <View className='me-group'>
-        <View className='me-row' onClick={function () { setShowPanel(!showPanel); }}>
-          <View className='ic amber'>设</View><Text className='l'>设置与数据</Text><Text className='r'>{state.settings.energyBudget} 精力 · 税 {Math.round((state.settings.taxRate || 0) * 100)}%</Text><Text className='chev'>{showPanel ? '⌃' : '›'}</Text>
-        </View>
-        <View className='me-row' onClick={function () { setShowPanel(true); }}>
-          <View className='ic amber'>明</View><Text className='l'>数据说明与版本</Text><Text className='r'>{release.version}</Text><Text className='chev'>›</Text>
-        </View>
-      </View>
+      </Section>
 
       {showPanel ? (
         <View className='settings-panel'>
           <View className='card'>
             <View className='card-head'><View className='flex1'><Text className='card-title'>外观</Text></View></View>
             <View className='card-body'>
-              <Seg value={state.settings.theme === 'dark' ? 'dark' : 'light'} options={THEME_OPTIONS} onChange={changeTheme} />
+              <Seg value={state.settings.theme || 'tech'} options={THEME_OPTIONS} onChange={changeTheme} />
             </View>
           </View>
 

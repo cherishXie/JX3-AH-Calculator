@@ -1,21 +1,28 @@
 import Taro from '@tarojs/taro';
 
 const WEAPP = process.env.TARO_ENV === 'weapp';
-const LIGHT_TABS = [
-  { icon: 'assets/tabs/home-light.png', selected: 'assets/tabs/home-on-light.png' },
-  { icon: 'assets/tabs/analysis-light.png', selected: 'assets/tabs/analysis-on-light.png' }
-].concat(WEAPP ? [{ icon: 'assets/tabs/stones-light.png', selected: 'assets/tabs/stones-on-light.png' }] : [])
- .concat([{ icon: 'assets/tabs/me-light.png', selected: 'assets/tabs/me-on-light.png' }]);
-const DARK_TABS = [
-  { icon: 'assets/tabs/home.png', selected: 'assets/tabs/home-on.png' },
-  { icon: 'assets/tabs/analysis.png', selected: 'assets/tabs/analysis-on.png' }
-].concat(WEAPP ? [{ icon: 'assets/tabs/stones.png', selected: 'assets/tabs/stones-on.png' }] : [])
- .concat([{ icon: 'assets/tabs/me.png', selected: 'assets/tabs/me-on.png' }]);
+const WEAPP_TAB_ROUTES = [
+  { route: 'pages/overview/index', icon: 'home' },
+  { route: 'pages/skills/index', icon: 'skills' },
+  { route: 'pages/prices/index', icon: 'prices' },
+  { route: 'pages/stones/index', icon: 'stones' },
+  { route: 'pages/settings/index', icon: 'me' }
+];
+const XHS_TAB_ROUTES = [
+  { route: 'pages/overview/index', icon: 'home' },
+  { route: 'pages/skills/index', icon: 'skills' },
+  { route: 'pages/prices/index', icon: 'prices' },
+  { route: 'pages/settings/index', icon: 'me' }
+];
+const TAB_ROUTES = (WEAPP ? WEAPP_TAB_ROUTES : XHS_TAB_ROUTES).map(function (t) { return t.route; });
+const TAB_ICONS = WEAPP ? WEAPP_TAB_ROUTES : XHS_TAB_ROUTES;
 
-const TAB_ROUTES = [
-  'pages/overview/index',
-  'pages/analysis/index'
-].concat(WEAPP ? ['pages/stones/index'] : []).concat(['pages/settings/index']);
+const LIGHT_TABS = TAB_ICONS.map(function (t) {
+  return { icon: 'assets/tabs/' + t.icon + '-light.png', selected: 'assets/tabs/' + t.icon + '-on-light.png' };
+});
+const DARK_TABS = TAB_ICONS.map(function (t) {
+  return { icon: 'assets/tabs/' + t.icon + '.png', selected: 'assets/tabs/' + t.icon + '-on.png' };
+});
 
 export function isTabPage() {
   try {

@@ -8,7 +8,10 @@ export default function DataNote(props) {
       <Text>数据 {DATA.meta.catalogVersion} · {DATA.recipes.length} 配方 · </Text>
       <Text
         className='link'
-        onClick={function () { Taro.navigateTo({ url: '/pages/settings/index?section=data' }); }}
+        onClick={function () {
+          try { Taro.setStorageSync('settingsSection', 'data'); } catch (e) {}
+          Taro.switchTab({ url: '/pages/settings/index' });
+        }}
       >说明</Text>
       {props.extra ? <Text> · {props.extra}</Text> : null}
     </View>

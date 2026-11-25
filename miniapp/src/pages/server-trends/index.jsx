@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import TopBar from '../../components/TopBar';
+import PageHeader from '../../components/PageHeader';
 import Kpi from '../../components/Kpi';
 import Seg from '../../components/Seg';
 import Empty from '../../components/Empty';
@@ -153,7 +153,7 @@ function ServerTrends() {
   if (!meta.points) {
     return (
       <View className='page'>
-        <TopBar showTitle={false} subtitle='17 服净涨跌与物品跨服统计' />
+        <PageHeader />
         <Empty title='暂无历史数据' desc='等待快照同步。' />
         <DataNote />
       </View>
@@ -162,7 +162,7 @@ function ServerTrends() {
 
   return (
     <View className='page st-page'>
-      <TopBar showTitle={false} subtitle={loading ? '正在同步历史…' : '17 服净涨跌 · 物品跨服统计'} />
+      <PageHeader />
 
       <View className='card'>
         <View className='card-body'>

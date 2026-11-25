@@ -2,7 +2,7 @@ import withTheme from '../../../components/withTheme';
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Input, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import TopBar from '../../../components/TopBar';
+import PageHeader from '../../../components/PageHeader';
 import Empty from '../../../components/Empty';
 import { useStore } from '../../../store';
 import { fmt } from '../../../shared/format';
@@ -98,7 +98,7 @@ function Directory() {
 
   return (
     <View className='page'>
-      <TopBar showTitle={false} subtitle='672 项家园 / 强化 / 消耗品 · 只查价，不参与配方收益' />
+      <PageHeader />
 
       <View className='notice'>
         <Text className='ic'>i</Text>

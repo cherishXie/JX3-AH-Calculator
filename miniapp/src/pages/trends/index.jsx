@@ -2,7 +2,7 @@ import withTheme from '../../components/withTheme';
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Picker, Canvas } from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import TopBar from '../../components/TopBar';
+import PageHeader from '../../components/PageHeader';
 import Kpi from '../../components/Kpi';
 import Seg from '../../components/Seg';
 import Empty from '../../components/Empty';
@@ -231,7 +231,7 @@ function Trends() {
   if (!meta.points) {
     return (
       <View className='page'>
-        <TopBar showTitle={false} subtitle='本服历史报价 · 离线快照' />
+        <PageHeader />
         <Empty title='暂无物价历史' desc='等待下次快照同步。' />
         <DataNote />
       </View>
@@ -240,7 +240,7 @@ function Trends() {
 
   return (
     <View className='page trend-page'>
-      <TopBar showTitle={false} subtitle='本服历史报价 · 离线快照' />
+      <PageHeader />
 
       <View className='card'>
         <View className='card-head'>

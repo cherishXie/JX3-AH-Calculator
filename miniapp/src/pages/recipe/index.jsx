@@ -2,7 +2,7 @@ import withTheme from '../../components/withTheme';
 import { useState } from 'react';
 import { View, Text, Input, Picker, Textarea } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
-import TopBar from '../../components/TopBar';
+import PageHeader from '../../components/PageHeader';
 import PriceInput from '../../components/PriceInput';
 import DataNote from '../../components/DataNote';
 import Empty from '../../components/Empty';
@@ -203,7 +203,7 @@ function Recipe() {
   if (!isNew && !recipe) {
     return (
       <View className='page'>
-        <TopBar showTitle={false} />
+        <PageHeader />
         <Empty title='配方不存在' desc='可能已被删除，返回列表后重试。' />
       </View>
     );
@@ -217,7 +217,7 @@ function Recipe() {
     const skillIdx = Math.max(0, DATA.skills.findIndex(function (s) { return s.id === draft.skillId; }));
     return (
       <View className='page'>
-        <TopBar showTitle={false} />
+        <PageHeader />
         <View className='card'>
           <View className='card-head'>
             <View className='flex1'>
@@ -387,7 +387,7 @@ function Recipe() {
 
   return (
     <View className='page'>
-      <TopBar showTitle={false} />
+      <PageHeader />
 
       <View className='card'>
         <View className='card-head'>

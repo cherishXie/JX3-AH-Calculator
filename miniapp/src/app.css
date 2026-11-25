@@ -130,21 +130,21 @@ button::after { border: none; }
 /* 按钮 / 控件 */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  height: 62rpx; padding: 0 22rpx; border-radius: 12rpx;
+  height: 72rpx; padding: 0 22rpx; border-radius: 12rpx;
   border: 1rpx solid var(--border); background: transparent; color: var(--text);
   font-size: 23rpx; font-weight: 500; line-height: 1; white-space: nowrap;
 }
 .btn-primary { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 600; }
 .btn-ghost { background: var(--panel); }
 .btn-danger { color: var(--danger); border-color: rgba(244, 63, 94, 0.4); }
-.btn-sm { height: 52rpx; padding: 0 16rpx; font-size: 21rpx; border-radius: 10rpx; }
+.btn-sm { height: 60rpx; padding: 0 18rpx; font-size: 21rpx; border-radius: 10rpx; }
 .btn-block { display: flex; width: 100%; }
 .btn-row { display: flex; flex-wrap: wrap; }
 .btn-row .btn { margin-right: 12rpx; margin-bottom: 12rpx; }
 
 .input {
-  height: 64rpx; padding: 0 16rpx; background: var(--panel); border: 1rpx solid var(--border);
-  border-radius: 12rpx; color: var(--text); font-size: 24rpx; width: 100%;
+  height: 76rpx; padding: 0 18rpx; background: var(--panel); border: 1rpx solid var(--border);
+  border-radius: 12rpx; color: var(--text); font-size: 32rpx; width: 100%;
 }
 .input-sm { height: 54rpx; font-size: 22rpx; }
 .textarea {
@@ -152,8 +152,8 @@ button::after { border: none; }
   border: 1rpx solid var(--border); border-radius: 12rpx; color: var(--text); font-size: 22rpx; line-height: 34rpx;
 }
 .picker {
-  height: 62rpx; padding: 0 16rpx; background: var(--panel); border: 1rpx solid var(--border);
-  border-radius: 12rpx; color: var(--text); font-size: 23rpx;
+  height: 76rpx; padding: 0 18rpx; background: var(--panel); border: 1rpx solid var(--border);
+  border-radius: 12rpx; color: var(--text); font-size: 28rpx;
   display: flex; align-items: center; justify-content: space-between;
 }
 .picker .arrow { color: var(--muted-2); font-size: 18rpx; margin-left: 8rpx; }
@@ -169,7 +169,7 @@ button::after { border: none; }
 
 /* 分段控件 */
 .seg { display: flex; padding: 4rpx; background: var(--panel); border: 1rpx solid var(--border); border-radius: 12rpx; }
-.seg-item { flex: 1; height: 52rpx; display: flex; align-items: center; justify-content: center; border-radius: 9rpx; font-size: 22rpx; color: var(--muted); }
+.seg-item { flex: 1; height: 64rpx; display: flex; align-items: center; justify-content: center; border-radius: 9rpx; font-size: 24rpx; color: var(--muted); }
 .seg-item.active { background: var(--text); color: var(--bg); font-weight: 600; }
 
 /* 标签 */
@@ -229,7 +229,7 @@ button::after { border: none; }
 .price-line .main { flex: 1; min-width: 0; padding-right: 12rpx; }
 .price-line .nm { font-size: 24rpx; font-weight: 500; line-height: 32rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .price-line .ds { font-size: 19rpx; color: var(--muted); line-height: 27rpx; }
-.price-box { width: 150rpx; height: 56rpx; padding: 0 10rpx; background: var(--panel); border: 1rpx solid var(--border); border-radius: 10rpx; text-align: right; font-size: 22rpx; color: var(--text); }
+.price-box { width: 176rpx; height: 72rpx; padding: 0 14rpx; background: var(--panel); border: 1rpx solid var(--border); border-radius: 12rpx; text-align: right; font-size: 30rpx; color: var(--text); }
 .price-state { font-size: 17rpx; color: var(--muted-2); margin-top: 3rpx; }
 .price-state.user { color: var(--positive); }
 .price-state.missing { color: var(--warning); }

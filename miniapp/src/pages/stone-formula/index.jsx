@@ -2,7 +2,7 @@ import withTheme from '../../components/withTheme';
 import { useState } from 'react';
 import { View, Text, Input, Picker } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
-import TopBar from '../../components/TopBar';
+import PageHeader from '../../components/PageHeader';
 import Empty from '../../components/Empty';
 import DataNote from '../../components/DataNote';
 import { useStore } from '../../store';
@@ -56,7 +56,7 @@ function StoneFormula() {
   if (!isNew && !recipe) {
     return (
       <View className='page'>
-        <TopBar showTitle={false} />
+        <PageHeader />
         <Empty title='公式不存在' desc='可能已被删除，返回五行石页重试。' />
       </View>
     );
@@ -175,7 +175,7 @@ function StoneFormula() {
 
   return (
     <View className='page'>
-      <TopBar showTitle={false} />
+      <PageHeader />
 
       <View className='card'>
         <View className='card-head'>
