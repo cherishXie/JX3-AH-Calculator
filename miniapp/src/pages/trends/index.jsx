@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Picker, Canvas } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import PageHeader from '../../components/PageHeader';
+import Section from '../../components/Section';
+import StatGrid from '../../components/StatGrid';
 import Kpi from '../../components/Kpi';
 import Seg from '../../components/Seg';
 import Empty from '../../components/Empty';
@@ -32,7 +34,8 @@ function timeText(at) {
 }
 
 function drawChart(series, theme) {
-  if (!series || !series.length) return;
+  series = (series || []).filter(function (p) { return p && Number.isFinite(Number(p.price)); });
+  if (!series.length) return;
   setTimeout(function () {
     const query = Taro.createSelectorQuery();
     query.select('#trend-canvas').fields({ node: true, size: true }).exec(function (res) {
@@ -228,9 +231,19 @@ function Trends() {
     drawChart(focusSeries, state.settings.theme === 'dark' ? 'dark' : 'light');
   }, [focusSeries, focusItem, state.settings.theme]);
 
+  function copyNodes() {
+    const lines = ['时间,价格,有价物品,变化物品,来源'];
+    viewPoints.slice().reverse().forEach(function (point) {
+      const price = focusItem ? priceOfPoint(point, focusItem) : null;
+      lines.push([trendAtText(point.at), price == null ? '' : price, point.pricedCount, point.changed, point.source === 'seed' ? '基准' : '更新'].join(','));
+    });
+    Taro.setClipboardData({ data: lines.join('\n') });
+    Taro.showToast({ title: '已复制历史节点 CSV', icon: 'none' });
+  }
+
   if (!meta.points) {
     return (
-      <View className='page'>
+      <View className='v2-page'>
         <PageHeader />
         <Empty title='暂无物价历史' desc='等待下次快照同步。' />
         <DataNote />
@@ -239,133 +252,112 @@ function Trends() {
   }
 
   return (
-    <View className='page trend-page'>
-      <PageHeader />
+    <View className='v2-page'>
+      <PageHeader
+        actions={<View hoverClass='v2-pressed' hoverStayTime={80} className='v2-icon-btn' onClick={refreshTrends}>{loading ? '…' : '↻'}</View>}
+      />
 
-      <View className='card'>
-        <View className='card-head'>
-          <View className='flex1'>
-            <Text className='card-title'>历史快照</Text>
-            <Text className='card-sub'>{meta.days} 天 · {meta.points} 个节点 · 数据 {meta.catalogVersion}</Text>
-          </View>
-          <View className='card-tool'>
-            <Text className={'badge ' + (meta.kind === 'cloud' ? 'badge-positive' : 'badge-neutral')} style={{ marginRight: '8rpx' }}>{meta.sourceLabel}</Text>
-            <View className='btn btn-ghost btn-sm' onClick={refreshTrends}>{loading ? '同步中' : '刷新'}</View>
-          </View>
+      <View className='v2-hero'>
+        <View className='v2-kicker'>物价走势 · {meta.sourceLabel}</View>
+        <View className='v2-h1' style={{ fontSize: '50rpx' }}>{focusItem ? focusItem.name : '本服物价'}</View>
+        <View className='v2-hero-sub'>
+          {serverName} · {meta.days} 天 · {meta.points} 个节点 · {allItems.length} 个物品
+          {focusItem ? ' · ' + focusItem.skillName : ''}
         </View>
-        <View className='card-body'>
-          <View className='kv'><Text className='k'>当前服务器</Text><Text className='v'>{serverName}</Text></View>
-          <View className='kv'><Text className='k'>快照时间</Text><Text className='v'>{meta.updatedAt ? meta.updatedAt.slice(0, 16).replace('T', ' ') : '—'}</Text></View>
-          <View className='kv'><Text className='k'>数据范围</Text><Text className='v'>{viewPoints.length} 个节点 · {allItems.length} 个物品</Text></View>
-          <View className='trend-filter-block'>
-            <Text className='form-label'>时间范围</Text>
-            <Seg value={range} options={RANGE_OPTIONS} onChange={setRange} />
-          </View>
-          <View className='trend-filter-block'>
-            <Text className='form-label'>类型</Text>
-            <Seg value={type} options={TYPE_OPTIONS} onChange={setType} />
-          </View>
-          <View className='filter-row mt'>
-            <Picker mode='selector' range={skillOptions} value={skillIdx}
-              onChange={function (e) {
-                const i = Number(e.detail.value);
-                setSkillId(i === skillOptions.length - 1 ? 'stone' : i ? DATA.skills[i - 1].id : '');
-              }}>
-              <View className='picker picker-sm'><Text>{skillOptions[skillIdx]}</Text><Text className='arrow'>⌄</Text></View>
-            </Picker>
-            <Picker mode='selector' range={allItems.map(function (i) { return i.name; })} value={focusIdx}
-              onChange={function (e) {
-                const item = allItems[Number(e.detail.value)];
-                if (item) setFocusKey(item.key);
-              }}>
-              <View className='picker picker-sm' style={{ flex: 1 }}><Text>{focusItem ? focusItem.name : '选择物品'}</Text><Text className='arrow'>⌄</Text></View>
-            </Picker>
-          </View>
+      </View>
+
+      <View className='v2-card-pad' style={{ marginTop: '18rpx', background: 'var(--card)', border: '1rpx solid var(--border)' }}>
+        <View className='v2-tiny' style={{ marginBottom: '8rpx' }}>时间范围</View>
+        <Seg value={range} options={RANGE_OPTIONS} onChange={setRange} />
+        <View className='v2-tiny' style={{ margin: '16rpx 0 8rpx' }}>类型</View>
+        <Seg value={type} options={TYPE_OPTIONS} onChange={setType} />
+        <View className='v2-flex' style={{ gap: '12rpx', marginTop: '16rpx' }}>
+          <Picker mode='selector' range={skillOptions} value={skillIdx}
+            onChange={function (e) {
+              const i = Number(e.detail.value);
+              setSkillId(i === skillOptions.length - 1 ? 'stone' : i ? DATA.skills[i - 1].id : '');
+            }}>
+            <View className='v2-input' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text>{skillOptions[skillIdx]}</Text><Text className='v2-muted'>⌄</Text>
+            </View>
+          </Picker>
+          <Picker mode='selector' range={allItems.map(function (i) { return i.name; })} value={focusIdx}
+            onChange={function (e) {
+              const item = allItems[Number(e.detail.value)];
+              if (item) setFocusKey(item.key);
+            }}>
+            <View className='v2-input' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ maxWidth: '240rpx', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{focusItem ? focusItem.name : '选择物品'}</Text>
+              <Text className='v2-muted'>⌄</Text>
+            </View>
+          </Picker>
         </View>
+        <View className='v2-tiny' style={{ marginTop: '10rpx' }}>快照 {meta.updatedAt ? meta.updatedAt.slice(0, 16).replace('T', ' ') : '—'} · 数据 {meta.catalogVersion}</View>
       </View>
 
       {isCustom ? (
-        <View className='notice'>
-          <Text className='ic'>!</Text>
-          <Text>自定义服无历史，按基准价展示。</Text>
-        </View>
+        <View className='v2-tiny' style={{ marginTop: '10rpx' }}>自定义服无历史，按基准价展示。</View>
       ) : null}
 
-      <View className='kpi-grid'>
-        <Kpi label='最新价' value={summary.last == null ? '—' : fmt(summary.last, 2)} unit='金'
-          meta={(focusItem ? focusItem.name : '选择物品') + ' · ' + summary.source} />
-        <Kpi label='区间涨跌' value={summary.changePct == null ? '—' : fmtPct(summary.changePct / 100, 1)}
-          meta={summary.count + ' 个节点'} tone={summary.changePct > 0 ? 'pos' : summary.changePct < 0 ? 'neg' : ''} />
-        <Kpi label='区间最高' value={summary.max == null ? '—' : fmt(summary.max, 2)} unit='金' meta='区间内采用价' />
-        <Kpi label='区间最低' value={summary.min == null ? '—' : fmt(summary.min, 2)} unit='金' meta={'来源 ' + summary.source} />
-      </View>
+      <StatGrid
+        items={[
+          { k: '最新价', v: summary.last == null ? '—' : fmt(summary.last, 2), u: '金', m: summary.source },
+          { k: '区间涨跌', v: summary.changePct == null ? '—' : fmtPct(summary.changePct / 100, 1), m: summary.count + ' 个节点', tone: summary.changePct > 0 ? 'v2-pos' : summary.changePct < 0 ? 'v2-neg' : '' },
+          { k: '区间最高', v: summary.max == null ? '—' : fmt(summary.max, 2), u: '金', m: '区间内采用价' },
+          { k: '区间最低', v: summary.min == null ? '—' : fmt(summary.min, 2), u: '金', m: '来源 ' + summary.source }
+        ]}
+      />
 
-      <View className='card'>
-        <View className='card-head'>
-          <View className='flex1'>
-            <Text className='card-title'>{focusItem ? focusItem.name : '物价变化'}</Text>
-            <Text className='card-sub'>{focusItem ? focusItem.skillName + ' · ' + focusItem.tierName : '选择物品'} · {summary.count} 个节点</Text>
-          </View>
-        </View>
+      <Section title='价格曲线' sub={'本服报价优先，缺失时用基准价 · ' + summary.count + ' 个节点'}>
         <View className='trend-canvas-wrap'>
           <Canvas type='2d' id='trend-canvas' canvasId='trend-canvas' className='trend-canvas' style={{ width: '100%', height: '320rpx' }} />
           {!focusSeries.length ? <View className='trend-canvas-empty'><Text className='tiny dim'>当前筛选没有价格节点</Text></View> : null}
         </View>
-        <View className='card-foot'>本服报价优先，缺失时使用基准价；不覆盖价格库里的手动校准。</View>
-      </View>
+        <View className='v2-tiny' style={{ marginTop: '8rpx' }}>不覆盖价格库里的手动校准；先在本服行情改价，曲线只反映历史快照。</View>
+      </Section>
 
-      <View className='card'>
-        <View className='card-head'>
-          <View className='flex1'>
-            <Text className='card-title'>区间涨跌榜</Text>
-            <Text className='card-sub'>按涨跌幅</Text>
-          </View>
-        </View>
-        <View className='card-body' style={{ paddingTop: '4rpx' }}>
-          {ranked.length ? ranked.map(function (row, i) {
+      <Section title='区间涨跌榜' sub={'按涨跌幅 · ' + ranked.length + ' 项'}>
+        <View className='v2-rows'>
+          {ranked.slice(0, 20).map(function (row, i) {
             const change = row.summary.changePct;
             return (
-              <View className={'trend-rank-row' + (focusItem && row.item.key === focusItem.key ? ' active' : '')}
-                key={row.item.key} onClick={function () { setFocusKey(row.item.key); }}>
-                <Text className='trend-rank-index'>{i + 1}</Text>
-                <View className='main'>
-                  <Text className='nm'>{row.item.name}</Text>
-                  <Text className='ds'>{row.item.skillName} · 最新 {fmt(row.summary.last, 2)} 金 · {row.summary.count} 个节点</Text>
+              <View className={'v2-row' + (focusItem && row.item.key === focusItem.key ? ' active' : '')} key={row.item.key}
+                onClick={function () { setFocusKey(row.item.key); }} style={{ minHeight: '92rpx' }}>
+                <Text className={'v2-no' + (i === 0 ? ' top' : '')}>{i + 1}</Text>
+                <View className='v2-row-main'>
+                  <Text className='v2-row-nm'>{row.item.name}</Text>
+                  <Text className='v2-row-ds'>{row.item.skillName} · 最新 {fmt(row.summary.last, 2)} 金 · {row.summary.count} 节点</Text>
                 </View>
-                <Text className={'trend-rank-change ' + (change > 0 ? 'pos' : change < 0 ? 'neg' : '')}>
-                  {fmtPct(change / 100, 1)}
-                </Text>
+                <View className='v2-row-val'>
+                  <Text className={'v2-row-v ' + (change > 0 ? 'v2-pos' : change < 0 ? 'v2-neg' : '')}>{fmtPct(change / 100, 1)}</Text>
+                  <Text className='v2-row-u'>区间涨跌</Text>
+                </View>
               </View>
             );
-          }) : <Empty title='当前筛选没有可比较的物品' desc='调整筛选。' />}
+          })}
+          {!ranked.length ? <Empty title='当前筛选没有可比较的物品' desc='调整筛选。' /> : null}
         </View>
-      </View>
+      </Section>
 
-      <View className='card'>
-        <View className='card-head'>
-          <View className='flex1'>
-            <Text className='card-title'>历史节点</Text>
-            <Text className='card-sub'>当前物品 · 时间倒序</Text>
-          </View>
-        </View>
-        <View className='card-body' style={{ paddingTop: '4rpx' }}>
+      <Section title='历史节点' sub='当前物品 · 时间倒序' action='复制 CSV' onAction={copyNodes}>
+        <View className='v2-rows'>
           {viewPoints.slice().reverse().map(function (point, i) {
             const price = focusItem ? priceOfPoint(point, focusItem) : null;
             return (
-              <View className='trend-node-row' key={point.at + i}>
-                <View className='main'>
-                  <Text className='nm'>{trendAtText(point.at)}</Text>
-                  <Text className='ds'>{point.pricedCount} 项有价 · {point.changed} 项变化 · {point.source === 'seed' ? '基准' : '更新'}</Text>
+              <View className='v2-row' key={point.at + i} style={{ minHeight: '84rpx' }}>
+                <View className='v2-row-main'>
+                  <Text className='v2-row-nm'>{trendAtText(point.at)}</Text>
+                  <Text className='v2-row-ds'>{point.pricedCount} 项有价 · {point.changed} 项变化 · {point.source === 'seed' ? '基准' : '更新'}</Text>
                 </View>
-                <View className='val'>
-                  <Text className='v'>{price == null ? '—' : fmt(price, 2)}</Text>
-                  <Text className='u'>金</Text>
+                <View className='v2-row-val'>
+                  <Text className='v2-row-v'>{price == null ? '—' : fmt(price, 2)}</Text>
+                  <Text className='v2-row-u'>金</Text>
                 </View>
               </View>
             );
           })}
         </View>
-      </View>
+      </Section>
 
       <DataNote />
     </View>

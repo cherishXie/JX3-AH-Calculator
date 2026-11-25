@@ -216,7 +216,7 @@
 ## 8. 落地状态（2026-11-25）
 
 - 微信：5 Tab（今日 / 技艺 / 行情 / 五行石 / 我的），13 个主包页面 + 1 个行情目录分包；小红书：4 Tab，8 个页面。
-- 新增/重写：`pages/overview`（总览）、`pages/skills`（首次注册的一级页）、`pages/prices`、`pages/analysis`（完整收益分析）、`pages/stones`、`pages/settings`、`pages/rank`。
+- 新增/重写：`pages/overview`（总览）、`pages/skills`（首次注册的一级页）、`pages/prices`、`pages/analysis`（完整收益分析）、`pages/stones`、`pages/settings`、`pages/rank`；二级页 `pages/recipe`、`pages/breakthrough`、`pages/trends` 同步换成 v2 头图与卡片。
 - 新增共享组件：`PageHeader`、`Section`、`StatGrid`、`Sheet`；`Toggle` 改为 88rpx 整行开关；新增 `styles/v2.css` 设计层。
 - 交互与视觉细则、Before/After 表、真机待验证项见 [10-miniapp-ui-refactor.md](./10-miniapp-ui-refactor.md)。
 - 验证：`build:weapp` / `build:xhs` 通过，`verify:weapp` 13 页 / 5 Tab / 10 图标 / 主包 1.55MB（1.5MB+120KB 代理预算内）。

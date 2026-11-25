@@ -3,12 +3,14 @@ import { useState } from 'react';
 import { View, Text, Input, Picker, Textarea } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import PageHeader from '../../components/PageHeader';
+import Section from '../../components/Section';
+import StatGrid from '../../components/StatGrid';
 import PriceInput from '../../components/PriceInput';
 import DataNote from '../../components/DataNote';
 import Empty from '../../components/Empty';
 import { useStore } from '../../store';
 import { DATA, findItem, findRecipe, calcRecipe, priceOf, skillOf, tierOf } from '../../shared/engine';
-import { fmt, fmtInt, fmtSigned, fmtPct } from '../../shared/format';
+import { fmt, fmtInt, fmtSigned, fmtPct, fmtWan } from '../../shared/format';
 
 function makeDraft(state, skillId, recipe) {
   if (recipe) {
@@ -202,7 +204,7 @@ function Recipe() {
 
   if (!isNew && !recipe) {
     return (
-      <View className='page'>
+      <View className='v2-page'>
         <PageHeader />
         <Empty title='配方不存在' desc='可能已被删除，返回列表后重试。' />
       </View>
@@ -216,7 +218,7 @@ function Recipe() {
     const skillNames = DATA.skills.map(function (s) { return s.name; });
     const skillIdx = Math.max(0, DATA.skills.findIndex(function (s) { return s.id === draft.skillId; }));
     return (
-      <View className='page'>
+      <View className='v2-page'>
         <PageHeader />
         <View className='card'>
           <View className='card-head'>
@@ -386,130 +388,119 @@ function Recipe() {
   const totalParts = parts.reduce(function (s, p) { return s + p.value; }, 0) || 1;
 
   return (
-    <View className='page'>
-      <PageHeader />
+    <View className='v2-page has-cta'>
+      <PageHeader meta={'Lv.' + recipe.level + ' · ' + sk.name} />
 
-      <View className='card'>
-        <View className='card-head'>
-          <View className='flex1'>
-            <Text className='page-h1'>{recipe.name}</Text>
-            <View className='row mt' style={{ flexWrap: 'wrap' }}>
-              <Text className='badge badge-outline'>{sk.name}</Text>
-              <Text className='badge badge-neutral' style={{ marginLeft: '8rpx' }}>{tierOf(recipe.tier).name}</Text>
-              <Text className='badge badge-neutral' style={{ marginLeft: '8rpx' }}>Lv.{recipe.level}</Text>
-              {recipe.verified ? <Text className='badge badge-positive' style={{ marginLeft: '8rpx' }}>配方已核验</Text> : null}
-              {recipe.custom ? <Text className='badge badge-custom' style={{ marginLeft: '8rpx' }}>自定义</Text> : null}
-            </View>
-          </View>
+      <View className='v2-hero'>
+        <View className='v2-kicker'>{sk.name} · {tierOf(recipe.tier).name} · Lv.{recipe.level}</View>
+        <View className='v2-h1' style={{ fontSize: '48rpx' }}>{recipe.name}</View>
+        <View className='v2-flex' style={{ flexWrap: 'wrap', gap: '8rpx', marginTop: '10rpx' }}>
+          {recipe.verified ? <Text className='v2-tag pos'>配方已核验</Text> : null}
+          {recipe.custom ? <Text className='v2-tag hot'>自定义</Text> : null}
+          <Text className='v2-tag'>{recipe.kind === 'gather' ? '采集点' : '制造配方'}</Text>
+          <Text className='v2-tag'>{fmtInt(calc.energy)} 精力</Text>
         </View>
-        <View className='card-body'>
-          {calc.missing ? <View className='notice'><Text className='ic'>!</Text><Text>有未定价项，收益按 0 计，结果会被低估。</Text></View> : null}
-
-          <View className='kpi-grid'>
-            <View className='kpi' style={{ width: '31.5%' }}>
-              <Text className='kpi-label'>总成本</Text>
-              <Text className='kpi-value' style={{ fontSize: '34rpx', lineHeight: '44rpx' }}>{fmt(calc.totalCost, 2)}</Text>
-              <Text className='kpi-meta'>金</Text>
-            </View>
-            <View className='kpi' style={{ width: '31.5%' }}>
-              <Text className='kpi-label'>产值</Text>
-              <Text className='kpi-value' style={{ fontSize: '34rpx', lineHeight: '44rpx' }}>{fmt(calc.outputValue, 2)}</Text>
-              <Text className='kpi-meta'>金</Text>
-            </View>
-            <View className='kpi' style={{ width: '31.5%' }}>
-              <Text className='kpi-label'>单次利润</Text>
-              <Text className={'kpi-value ' + (calc.profit >= 0 ? 'pos' : 'neg')} style={{ fontSize: '34rpx', lineHeight: '44rpx' }}>{fmtSigned(calc.profit, 2)}</Text>
-              <Text className='kpi-meta'>金</Text>
-            </View>
-          </View>
-          <View className='row-between mt'>
-            <Text className='tiny dim'>精力收益</Text>
-            <Text className={'small strong ' + (calc.perEnergy >= 0 ? 'pos' : 'neg')}>{calc.perEnergy == null ? '—' : fmt(calc.perEnergy, 2)} 金/精力</Text>
-          </View>
-          <View className='row-between mt'>
-            <Text className='tiny dim'>成本口径</Text>
-            <Text className='tiny dim'>{basisText}</Text>
-          </View>
-        </View>
+        <View className='v2-hero-sub'>{calc.missing ? '有未定价项，收益按 0 计，结果会被低估。' : '成本、税后产值与精力收益已按本服价格计算。'}</View>
       </View>
 
-      <View className='card'>
-        <View className='card-head'><View className='flex1'><Text className='card-title'>产物与售价</Text></View></View>
-        <View className='card-body' style={{ paddingTop: '4rpx' }}>
+      <StatGrid
+        items={[
+          { k: '精力收益', v: calc.perEnergy == null ? '—' : fmt(calc.perEnergy, 2), u: '金/精力', m: '利润 ÷ 精力', tone: calc.perEnergy > 0 ? 'v2-pos' : calc.perEnergy < 0 ? 'v2-neg' : '' },
+          { k: '单次利润', v: fmtWan(calc.profit, 2), u: '金', m: '税后产值 − 总成本', tone: calc.profit >= 0 ? 'v2-pos' : 'v2-neg' },
+          { k: '总成本', v: fmtWan(calc.totalCost, 2), u: '金', m: '材料 + 手续费' },
+          { k: '税后产值', v: fmtWan(calc.outputValue, 2), u: '金', m: '扣 ' + fmtPct(state.settings.taxRate, 0) + ' 交易税' }
+        ]}
+      />
+
+      <Section title='产物与售价' sub='直接改价，本页收益即时重算'>
+        <View className='v2-rows'>
           {calc.outputs.map(function (o) {
+            const qtyText = o.qtyMin != null && o.qtyMax != null && o.qtyMax > o.qtyMin ? o.qtyMin + '~' + o.qtyMax : String(o.qty);
             return (
-              <View className='price-line' key={o.itemId}>
-                <View className='main'>
-                  <Text className='nm'>{o.name}</Text>
-                  <Text className='ds'>数量 {o.qtyMin != null && o.qtyMax != null && o.qtyMax > o.qtyMin ? o.qtyMin + '~' + o.qtyMax : o.qty}{o.chance != null && o.chance < 0.999 ? ' · 掉率 ' + (o.chance * 100).toFixed(o.chance < 0.1 ? 1 : 0) + '%' : ''}{o.missing ? ' · 缺价' : ''}</Text>
+              <View className='v2-row' key={o.itemId}>
+                <View className='v2-row-main'>
+                  <View className='v2-flex' style={{ gap: '8rpx' }}>
+                    <Text className='v2-row-nm'>{o.name}</Text>
+                    {o.missing ? <Text className='v2-tag warn'>缺价</Text> : null}
+                  </View>
+                  <Text className='v2-row-ds'>
+                    数量 {qtyText}{o.chance != null && o.chance < 0.999 ? ' · 掉率 ' + (o.chance * 100).toFixed(o.chance < 0.1 ? 1 : 0) + '%' : ''}
+                    {' · 单价 ' + fmt(o.unit, 2)}
+                  </Text>
                 </View>
                 <View style={{ textAlign: 'right' }}>
                   <PriceInput value={o.missing ? '' : o.unit} onSave={function (v) { savePrice(o.itemId, v); }} />
-                  <Text className='price-state'>小计 {fmt(o.sub, 2)} 金</Text>
+                  <Text className='v2-row-u'>小计 {fmt(o.sub, 2)} 金</Text>
                 </View>
               </View>
             );
           })}
         </View>
-      </View>
+      </Section>
 
       {recipe.kind === 'craft' ? (
-        <View className='card'>
-          <View className='card-head'><View className='flex1'><Text className='card-title'>材料清单</Text><Text className='card-sub'>可直接改价 · 成本构成</Text></View></View>
-          <View className='card-body' style={{ paddingTop: '4rpx' }}>
+        <Section title='材料清单' sub={'可直接改价 · 成本构成 · ' + calc.materials.length + ' 项'}>
+          <View className='v2-rows'>
             {calc.materials.map(function (m, i) {
               const p = priceOf(state, m.itemId, state.serverId);
               return (
-                <View className='price-line' key={m.itemId + i}>
-                  <View className='main'>
-                    <Text className='nm'>{m.name}</Text>
-                    <Text className='ds'>数量 {m.qty} · 计入 {fmt(m.unit, 2)} 金{m.source === 'craft' ? ' · 自制' : ''}{m.missing ? ' · 缺价' : ''}</Text>
+                <View className='v2-row' key={m.itemId + i}>
+                  <View className='v2-row-main'>
+                    <View className='v2-flex' style={{ gap: '8rpx' }}>
+                      <Text className='v2-row-nm'>{m.name}</Text>
+                      {m.missing ? <Text className='v2-tag warn'>缺价</Text> : null}
+                      {m.source === 'craft' ? <Text className='v2-tag info'>自制</Text> : null}
+                    </View>
+                    <Text className='v2-row-ds'>数量 {m.qty} · 计入 {fmt(m.unit, 2)} 金</Text>
                   </View>
                   <View style={{ textAlign: 'right' }}>
                     <PriceInput value={p.missing ? '' : p.v} onSave={function (v) { savePrice(m.itemId, v); }} />
-                    <Text className='price-state'>小计 {fmt(m.sub, 2)} 金</Text>
+                    <Text className='v2-row-u'>小计 {fmt(m.sub, 2)} 金</Text>
                   </View>
                 </View>
               );
             })}
-            <View className='divider' />
-            <Text className='tiny dim'>成本构成</Text>
-            <View style={{ marginTop: '8rpx' }}>
-              {parts.map(function (p, i) {
-                return (
-                  <View className='bar-row' key={i}>
-                    <View className='bar-label'><Text className='n'>{p.name}</Text></View>
-                    <View className='bar-track'><View className='bar-fill' style={{ width: Math.max(1, (p.value / totalParts) * 100) + '%', background: p.color }} /></View>
-                    <Text className='bar-val'>{fmt(p.value, 2)}</Text>
-                  </View>
-                );
-              })}
-            </View>
           </View>
-        </View>
+          <View className='v2-card-pad' style={{ marginTop: '16rpx', background: 'var(--card)', border: '1rpx solid var(--border)' }}>
+            <View className='v2-tiny' style={{ marginBottom: '10rpx' }}>成本构成</View>
+            {parts.map(function (p, i) {
+              return (
+                <View className='bar-row' key={i}>
+                  <View className='bar-label'><Text className='n'>{p.name}</Text></View>
+                  <View className='bar-track'><View className='bar-fill' style={{ width: Math.max(1, (p.value / totalParts) * 100) + '%', background: p.color }} /></View>
+                  <Text className='bar-val'>{fmt(p.value, 2)}</Text>
+                </View>
+              );
+            })}
+          </View>
+        </Section>
       ) : null}
 
-      <View className='card'>
-        <View className='card-head'><View className='flex1'><Text className='card-title'>精力与口径</Text></View></View>
-        <View className='card-body' style={{ paddingTop: '4rpx' }}>
-          <View className='kv'><Text className='k'>单次精力</Text><Text className='v'>{fmtInt(calc.energy)} 点</Text></View>
-          <View className='kv'><Text className='k'>手续费</Text><Text className='v'>{fmt(calc.fee, 2)} 金</Text></View>
-          <View className='kv'><Text className='k'>材料成本</Text><Text className='v'>{fmt(calc.materialCost, 2)} 金</Text></View>
-          <View className='kv'><Text className='k'>满 {fmtInt(state.settings.energyBudget)} 精力可做</Text><Text className='v'>{calc.energy > 0 ? Math.floor(state.settings.energyBudget / calc.energy) : 0} 次</Text></View>
-          <View className='kv'><Text className='k'>毛利率</Text><Text className='v'>{calc.margin == null ? '—' : fmtPct(calc.margin, 1)}</Text></View>
-          <Text className='tiny dim mt' style={{ display: 'block', lineHeight: '30rpx' }}>
-            售价已扣 {fmtPct(state.settings.taxRate, 0)} 税；未计暴击与署名溢价。
-          </Text>
-          {recipe.note ? <Text className='tiny dim mt' style={{ display: 'block' }}>备注：{recipe.note}</Text> : null}
-          <Text className='tiny dim mt' style={{ display: 'block' }}>来源：{recipe.origin || '示例配方'}</Text>
+      <Section title='精力与口径' sub={basisText}>
+        <View className='v2-card-pad' style={{ background: 'var(--card)', border: '1rpx solid var(--border)' }}>
+          <View className='v2-kv'><Text className='k'>单次精力</Text><Text className='v'>{fmtInt(calc.energy)} 点</Text></View>
+          <View className='v2-kv'><Text className='k'>手续费</Text><Text className='v'>{fmt(calc.fee, 2)} 金</Text></View>
+          <View className='v2-kv'><Text className='k'>材料成本</Text><Text className='v'>{fmt(calc.materialCost, 2)} 金</Text></View>
+          <View className='v2-kv'><Text className='k'>满 {fmtInt(state.settings.energyBudget)} 精力可做</Text><Text className='v'>{calc.energy > 0 ? Math.floor(state.settings.energyBudget / calc.energy) : 0} 次</Text></View>
+          <View className='v2-kv'><Text className='k'>毛利率</Text><Text className='v'>{calc.margin == null ? '—' : fmtPct(calc.margin, 1)}</Text></View>
+          <View className='v2-kv'><Text className='k'>数据口径</Text><Text className='v'>{basisText} · 扣 {fmtPct(state.settings.taxRate, 0)} 税</Text></View>
+          <View className='v2-tiny' style={{ marginTop: '10rpx' }}>
+            未计暴击额外产出与署名溢价。{recipe.note ? '备注：' + recipe.note : ''}
+            {recipe.origin ? ' 来源：' + recipe.origin : ''}
+          </View>
+        </View>
+      </Section>
+
+      <DataNote />
+
+      <View className='v2-cta'>
+        <View className='v2-flex' style={{ gap: '14rpx' }}>
+          <View hoverClass='v2-pressed' hoverStayTime={80} className='v2-btn primary' style={{ flex: 1 }} onClick={startEdit}>编辑配方</View>
+          {recipe.custom
+            ? <View hoverClass='v2-pressed' hoverStayTime={80} className='v2-btn ghost' style={{ flex: '0 0 200rpx' }} onClick={removeRecipe}>删除</View>
+            : <View hoverClass='v2-pressed' hoverStayTime={80} className='v2-btn ghost' style={{ flex: '0 0 200rpx' }} onClick={resetRecipe}>恢复示例</View>}
         </View>
       </View>
-
-      <View className='btn-row'>
-        <View className='btn btn-primary' onClick={startEdit}>编辑配方</View>
-        {recipe.custom ? <View className='btn btn-danger' onClick={removeRecipe}>删除</View> : <View className='btn btn-ghost' onClick={resetRecipe}>恢复示例</View>}
-      </View>
-      <DataNote />
     </View>
   );
 }

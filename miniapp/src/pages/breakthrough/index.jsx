@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { useRouter } from '@tarojs/taro';
 import PageHeader from '../../components/PageHeader';
+import Section from '../../components/Section';
 import Seg from '../../components/Seg';
 import DataNote from '../../components/DataNote';
 import Empty from '../../components/Empty';
@@ -42,26 +43,38 @@ function Breakthrough() {
   }
 
   return (
-    <View className='page bt-page'>
+    <View className='v2-page bt-page'>
       <PageHeader />
 
-      <View className='bt-head'>
-        <Text className='t'>{result.meta.name} · 1→50</Text>
-        <Text className='s'>{strategyLabel(strategy)} · {t.energy == null ? '无法核算' : fmtInt(t.energy) + ' 精力 · ' + fmtInt(t.crafts) + ' 次'}</Text>
+      <View className='v2-hero'>
+        <View className='v2-kicker'>突破升级 · 8 技艺 · 1→50</View>
+        <View className='v2-h1' style={{ fontSize: '50rpx' }}>{result.meta.name}</View>
+        <View className='v2-hero-sub'>
+          {strategyLabel(strategy)} · {t.energy == null ? '无法核算' : fmtInt(t.energy) + ' 精力 · ' + fmtInt(t.crafts) + ' 次'}
+        </View>
       </View>
 
-      <View className='skill-grid'>
+      <ScrollView scrollX className='v2-chip-row' style={{ marginTop: '16rpx' }}>
         {DATA.skills.map(function (s) {
           return (
-            <View key={s.id} className={'chip' + (s.id === skillId ? ' active' : '')}
+            <View key={s.id} hoverClass='v2-pressed' hoverStayTime={80}
+              className={'v2-chip' + (s.id === skillId ? ' on' : '')}
               onClick={function () { setSkillId(s.id); setOpen(''); }}>
               {s.name}
             </View>
           );
         })}
+      </ScrollView>
+
+      <View style={{ marginTop: '16rpx' }}>
+        <Seg value={strategy} options={STRATEGIES} onChange={function (v) { setStrategy(v); setOpen(''); }} />
       </View>
 
-      <Seg value={strategy} options={STRATEGIES} onChange={function (v) { setStrategy(v); setOpen(''); }} />
+      {strategy === 'gold' && !result.enough ? (
+        <View className='v2-tiny' style={{ marginTop: '12rpx', lineHeight: '32rpx' }}>
+          金币优先需要 1–30 级材料都有本服报价；当前有缺价，所以整条路线无法核算。切到「精力优先」仍可看精力与次数。
+        </View>
+      ) : null}
 
       <View className='bt-summary'>
         <View className='bt-summary-lead'>
