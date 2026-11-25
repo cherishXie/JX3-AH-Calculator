@@ -457,7 +457,3 @@ update JX3BOX prices
 ## 2026-11-23 · 03ff9f4
 
 update JX3BOX prices
-
-## 2026-11-23 · 38f971f
-
-update JX3BOX prices
