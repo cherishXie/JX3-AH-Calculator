@@ -2,6 +2,10 @@
 
 由 GitHub Actions 根据最近 200 条提交自动维护；日期使用北京时间。价格更新也记录在此。
 
+## 2026-11-25 · 74624f8
+
+update JX3BOX prices
+
 ## 2026-11-25 · fb3a09b
 
 update JX3BOX prices
@@ -379,9 +383,5 @@ update JX3BOX prices
 update JX3BOX prices
 
 ## 2026-11-22 · 3131040
-
-update JX3BOX prices
-
-## 2026-11-22 · 877e414
 
 update JX3BOX prices
