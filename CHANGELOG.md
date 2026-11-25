@@ -373,7 +373,3 @@ update JX3BOX prices
 ## 2026-11-22 · e27939c
 
 update JX3BOX prices
-
-## 2026-11-22 · 96e3a5c
-
-价格机器人提交时遇并发推送自动 rebase 重试
