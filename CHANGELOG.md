@@ -377,7 +377,3 @@ update JX3BOX prices
 ## 2026-11-22 · 019b7a7
 
 趋势历史按云开发单次写入上限自动分片
-
-## 2026-11-22 · b60637b
-
-update JX3BOX prices
