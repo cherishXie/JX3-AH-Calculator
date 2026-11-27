@@ -498,8 +498,8 @@
     const scoreById = Object.create(null);
     const total = scored.length;
     scored.forEach(function (entry, index) {
-      // 潜力分取同期全部稳健样本的相对分位：99 = 最高，50 = 中位。
-      scoreById[entry.row.id] = total > 1 ? Math.round(99 - (index / (total - 1)) * 49) : 99;
+      // 潜力分取同期全部稳健样本的相对分位：99 = 最高，1 = 最低，50 ≈ 中位。
+      scoreById[entry.row.id] = total > 1 ? Math.round(99 - (index / (total - 1)) * 98) : 99;
     });
     const decorate = function (row) {
       return Object.assign({}, row, {
