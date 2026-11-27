@@ -150,6 +150,7 @@
     external: '<path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
     shield: '<path d="M12 3l8 3v6c0 4.4-3.2 7.9-8 9-4.8-1.1-8-4.6-8-9V6l8-3Z"/><path d="M9 12l2 2 4-4"/>',
     spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/>',
+    message: '<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H5l-2 2V11.5A8.5 8.5 0 0 1 11.5 3h1A8.5 8.5 0 0 1 21 11.5Z"/><path d="M8 9h8M8 13h5"/>',
     filter: '<path d="M3 5h18l-7 8v6l-4-2v-4L3 5Z"/>',
     refreshPrice: '<path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M4.6 15a8 8 0 0 0 13.8 2.4M19.4 9A8 8 0 0 0 5.6 6.6"/>'
   };
@@ -7306,6 +7307,143 @@
     requestAnimationFrame(restoreTrendScroll);
   }
 
+  /* ------------------------------------------------------------------ */
+  /* 用户反馈（静态站安全提交到 GitHub Issue）                           */
+  /* ------------------------------------------------------------------ */
+  const FEEDBACK_REPO = 'cherishXie/JX3-AH-Calculator';
+  const FEEDBACK_DRAFT_KEY = 'jx3-feedback-draft-v1';
+  const FEEDBACK_MAX = 2000;
+
+  function feedbackIssueTitle(text) {
+    const first = String(text || '').split('\n').map(function (line) { return line.trim(); }).filter(Boolean)[0] || '用户反馈';
+    return '[反馈] ' + first.slice(0, 42) + (first.length > 42 ? '…' : '');
+  }
+  function feedbackIssueBody(text) {
+    const meta = document.querySelector('meta[name="app-version"]');
+    const appVer = meta ? meta.getAttribute('content') : 'dev';
+    const ctx = [
+      '- 页面：' + location.href,
+      '- 页面标题：' + document.title,
+      '- 区服：' + (server() ? server().name : '—'),
+      '- 应用版本：' + appVer,
+      '- 数据版本：' + (DATA.meta.version || '—') + ' / ' + (DATA.meta.catalogVersion || '—'),
+      '- 行情更新：' + (DATA.meta.priceUpdatedAt || '—'),
+      '- 窗口：' + window.innerWidth + '×' + window.innerHeight,
+      '- 浏览器：' + navigator.userAgent,
+      '- 时间：' + new Date().toLocaleString('zh-CN', { hour12: false })
+    ];
+    return '## 反馈内容\n\n' + String(text || '').trim() +
+      '\n\n---\n### 页面环境\n' + ctx.join('\n') + '\n';
+  }
+  function feedbackIssueUrl(text) {
+    const title = feedbackIssueTitle(text);
+    const body = feedbackIssueBody(text).slice(0, 7000);
+    return 'https://github.com/' + FEEDBACK_REPO + '/issues/new?title=' +
+      encodeURIComponent(title) + '&body=' + encodeURIComponent(body);
+  }
+  function copyText(text, okMessage) {
+    const done = function () { toast(okMessage || '已复制'); };
+    const fail = function () { toast('复制失败，请手动选择文本', 'error'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fail);
+      return;
+    }
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      ta.style.pointerEvents = 'none';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      done();
+    } catch (err) {
+      fail();
+    }
+  }
+  function initFeedback() {
+    const root = document.getElementById('feedback-root');
+    if (!root || root.getAttribute('data-ready') === '1') return;
+    root.setAttribute('data-ready', '1');
+    root.innerHTML =
+      '<div class="feedback-dock" id="feedback-dock">' +
+        '<section class="feedback-panel" id="feedback-panel" role="region" aria-label="用户反馈" hidden>' +
+          '<div class="feedback-head"><div><b>用户反馈</b><span>问题 · 建议 · 数据错误</span></div>' +
+            '<button type="button" class="feedback-close" data-feedback-close aria-label="收起反馈">' + icon('x') + '</button></div>' +
+          '<textarea id="feedback-text" maxlength="' + FEEDBACK_MAX + '" placeholder="例如：某物品的价格/配方有误，或希望增加什么功能…" aria-label="反馈内容"></textarea>' +
+          '<div class="feedback-meta"><span>会自动附带当前页面、区服和版本</span><span id="feedback-count">0/' + FEEDBACK_MAX + '</span></div>' +
+          '<div class="feedback-actions">' +
+            '<button type="button" class="btn btn-sm btn-primary" data-feedback-submit disabled>打开 GitHub 提交</button>' +
+            '<button type="button" class="btn btn-sm" data-feedback-copy>复制</button>' +
+            '<button type="button" class="btn btn-sm btn-ghost" data-feedback-close>收起</button>' +
+          '</div>' +
+          '<p class="feedback-hint">会打开 GitHub 的预填 Issue 页面，登录并确认后才会创建。反馈公开可见，请勿填写账号密码等隐私信息。</p>' +
+        '</section>' +
+        '<button type="button" class="feedback-toggle" data-feedback-toggle aria-expanded="false" aria-controls="feedback-panel">' +
+          icon('message') + '<span>反馈</span></button>' +
+      '</div>';
+    const panel = document.getElementById('feedback-panel');
+    const toggle = root.querySelector('[data-feedback-toggle]');
+    const input = document.getElementById('feedback-text');
+    const count = document.getElementById('feedback-count');
+    const submit = root.querySelector('[data-feedback-submit]');
+    const copy = root.querySelector('[data-feedback-copy]');
+    let saveTimer = 0;
+
+    try {
+      const draft = localStorage.getItem(FEEDBACK_DRAFT_KEY);
+      if (draft) input.value = draft;
+    } catch (err) { /* 隐私模式忽略 */ }
+
+    function sync() {
+      const text = input.value;
+      count.textContent = text.length + '/' + FEEDBACK_MAX;
+      submit.disabled = !text.trim();
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () {
+        try { localStorage.setItem(FEEDBACK_DRAFT_KEY, text); } catch (err) { /* ignore */ }
+      }, 250);
+    }
+    function setOpen(open) {
+      panel.hidden = !open;
+      root.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) setTimeout(function () { input.focus(); }, 0);
+    }
+    toggle.addEventListener('click', function () { setOpen(panel.hidden); });
+    root.querySelectorAll('[data-feedback-close]').forEach(function (btn) {
+      btn.addEventListener('click', function () { setOpen(false); toggle.focus(); });
+    });
+    input.addEventListener('input', sync);
+    submit.addEventListener('click', function () {
+      if (!input.value.trim()) return;
+      const url = feedbackIssueUrl(input.value);
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast('已打开 GitHub，请在页面中确认提交 Issue', 'info');
+      setOpen(false);
+    });
+    copy.addEventListener('click', function () {
+      const text = input.value.trim();
+      if (!text) { toast('先写一点反馈内容', 'warn'); return; }
+      copyText(feedbackIssueBody(text), '反馈内容已复制，可粘贴到 Issue');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) setOpen(false);
+    });
+    document.addEventListener('click', function (e) {
+      if (!panel.hidden && !root.contains(e.target)) setOpen(false);
+    });
+    sync();
+  }
+
   function boot() {
     setBootProgress(55, '正在初始化计算内核…');
     Store.init();
@@ -7339,6 +7477,7 @@
       });
     }
     bindEvents();
+    initFeedback();
     renderSkeleton();
     setBootProgress(70, '正在准备页面…');
     setTimeout(dataSyncTick, isDevDeployment() ? 1200 : 5000);
