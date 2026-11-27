@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || '7d0b9a2c6d39565e677c04428efa3e61' }}
     steps:
       - uses: actions/checkout@v4
       - name: Check Cloudflare token
@@ -27,9 +28,30 @@ jobs:
           else
             echo "ok=1" >> "$GITHUB_OUTPUT"
           fi
+      - name: Verify Cloudflare token
+        if: steps.token.outputs.ok == '1'
+        run: |
+          code=$(curl -sS -o /tmp/cf-verify.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "User-Agent: jx3-feedback-worker" \
+            'https://api.cloudflare.com/client/v4/user/tokens/verify')
+          echo "Cloudflare token verify HTTP $code"
+          python3 - <<'PY'
+          import json
+          try:
+              d = json.load(open('/tmp/cf-verify.json'))
+              print(json.dumps({'success': d.get('success'), 'errors': d.get('errors')}, ensure_ascii=False))
+          except Exception as exc:
+              print('verify parse failed:', exc)
+          PY
+          if [ "$code" != "200" ]; then
+            echo "::error::Cloudflare API Token 校验失败（HTTP $code）。请确认 token 有效且未过期。"
+            exit 1
+          fi
       - name: Deploy Cloudflare Worker
         if: steps.token.outputs.ok == '1'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ env.CF_API_TOKEN }}
+          accountId: ${{ env.CF_ACCOUNT_ID }}
           workingDirectory: cloudflare/price-cron
