@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "timezone": "Asia/Shanghai",
-  "generatedAt": "2026-11-27T23:07:49+08:00",
-  "sourceUpdatedAt": "2026-11-27T23:07:49+08:00",
+  "generatedAt": "2026-11-27T23:37:57+08:00",
+  "sourceUpdatedAt": "2026-11-27T23:37:57+08:00",
   "catalogVersion": "v3.9-medicine",
   "itemCount": 1117,
   "maxDays": 7,
@@ -162,12 +162,12 @@
     },
     {
       "date": "2026-11-27",
-      "points": 25,
+      "points": 26,
       "baseAt": "2026-11-27T00:09:01+08:00",
-      "lastAt": "2026-11-27T23:07:49+08:00",
-      "hash": "b7379aea91a20be0",
-      "bytes": 487207,
-      "serverBytes": 71111,
+      "lastAt": "2026-11-27T23:37:57+08:00",
+      "hash": "d56383bf6c4b0038",
+      "bytes": 490872,
+      "serverBytes": 71477,
       "dayFile": "days/2026-11-27.json",
       "serverFile": "servers/{server}/2026-11-27.json"
     }
