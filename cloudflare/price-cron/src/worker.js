@@ -88,6 +88,27 @@ function buildFeedbackBody(text, context) {
   return body.slice(0, FEEDBACK_CONTEXT_MAX + 2400);
 }
 
+async function createIssueDirect(env, payload) {
+  if (!env.GITHUB_TOKEN) throw new Error('missing GITHUB_TOKEN');
+  const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'jx3-feedback-worker',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title: payload.title, body: payload.body })
+  });
+  if (!response.ok) {
+    const body = await response.text();
+    console.error('GitHub issue create failed', response.status, body);
+    throw new Error(`GitHub issue create failed: ${response.status}`);
+  }
+  console.log('GitHub issue created directly');
+}
+
 async function dispatchFeedback(env, payload) {
   if (!env.GITHUB_TOKEN) throw new Error('missing GITHUB_TOKEN');
   const response = await fetch(
@@ -159,8 +180,17 @@ async function handleFeedback(request, env) {
   const body = buildFeedbackBody(text, data && data.context);
   try {
     await dispatchFeedback(env, { title: title, body: body });
-  } catch (err) {
-    return json({ ok: false, error: '自动提交暂不可用' }, 502, origin);
+  } catch (dispatchError) {
+    // 兼容只有 Issues:write 的 token：直接创建 Issue，不依赖 dev 分支的 workflow。
+    try {
+      await createIssueDirect(env, { title: title, body: body });
+    } catch (createError) {
+      console.error('Feedback submit failed', dispatchError.message, createError.message);
+      return json({
+        ok: false,
+        error: '自动提交暂不可用：' + dispatchError.message + ' / ' + createError.message
+      }, 502, origin);
+    }
   }
   return json({ ok: true }, 200, origin);
 }
