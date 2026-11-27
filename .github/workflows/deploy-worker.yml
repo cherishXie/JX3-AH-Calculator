@@ -1,0 +1,23 @@
+name: Deploy feedback worker
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'cloudflare/price-cron/src/worker.js'
+      - 'cloudflare/price-cron/wrangler.toml'
+      - '.github/workflows/deploy-worker.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy Cloudflare Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: cloudflare/price-cron

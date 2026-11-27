@@ -7311,35 +7311,83 @@
   /* 用户反馈（静态站安全提交到 GitHub Issue）                           */
   /* ------------------------------------------------------------------ */
   const FEEDBACK_REPO = 'cherishXie/JX3-AH-Calculator';
+  const FEEDBACK_ENDPOINT = 'https://jx3-price-cron.978345307.workers.dev/feedback';
   const FEEDBACK_DRAFT_KEY = 'jx3-feedback-draft-v1';
+  const FEEDBACK_CLIENT_KEY = 'jx3-feedback-client-v1';
   const FEEDBACK_MAX = 2000;
 
   function feedbackIssueTitle(text) {
     const first = String(text || '').split('\n').map(function (line) { return line.trim(); }).filter(Boolean)[0] || '用户反馈';
     return '[反馈] ' + first.slice(0, 42) + (first.length > 42 ? '…' : '');
   }
-  function feedbackIssueBody(text) {
+  function feedbackClientId() {
+    try {
+      let id = localStorage.getItem(FEEDBACK_CLIENT_KEY);
+      if (!id) {
+        const rand = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() :
+          Math.random().toString(36).slice(2) + Date.now().toString(36);
+        id = 'anon-' + rand.slice(0, 18);
+        localStorage.setItem(FEEDBACK_CLIENT_KEY, id);
+      }
+      return id;
+    } catch (err) {
+      return 'anon';
+    }
+  }
+  function feedbackContext() {
     const meta = document.querySelector('meta[name="app-version"]');
     const appVer = meta ? meta.getAttribute('content') : 'dev';
-    const ctx = [
-      '- 页面：' + location.href,
-      '- 页面标题：' + document.title,
-      '- 区服：' + (server() ? server().name : '—'),
-      '- 应用版本：' + appVer,
-      '- 数据版本：' + (DATA.meta.version || '—') + ' / ' + (DATA.meta.catalogVersion || '—'),
-      '- 行情更新：' + (DATA.meta.priceUpdatedAt || '—'),
-      '- 窗口：' + window.innerWidth + '×' + window.innerHeight,
-      '- 浏览器：' + navigator.userAgent,
-      '- 时间：' + new Date().toLocaleString('zh-CN', { hour12: false })
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    return {
+      page: location.href,
+      title: document.title,
+      server: server() ? server().name : '—',
+      appVersion: appVer,
+      dataVersion: (DATA.meta.version || '—') + ' / ' + (DATA.meta.catalogVersion || '—'),
+      priceUpdatedAt: DATA.meta.priceUpdatedAt || '—',
+      viewport: window.innerWidth + '×' + window.innerHeight,
+      language: navigator.language || '',
+      timezone: (function () { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (err) { return ''; } })(),
+      standalone: !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches),
+      platform: navigator.platform || '',
+      hardwareConcurrency: navigator.hardwareConcurrency || null,
+      deviceMemory: navigator.deviceMemory || null,
+      connection: conn ? (conn.effectiveType || '') : '',
+      clientId: feedbackClientId(),
+      userAgent: navigator.userAgent,
+      createdAt: new Date().toISOString()
+    };
+  }
+  function feedbackIssueBody(text, context) {
+    const c = context || feedbackContext();
+    const rows = [
+      ['页面', c.page], ['页面标题', c.title], ['区服', c.server],
+      ['应用版本', c.appVersion], ['数据版本', c.dataVersion], ['行情更新', c.priceUpdatedAt],
+      ['视口', c.viewport], ['语言 / 时区', [c.language, c.timezone].filter(Boolean).join(' / ')],
+      ['PWA 模式', c.standalone ? 'standalone' : 'browser'],
+      ['设备', [c.platform, c.hardwareConcurrency ? c.hardwareConcurrency + ' 核' : '', c.deviceMemory ? c.deviceMemory + ' GB' : ''].filter(Boolean).join(' / ')],
+      ['网络', c.connection], ['匿名客户端', c.clientId], ['浏览器', c.userAgent],
+      ['时间', c.createdAt]
     ];
-    return '## 反馈内容\n\n' + String(text || '').trim() +
-      '\n\n---\n### 页面环境\n' + ctx.join('\n') + '\n';
+    return '## 反馈内容\n\n' + String(text || '').trim() + '\n\n---\n### 页面环境\n' +
+      rows.filter(function (row) { return row[1]; }).map(function (row) {
+        return '- ' + row[0] + '：' + String(row[1]).replace(/\s+/g, ' ').slice(0, 700);
+      }).join('\n') + '\n';
   }
   function feedbackIssueUrl(text) {
     const title = feedbackIssueTitle(text);
     const body = feedbackIssueBody(text).slice(0, 7000);
     return 'https://github.com/' + FEEDBACK_REPO + '/issues/new?title=' +
       encodeURIComponent(title) + '&body=' + encodeURIComponent(body);
+  }
+  function openFeedbackIssue(text) {
+    const a = document.createElement('a');
+    a.href = feedbackIssueUrl(text);
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
   function copyText(text, okMessage) {
     const done = function () { toast(okMessage || '已复制'); };
@@ -7373,13 +7421,13 @@
           '<div class="feedback-head"><div><b>用户反馈</b><span>问题 · 建议 · 数据错误</span></div>' +
             '<button type="button" class="feedback-close" data-feedback-close aria-label="收起反馈">' + icon('x') + '</button></div>' +
           '<textarea id="feedback-text" maxlength="' + FEEDBACK_MAX + '" placeholder="例如：某物品的价格/配方有误，或希望增加什么功能…" aria-label="反馈内容"></textarea>' +
-          '<div class="feedback-meta"><span>会自动附带当前页面、区服和版本</span><span id="feedback-count">0/' + FEEDBACK_MAX + '</span></div>' +
+          '<div class="feedback-meta"><span>自动附带页面、区服、版本和设备信息</span><span id="feedback-count">0/' + FEEDBACK_MAX + '</span></div>' +
           '<div class="feedback-actions">' +
-            '<button type="button" class="btn btn-sm btn-primary" data-feedback-submit disabled>打开 GitHub 提交</button>' +
+            '<button type="button" class="btn btn-sm btn-primary" data-feedback-submit disabled>提交反馈</button>' +
             '<button type="button" class="btn btn-sm" data-feedback-copy>复制</button>' +
             '<button type="button" class="btn btn-sm btn-ghost" data-feedback-close>收起</button>' +
           '</div>' +
-          '<p class="feedback-hint">会打开 GitHub 的预填 Issue 页面，登录并确认后才会创建。反馈公开可见，请勿填写账号密码等隐私信息。</p>' +
+          '<p class="feedback-hint">提交后会直接创建 GitHub Issue，并附带页面、区服、版本、行情时间、设备与匿名客户端信息。反馈公开可见，请勿填写账号密码等隐私信息；自动提交暂不可用时会打开 GitHub 预填页。</p>' +
         '</section>' +
         '<button type="button" class="feedback-toggle" data-feedback-toggle aria-expanded="false" aria-controls="feedback-panel">' +
           icon('message') + '<span>反馈</span></button>' +
@@ -7418,17 +7466,53 @@
     });
     input.addEventListener('input', sync);
     submit.addEventListener('click', function () {
-      if (!input.value.trim()) return;
-      const url = feedbackIssueUrl(input.value);
-      const a = document.createElement('a');
-      a.href = url;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      toast('已打开 GitHub，请在页面中确认提交 Issue', 'info');
-      setOpen(false);
+      const text = input.value.trim();
+      if (!text) return;
+      if (submit.getAttribute('data-busy') === '1') return;
+      const oldLabel = submit.textContent;
+      submit.setAttribute('data-busy', '1');
+      submit.disabled = true;
+      submit.textContent = '提交中…';
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timer = controller ? setTimeout(function () { controller.abort(); }, 8000) : 0;
+      const finish = function () {
+        if (timer) clearTimeout(timer);
+        submit.removeAttribute('data-busy');
+        submit.textContent = oldLabel;
+        submit.disabled = !input.value.trim();
+      };
+      fetch(FEEDBACK_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text, context: feedbackContext(), website: '' }),
+        signal: controller ? controller.signal : undefined
+      }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (data) {
+          return { ok: res.ok && data && data.ok, status: res.status, error: (data && data.error) || '' };
+        });
+      }).then(function (result) {
+        if (result.ok) {
+          toast('反馈已自动提交，感谢！');
+          try { localStorage.removeItem(FEEDBACK_DRAFT_KEY); } catch (err) { /* ignore */ }
+          input.value = '';
+          sync();
+          finish();
+          setOpen(false);
+          return;
+        }
+        if (result.status === 429 || result.status === 400) {
+          toast(result.error || '提交失败，请稍后再试', 'warn');
+          finish();
+          return;
+        }
+        throw new Error(result.error || 'auto submit failed');
+      }).catch(function () {
+        // 后端不可用时退回 GitHub 预填页，用户仍可手动确认提交。
+        openFeedbackIssue(text);
+        toast('自动提交暂不可用，已打开 GitHub 预填页', 'warn');
+        setOpen(false);
+        finish();
+      });
     });
     copy.addEventListener('click', function () {
       const text = input.value.trim();
