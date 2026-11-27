@@ -882,6 +882,7 @@
     '/skills': '生活技艺',
     '/prices': '行情',
     '/analysis': '精力收益分析',
+    '/deep': '深度',
     '/trends': '物价走势',
     '/server-trends': '区服趋势',
     '/breakthrough': '突破升级',
@@ -907,6 +908,7 @@
       {
         group: '分析', items: [
           { href: Route.href('/analysis'), label: '精力收益', icon: 'chart', path: '/analysis', badge: rows.filter(function (r) { return !r.calc.missing; }).length },
+          { href: Route.href('/deep'), label: '深度分析', icon: 'spark', path: '/deep' },
           { href: Route.href('/trends'), label: '物价走势', icon: 'trend', path: '/trends' },
           { href: Route.href('/server-trends'), label: '区服趋势', icon: 'trend', path: '/server-trends' },
           { href: Route.href('/breakthrough'), label: '突破升级', icon: 'arrowUp', path: '/breakthrough' }
@@ -1099,7 +1101,7 @@
     html += '<div class="grid section-gap">' +
       '<section class="card col-8 chart-card"><div class="card-head"><div class="card-head-main">' +
         '<h2 class="card-title">现在做什么最赚精力？</h2>' +
-        '<p class="card-sub">按每点精力收益排序 · Top 10 · 已排除数据不全的配方<span class="mobile-only"> · 左右滑动查看</span></p>' +
+        '<p class="card-sub">按每点精力收益排序 · Top 10 · 已排除数据不全的配方</p>' +
       '</div><div class="card-tools">' +
         '<div class="seg seg-sm" role="group" aria-label="类型筛选">' +
           '<button class="' + (type === 'all' ? 'active' : '') + '" data-filter="type" data-value="">全部</button>' +
@@ -1123,7 +1125,7 @@
         '<span class="item"><span class="swatch" style="--sw:' + Charts.color.craft + '"></span>制造</span>' +
         '<span class="item"><span class="swatch" style="--sw:' + Charts.color.gather + '"></span>采集</span>' +
         '<span class="item"><span class="swatch" style="--sw:' + Charts.color.peak + '"></span>当前最优</span>' +
-        '<span class="item"><span class="line"></span>全站中位</span>' +
+        '<span class="item ref-legend"><span class="line"></span>全站中位</span>' +
       '</div><span class="spacer"></span><a href="' + Route.href('/analysis', { type: type || '', tier: tierId || '' }) + '">查看完整分析 ' + icon('arrowRight') + '</a></div>' +
       '</section>' +
 
@@ -2364,6 +2366,7 @@
           '<button class="' + (landFilter === 'all' ? 'active' : '') + '" data-filter="land" data-value="all" title="包含不可做、缺价与亏损项">全部（含不可做）</button>' +
         '</div>' +
         '<span class="badge badge-outline" title="所有产物售价按此税率扣税，可在设置中修改">交易税 ' + U.fmtPct(currentTaxRate(), 0) + '</span>' +
+        '<a class="btn" href="' + Route.href('/deep') + '">' + icon('spark') + '<span class="txt">深度分析</span></a>' +
         '<button class="btn" data-action="export-csv" data-csv="analysis">' + icon('download') + '<span class="txt">导出 CSV</span></button>' +
       '</div></div>' + gradeWarning(landFilter === 'all');
 
@@ -2379,6 +2382,10 @@
     '</div>';
 
     html += btMiniCard();
+    html += '<a class="deep-entry" href="' + Route.href('/deep') + '">' +
+      '<span class="deep-entry-ic">' + icon('spark') + '</span>' +
+      '<span class="deep-entry-main"><b>深度分析</b><span>每日 / 每周涨跌 · 一线采集物 → 中间物 → 成品 · 成本传导与利润挤压</span></span>' +
+      '<span class="deep-entry-go"><span class="txt">进入</span> ' + icon('arrowRight') + '</span></a>';
 
     const chartRows = sorted.filter(function (r) { return !r.calc.missing && r.calc.perEnergy != null; }).slice(0, 15).map(function (r) {
       return {
@@ -2390,7 +2397,7 @@
     });
 
     html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">精力收益排行</h2><p class="card-sub">只看可做 · 每点精力收益 · 虚线为中位<span class="mobile-only"> · 左右滑动</span></p></div>' +
+      '<h2 class="card-title">精力收益排行</h2><p class="card-sub">只看可做 · 每点精力收益 · 虚线为中位</p></div>' +
       '<div class="card-tools">' +
         '<div class="seg seg-sm" role="group" aria-label="类型筛选">' +
           '<button class="' + (type === 'all' ? 'active' : '') + '" data-filter="type" data-value="">全部</button>' +
@@ -3486,6 +3493,309 @@
     });
     U.download('剑网三物价走势_' + ctx.view.from.slice(0, 10) + '_' + ctx.view.to.slice(0, 10) + '_' + server().name + '.csv', U.csv(rows), 'text/csv;charset=utf-8');
     toast('已导出走势数据 ' + U.fmtInt(rows.length - 1) + ' 行');
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 深度分析                                                           */
+  /* ------------------------------------------------------------------ */
+  const DEEP_FILTERS = [['', '全部'], ['raw', '一线'], ['mid', '中间'], ['fin', '成品']];
+
+  function deepWindowKey(p) {
+    return p && p.dwindow === 'week' ? 'week' : 'day';
+  }
+  function deepPct(value, digits) {
+    if (value == null || !isFinite(value)) return '—';
+    const v = Math.abs(value) < 0.05 ? 0 : value;
+    return U.fmtSigned(v, digits == null ? 1 : digits) + '%';
+  }
+  function deepPp(value, digits) {
+    if (value == null || !isFinite(value)) return '—';
+    const v = Math.abs(value) < 0.05 ? 0 : value;
+    return U.fmtSigned(v, digits == null ? 1 : digits) + ' pp';
+  }
+  function deepTone(value) {
+    if (value == null || !isFinite(value) || Math.abs(value) < 0.05) return '';
+    return value > 0 ? 'pos' : 'neg';
+  }
+  function deepView(p) {
+    const T = window.JX3Trends;
+    if (!T) return { status: 'error', error: '走势模块未加载' };
+    const days = (T.state && T.state.manifest && T.state.manifest.days) || [];
+    // 先让 trends 模块去加载 manifest；拿到日期后再按「每日 2 天 / 每周 7 天」取数。
+    if (!days.length) return T.view(Store.state.serverId, { mode: 'price' });
+    const latest = days[days.length - 1].date;
+    const count = deepWindowKey(p) === 'week' ? 7 : 2;
+    const start = days[Math.max(0, days.length - count)].date;
+    return T.view(Store.state.serverId, { mode: 'price', from: start + 'T00:00', to: latest + 'T23:00' });
+  }
+  function deepWindowLabel(report) {
+    if (!report) return '每日';
+    if (report.mode === 'intraday') return '日内';
+    return report.window === 'week' ? '近 7 日' : '较昨日';
+  }
+  function deepHead(p, view, report) {
+    const windowKey = deepWindowKey(p);
+    const serverName = U.esc(server().name);
+    const updated = DATA.meta.priceUpdatedAt ? U.fmtTime(Date.parse(DATA.meta.priceUpdatedAt)) : '—';
+    const coverage = report ? ('样本 ' + report.overall.n + ' / ' + report.scope.catalog + ' 个配方链物品') : '正在读取本服报价';
+    return '<div class="page-head deep-page-head"><div><h1 class="page-title">深度分析</h1>' +
+      '<p class="page-sub">把「一线采集物 → 中间物 → 成品」放在同一时间轴：先看' + U.esc(serverName) + '的涨跌结构，再看成本有没有传导到成品、哪些配方利润被挤压。</p>' +
+      '<div class="flex" style="flex-wrap:wrap;gap:6px;margin-top:8px">' +
+        '<span class="badge badge-outline">' + icon('clock') + ' 行情截至 ' + U.esc(updated) + '</span>' +
+        '<span class="badge badge-outline">' + U.esc(coverage) + '</span>' +
+        (view && (view.partial || view.stale) ? '<span class="badge badge-warning">历史更新中</span>' : '') +
+        (report && report.mode === 'intraday' ? '<span class="badge badge-warning">仅 1 天数据 · 日内口径</span>' : '') +
+      '</div></div>' +
+      '<div class="page-tools">' +
+        '<div class="seg seg-sm deep-window-seg" role="group" aria-label="分析周期">' +
+          '<button class="' + (windowKey === 'day' ? 'active' : '') + '" data-filter="dwindow" data-value="day">每日</button>' +
+          '<button class="' + (windowKey === 'week' ? 'active' : '') + '" data-filter="dwindow" data-value="week">每周</button>' +
+        '</div>' +
+        '<button class="btn btn-sm" data-action="trend-refresh" title="重新加载历史数据">' + icon('refresh') + '<span class="txt">刷新</span></button>' +
+      '</div></div>';
+  }
+  function deepRecipeRow(row, tone) {
+    const recipeAttr = row.id ? ' data-deep-recipe="' + U.esc(row.id) + '"' : '';
+    return '<div class="deep-recipe-row" tabindex="0"' + recipeAttr + '>' +
+      '<div class="deep-recipe-main"><span class="nm">' + U.esc(row.name) + '</span>' +
+      '<span class="ds">' + U.esc(row.skillName || '制造') + ' · 成本 ' + deepPct(row.costChangePct) + ' → 成品 ' + deepPct(row.productChangePct) + '</span></div>' +
+      '<div class="deep-recipe-val ' + (tone || (row.spread >= 0 ? 'pos' : 'neg')) + '">' + deepPp(row.spread) + '</div></div>';
+  }
+  function deepCategoryCard(cls, sum) {
+    const meta = JX3Deep.classes[cls];
+    const total = sum.n || 1;
+    const rows = [];
+    sum.topUp.slice(0, 2).forEach(function (row) { rows.push(row); });
+    sum.topDown.slice(0, 2).forEach(function (row) { rows.push(row); });
+    const list = rows.length ? rows.map(function (row) {
+      return '<div class="deep-cat-row"' + (row.recipeId ? ' data-deep-recipe="' + U.esc(row.recipeId) + '"' : '') + '>' +
+        '<span class="nm">' + U.esc(row.name) + '</span>' +
+        '<span class="chg ' + (row.change > 0 ? 'pos' : row.change < 0 ? 'neg' : 'dim') + '">' + deepPct(row.changePct) + '</span></div>';
+    }).join('') : '<div class="deep-cat-row"><span class="nm dim">当前区间暂无报价</span></div>';
+    return '<section class="card deep-cat"><div class="deep-cat-head">' +
+      '<span class="deep-cat-dot" style="--c:' + meta.color + '"></span>' +
+      '<div class="deep-cat-name"><b>' + meta.name + '</b><span>' + meta.desc + '</span></div>' +
+      '<div class="deep-cat-median"><b class="' + deepTone(sum.median) + '">' + deepPct(sum.median) + '</b><span>中位涨跌</span></div>' +
+      '</div>' +
+      '<div class="deep-breadth"><i class="up" style="width:' + (sum.up / total * 100).toFixed(1) + '%"></i>' +
+        '<i class="flat" style="width:' + (sum.flat / total * 100).toFixed(1) + '%"></i>' +
+        '<i class="down" style="width:' + (sum.down / total * 100).toFixed(1) + '%"></i></div>' +
+      '<div class="deep-cat-meta"><span class="pos">↑ ' + sum.up + '</span><span class="neg">↓ ' + sum.down + '</span><span class="dim">— ' + sum.flat + '</span>' +
+        '<span class="dim">上涨面 ' + (sum.upShare == null ? '—' : sum.upShare.toFixed(0) + '%') + '</span><span class="dim">' + sum.n + ' 个</span></div>' +
+      '<div class="deep-cat-list">' + list + '</div></section>';
+  }
+  function deepQuadrantCard(report) {
+    const r = report.recipes;
+    if (!r.usable) {
+      return '<section class="card col-12"><div class="card-head"><div class="card-head-main"><h2 class="card-title">成本涨了，成品跟了吗？</h2>' +
+        '<p class="card-sub">按配方材料数量加权，横轴原料成本变化，纵轴主产物价格变化</p></div></div><div class="card-body">' +
+        emptyState('暂无可完整计算的配方', '需要材料与主产物都有本服报价；可先在行情页补齐价格。', '<a class="btn btn-sm" href="' + Route.href('/prices') + '">去校准价格</a>', 'filter') + '</div></section>';
+    }
+    const chartRows = r.rows.map(function (row) {
+      return {
+        x: row.costChangePct, y: row.productChangePct, name: row.name,
+        spread: row.spread, tone: row.quadrant, id: row.id
+      };
+    });
+    const clipped = chartRows.filter(function (row) {
+      return Math.abs(row.x) > 60 || Math.abs(row.y) > 60;
+    }).length;
+    return '<section class="card col-12"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">成本涨了，成品跟了吗？</h2>' +
+      '<p class="card-sub">每点一个制造配方：横轴原料成本变化，纵轴主产物价格变化；越靠左上，利润改善越明显</p></div>' +
+      '<div class="card-tools"><span class="badge badge-outline">' + r.usable + ' 个配方</span></div></div>' +
+      '<div class="trend-chart-wrap deep-quad-wrap">' + Charts.quadrant(chartRows, {
+        palette: Charts.palette(ui.theme), width: chartWidthForCard(12), height: 320, limit: 60,
+        emptyText: '暂无可完整计算的配方', ariaLabel: '配方成本与成品涨跌象限图'
+      }) + '</div>' +
+      '<div class="card-foot"><div class="chart-legend">' +
+        '<span class="item"><span class="swatch" style="--sw:' + Charts.color.gather + '"></span>利润改善</span>' +
+        '<span class="item"><span class="swatch" style="--sw:' + Charts.color.warning + '"></span>成本、成品同涨</span>' +
+        '<span class="item"><span class="swatch" style="--sw:' + Charts.color.danger + '"></span>利润压缩</span>' +
+        '<span class="item"><span class="swatch" style="--sw:' + Charts.color.info + '"></span>成本、成品同跌</span>' +
+      '</div><span class="spacer"></span><span class="tiny dim">' + (clipped ? clipped + ' 个点超出 ±60%，已贴边显示；' : '') + '主产物收入未扣税与精力</span></div></section>';
+  }
+  function deepRecipeLists(report) {
+    const r = report.recipes;
+    if (!r.usable) return '';
+    return '<div class="grid section-gap">' +
+      '<section class="card col-6"><div class="card-head"><div class="card-head-main"><h2 class="card-title">利润改善 Top 6</h2>' +
+        '<p class="card-sub">成品涨幅 − 原料成本涨幅，数值越大越舒服</p></div></div><div class="card-body tight">' +
+        (r.topImproved.length ? r.topImproved.map(function (row) { return deepRecipeRow(row, 'pos'); }).join('') : '<span class="tiny dim">暂无</span>') +
+      '</div></section>' +
+      '<section class="card col-6"><div class="card-head"><div class="card-head-main"><h2 class="card-title">利润压缩 Top 6</h2>' +
+        '<p class="card-sub">原料涨、成品跌或传导不足，短期更适合观望</p></div></div><div class="card-body tight">' +
+        (r.topSqueezed.length ? r.topSqueezed.map(function (row) { return deepRecipeRow(row, 'neg'); }).join('') : '<span class="tiny dim">暂无</span>') +
+      '</div></section></div>';
+  }
+  function deepMovers(rows, direction, limit) {
+    const strict = rows.filter(function (row) {
+      return (direction > 0 ? row.change > 0 : row.change < 0) &&
+        row.start >= 1 && row.latest >= 1 && Math.abs(row.changePct) >= 2;
+    }).sort(function (a, b) {
+      return direction > 0 ? b.changePct - a.changePct : a.changePct - b.changePct;
+    });
+    if (strict.length >= Math.min(3, limit)) return strict.slice(0, limit);
+    return rows.filter(function (row) {
+      return (direction > 0 ? row.change > 0 : row.change < 0) && row.latest >= 0.5;
+    }).sort(function (a, b) {
+      return direction > 0 ? b.changePct - a.changePct : a.changePct - b.changePct;
+    }).slice(0, limit);
+  }
+  function deepRankCard(report, p) {
+    const cls = p.dcls === 'raw' || p.dcls === 'mid' || p.dcls === 'fin' ? p.dcls : '';
+    const rows = report.rows.filter(function (row) { return !cls || row.cls === cls; });
+    const up = deepMovers(rows, 1, 10);
+    const down = deepMovers(rows, -1, 10);
+    const label = cls ? (JX3Deep.classes[cls].short + ' · ') : '';
+    function list(items, direction) {
+      if (!items.length) return '<div class="trend-rank-empty">当前筛选暂无' + (direction === 'up' ? '上涨' : '下跌') + '物品</div>';
+      return items.map(function (row, index) {
+        const tone = direction === 'up' ? 'pos' : 'neg';
+        const attr = row.recipeId ? ' data-deep-recipe="' + U.esc(row.recipeId) + '"' : '';
+        return '<div class="trend-rank-row" tabindex="0"' + attr + ' title="' + U.esc(row.name + ' · ' + row.className + ' · ' + (row.skillName || '交易行') + ' · ' + U.fmt(row.start, 2) + ' → ' + U.fmt(row.latest, 2) + ' 金') + '">' +
+          '<span class="trend-rank-no">' + (index + 1) + '</span>' +
+          '<span class="trend-dot" style="--c:' + row.color + '"></span>' +
+          '<span class="trend-rank-name">' + U.esc(row.name) + '</span>' +
+          '<span class="trend-rank-change ' + tone + '">' + deepPct(row.changePct) + '</span>' +
+          '<span class="trend-rank-price">' + U.fmt(row.latest, 2) + ' 金</span></div>';
+      }).join('');
+    }
+    const sorted = rows.slice().sort(function (a, b) { return b.changePct - a.changePct; });
+    const fullRows = sorted.map(function (row, index) {
+      const tone = row.change > 0 ? 'pos' : row.change < 0 ? 'neg' : 'dim';
+      const attr = row.recipeId ? ' data-deep-recipe="' + U.esc(row.recipeId) + '"' : '';
+      return '<tr' + attr + ' tabindex="0"><td class="num dim">' + (index + 1) + '</td>' +
+        '<td><span class="trend-dot" style="--c:' + row.color + '"></span>' + U.esc(row.name) + '</td>' +
+        '<td class="dim">' + U.esc(row.clsShort + ' · ' + (row.skillName || '交易行')) + '</td>' +
+        '<td class="num">' + U.fmt(row.start, 2) + '</td>' +
+        '<td class="num">' + U.fmt(row.latest, 2) + '</td>' +
+        '<td class="num ' + tone + '">' + deepPct(row.changePct) + '</td>' +
+        '<td class="num dim">' + (row.spanDays > 0 ? row.spanDays + ' 天' : '日内') + '</td></tr>';
+    }).join('');
+    return '<section class="card col-12 trend-rank-card"><div class="card-head"><div class="card-head-main">' +
+      '<h2 class="card-title">本服涨跌榜</h2><p class="card-sub">' + U.esc(server().name) + ' · 只统计本服有拍卖报价的物品 · 起价与现价均 ≥ 1 金的才进前 10</p></div>' +
+      '<div class="card-tools"><div class="seg seg-sm" role="group" aria-label="品类筛选">' +
+        DEEP_FILTERS.map(function (it) {
+          return '<button class="' + (cls === it[0] ? 'active' : '') + '" data-filter="dcls" data-value="' + it[0] + '">' + it[1] + '</button>';
+        }).join('') + '</div><span class="tiny dim">' + rows.length + ' 项</span></div></div>' +
+      '<div class="trend-rank-grid">' +
+        '<div class="trend-rank-col"><div class="trend-rank-head"><span class="pos">' + label + '涨幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(up, 'up') + '</div>' +
+        '<div class="trend-rank-col"><div class="trend-rank-head"><span class="neg">' + label + '跌幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(down, 'down') + '</div>' +
+      '</div>' +
+      '<details class="trend-rank-all"><summary><span>全部涨跌数据</span><span class="badge badge-outline">' + rows.length + '</span><span class="chev">' + icon('chevronDown') + '</span></summary>' +
+      '<div class="trend-rank-all-wrap deep-table-wrap"><table class="data compact deep-table"><thead><tr><th class="num">#</th><th>物品</th><th>类型/技艺</th><th class="num">起价</th><th class="num">现价</th><th class="num">涨跌</th><th class="num">区间</th></tr></thead>' +
+      '<tbody>' + (fullRows || '<tr><td colspan="7">' + emptyState('当前筛选暂无数据', '换一个品类或周期。', '', 'filter') + '</td></tr>') + '</tbody></table></div></details></section>';
+  }
+  function deepMethodCard(report) {
+    const modeText = report.mode === 'week'
+      ? '每周：每件物品取近 7 日内「首个有本服报价的快照」对比最新报价；不同物品的覆盖天数可能不同（表内「区间」列）。'
+      : report.mode === 'intraday'
+        ? '日内：历史只有 1 天数据，暂用当日首个快照对比最新快照；至少积累 2 天后会自动切回「较昨日」。'
+        : '每日：最新快照对比上一自然日的最后快照。';
+    return '<div class="grid section-gap"><section class="card col-12 deep-method-card"><details><summary class="deep-method-summary">' +
+      '<span>指标口径与数据说明</span><span class="badge badge-outline">' + deepWindowLabel(report) + '</span><span class="chev">' + icon('chevronDown') + '</span></summary>' +
+      '<div class="card-body deep-method-body"><ul>' +
+        '<li><b>时间口径：</b>' + U.esc(modeText) + '</li>' +
+        '<li><b>物品分类：</b>一线采集物 = 采集产出 + 未被配方制造、但被配方消耗的上游原料；中间物 = 被配方制造且继续进入其他配方；成品 = 配方最终产物。</li>' +
+        '<li><b>报价口径：</b>只统计本服有拍卖报价的物品；无报价物品不使用目录基准价补位，避免把「没有成交」误当成「价格持平」。当前覆盖 ' + report.overall.n + ' / ' + report.scope.catalog + ' 个配方链物品。</li>' +
+        '<li><b>上涨面：</b>在「上涨 + 下跌」的物品里算上涨占比，持平不计入分母；大量持平会单独展示。</li>' +
+        '<li><b>成本传导：</b>配方成本 = Σ（材料数量 × 起价/现价）；主产物收入 = 主产物数量 × 起价/现价。传导差 = 成品涨跌幅 − 原料成本涨跌幅，正值表示成品端更强。</li>' +
+        '<li><b>利润压缩：</b>成本上涨而产物下跌，或产物涨幅明显落后于成本；未计入精力、手续费、暴击产出与挂单时间。</li>' +
+        '<li><b>噪声控制：</b>低价物品的百分比跳动容易失真，涨跌榜前 10 会要求起价与现价均 ≥ 1 金；完整表仍保留全部有报价样本。</li>' +
+        '</ul><div class="deep-method-links"><a class="btn btn-sm" href="' + Route.href('/trends', { srange: '7d' }) + '">查看原始物价走势 ' + icon('arrowRight') + '</a>' +
+        '<a class="btn btn-sm" href="' + Route.href('/prices') + '">校准本服行情</a><span class="tiny dim">数据来源：JX3BOX 拍卖 · ' + U.esc(server().name) + '</span></div></div></details></section></div>';
+  }
+  function renderDeep(p) {
+    const T = window.JX3Trends;
+    if (!T) {
+      return '<div class="page deep-page">' + deepHead(p, null, null) +
+        '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
+        notice('走势模块未加载，无法读取本服历史报价。请刷新页面后重试。', 'info') + '</div></section></div>' + dataFoot() + '</div>';
+    }
+    const view = deepView(p);
+    if (!window.JX3Deep) {
+      return '<div class="page deep-page">' + deepHead(p, view, null) +
+        '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
+        notice('深度分析模块未加载。请刷新页面或检查网络后重试。', 'info') + '</div></section></div>' + dataFoot() + '</div>';
+    }
+    if (!view || view.status === 'loading') {
+      return '<div class="page deep-page">' + deepHead(p, view, null) + historyLoadingCard(view, '深度分析') + dataFoot() + '</div>';
+    }
+    if (view.status === 'error') {
+      return '<div class="page deep-page">' + deepHead(p, view, null) +
+        '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
+        notice('无法加载本服历史报价：' + U.esc(view.error || '未知错误') + '。历史文件只在联网时读取；离线或本地 file:// 打开时不可用。<br>' +
+          '<button class="btn btn-sm" data-action="trend-retry">' + icon('refresh') + '重试</button>' +
+          '<button class="btn btn-sm" data-action="trend-refresh">清空缓存后重试</button>', 'info') +
+        '</div></section></div>' + dataFoot() + '</div>';
+    }
+
+    const report = window.JX3Deep.analyze(view.points || [], { window: deepWindowKey(p) });
+    let html = '<div class="page deep-page trend-page">' + deepHead(p, view, report);
+    if (!DATA.servers.some(function (item) { return item.id === Store.state.serverId; })) {
+      html += notice('当前是自定义服务器。物价历史只覆盖 JX3BOX 的内置 17 个区服；自定义服缺少本服拍卖序列，深度分析可能没有样本，切换到内置区服可看真实报价。', 'info');
+    }
+    if (!report.rows.length) {
+      html += '<div class="grid section-gap"><section class="card col-12"><div class="card-body">' +
+        emptyState(report.mode === 'week' ? '近 7 日没有可用于分析的报价' : '暂无可对比的本服报价',
+          report.mode === 'week'
+            ? '本服在这段时间内没有同时具备起价与现价的物品。可先到行情页校准，或换一个内置区服。'
+            : '需要至少两天的本服拍卖快照。可切换到「每周」，或先到行情页校准当前价格。',
+          '<button class="btn btn-sm btn-primary" data-filter="dwindow" data-value="week">试试每周</button><a class="btn btn-sm" href="' + Route.href('/prices') + '">去校准价格</a>', 'trend') +
+        '</div></section></div>' + dataFoot() + '</div>';
+      return html;
+    }
+
+    const o = report.overall;
+    const c = report.categories;
+    const r = report.recipes;
+    const rawUp = c.raw.upShare;
+    const finUp = c.fin.upShare;
+    const upGap = rawUp == null || finUp == null ? null : finUp - rawUp;
+    const upValue = o.upShare == null ? '—' : o.upShare.toFixed(0);
+    const upWidth = o.upShare == null ? 0 : o.upShare;
+
+    html += '<div class="kpi-grid section-gap">' +
+      '<div class="kpi"><div class="kpi-label">上涨面 <span class="info" data-tip="在上涨与下跌的物品中算上涨占比；大量持平不进入分母">' + icon('info') + '</span></div>' +
+        '<div class="kpi-value">' + upValue + '<span class="kpi-unit">%</span></div>' +
+        '<div class="kpi-meta"><span class="up">↑ ' + o.up + '</span><span class="sep"></span><span class="down">↓ ' + o.down + '</span><span class="sep"></span><span class="dim">— ' + o.flat + '</span></div>' +
+        '<div class="progress' + (o.upShare != null && o.upShare >= 50 ? ' is-positive' : '') + '"><i style="width:' + upWidth + '%"></i></div></div>' +
+      '<div class="kpi"><div class="kpi-label">中位涨跌幅</div>' +
+        '<div class="kpi-value ' + deepTone(o.median) + '">' + deepPct(o.median) + '</div>' +
+        '<div class="kpi-meta"><span>' + o.n + ' 个有报价物品</span><span class="sep"></span><span class="dim">' + deepWindowLabel(report) + '</span></div>' +
+        '<div class="kpi-meta"><span class="dim">一线中位 ' + deepPct(c.raw.median) + ' / 成品中位 ' + deepPct(c.fin.median) + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">成品 − 一线 上涨面 <span class="info" data-tip="成品上涨占比减去一线上涨占比；负值表示成品端弱于原料端">' + icon('info') + '</span></div>' +
+        '<div class="kpi-value ' + deepTone(upGap) + '">' + (upGap == null ? '—' : deepPp(upGap)) + '</div>' +
+        '<div class="kpi-meta"><span>一线 ' + (rawUp == null ? '—' : rawUp.toFixed(0) + '%') + '</span><span class="sep"></span><span>成品 ' + (finUp == null ? '—' : finUp.toFixed(0) + '%') + '</span></div>' +
+        '<div class="kpi-meta"><span class="dim">' + (upGap == null ? '样本不足' : upGap <= -5 ? '成品端偏弱，利润承压' : upGap >= 5 ? '成品端偏强，利润改善' : '两端基本同步') + '</span></div></div>' +
+      '<div class="kpi"><div class="kpi-label">配方利润改善</div>' +
+        '<div class="kpi-value">' + r.improved + '<span class="kpi-unit">/ ' + r.usable + ' 个</span></div>' +
+        '<div class="kpi-meta"><span class="down">压缩 ' + r.squeezed + '</span><span class="sep"></span><span>同向率 ' + (r.sameDirRate == null ? '—' : r.sameDirRate.toFixed(0) + '%') + '</span></div>' +
+        '<div class="kpi-meta"><span class="dim">中位传导差 ' + deepPp(r.medianSpread) + '</span></div></div>' +
+    '</div>';
+
+    if (report.insights.length) {
+      html += '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main"><h2 class="card-title">深度结论</h2>' +
+        '<p class="card-sub">先看结论，再用下面的结构、传导和榜单验证；样本较少时以中位与占比为主</p></div></div>' +
+        '<div class="card-body tight"><div class="deep-insights">' +
+        report.insights.map(function (insight) {
+          const ic = insight.tone === 'pos' ? 'arrowUp' : insight.tone === 'neg' ? 'arrowDown' : insight.tone === 'warn' ? 'alert' : 'spark';
+          return '<div class="deep-insight is-' + insight.tone + '"><span class="deep-insight-ic">' + icon(ic) + '</span><div><b>' + U.esc(insight.title) + '</b><p>' + U.esc(insight.text) + '</p></div></div>';
+        }).join('') + '</div></div></section></div>';
+    }
+
+    html += '<div class="deep-cats section-gap">' + ['raw', 'mid', 'fin'].map(function (cls) {
+      return deepCategoryCard(cls, c[cls]);
+    }).join('') + '</div>';
+
+    html += '<div class="grid section-gap">' + deepQuadrantCard(report) + '</div>';
+    html += deepRecipeLists(report);
+    html += '<div class="grid section-gap">' + deepRankCard(report, p) + '</div>';
+    html += deepMethodCard(report);
+    html += dataFoot();
+    html += '</div>';
+    return html;
   }
 
   /* ------------------------------------------------------------------ */
@@ -5865,6 +6175,12 @@
         window.requestAnimationFrame(function () { updateParams({ srange: value }); });
         return;
       }
+      if (key === 'dwindow') {
+        // 每周会一次性补拉多天历史；先绘制选中态再让出一帧，避免点击后像卡住。
+        markSwitchPending(filterBtn, 'button[data-filter="dwindow"]', 'active');
+        window.requestAnimationFrame(function () { updateParams({ dwindow: value }); });
+        return;
+      }
       updateParams({ [key]: value });
       return;
     }
@@ -5981,6 +6297,11 @@
       captureTrendScroll();
       ui.trendCenterKey = focusEl.getAttribute('data-trend-focus');
       updateParams({ tfocus: ui.trendCenterKey });
+      return;
+    }
+    const deepRecipe = e.target.closest('[data-deep-recipe]');
+    if (deepRecipe) {
+      openRecipe(deepRecipe.getAttribute('data-deep-recipe'));
       return;
     }
     const chartEl = e.target.closest('.chart-bar[data-recipe], .chart-point[data-recipe]');
@@ -6627,6 +6948,8 @@
       html = renderPrices(p); title = '行情';
     } else if (route.path === '/analysis') {
       html = renderAnalysis(p); title = '精力收益分析';
+    } else if (route.path === '/deep') {
+      html = renderDeep(p); title = '深度分析';
     } else if (route.path === '/trends') {
       html = renderTrends(p); title = '物价走势';
     } else if (route.path === '/server-trends') {
@@ -6703,14 +7026,14 @@
       window.JX3Trends.onUpdate(function () {
         if (!ui.booted) return;
         const path = Route.parse().path;
-        if (path !== '/trends' && path !== '/server-trends') return;
+        if (path !== '/trends' && path !== '/server-trends' && path !== '/deep') return;
         // 首次进入 7 日区间会连续补拉多个日文件，每个文件都 notify 一次；
         // 合并成一次重绘，避免同一屏连续重算多遍。
         if (trendRenderTimer) return;
         trendRenderTimer = setTimeout(function () {
           trendRenderTimer = 0;
           const now = Route.parse().path;
-          if (now === '/trends' || now === '/server-trends') render();
+          if (now === '/trends' || now === '/server-trends' || now === '/deep') render();
         }, 80);
       });
     }

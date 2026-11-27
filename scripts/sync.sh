@@ -21,6 +21,7 @@ node scripts/test-price-history.mjs
 node scripts/test-price-trends.mjs
 node scripts/test-trends.cjs
 node scripts/test-trends-loader.cjs
+node scripts/test-deep-analysis.cjs
 node scripts/test-miniapp-catalog.cjs
 node scripts/test-audit-data.cjs
 node miniapp/scripts/build-trends.mjs

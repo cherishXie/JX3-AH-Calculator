@@ -79,19 +79,22 @@
     opts = opts || {};
     const P = opts.palette || DARK;
     const width = opts.width || fitWidth(opts.span || 0.66);
-    const rowH = 32;
-    const top = 26;
-    // 左列要同时放下名字和右侧的「技艺 · 状态」，166 会被长名字压住。
-    const left = opts.left || 190;
-    const right = 74;
+    // 手机端单独走两行式排行：名称 + 数值一行，技艺/序号一行，底部细条。
+    // 旧版在 342px 宽的卡片里仍按桌面 190px 左栏绘制，再被 CSS 的
+    // min-width:640px 整体放大，文字会大到 20px、右侧数值还会被裁掉。
+    const compact = opts.compact != null ? !!opts.compact : width < 620;
+    const rowH = compact ? 46 : 32;
+    const top = compact ? 4 : 26;
+    const left = compact ? 10 : (opts.left || 190);
+    const right = compact ? 10 : 74;
     const data = rows.slice(0, opts.limit || 10);
-    if (!data.length) return emptyChart(width, 240, opts.emptyText || '当前筛选无数据', P);
+    if (!data.length) return emptyChart(width, compact ? 180 : 240, opts.emptyText || '当前筛选无数据', P);
 
-    const height = top + data.length * rowH + 12;
+    const height = top + data.length * rowH + (compact ? 4 : 12);
     const maxVal = niceMax(Math.max.apply(null, data.map(function (d) { return Math.max(0, d.value); })) || 1);
     const plotW = width - left - right;
     const x = function (v) { return left + (Math.max(0, v) / maxVal) * plotW; };
-    const tk = ticks(maxVal, 4);
+    const tk = compact ? [] : ticks(maxVal, 4);
     const topValue = Math.max.apply(null, data.map(function (d) { return d.value; }));
     let svg = '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="' +
       attr(opts.ariaLabel || '精力收益排行') + '">';
@@ -115,20 +118,31 @@
         (d.id ? ' data-recipe="' + attr(d.id) + '"' : '') + ' aria-label="' + attr(tip) + '">';
       svg += '<rect x="0" y="' + (y - 2) + '" width="' + width + '" height="' + (rowH - 2) + '" fill="transparent"/>';
       if (isTop) {
-        svg += '<rect x="0" y="' + (y - 2) + '" width="3" height="' + (rowH - 6) + '" fill="' + COLOR.peak + '" rx="1.5"/>';
+        svg += '<rect x="0" y="' + (y - 2) + '" width="3" height="' + (rowH - 10) + '" fill="' + COLOR.peak + '" rx="1.5"/>';
       }
-      svg += '<text x="10" y="' + (y + 14) + '" font-size="11" font-weight="500" fill="' + (isTop ? COLOR.peak : P.text) + '">' +
-        U.esc(truncate(d.label, 10)) + '</text>';
-      svg += '<text x="' + (left - 10) + '" y="' + (y + 14) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
-        U.esc(d.meta || '') + '</text>';
-      svg += '<rect x="' + left + '" y="' + (y + 4) + '" width="' + barW.toFixed(1) + '" height="' + (rowH - 14) +
-        '" rx="3" fill="' + color + '" opacity="' + (isTop ? '1' : '.82') + '"/>';
-      svg += '<text x="' + (width - 8) + '" y="' + (y + 15) + '" text-anchor="end" font-size="11" font-weight="600" fill="' +
-        (isTop ? COLOR.peak : P.text) + '" style="font-variant-numeric:tabular-nums">' + U.fmt(d.value, 2) + '</text>';
+      if (compact) {
+        const nameMax = Math.max(6, Math.floor((width - 90) / 12.5));
+        svg += '<text x="12" y="' + (y + 17) + '" font-size="12.5" font-weight="500" fill="' + (isTop ? COLOR.peak : P.text) + '">' +
+          U.esc(truncate(d.label, nameMax)) + '</text>';
+        svg += '<text x="' + (width - 10) + '" y="' + (y + 17) + '" text-anchor="end" font-size="11.5" font-weight="600" fill="' +
+          (isTop ? COLOR.peak : P.text) + '" style="font-variant-numeric:tabular-nums">' + U.fmt(d.value, 2) + '</text>';
+        svg += '<text x="12" y="' + (y + 32) + '" font-size="9.5" fill="' + P.muted + '">' + U.esc(d.meta || '') + '</text>';
+        svg += '<rect x="12" y="' + (y + 38) + '" width="' + Math.max(1, barW - 2).toFixed(1) + '" height="3" rx="1.5" fill="' +
+          color + '" opacity="' + (isTop ? '1' : '.75') + '"/>';
+      } else {
+        svg += '<text x="10" y="' + (y + 14) + '" font-size="11" font-weight="500" fill="' + (isTop ? COLOR.peak : P.text) + '">' +
+          U.esc(truncate(d.label, 10)) + '</text>';
+        svg += '<text x="' + (left - 10) + '" y="' + (y + 14) + '" text-anchor="end" font-size="10" fill="' + P.muted + '">' +
+          U.esc(d.meta || '') + '</text>';
+        svg += '<rect x="' + left + '" y="' + (y + 4) + '" width="' + barW.toFixed(1) + '" height="' + (rowH - 14) +
+          '" rx="3" fill="' + color + '" opacity="' + (isTop ? '1' : '.82') + '"/>';
+        svg += '<text x="' + (width - 8) + '" y="' + (y + 15) + '" text-anchor="end" font-size="11" font-weight="600" fill="' +
+          (isTop ? COLOR.peak : P.text) + '" style="font-variant-numeric:tabular-nums">' + U.fmt(d.value, 2) + '</text>';
+      }
       svg += '</g>';
     });
 
-    if (opts.refLine != null) {
+    if (!compact && opts.refLine != null) {
       const xx = x(opts.refLine);
       if (xx >= left && xx <= left + plotW) {
         svg += '<line x1="' + xx.toFixed(1) + '" y1="' + (top - 4) + '" x2="' + xx.toFixed(1) + '" y2="' + (height - 10) +
@@ -910,6 +924,68 @@
     return svg;
   }
 
+  /* ------------------------------------------------------------------ */
+  /* 成本 × 成品涨跌象限图（深度分析）                                    */
+  /* ------------------------------------------------------------------ */
+  function quadrant(rows, opts) {
+    opts = opts || {};
+    const P = opts.palette || DARK;
+    const width = opts.width || fitWidth(0.9);
+    const height = opts.height || 320;
+    const data = (rows || []).filter(function (row) {
+      return row && isFinite(row.x) && isFinite(row.y);
+    });
+    if (!data.length) return emptyChart(width, height, opts.emptyText || '暂无可计算配方', P);
+
+    const limit = Math.max(10, Number(opts.limit) || 60);
+    const ml = 42, mr = 14, mt = 16, mb = 32;
+    const plotW = width - ml - mr;
+    const plotH = height - mt - mb;
+    const clamp = function (v) { return Math.max(-limit, Math.min(limit, v)); };
+    const x = function (v) { return ml + ((clamp(v) + limit) / (2 * limit)) * plotW; };
+    const y = function (v) { return mt + plotH - ((clamp(v) + limit) / (2 * limit)) * plotH; };
+    const tones = opts.colors || {
+      improve: COLOR.gather, squeeze: COLOR.danger, 'both-up': COLOR.warning, 'both-down': COLOR.info
+    };
+
+    let svg = '<svg class="chart-svg" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="' +
+      attr(opts.ariaLabel || '配方成本与成品涨跌象限图') + '">';
+    svg += '<rect width="' + width + '" height="' + height + '" fill="' + P.bg + '"/>';
+    // 四个象限的极淡底色：一眼看出改善区 / 压缩区。
+    svg += '<rect x="' + ml + '" y="' + mt + '" width="' + (plotW / 2) + '" height="' + (plotH / 2) + '" fill="' + COLOR.gather + '" opacity=".055"/>';
+    svg += '<rect x="' + (ml + plotW / 2) + '" y="' + (mt + plotH / 2) + '" width="' + (plotW / 2) + '" height="' + (plotH / 2) + '" fill="' + COLOR.danger + '" opacity=".055"/>';
+
+    const tk = [-limit, -limit / 2, 0, limit / 2, limit];
+    tk.forEach(function (t) {
+      const xx = x(t);
+      const yy = y(t);
+      svg += '<line x1="' + xx.toFixed(1) + '" y1="' + mt + '" x2="' + xx.toFixed(1) + '" y2="' + (height - mb) + '" stroke="' + (t === 0 ? P.axis : P.grid) + '" stroke-width="1"' + (t === 0 ? ' stroke-dasharray="3 3"' : '') + '/>';
+      svg += '<line x1="' + ml + '" y1="' + yy.toFixed(1) + '" x2="' + (width - mr) + '" y2="' + yy.toFixed(1) + '" stroke="' + (t === 0 ? P.axis : P.grid) + '" stroke-width="1"' + (t === 0 ? ' stroke-dasharray="3 3"' : '') + '/>';
+      svg += '<text x="' + xx.toFixed(1) + '" y="' + (height - mb + 13) + '" text-anchor="middle" font-size="9" fill="' + P.muted + '">' +
+        (t > 0 ? '+' : '') + U.fmt(t, 0) + '%</text>';
+      svg += '<text x="' + (ml - 6) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="9" fill="' + P.muted + '">' +
+        (t > 0 ? '+' : '') + U.fmt(t, 0) + '%</text>';
+    });
+    svg += '<text x="' + (width - mr) + '" y="' + (height - 4) + '" text-anchor="end" font-size="9" fill="' + P.muted + '">原料成本变化 →</text>';
+    // 象限说明放在角落，透明度压低，避免压住数据点。
+    svg += '<text x="' + (ml + 6) + '" y="' + (mt + 34) + '" font-size="8.5" fill="' + COLOR.gather + '" opacity=".85">成本降 · 成品涨</text>';
+    svg += '<text x="' + (ml + 6) + '" y="' + (mt + 45) + '" font-size="8.5" fill="' + COLOR.gather + '" opacity=".65">利润改善</text>';
+    svg += '<text x="' + (width - mr - 6) + '" y="' + (height - mb - 18) + '" text-anchor="end" font-size="8.5" fill="' + COLOR.danger + '" opacity=".85">成本涨 · 成品跌</text>';
+    svg += '<text x="' + (width - mr - 6) + '" y="' + (height - mb - 7) + '" text-anchor="end" font-size="8.5" fill="' + COLOR.danger + '" opacity=".65">利润压缩</text>';
+
+    const radius = data.length > 220 ? 2.4 : (data.length > 100 ? 2.8 : 3.4);
+    data.forEach(function (row) {
+      const cx = x(row.x), cy = y(row.y);
+      const color = tones[row.tone] || row.color || COLOR.craft;
+      const tip = (row.name || '配方') + ' · 成本 ' + labelText(row.x, '%') + ' / 成品 ' + labelText(row.y, '%') +
+        (isFinite(row.spread) ? ' · 传导差 ' + (row.spread >= 0 ? '+' : '') + U.fmt(row.spread, 1) + ' pp' : '');
+      svg += '<circle class="chart-point" tabindex="0" cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + radius +
+        '" fill="' + color + '" fill-opacity=".72" data-tip="' + attr(tip) + '" aria-label="' + attr(tip) + '"/>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
   window.JX3Charts = {
     palette: palette,
     color: COLOR,
@@ -924,6 +1000,7 @@
     categoryScatter: categoryScatter,
     priceLine: priceLine,
     profitLine: profitLine,
+    quadrant: quadrant,
     emptyChart: emptyChart
   };
 })();

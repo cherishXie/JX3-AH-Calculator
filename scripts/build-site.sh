@@ -31,6 +31,7 @@ files = [
     'assets/profit.js',
     'assets/landability.js',
     'assets/trends.js',
+    'assets/deep.js',
     'assets/app.js',
     'assets/pwa.js',
     'assets/install.js',
@@ -58,10 +59,10 @@ rm -rf _site
 mkdir -p _site/icons _site/downloads
 cp index.html _site/index.html
 cp -R assets _site/assets
-# 首屏合并：11 个 <script> -> 2 个，3 个样式表 -> 1 个。
+# 首屏合并：12 个 <script> -> 2 个，3 个样式表 -> 1 个。
 # 每个脚本都是自执行函数且没有顶层声明，按原顺序拼接即可保持作用域和执行顺序；
 # data.js 保持独立，因为价格机器人只更新它，且 SW 单独做网络优先缓存。
-BUNDLE_SCRIPTS="core stones charts access-data profit landability trends app pwa install"
+BUNDLE_SCRIPTS="core stones charts access-data profit landability trends deep app pwa install"
 : > _site/assets/app.bundle.js
 for name in $BUNDLE_SCRIPTS; do
   cat "assets/$name.js" >> _site/assets/app.bundle.js
@@ -147,7 +148,7 @@ if css_old in html:
     html = html.replace(css_old, '  <link rel="stylesheet" href="assets/app.bundle.css">\n')
 
 js_pattern = re.compile(
-    r'(?:  <script src="assets/(?:data|core|stones|charts|access-data|profit|landability|trends|app|pwa|install)\.js"[^>]*></script>\n)+'
+    r'(?:  <script src="assets/(?:data|core|stones|charts|access-data|profit|landability|trends|deep|app|pwa|install)\.js"[^>]*></script>\n)+'
 )
 js_new = (
     '  <script src="assets/data.js" defer></script>\n'
