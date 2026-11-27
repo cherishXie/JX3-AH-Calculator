@@ -75,3 +75,21 @@ npx wrangler@latest tail
 - 只有 `Actions: write`，泄露也只能触发这个仓库的工作流，不能改代码；
 - token 到期后 Worker 会返回 401，重新 `secret put GITHUB_TOKEN` 即可；
 - 本机 launchd 已取消；GitHub Actions `schedule` 每 2 小时作为外部调度失效时的兜底。
+
+
+## 7. 用户反馈自动开 Issue
+
+同一 Worker 新增 `POST /feedback`，前端提交后：
+
+1. Worker 校验来源 / 长度 / IP（1 分钟最多一次）；
+2. 用 `GITHUB_TOKEN` dispatch `dev` 分支的 `feedback.yml`；
+3. `feedback.yml` 用 Actions 自带的 `GITHUB_TOKEN` 创建 Issue；
+4. Issue 会自动附带页面、区服、版本、行情时间、视口、设备、匿名客户端和浏览器信息。
+
+需要：
+
+- Cloudflare Worker secret `GITHUB_TOKEN`：仓库 **Actions: Read and write**；
+- GitHub 仓库 secret `CLOUDFLARE_API_TOKEN`（或 `CF_API_TOKEN`）：用于 `Deploy feedback worker` workflow 部署；
+- `feedback.yml` 必须在 `dev` 分支（当前 `FEEDBACK_REF = 'dev'`）。
+
+如果 Worker 未部署或 token 失效，前端会自动退回 GitHub 预填 Issue 页面，不会丢失反馈内容。
