@@ -1,8 +1,6 @@
 const OWNER = 'cherishXie';
 const REPO = 'JX3-AH-Calculator';
 const WORKFLOW = 'update-jx3-prices.yml';
-const FEEDBACK_WORKFLOW = 'feedback.yml';
-const FEEDBACK_REF = 'dev';
 const FEEDBACK_MAX = 2000;
 const FEEDBACK_CONTEXT_MAX = 4000;
 
@@ -109,36 +107,6 @@ async function createIssueDirect(env, payload) {
   console.log('GitHub issue created directly');
 }
 
-async function dispatchFeedback(env, payload) {
-  if (!env.GITHUB_TOKEN) throw new Error('missing GITHUB_TOKEN');
-  const response = await fetch(
-    `https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${FEEDBACK_WORKFLOW}/dispatches`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${env.GITHUB_TOKEN}`,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'User-Agent': 'jx3-feedback-worker',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ref: FEEDBACK_REF,
-        inputs: {
-          title: payload.title,
-          body: payload.body
-        }
-      })
-    }
-  );
-  if (!response.ok) {
-    const body = await response.text();
-    console.error('GitHub feedback dispatch failed', response.status, body);
-    throw new Error(`GitHub feedback dispatch failed: ${response.status}`);
-  }
-  console.log('GitHub feedback workflow dispatched');
-}
-
 async function handleFeedback(request, env) {
   const origin = request.headers.get('Origin') || '';
   if (origin && !allowedOrigin(origin)) {
@@ -179,18 +147,10 @@ async function handleFeedback(request, env) {
   const title = ('[反馈] ' + (text.split('\n').map(function (line) { return line.trim(); }).filter(Boolean)[0] || '用户反馈')).slice(0, 100);
   const body = buildFeedbackBody(text, data && data.context);
   try {
-    await dispatchFeedback(env, { title: title, body: body });
-  } catch (dispatchError) {
-    // 兼容只有 Issues:write 的 token：直接创建 Issue，不依赖 dev 分支的 workflow。
-    try {
-      await createIssueDirect(env, { title: title, body: body });
-    } catch (createError) {
-      console.error('Feedback submit failed', dispatchError.message, createError.message);
-      return json({
-        ok: false,
-        error: '自动提交暂不可用：' + dispatchError.message + ' / ' + createError.message
-      }, 502, origin);
-    }
+    await createIssueDirect(env, { title: title, body: body });
+  } catch (err) {
+    console.error('Feedback submit failed', err.message);
+    return json({ ok: false, error: '自动提交暂不可用，请稍后再试或使用 GitHub 预填页' }, 502, origin);
   }
   return json({ ok: true }, 200, origin);
 }
