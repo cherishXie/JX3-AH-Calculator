@@ -2429,3 +2429,130 @@ html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fa
     backdrop-filter: none;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* 深度分析 · 套利 / 挂单 / 技艺潜力                                   */
+/* ------------------------------------------------------------------ */
+.deep-strategy-card .card-body, .deep-listing-card .card-body, .deep-skill-card .card-body { padding-top: 10px; }
+.deep-regime { padding: 10px 12px; border: 1px solid var(--border-soft); border-radius: 7px; background: var(--accent-2); }
+.deep-regime.is-pos { border-color: color-mix(in srgb, var(--positive) 28%, var(--border)); }
+.deep-regime.is-neg { border-color: color-mix(in srgb, var(--danger) 28%, var(--border)); }
+.deep-regime-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.deep-regime-tag { font-size: 9px; font-weight: 600; letter-spacing: .08em; color: var(--muted-2); }
+.deep-regime-head b { font-size: 13px; font-weight: 700; }
+.deep-regime.is-pos .deep-regime-head b { color: var(--positive); }
+.deep-regime.is-neg .deep-regime-head b { color: var(--danger); }
+.deep-regime.is-info .deep-regime-head b { color: var(--info); }
+.deep-regime-meta { margin-left: auto; font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.deep-regime p { margin-top: 5px; font-size: 11px; line-height: 16.5px; color: var(--muted); }
+.deep-strategy-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.deep-strategy-tile { min-width: 0; padding: 9px 10px; border: 1px solid var(--border-soft); border-radius: 7px; background: var(--card); }
+.deep-strategy-tile-head { display: flex; align-items: center; gap: 6px; }
+.deep-strategy-tile-head b { font-size: 12px; font-weight: 600; }
+.deep-strategy-tile-head .badge { margin-left: auto; }
+.deep-strategy-desc { margin-top: 3px; font-size: 10px; line-height: 14px; color: var(--muted-2); }
+.deep-strategy-list { margin-top: 5px; }
+.deep-strategy-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 6px; padding: 4px 0; border-top: 1px solid var(--border-soft); font-size: 10.5px; cursor: pointer; }
+.deep-strategy-row:first-child { border-top: 0; }
+.deep-strategy-row:hover { background: var(--accent-2); }
+.deep-strategy-row .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-strategy-row .px { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 10px; }
+.deep-strategy-row .val { font-weight: 600; font-variant-numeric: tabular-nums; }
+.deep-strategy-row .val i { font-style: normal; font-weight: 400; font-size: 9px; color: var(--muted-2); margin-right: 2px; }
+.deep-strategy-note { margin-top: 10px; padding: 8px 10px; border-left: 2px solid var(--info); background: var(--accent-2); font-size: 10.5px; line-height: 16px; color: var(--muted); }
+.deep-strategy-note b { color: var(--text); }
+.deep-overheat { margin-top: 7px; font-size: 10.5px; line-height: 16px; color: var(--warning); }
+
+.deep-listing-head { display: grid; grid-template-columns: minmax(0, 1fr) 300px 94px; gap: 8px; padding: 0 2px 6px; font-size: 9px; letter-spacing: .04em; color: var(--muted-2); }
+.deep-listing-head span:nth-child(2), .deep-listing-head span:nth-child(3) { text-align: right; }
+.deep-listing-list { border-top: 1px solid var(--border-soft); }
+.deep-listing-row { display: grid; grid-template-columns: minmax(0, 1fr) 300px 94px; gap: 8px; align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--border-soft); cursor: pointer; }
+.deep-listing-row:last-child { border-bottom: 0; }
+.deep-listing-row:hover { background: var(--accent-2); }
+.deep-listing-main { min-width: 0; }
+.deep-listing-main .nm { display: block; font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-listing-main .ds { display: block; margin-top: 2px; font-size: 9.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-listing-prices { display: flex; justify-content: flex-end; gap: 14px; }
+.deep-listing-prices span { text-align: right; min-width: 64px; }
+.deep-listing-prices i { display: block; font-style: normal; font-size: 9px; color: var(--muted-2); }
+.deep-listing-prices b { display: block; font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.deep-listing-prices em { display: block; font-style: normal; font-size: 9px; color: var(--positive); font-variant-numeric: tabular-nums; }
+.deep-listing-room { text-align: right; }
+.deep-listing-room > b { display: block; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.deep-risk { display: inline-block; margin-top: 2px; font-size: 9px; color: var(--muted); }
+.deep-risk.ok { color: var(--positive); }
+.deep-risk.warn { color: var(--warning); }
+.deep-risk.muted { color: var(--muted-2); }
+
+.deep-skill-chips { display: flex; flex-wrap: wrap; gap: 5px; padding-bottom: 6px; }
+.deep-skill-chip { display: inline-flex; align-items: center; gap: 5px; flex: none; height: 26px; padding: 0 8px; border: 1px solid var(--border); border-radius: 5px; background: transparent; color: var(--muted); font-size: 10.5px; font-weight: 500; }
+.deep-skill-chip:hover { color: var(--text); }
+.deep-skill-chip.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.deep-skill-chip .dot { width: 6px; height: 6px; border-radius: 2px; background: var(--c); }
+.deep-skill-chip em { font-style: normal; font-size: 9px; opacity: .65; }
+.deep-skill-list { margin-top: 4px; border-top: 1px solid var(--border-soft); }
+.deep-skill-row { display: grid; grid-template-columns: 18px minmax(0, 1fr) 62px 52px 46px; gap: 8px; align-items: center; padding: 7px 2px; border-bottom: 1px solid var(--border-soft); cursor: pointer; }
+.deep-skill-row:last-child { border-bottom: 0; }
+.deep-skill-row:hover { background: var(--accent-2); }
+.deep-skill-rank { font-size: 10px; color: var(--muted-2); text-align: right; font-variant-numeric: tabular-nums; }
+.deep-skill-dot { width: 7px; height: 7px; border-radius: 2px; background: var(--c); }
+.deep-skill-main { min-width: 0; }
+.deep-skill-main .nm { display: block; font-size: 11.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-skill-main .ds { display: -webkit-box; margin-top: 2px; font-size: 9.5px; line-height: 13px; color: var(--muted); overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.deep-skill-price { text-align: right; font-size: 11px; font-variant-numeric: tabular-nums; }
+.deep-skill-price i { font-style: normal; font-size: 9px; color: var(--muted-2); margin-left: 1px; }
+.deep-skill-change { text-align: right; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.deep-skill-change.pos { color: var(--positive); }
+.deep-skill-change.neg { color: var(--danger); }
+.deep-skill-score { text-align: right; }
+.deep-skill-score b { display: block; font-size: 13px; font-weight: 700; line-height: 14px; font-variant-numeric: tabular-nums; }
+.deep-skill-score i { font-style: normal; font-size: 8.5px; color: var(--muted-2); }
+.deep-skill-score.hot b { color: var(--peak); }
+.deep-skill-score.warm b { color: var(--info); }
+.deep-skill-score.cool b { color: var(--muted); }
+.deep-skill-best-row { display: grid; grid-template-columns: 8px 72px minmax(0, 1fr) 56px 76px; gap: 8px; align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--border-soft); cursor: pointer; }
+.deep-skill-best-row:last-child { border-bottom: 0; }
+.deep-skill-best-row:hover { background: var(--accent-2); }
+.deep-skill-best-name { font-size: 11.5px; font-weight: 600; }
+.deep-skill-best-item { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.deep-skill-best-item em { font-style: normal; margin-left: 5px; font-size: 9px; color: var(--muted-2); }
+.deep-skill-best-price { text-align: right; font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 1080px) {
+  .deep-strategy-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .deep-regime-meta { margin-left: 0; width: 100%; }
+  .deep-strategy-grid { grid-template-columns: 1fr; }
+  .deep-listing-head { display: none; }
+  .deep-listing-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "main room" "prices prices"; gap: 6px 8px; padding: 9px 2px; }
+  .deep-listing-main { grid-area: main; }
+  .deep-listing-room { grid-area: room; }
+  .deep-listing-prices { grid-area: prices; justify-content: flex-start; gap: 16px; padding: 5px 8px; border-radius: 5px; background: var(--accent-2); }
+  .deep-listing-prices span { text-align: left; min-width: 58px; }
+  .deep-listing-prices em { color: var(--positive); }
+  .deep-skill-row { grid-template-columns: 16px minmax(0, 1fr) 54px 48px 42px; gap: 6px; }
+  .deep-skill-best-row { grid-template-columns: 8px 62px minmax(0, 1fr) 46px; }
+  .deep-skill-best-price { display: none; }
+  .deep-skill-main .ds { max-width: 100%; }
+}
+
+@media (max-width: 768px) {
+  .deep-listing-row { padding: 7px 2px; gap: 4px 8px; }
+  .deep-listing-prices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; padding: 4px 6px; }
+  .deep-listing-prices span { display: flex; align-items: baseline; gap: 3px; min-width: 0; text-align: left; }
+  .deep-listing-prices i { display: inline; font-size: 8.5px; }
+  .deep-listing-prices b { font-size: 10.5px; }
+  .deep-listing-prices em { display: none; }
+  .deep-listing-main .ds { font-size: 9px; }
+  .deep-listing-room > b { font-size: 13px; }
+}
+
+@media (max-width: 768px) {
+  .deep-strategy-card .card-head,
+  .deep-listing-card .card-head,
+  .deep-skill-card .card-head { flex-wrap: wrap; }
+  .deep-strategy-card .card-tools,
+  .deep-listing-card .card-tools,
+  .deep-skill-card .card-tools { width: 100%; justify-content: flex-start; padding-top: 2px; }
+}

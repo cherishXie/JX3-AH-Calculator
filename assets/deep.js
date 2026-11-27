@@ -58,6 +58,20 @@
     return list.reduce(function (sum, v) { return sum + v; }, 0) / list.length;
   }
 
+  function percentile(sorted, p) {
+    if (!sorted || !sorted.length) return null;
+    const pos = (sorted.length - 1) * p;
+    const base = Math.floor(pos);
+    const rest = pos - base;
+    return sorted[base + 1] !== undefined
+      ? sorted[base] + rest * (sorted[base + 1] - sorted[base])
+      : sorted[base];
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
   function dayKey(at) {
     return String(at || '').slice(0, 10);
   }
@@ -363,6 +377,7 @@
         energy: recipe.energy,
         productId: recipe.productId,
         productName: recipe.productName,
+        productEnd: product.end,
         costStart: costStart,
         costEnd: costEnd,
         revenueStart: revenueStart,
@@ -423,6 +438,184 @@
     if (value == null || !isFinite(value)) return '—';
     if (Math.abs(value) < 0.05) return '0.0 pp';
     return (value >= 0 ? '+' : '−') + Math.abs(value).toFixed(digits == null ? 1 : digits) + ' pp';
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 交易行套利 / 挂单策略                                               */
+  /* ------------------------------------------------------------------ */
+  function rowSignal(row) {
+    if (row.position <= 0.3) return '低位';
+    if (row.position >= 0.7) return '高位';
+    if (row.changePct >= 3) return '趋势↑';
+    if (row.changePct <= -3) return '趋势↓';
+    return '区间';
+  }
+
+  function potentialScore(row) {
+    const upside = row.p75 > 0 ? row.p75 / row.latest - 1 : 0;
+    const momentum = row.changePct / 100;
+    const range = row.rangePct / 100;
+    // 规则评分：低吸空间 45%，趋势 25%，振幅 15%，报价覆盖 15%。
+    // 分数只用于同一屏内排序，不是收益预测。
+    let score = 50
+      + clamp(upside, -0.25, 0.4) * 120
+      + clamp(momentum, -0.3, 0.5) * 30
+      + clamp(range, 0, 0.5) * 20
+      + (row.coverage - 0.5) * 20;
+    if (row.latest < 1) score -= 15;
+    return Math.round(clamp(score, 0, 99));
+  }
+
+  function rowTags(row) {
+    const tags = [];
+    if (row.position <= 0.3) tags.push('低位');
+    else if (row.position >= 0.7) tags.push('高位');
+    if (row.changePct >= 3) tags.push('趋势↑');
+    else if (row.changePct <= -3) tags.push('趋势↓');
+    if (row.p75 > 0 && row.p75 / row.latest - 1 >= 0.08) tags.push('目标空间');
+    if (row.rangePct >= 25) tags.push('高波动');
+    if (row.coverage < 0.4) tags.push('报价少');
+    if (row.latest >= 1000) tags.push('高单价');
+    if (row.tailRun <= -3) tags.push('连跌');
+    else if (row.tailRun >= 3) tags.push('连涨');
+    return tags.slice(0, 5);
+  }
+
+  function buildStrategies(report, catalog) {
+    const taxRate = isFinite(report.taxRate) ? report.taxRate : 0.05;
+    const net = function (price) { return price * (1 - taxRate); };
+    // 只用稳健样本：现价≥1金、报价覆盖≥40%、p75/p25≤3、7日振幅≤80%。
+    // 低价、单点异常挂单和几乎没有报价的物品不进入策略，避免 500%+ 的假机会。
+    const valid = report.rows.filter(function (row) {
+      return row.latest >= 1 && row.p10 > 0 && row.p90 > 0 && row.p50 > 0 && row.p25 > 0 && row.p75 > 0 &&
+        row.latest >= row.p10 * 0.5 && row.latest <= row.p90 * 2 &&
+        row.coverage >= 0.4 && row.rangePct >= 2 && row.rangePct <= 80 && row.p75 / row.p25 <= 3;
+    });
+
+    const scored = valid.map(function (row) {
+      return { row: row, raw: potentialScore(row) };
+    }).sort(function (a, b) { return b.raw - a.raw; });
+    const scoreById = Object.create(null);
+    const total = scored.length;
+    scored.forEach(function (entry, index) {
+      // 潜力分取同期全部稳健样本的相对分位：99 = 最高，50 = 中位。
+      scoreById[entry.row.id] = total > 1 ? Math.round(99 - (index / (total - 1)) * 49) : 99;
+    });
+    const decorate = function (row) {
+      return Object.assign({}, row, {
+        score: scoreById[row.id] || 0,
+        tags: rowTags(row),
+        signal: rowSignal(row)
+      });
+    };
+
+    const buy = valid.filter(function (row) {
+      return row.position <= 0.35 && row.rangePct >= 10;
+    }).sort(function (a, b) {
+      return (b.p75 / b.latest - a.p75 / a.latest) || (b.coverage - a.coverage);
+    }).slice(0, 6).map(decorate);
+
+    const range = valid.filter(function (row) {
+      return row.rangePct >= 15 && row.position >= 0.2 && row.position <= 0.8;
+    }).sort(function (a, b) {
+      return (b.rangePct * b.coverage) - (a.rangePct * a.coverage);
+    }).slice(0, 6).map(decorate);
+
+    const momentum = valid.filter(function (row) {
+      return row.changePct >= 3 && row.position >= 0.5;
+    }).sort(function (a, b) {
+      return b.changePct - a.changePct;
+    }).slice(0, 6).map(decorate);
+
+    const overheat = valid.filter(function (row) {
+      return row.position >= 0.85 && row.changePct > 0;
+    }).sort(function (a, b) {
+      return b.changePct - a.changePct;
+    }).slice(0, 4);
+
+    const recipe = (report.recipes.topImproved || []).filter(function (row) {
+      return row.spread > 2 && row.spread <= 300 && row.productChangePct > 0;
+    }).slice(0, 6);
+
+    const listing = valid.filter(function (row) {
+      return row.p75 > row.latest * 1.02;
+    }).map(function (row) {
+      const netRoom = net(row.p75) / row.latest - 1;
+      const fastNetRoom = net(row.p50) / row.latest - 1;
+      let risk = '正常';
+      if (row.p75 / row.p25 > 3 || row.rangePct > 60) risk = '异常波动';
+      else if (row.tailRun <= -3) risk = '连续下跌';
+      else if (row.changePct <= -20) risk = '大幅回落';
+      else if (row.coverage < 0.55) risk = '报价少';
+      else if (row.latest < 2) risk = '低价';
+      let strategy = row.position <= 0.35 ? '低吸等待'
+        : row.position >= 0.7 ? '高位分批' : '区间挂单';
+      if (row.tailRun <= -3 || row.changePct <= -20) strategy = '等企稳';
+      else if (row.tailRun >= 3 && row.position >= 0.7) strategy = '分批止盈';
+      return {
+        id: row.id, name: row.name, cls: row.cls, className: row.className,
+        skillName: row.skillName, recipeId: row.recipeId, color: row.color,
+        latest: row.latest, position: row.position, rangePct: row.rangePct, coverage: row.coverage,
+        fastPrice: row.p50, patientPrice: row.p75,
+        fastNetRoomPct: fastNetRoom * 100, netRoomPct: netRoom * 100,
+        changePct: row.changePct, risk: risk, strategy: strategy,
+        score: scoreById[row.id] || 0
+      };
+    }).filter(function (row) {
+      return row.netRoomPct > 1;
+    }).sort(function (a, b) {
+      return (b.netRoomPct * (0.5 + b.coverage * 0.5)) - (a.netRoomPct * (0.5 + a.coverage * 0.5));
+    }).slice(0, 8);
+
+    const skills = (DATA.skills || []).map(function (skill) {
+      const all = valid.filter(function (row) {
+        const meta = catalog.items[row.id];
+        return meta && (meta.skillIds || []).indexOf(skill.id) !== -1;
+      }).map(decorate).sort(function (a, b) {
+        return b.score - a.score || b.p75 / b.latest - a.p75 / a.latest;
+      });
+      return {
+        id: skill.id, name: skill.name, color: skill.color || '#64748B',
+        count: all.length, items: all.slice(0, 6), best: all[0] || null
+      };
+    });
+
+    const o = report.overall;
+    let regime;
+    if (o.upShare != null && o.upShare >= 55 && o.median > 0) {
+      regime = {
+        label: '偏强趋势', tone: 'pos',
+        playbook: '上涨面占优：优先做回踩确认，不追刚拉高的物品；材料端先动时，成品补涨往往滞后，可关注传导差为正的配方。'
+      };
+    } else if (o.upShare != null && o.upShare <= 45 && o.median < 0) {
+      regime = {
+        label: '偏弱下行', tone: 'neg',
+        playbook: '下跌面占优：先等成本回落，不急着抄底；已有库存按 p50/p75 分批挂单，宁可少赚也要保证成交。'
+      };
+    } else {
+      regime = {
+        label: '震荡分化', tone: 'info',
+        playbook: '涨跌分化：优先区间策略，低位分批低吸、p75 附近挂单；只做报价覆盖足够、振幅够大的物品。'
+      };
+    }
+    regime.upShare = o.upShare;
+    regime.median = o.median;
+    regime.sameDirRate = report.recipes.sameDirRate;
+    regime.taxRate = taxRate;
+    regime.scoredCount = valid.length;
+
+    return {
+      regime: regime,
+      buy: buy,
+      range: range,
+      momentum: momentum,
+      overheat: overheat,
+      recipe: recipe,
+      listing: listing,
+      skills: skills,
+      taxRate: taxRate,
+      validCount: valid.length
+    };
   }
 
   function buildInsights(report) {
@@ -495,10 +688,11 @@
   /* ------------------------------------------------------------------ */
   /* 主分析                                                             */
   /* ------------------------------------------------------------------ */
-  function emptyReport(window) {
+  function emptyReport(window, taxRate) {
     return {
       window: window,
       mode: window,
+      taxRate: isFinite(taxRate) ? taxRate : 0.05,
       dates: [],
       latestDate: '',
       startDate: '',
@@ -509,6 +703,7 @@
       categories: { raw: summarize([]), mid: summarize([]), fin: summarize([]) },
       recipes: buildRecipes([], buildCatalog()),
       rhythm: { points: [], n: 0, corrRawFin: null, sameDirRate: null, latest: null },
+      strategies: null,
       insights: [],
       scope: { catalog: buildCatalog().list.length, quoted: 0, skipped: 0 }
     };
@@ -517,10 +712,11 @@
   function analyze(points, opts) {
     opts = opts || {};
     const window = opts.window === 'week' ? 'week' : 'day';
+    const taxRate = Number.isFinite(Number(opts.taxRate)) ? Math.max(0, Math.min(1, Number(opts.taxRate))) : 0.05;
     const catalog = buildCatalog();
     const list = (points || []).filter(function (point) { return point && point.at; })
       .slice().sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
-    if (!list.length) return emptyReport(window);
+    if (!list.length) return emptyReport(window, taxRate);
 
     const dates = [];
     const byDate = Object.create(null);
@@ -546,16 +742,21 @@
         let row = track[item.id];
         if (!row) {
           row = track[item.id] = {
-            min: px, max: px, first: null, firstQuote: null, last: null, lastQuote: null
+            min: px, max: px, first: null, firstQuote: null, last: null, lastQuote: null,
+            quotes: [], days: Object.create(null), pointCount: 0, quoteCount: 0
           };
         }
         if (px < row.min) row.min = px;
         if (px > row.max) row.max = px;
+        row.pointCount++;
         if (!row.first) row.first = { price: px, at: point.at, date: date };
         const quote = quoteOf(point, item.id);
         if (quote != null) {
           if (!row.firstQuote) row.firstQuote = { price: px, at: point.at, date: date };
           row.lastQuote = { price: px, at: point.at, date: date };
+          row.quotes.push(px);
+          row.quoteCount++;
+          row.days[date] = px;
         }
         row.last = { price: px, at: point.at, date: date, quote: quote != null };
       });
@@ -600,6 +801,34 @@
       if (!isFinite(change)) { skipped++; return; }
       if (end.price < MIN_ROW_PRICE) { skipped++; return; }
 
+      const sorted = state.quotes.slice().sort(function (a, b) { return a - b; });
+      const p10 = percentile(sorted, 0.1);
+      const p25 = percentile(sorted, 0.25);
+      const p50 = percentile(sorted, 0.5);
+      const p75 = percentile(sorted, 0.75);
+      const p90 = percentile(sorted, 0.9);
+      const rangePct = p50 > 0 ? (p90 - p10) / p50 * 100 : 0;
+      const position = p90 > p10 ? clamp((end.price - p10) / (p90 - p10), 0, 1) : 0.5;
+      const coverage = state.pointCount ? state.quoteCount / state.pointCount : 0;
+      const dayKeys = Object.keys(state.days).sort();
+      const dailyChanges = [];
+      for (let i = 1; i < dayKeys.length; i++) {
+        const before = state.days[dayKeys[i - 1]];
+        const after = state.days[dayKeys[i]];
+        if (before > 0 && after > 0) dailyChanges.push(after / before - 1);
+      }
+      let upDays = 0, downDays = 0, flatDays = 0, maxRunUp = 0, maxRunDown = 0, run = 0;
+      dailyChanges.forEach(function (value) {
+        if (value > 0.0001) { upDays++; run = run > 0 ? run + 1 : 1; maxRunUp = Math.max(maxRunUp, run); }
+        else if (value < -0.0001) { downDays++; run = run < 0 ? run - 1 : -1; maxRunDown = Math.max(maxRunDown, -run); }
+        else { flatDays++; run = 0; }
+      });
+      const meanDaily = dailyChanges.length
+        ? dailyChanges.reduce(function (sum, value) { return sum + value; }, 0) / dailyChanges.length
+        : 0;
+      const variance = dailyChanges.length > 1
+        ? dailyChanges.reduce(function (sum, value) { return sum + (value - meanDaily) * (value - meanDaily); }, 0) / (dailyChanges.length - 1)
+        : 0;
       rows.push({
         id: item.id,
         name: item.name,
@@ -622,7 +851,19 @@
         startDate: start.date,
         endDate: end.date,
         spanDays: spanDays,
-        rangePct: start.price > 0 ? (state.max - state.min) / start.price * 100 : 0
+        // 7 日区间用 p10–p90 的稳健区间，避免单个异常挂单把振幅拉爆。
+        p10: p10, p25: p25, p50: p50, p75: p75, p90: p90,
+        rangePct: rangePct,
+        position: position,
+        coverage: coverage,
+        quoteCount: state.quoteCount,
+        snapshots: state.pointCount,
+        upDays: upDays, downDays: downDays, flatDays: flatDays,
+        maxRunUp: maxRunUp, maxRunDown: maxRunDown, tailRun: run,
+        volatilityPct: Math.sqrt(variance) * 100,
+        upsidePct: p75 > 0 ? (p75 / end.price - 1) * 100 : null,
+        drawdownPct: p90 > 0 ? (end.price / p90 - 1) * 100 : null,
+        reboundPct: p10 > 0 ? (end.price / p10 - 1) * 100 : null
       });
     });
 
@@ -641,6 +882,7 @@
       startDate: window === 'week' ? dates[0] : (prevDate || latestDate),
       latestAt: latestPoint.at,
       startAt: window === 'week' ? (list[0] ? list[0].at : '') : (prevPoint ? prevPoint.at : latestPoint.at),
+      taxRate: taxRate,
       rows: rows,
       overall: summarize(rows),
       categories: categories,
@@ -648,6 +890,7 @@
     };
     report.recipes = buildRecipes(rows, catalog);
     report.rhythm = buildRhythm(dates, byDate, catalog);
+    report.strategies = buildStrategies(report, catalog);
     report.insights = buildInsights(report);
     return report;
   }
@@ -663,7 +906,10 @@
       buildRecipes: buildRecipes,
       buildRhythm: buildRhythm,
       pearson: pearson,
-      dayDistance: dayDistance
+      dayDistance: dayDistance,
+      percentile: percentile,
+      potentialScore: potentialScore,
+      buildStrategies: buildStrategies
     }
   };
 })();

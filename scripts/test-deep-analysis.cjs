@@ -100,6 +100,11 @@ assert.equal(day.recipes.sameDirRate, 100, '成本与成品同向上涨');
 // 4. 结论可读：至少有温度/上下游/配方传导三条。
 assert.ok(day.insights.length >= 3);
 assert.ok(day.insights.some(i => i.title === '上游 vs 成品'));
+assert.ok(day.strategies, '每日也应生成策略结构');
+assert.ok(Array.isArray(day.strategies.buy));
+assert.ok(Array.isArray(day.strategies.listing));
+assert.ok(day.rows.every(r => r.p50 > 0 && r.coverage > 0 && r.position >= 0 && r.position <= 1));
+assert.equal(day.taxRate, 0.05, '默认税率 5%');
 
 // 5. 周口径：逐物品取窗口内首个报价，允许覆盖天数不同。
 const weekPoints = [
@@ -112,6 +117,11 @@ assert.equal(week.mode, 'week');
 assert.equal(week.categories.fin.n, 1);
 assert.equal(week.rows.find(r => r.id === 'fin').spanDays, 2);
 assert.equal(week.rows.find(r => r.id === 'fin').start, 105, '周口径取首个有报价点，而不是窗口第一天');
+assert.ok(week.strategies.skills.length >= 2, '应按技艺分组');
+assert.ok(week.strategies.skills.every(s => s.best), '每个有样本的技艺都应有最佳物品');
+assert.ok(week.strategies.regime.label);
+assert.equal(week.strategies.taxRate, 0.05);
+assert.equal(Deep._test.percentile([1, 2, 3, 4], 0.5), 2.5);
 
 // 6. 只有一天时自动降级为日内口径，而不是报错。
 const intraday = Deep.analyze([
@@ -127,5 +137,6 @@ const empty = Deep.analyze([], { window: 'day' });
 assert.equal(empty.rows.length, 0);
 assert.equal(empty.overall.n, 0);
 assert.equal(empty.insights.length, 0);
+assert.equal(empty.strategies, null);
 
 console.log('PASS: deep analysis classification, daily/weekly windows, recipe transmission, intraday fallback.');
