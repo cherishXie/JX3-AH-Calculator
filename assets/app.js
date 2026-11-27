@@ -82,6 +82,9 @@
     trendPickerQuery: '',
     trendFilterOpen: false,
     trendRankAllOpen: false,
+    trendChartsAll: false,
+    crossServerOpen: false,
+    deepRankAllOpen: false,
     trendTab: 'price',
     serverItemTab: 'price',
     profitSkill: '',
@@ -526,8 +529,24 @@
   function recipe(id) { return C.recipeOf(id); }
   function server() { return C.serverOf(Store.state.serverId) || Store.state.servers[0]; }
   function currentBasis(params) { return (params && params.basis) || settings().basis || 'market'; }
+  // 一次 render 内 renderShell + 页面本身会多次要全量配方结果；按
+  // 「区服 + 成本口径 + 数据修订号」缓存，避免手机上重复算 300+ 个配方。
+  let rowsCache = { key: '', rows: null };
   function currentRows(params) {
-    return Calc.rows({ serverId: Store.state.serverId, basis: currentBasis(params) });
+    const basis = currentBasis(params);
+    const key = Store.state.serverId + '|' + basis + '|' + (Store.rev || 0) + '|' + (DATA.meta.priceUpdatedAt || '');
+    if (rowsCache.key === key) return rowsCache.rows;
+    const rows = Calc.rows({ serverId: Store.state.serverId, basis: basis });
+    rowsCache = { key: key, rows: rows };
+    return rows;
+  }
+  let statsCache = { key: '', stats: null };
+  function currentStats() {
+    const key = Store.state.serverId + '|' + (Store.rev || 0) + '|' + (DATA.meta.priceUpdatedAt || '');
+    if (statsCache.key === key) return statsCache.stats;
+    const stats = Calc.stats(Store.state.serverId);
+    statsCache = { key: key, stats: stats };
+    return stats;
   }
 
   function tierBadge(t) {
@@ -890,8 +909,8 @@
   };
 
   function navItems() {
-    const rows = Calc.rows({ serverId: Store.state.serverId, basis: settings().basis });
-    const miss = Calc.stats(Store.state.serverId).missing;
+    const rows = currentRows();
+    const miss = currentStats().missing;
     return [
       {
         group: '工作台', items: [
@@ -1028,7 +1047,7 @@
     const positives = rows.filter(function (r) { return !r.calc.missing && r.calc.profit > 0; }).length;
     const negatives = rows.filter(function (r) { return !r.calc.missing && r.calc.profit < 0; }).length;
     const missing = rows.filter(function (r) { return r.calc.missing; }).length;
-    const stats = Calc.stats(Store.state.serverId);
+    const stats = currentStats();
     const audit = auditServer(Store.state.serverId);
     const ac = audit && audit.items;
     let localQuote = 0, localVendor = 0, localBase = 0;
@@ -1647,7 +1666,7 @@
     const basis = currentBasis(p);
     // 生活技艺是查找入口，默认展示全部配方；收益分析/总览仍默认只看可做/谨慎。
     const showAll = p.all !== '0';
-    const allRows = Calc.rows({ serverId: Store.state.serverId, basis: basis }).map(function (r) {
+    const allRows = currentRows({ basis: basis }).map(function (r) {
       return Object.assign({}, r, { grade: r.type === 'gather' ? 'G' : rowGrade(r) });
     });
     const rows = allRows.filter(function (r) { return r.recipe.skillId === skillId && (showAll || r.grade === 'A' || r.grade === 'B' || r.grade === 'G'); });
@@ -1849,10 +1868,16 @@
     if (it.skillId && list.indexOf(it.skillId) === -1) list.unshift(it.skillId);
     return list.length ? list : (it.skillId ? [it.skillId] : []);
   }
+  const itemSearchTextCache = Object.create(null);
   function itemSearchText(it) {
+    // 行情页每次输入都会扫全部物品；名字/技艺/品阶不变，按内容键缓存搜索结果。
+    const key = it.id + '|' + (it.name || '') + '|' + (it.skillId || '') + '|' + (it.tier || '') + '|' + (it.category || '');
+    if (itemSearchTextCache[key]) return itemSearchTextCache[key];
     const names = itemSkillIds(it).map(function (id) { return skill(id).name; });
-    const t = DATA.tiers.filter(function (x) { return String(x.id) === String(it.tier); })[0];
-    return [it.name, names.join(' '), categoryName(itemCategory(it)), (t && t.name) || '', it.origin || ''].join(' ');
+    const t = tier(it.tier);
+    const text = [it.name, names.join(' '), categoryName(itemCategory(it)), (t && t.name) || '', it.origin || ''].join(' ');
+    itemSearchTextCache[key] = text;
+    return text;
   }
   function filteredItems(p) {
     const q = (p.q || '').trim();
@@ -1860,20 +1885,23 @@
     const category = p.category || '';
     const kind = p.kind || '';
     const missingOnly = p.missing === '1';
-    return Store.state.items.filter(function (it) {
-      if (skillId && itemSkillIds(it).indexOf(skillId) === -1) return false;
-      if (category === 'life' && !it.life) return false;
-      if (category && category !== 'life' && itemCategory(it) !== category) return false;
-      if (kind && it.kind !== kind) return false;
-      if (missingOnly && !Store.price(Store.state.serverId, it.id).missing) return false;
-      if (q && !U.includes(itemSearchText(it), q)) return false;
-      return true;
-    }).sort(function (a, b) {
-      const pa = Store.price(Store.state.serverId, a.id);
-      const pb = Store.price(Store.state.serverId, b.id);
-      if (pa.missing !== pb.missing) return pa.missing ? 1 : -1;
-      return a.name.localeCompare(b.name, 'zh-CN');
+    const list = [];
+    Store.state.items.forEach(function (it) {
+      if (skillId && itemSkillIds(it).indexOf(skillId) === -1) return;
+      if (category === 'life' && !it.life) return;
+      if (category && category !== 'life' && itemCategory(it) !== category) return;
+      if (kind && it.kind !== kind) return;
+      if (q && !U.includes(itemSearchText(it), q)) return;
+      // 价格只取一次，避免排序比较器里反复 Store.price（1117 项约 1 万次）。
+      const missing = Store.price(Store.state.serverId, it.id).missing;
+      if (missingOnly && !missing) return;
+      list.push({ it: it, missing: missing });
     });
+    list.sort(function (a, b) {
+      if (a.missing !== b.missing) return a.missing ? 1 : -1;
+      return a.it.name.localeCompare(b.it.name, 'zh-CN');
+    });
+    return list.map(function (row) { return row.it; });
   }
 
   function renderStonePriceCard() {
@@ -1916,20 +1944,22 @@
   }
 
   function renderPrices(p) {
-    const stats = Calc.stats(Store.state.serverId);
+    const stats = currentStats();
     const audit = auditServer(Store.state.serverId);
     const ac = audit && audit.items;
-    const local = localPriceCounts();
-    const quoteCount = ac ? ac.quote : local.quote;
-    const vendorCount = ac ? ac.vendor : local.vendor;
-    const baseCount = ac ? ac.base : local.base;
+    // audit 数据已经按本服统计好时，不再扫 1117 个物品重复算一遍。
+    const local = ac ? null : localPriceCounts();
+    const quoteCount = ac ? ac.quote : (local ? local.quote : 0);
+    const vendorCount = ac ? ac.vendor : (local ? local.vendor : 0);
+    const baseCount = ac ? ac.base : (local ? local.base : 0);
     const missingCount = ac ? ac.missing : stats.missing;
     const allItems = filteredItems(p);
     const pageSize = 100;
     const totalPages = Math.max(1, Math.ceil(allItems.length / pageSize));
     const page = Math.min(totalPages, Math.max(1, Number(p.page) || 1));
     const items = allItems.slice((page - 1) * pageSize, page * pageSize);
-    const spreads = serverSpreads();
+    // 跨服比价默认折叠；展开后才扫 17 服 × 1117 物品，避免首屏白算。
+    const spreads = ui.crossServerOpen ? serverSpreads() : [];
     const q = p.q || '';
 
     let html = '<div class="page">';
@@ -2025,7 +2055,7 @@
 
     html += '<div class="grid section-gap">' + renderStonePriceCard() + '</div>';
 
-    html += '<details class="section-gap"><summary class="card-sub" style="cursor:pointer">跨服比价（独立参考，不参与本服收益）</summary>' +
+    html += '<details class="section-gap cross-server-details"' + (ui.crossServerOpen ? ' open' : '') + '><summary class="card-sub" style="cursor:pointer">跨服比价（独立参考，不参与本服收益）</summary>' +
       '<div class="grid section-gap"><section class="card col-12"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">跨服比价</h2><p class="card-sub">同一物品各服最高/最低价 · 独立视图，不参与本服收益计算</p></div>' +
       '<div class="card-tools"><span class="badge badge-outline">' + Store.state.servers.length + ' 个服务器</span>' +
@@ -2033,7 +2063,7 @@
       '<div class="table-wrap medium"><table class="data compact"><thead><tr>' +
         '<th class="sticky">物品</th><th>技艺</th><th>最低价服务器</th><th class="num">最低价</th><th>最高价服务器</th><th class="num">最高价</th><th class="num">价差</th><th class="num">价差率</th>' +
       '</tr></thead><tbody>' +
-      (spreads.length ? spreads.slice(0, 14).map(function (s) {
+      (!ui.crossServerOpen ? '<tr><td colspan="8"><div class="trend-rank-placeholder">展开后计算 ' + Store.state.servers.length + ' 个服务器的跨服价差</div></td></tr>' : spreads.length ? spreads.slice(0, 14).map(function (s) {
         return '<tr><td class="sticky"><div class="cell-main"><span class="t1">' + U.esc(s.item.name) + '</span></div></td>' +
           '<td class="dim">' + U.esc(skill(s.item.skillId).name) + '</td>' +
           '<td>' + U.esc(s.min.server.name) + '</td><td class="num">' + U.fmt(s.min.price, 2) + '</td>' +
@@ -2644,6 +2674,57 @@
       count: vals.length
     };
   }
+  // 手机上四张走势图如果默认渲染全部 1000+ 项，会产生 6 万+ DOM 节点和
+  // 10MB 级 HTML，Safari 会明显卡顿甚至失去响应。默认只画波动最大的 40 项，
+  // 用户可在筛选栏点「图表全部」按需展开；榜单与单品走势不受限制。
+  const TREND_VISUAL_LIMIT = 40;
+  function trendAllLimit() {
+    // iPhone/iPad 竖屏最多展开到 120 项，避免一次生成几万个 SVG 节点；
+    // 桌面端允许真正“全部”，但仍然只在用户主动点击时发生。
+    return (typeof window !== 'undefined' && window.innerWidth <= 768) ? 120 : 2000;
+  }
+  function trendVisualItems(ctx) {
+    const list = (ctx && ctx.rankedItems) || [];
+    const limit = ui.trendChartsAll ? trendAllLimit() : TREND_VISUAL_LIMIT;
+    return list.length <= limit ? list : list.slice(0, limit);
+  }
+  function trendVisualLimit() { return ui.trendChartsAll ? trendAllLimit() : TREND_VISUAL_LIMIT; }
+  function trendSamplePoints(points, max) {
+    const list = points || [];
+    if (list.length <= max) return list;
+    const out = [];
+    const step = (list.length - 1) / (max - 1);
+    for (let i = 0; i < max; i++) out.push(list[Math.round(i * step)]);
+    return out;
+  }
+
+  let trendPickerItemsCache = [];
+  let trendPickerSelectedCache = [];
+  function trendPickerListHtml(items, selectedKeys, query, limit) {
+    const q = String(query || '').trim();
+    const selected = selectedKeys instanceof Set ? selectedKeys : new Set(selectedKeys || []);
+    const matched = (items || []).filter(function (item) {
+      if (!q) return true;
+      return U.includes([item.name, item.skillName, item.skillNames || '', item.tierName || ''].join(' '), q);
+    });
+    const shown = matched.slice(0, limit || 120);
+    const rows = shown.map(function (item) {
+      const checked = selected.has(item.key);
+      const searchText = [item.name, item.skillName, item.skillNames || '', item.tierName || ''].join(' ');
+      return '<label class="trend-check" data-picker-item data-picker-text="' + U.esc(searchText) + '"><input type="checkbox" data-trend-item-toggle="' + U.esc(item.key) + '"' + (checked ? ' checked' : '') + '>' +
+        '<span class="trend-dot" style="--c:' + U.esc(item.color) + '"></span>' +
+        '<span class="nm">' + U.esc(item.name) + '</span><span class="tier">' + U.esc(item.tierName) + '</span></label>';
+    }).join('');
+    const more = matched.length > shown.length
+      ? '<div class="tiny dim" style="padding:8px 4px">匹配 ' + matched.length + ' 项，仅显示前 ' + shown.length + ' 项；输入关键词继续缩小范围。</div>'
+      : '';
+    return (rows || '<span class="tiny dim">没有匹配的物品</span>') + more;
+  }
+  function trendVisualCapped(ctx) {
+    const total = (ctx && ctx.rankedItems) || [];
+    return total.length > trendVisualLimit();
+  }
+
   function trendContext(p) {
     const T = window.JX3Trends;
     if (!T) return { view: { status: 'error', error: '走势模块未加载' } };
@@ -2738,6 +2819,8 @@
     return '<div class="page-head trend-page-head"><div><h1 class="page-title">物价走势</h1></div></div>';
   }
   function trendFilter(ctx, p) {
+    trendPickerItemsCache = ctx.scopeItems;
+    trendPickerSelectedCache = ctx.selectedKeys;
     const view = ctx.view;
     const fromDate = view.from ? view.from.slice(0, 10) : '';
     const fromHour = view.from ? view.from.slice(11, 13) : '00';
@@ -2786,21 +2869,13 @@
           '<span class="tiny dim">已选 ' + selectedCount + ' / ' + total + (noQuote > 0 ? ' · 另有 ' + noQuote + ' 项在当前区间无报价，不参与走势' : '') + '</span>' +
         '</div>' +
         '<div class="trend-picker-search"><input class="input" type="search" placeholder="搜索物品" value="' + U.esc(ui.trendPickerQuery || '') + '" data-trend-picker-search data-fkey="trend-picker-search" aria-label="搜索物品"></div>' +
-        '<div class="trend-picker-list">' +
-          (ctx.scopeItems.filter(function (item) {
-            const q = String(ui.trendPickerQuery || '').trim();
-            if (!q) return true;
-            return U.includes([item.name, item.skillName, item.skillNames || '', item.tierName || ''].join(' '), q);
-          }).map(function (item) {
-            const checked = ctx.selectedKeys.indexOf(item.key) !== -1;
-            const searchText = [item.name, item.skillName, item.skillNames || '', item.tierName || ''].join(' ');
-            return '<label class="trend-check" data-picker-item data-picker-text="' + U.esc(searchText) + '"><input type="checkbox" data-trend-item-toggle="' + U.esc(item.key) + '"' + (checked ? ' checked' : '') + '>' +
-              '<span class="trend-dot" style="--c:' + U.esc(item.color) + '"></span>' +
-              '<span class="nm">' + U.esc(item.name) + '</span><span class="tier">' + U.esc(item.tierName) + '</span></label>';
-          }).join('') || '<span class="tiny dim">没有匹配的物品</span>') +
-        '</div>' +
+        '<div class="trend-picker-list">' + trendPickerListHtml(ctx.scopeItems, ctx.selectedKeys, ui.trendPickerQuery, 120) + '</div>' +
       '</div>' +
     '</details>';
+    if (ctx.rankedItems.length > TREND_VISUAL_LIMIT) {
+      html += '<button class="btn btn-sm" data-action="trend-charts-all" title="默认只渲染波动最大的 40 项，避免手机 Safari 卡顿">' +
+        icon('chart') + (ui.trendChartsAll ? (trendAllLimit() >= 2000 ? '图表全部' : '图表 ' + trendAllLimit() + ' 项') : '图表前 ' + TREND_VISUAL_LIMIT) + '</button>';
+    }
     html += '<button class="btn btn-sm" data-action="trend-refresh" title="重新加载历史数据">' + icon('refresh') + '刷新</button>';
     html += '</div></div></div></section>';
     return html;
@@ -2822,7 +2897,7 @@
     return html;
   }
   function trendDistributionItems(ctx) {
-    return ctx.rankedItems.map(function (item) {
+    return trendVisualItems(ctx).map(function (item) {
       const series = trendAxisSeries(ctx.seriesMap[item.key] || [], ctx.distAxis);
       return {
         key: item.key, name: item.name, tierName: item.tierName, tierColor: item.tierColor, color: item.color,
@@ -2830,26 +2905,45 @@
       };
     }).filter(function (item) { return item.stats; });
   }
-  function trendCategoryScatterRows(ctx) {
+  function trendCategoryScatterRows(ctx, items) {
     const rows = [];
-    ctx.rankedItems.forEach(function (item, index) {
+    (items || ctx.rankedItems).forEach(function (item, index) {
       const raw = ctx.seriesMap[item.key] || [];
       if (!raw.length) return;
-      const series = trendAxisSeries(raw, ctx.scatterAxis);
-      const first = raw[0].price;
+      // 7 日区间有 100+ 个快照；每个物品只采样最多 32 个点，
+      // 否则 40 个物品就会生成 6000+ 个 SVG 圆点。
+      const sampled = trendSamplePoints(raw, 32);
+      const series = trendAxisSeries(sampled, ctx.scatterAxis);
+      const first = sampled[0].price;
       const n = series.length;
       series.forEach(function (point, j) {
         rows.push({
           itemKey: item.key, itemIndex: index, name: item.name, tierName: item.tierName,
           color: item.color || item.tierColor || '#64748B', at: point.at, price: point.price,
-          rawPrice: raw[j] ? raw[j].price : point.price,
-          change: first > 0 ? (raw[j].price / first - 1) * 100 : 0,
+          rawPrice: sampled[j] ? sampled[j].price : point.price,
+          change: first > 0 ? (sampled[j].price / first - 1) * 100 : 0,
           jitter: n > 1 ? j / (n - 1) - 0.5 : 0,
           focus: item.key === ctx.focusKey
         });
       });
     });
     return rows;
+  }
+  let trendRankRowsCache = [];
+  function trendRankRowsHtml(rows) {
+    const fullRows = rows.slice().sort(function (a, b) {
+      return b.change - a.change || String(a.item.name).localeCompare(String(b.item.name), 'zh-CN');
+    });
+    return fullRows.map(function (row, index) {
+      const cls = row.change > 0 ? 'pos' : row.change < 0 ? 'neg' : 'dim';
+      return '<tr class="trend-rank-all-row" data-trend-focus="' + U.esc(row.item.key) + '" tabindex="0">' +
+        '<td class="num dim">' + (index + 1) + '</td>' +
+        '<td><span class="trend-dot" style="--c:' + U.esc(row.item.color) + '"></span>' + U.esc(row.item.name) + '</td>' +
+        '<td class="dim">' + U.esc(row.item.skillName) + '</td>' +
+        '<td class="dim">' + U.esc(row.item.tierName) + '</td>' +
+        '<td class="num ' + cls + '">' + (row.change > 0 ? '+' : row.change < 0 ? '−' : '') + U.fmt(Math.abs(row.change), 1) + '%</td>' +
+        '<td class="num">' + U.fmt(row.last, 2) + ' 金</td></tr>';
+    }).join('') || '<tr><td colspan="6" class="trend-rank-placeholder">暂无涨跌数据</td></tr>';
   }
   function trendRankCard(ctx) {
     const allRows = [];
@@ -2885,23 +2979,13 @@
           '</div>';
       }).join('');
     }
-    const fullRows = allRows.slice().sort(function (a, b) {
-      return b.change - a.change || String(a.item.name).localeCompare(String(b.item.name), 'zh-CN');
-    });
-    const fullBody = fullRows.map(function (row, index) {
-      const cls = row.change > 0 ? 'pos' : row.change < 0 ? 'neg' : 'dim';
-      return '<tr class="trend-rank-all-row" data-trend-focus="' + U.esc(row.item.key) + '" tabindex="0">' +
-        '<td class="num dim">' + (index + 1) + '</td>' +
-        '<td><span class="trend-dot" style="--c:' + U.esc(row.item.color) + '"></span>' + U.esc(row.item.name) + '</td>' +
-        '<td class="dim">' + U.esc(row.item.skillName) + '</td>' +
-        '<td class="dim">' + U.esc(row.item.tierName) + '</td>' +
-        '<td class="num ' + cls + '">' + (row.change > 0 ? '+' : row.change < 0 ? '−' : '') + U.fmt(Math.abs(row.change), 1) + '%</td>' +
-        '<td class="num">' + U.fmt(row.last, 2) + ' 金</td></tr>';
-    }).join('');
+    trendRankRowsCache = allRows;
+    const fullBody = ui.trendRankAllOpen ? trendRankRowsHtml(allRows) :
+      '<tr><td colspan="6" class="trend-rank-placeholder">展开后加载全部 ' + allRows.length + ' 项明细</td></tr>';
     const full = '<details class="trend-rank-all"' + (ui.trendRankAllOpen ? ' open' : '') + '><summary><span>全部涨跌数据</span><span class="badge badge-outline">' + allRows.length + '</span>' +
       '<span class="chev">' + icon('chevronDown') + '</span></summary>' +
       '<div class="trend-rank-all-wrap"><table class="data compact"><thead><tr><th class="num">#</th><th>物品</th><th>技艺</th><th>品阶</th><th class="num">区间涨跌</th><th class="num">最新价</th></tr></thead>' +
-      '<tbody>' + (fullBody || '<tr><td colspan="6">' + emptyState('暂无涨跌数据', '调整筛选条件。', '', 'filter') + '</td></tr>') + '</tbody></table></div></details>';
+      '<tbody' + (ui.trendRankAllOpen ? ' data-filled="1"' : '') + '>' + fullBody + '</tbody></table></div></details>';
     return '<section class="card col-12 trend-rank-card"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">涨跌红黑榜</h2></div><div class="card-tools"><span class="tiny dim">前 10 / 全量 ' + allRows.length + '</span></div></div>' +
       '<div class="trend-rank-grid">' +
@@ -2910,12 +2994,13 @@
       '</div>' + full + '</section>';
   }
   function trendHeatmap(ctx) {
-    const items = ctx.rankedItems;
+    const items = trendVisualItems(ctx);
     if (!items.length) {
       return '<section class="card col-12 trend-heatmap-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">区间涨跌热力图</h2></div></div>' +
         '<div class="card-body">' + emptyState('未选择物品', '在物品筛选中全选或勾选物品。', '', 'filter') + '</div></section>';
     }
-    const points = ctx.points;
+    // 7 日区间快照很多，热力图最多取 48 列；数值与颜色仍按区间首点计算。
+    const points = trendSamplePoints(ctx.points, 48);
     const seriesMap = {};
     let maxAbs = 1;
     items.forEach(function (item) {
@@ -2950,7 +3035,7 @@
         '<span class="trend-heat-name">' + U.esc(item.name) + '</span><span class="trend-heat-tier">' + U.esc(item.tierName) + '</span></th>' + cells + '</tr>';
     }).join('');
     return '<section class="card col-12 trend-heatmap-card"><div class="card-head"><div class="card-head-main">' +
-      '<h2 class="card-title">区间涨跌热力图</h2></div><div class="card-tools"><div class="trend-heat-legend">' +
+      '<h2 class="card-title">区间涨跌热力图</h2><p class="card-sub">' + (trendVisualCapped(ctx) ? '默认显示波动最大的 ' + TREND_VISUAL_LIMIT + ' 项，可在筛选栏' + (trendAllLimit() >= 2000 ? '展开为全部' : '展开到 ' + trendAllLimit() + ' 项') : '按波动从大到小排序') + (ctx.points.length > 48 ? ' · 时间列最多 48 个' : '') + '</p></div><div class="card-tools"><div class="trend-heat-legend">' +
       '<span class="item"><span class="swatch" style="--sw:rgba(69,212,131,.8)"></span>涨</span>' +
       '<span class="item"><span class="swatch" style="--sw:rgba(244,63,94,.8)"></span>跌</span>' +
       '<span class="tiny dim">相对区间首点</span>' +
@@ -2976,13 +3061,14 @@
         '<span class="item"><span class="trend-whisker"></span>最低 / 最高</span>' +
         '<span class="item"><span class="swatch" style="--sw:linear-gradient(90deg,#5B8FF9,#61DDAA,#F6BD16)"></span>25–75%</span>' +
         '<span class="item"><span class="line" style="border-color:var(--text)"></span>中位</span>' +
-      '</div></section>';
+      '</div><span class="spacer"></span><span class="tiny dim">' + (trendVisualCapped(ctx) ? '图表显示 ' + items.length + ' 项 / 共 ' + ctx.rankedItems.length + ' 项' : items.length + ' 个物品') + '</span></section>';
   }
   function trendScatterCard(ctx) {
-    const items = ctx.rankedItems.map(function (item) {
+    const visualItems = trendVisualItems(ctx);
+    const items = visualItems.map(function (item) {
       return { key: item.key, name: item.name, color: item.color, tierColor: item.tierColor, focus: item.key === ctx.focusKey };
     });
-    const rows = trendCategoryScatterRows(ctx);
+    const rows = trendCategoryScatterRows(ctx, visualItems);
     if (!items.length || !rows.length) {
       return '<section class="card col-12 trend-chart-card"><div class="card-head"><div class="card-head-main"><h2 class="card-title">价格散点</h2></div></div>' +
         '<div class="card-body">' + emptyState('当前筛选没有价格数据', '换一个技艺、类型或时间范围。', '', 'filter') + '</div></section>';
@@ -3642,6 +3728,21 @@
       return direction > 0 ? b.changePct - a.changePct : a.changePct - b.changePct;
     }).slice(0, limit);
   }
+  let deepRankRowsCache = [];
+  function deepRankRowsHtml(rows) {
+    const sorted = rows.slice().sort(function (a, b) { return b.changePct - a.changePct; });
+    return sorted.map(function (row, index) {
+      const tone = row.change > 0 ? 'pos' : row.change < 0 ? 'neg' : 'dim';
+      const attr = row.recipeId ? ' data-deep-recipe="' + U.esc(row.recipeId) + '"' : '';
+      return '<tr' + attr + ' tabindex="0"><td class="num dim">' + (index + 1) + '</td>' +
+        '<td><span class="trend-dot" style="--c:' + row.color + '"></span>' + U.esc(row.name) + '</td>' +
+        '<td class="dim">' + U.esc(row.clsShort + ' · ' + (row.skillName || '交易行')) + '</td>' +
+        '<td class="num">' + U.fmt(row.start, 2) + '</td>' +
+        '<td class="num">' + U.fmt(row.latest, 2) + '</td>' +
+        '<td class="num ' + tone + '">' + deepPct(row.changePct) + '</td>' +
+        '<td class="num dim">' + (row.spanDays > 0 ? row.spanDays + ' 天' : '日内') + '</td></tr>';
+    }).join('') || '<tr><td colspan="7" class="trend-rank-placeholder">当前筛选暂无数据</td></tr>';
+  }
   function deepRankCard(report, p) {
     const cls = p.dcls === 'raw' || p.dcls === 'mid' || p.dcls === 'fin' ? p.dcls : '';
     const rows = report.rows.filter(function (row) { return !cls || row.cls === cls; });
@@ -3661,18 +3762,9 @@
           '<span class="trend-rank-price">' + U.fmt(row.latest, 2) + ' 金</span></div>';
       }).join('');
     }
-    const sorted = rows.slice().sort(function (a, b) { return b.changePct - a.changePct; });
-    const fullRows = sorted.map(function (row, index) {
-      const tone = row.change > 0 ? 'pos' : row.change < 0 ? 'neg' : 'dim';
-      const attr = row.recipeId ? ' data-deep-recipe="' + U.esc(row.recipeId) + '"' : '';
-      return '<tr' + attr + ' tabindex="0"><td class="num dim">' + (index + 1) + '</td>' +
-        '<td><span class="trend-dot" style="--c:' + row.color + '"></span>' + U.esc(row.name) + '</td>' +
-        '<td class="dim">' + U.esc(row.clsShort + ' · ' + (row.skillName || '交易行')) + '</td>' +
-        '<td class="num">' + U.fmt(row.start, 2) + '</td>' +
-        '<td class="num">' + U.fmt(row.latest, 2) + '</td>' +
-        '<td class="num ' + tone + '">' + deepPct(row.changePct) + '</td>' +
-        '<td class="num dim">' + (row.spanDays > 0 ? row.spanDays + ' 天' : '日内') + '</td></tr>';
-    }).join('');
+    deepRankRowsCache = rows;
+    const fullRows = ui.deepRankAllOpen ? deepRankRowsHtml(rows) :
+      '<tr><td colspan="7" class="trend-rank-placeholder">展开后加载全部 ' + rows.length + ' 项明细</td></tr>';
     return '<section class="card col-12 trend-rank-card"><div class="card-head"><div class="card-head-main">' +
       '<h2 class="card-title">本服涨跌榜</h2><p class="card-sub">' + U.esc(server().name) + ' · 只统计本服有拍卖报价的物品 · 起价与现价均 ≥ 1 金的才进前 10</p></div>' +
       '<div class="card-tools"><div class="seg seg-sm" role="group" aria-label="品类筛选">' +
@@ -3683,9 +3775,9 @@
         '<div class="trend-rank-col"><div class="trend-rank-head"><span class="pos">' + label + '涨幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(up, 'up') + '</div>' +
         '<div class="trend-rank-col"><div class="trend-rank-head"><span class="neg">' + label + '跌幅前 10</span><span class="tiny dim">按区间涨跌幅</span></div>' + list(down, 'down') + '</div>' +
       '</div>' +
-      '<details class="trend-rank-all"><summary><span>全部涨跌数据</span><span class="badge badge-outline">' + rows.length + '</span><span class="chev">' + icon('chevronDown') + '</span></summary>' +
+      '<details class="trend-rank-all deep-rank-all"' + (ui.deepRankAllOpen ? ' open' : '') + '><summary><span>全部涨跌数据</span><span class="badge badge-outline">' + rows.length + '</span><span class="chev">' + icon('chevronDown') + '</span></summary>' +
       '<div class="trend-rank-all-wrap deep-table-wrap"><table class="data compact deep-table"><thead><tr><th class="num">#</th><th>物品</th><th>类型/技艺</th><th class="num">起价</th><th class="num">现价</th><th class="num">涨跌</th><th class="num">区间</th></tr></thead>' +
-      '<tbody>' + (fullRows || '<tr><td colspan="7">' + emptyState('当前筛选暂无数据', '换一个品类或周期。', '', 'filter') + '</td></tr>') + '</tbody></table></div></details></section>';
+      '<tbody' + (ui.deepRankAllOpen ? ' data-filled="1"' : '') + '>' + fullRows + '</tbody></table></div></details></section>';
   }
   function deepMethodCard(report) {
     const modeText = report.mode === 'week'
@@ -3705,6 +3797,18 @@
         '<li><b>噪声控制：</b>低价物品的百分比跳动容易失真，涨跌榜前 10 会要求起价与现价均 ≥ 1 金；完整表仍保留全部有报价样本。</li>' +
         '</ul><div class="deep-method-links"><a class="btn btn-sm" href="' + Route.href('/trends', { srange: '7d' }) + '">查看原始物价走势 ' + icon('arrowRight') + '</a>' +
         '<a class="btn btn-sm" href="' + Route.href('/prices') + '">校准本服行情</a><span class="tiny dim">数据来源：JX3BOX 拍卖 · ' + U.esc(server().name) + '</span></div></div></details></section></div>';
+  }
+  let deepReportCache = { key: '', report: null };
+  function deepReport(view, windowKey) {
+    const points = view.points || [];
+    const first = points[0];
+    const last = points[points.length - 1];
+    const key = Store.state.serverId + '|' + windowKey + '|' + (DATA.meta.priceUpdatedAt || '') + '|' +
+      points.length + '|' + (first ? first.at : '') + '|' + (last ? last.at : '');
+    if (deepReportCache.key === key) return deepReportCache.report;
+    const report = window.JX3Deep.analyze(points, { window: windowKey });
+    deepReportCache = { key: key, report: report };
+    return report;
   }
   function renderDeep(p) {
     const T = window.JX3Trends;
@@ -3731,7 +3835,7 @@
         '</div></section></div>' + dataFoot() + '</div>';
     }
 
-    const report = window.JX3Deep.analyze(view.points || [], { window: deepWindowKey(p) });
+    const report = deepReport(view, deepWindowKey(p));
     let html = '<div class="page deep-page trend-page">' + deepHead(p, view, report);
     if (!DATA.servers.some(function (item) { return item.id === Store.state.serverId; })) {
       html += notice('当前是自定义服务器。物价历史只覆盖 JX3BOX 的内置 17 个区服；自定义服缺少本服拍卖序列，深度分析可能没有样本，切换到内置区服可看真实报价。', 'info');
@@ -5562,7 +5666,7 @@
   function csvAnalysis() {
     const p = params();
     const basis = currentBasis(p);
-    let rows = filterRows(Calc.rows({ serverId: Store.state.serverId, basis: basis }), p);
+    let rows = filterRows(currentRows({ basis: basis }), p);
     if (p.complete !== '0') rows = rows.filter(function (r) { return !r.calc.missing; });
     rows = sortRows(rows, p.sort || 'perEnergy', p.dir || 'desc');
     const out = [['排名', '配方', '技艺', '类型', '品阶', '等级', '产物', '材料成本', '手续费', '总成本', '税前产值', '交易税', '税后产值', '利润', '精力', '精力收益(金/精力)', '毛利率', '数据状态', '核验状态']];
@@ -5900,6 +6004,11 @@
       }
       case 'trend-retry': {
         if (window.JX3Trends) window.JX3Trends.retry();
+        render();
+        break;
+      }
+      case 'trend-charts-all': {
+        ui.trendChartsAll = !ui.trendChartsAll;
         render();
         break;
       }
@@ -6564,13 +6673,9 @@
     }
     if (t.matches('[data-trend-picker-search]')) {
       const panel = t.closest('.trend-picker-panel');
-      const q = t.value.trim();
       ui.trendPickerQuery = t.value;
-      if (panel) {
-        panel.querySelectorAll('[data-picker-item]').forEach(function (label) {
-          label.hidden = !!q && !U.includes(label.getAttribute('data-picker-text') || '', q);
-        });
-      }
+      const list = panel ? panel.querySelector('.trend-picker-list') : null;
+      if (list) list.innerHTML = trendPickerListHtml(trendPickerItemsCache, trendPickerSelectedCache, t.value, 120);
       return;
     }
     if (!t.matches('[data-search]')) return;
@@ -6696,8 +6801,31 @@
     }, true);
     document.addEventListener('keydown', onKeydown);
     document.addEventListener('toggle', function (e) {
-      if (e.target && e.target.classList && e.target.classList.contains('trend-rank-all')) {
+      if (e.target && e.target.classList && e.target.classList.contains('deep-rank-all')) {
+        ui.deepRankAllOpen = !!e.target.open;
+        if (e.target.open) {
+          const body = e.target.querySelector('tbody');
+          if (body && !body.getAttribute('data-filled')) {
+            body.innerHTML = deepRankRowsHtml(deepRankRowsCache);
+            body.setAttribute('data-filled', '1');
+          }
+        }
+      } else if (e.target && e.target.classList && e.target.classList.contains('trend-rank-all')) {
         ui.trendRankAllOpen = !!e.target.open;
+        if (e.target.open) {
+          const body = e.target.querySelector('tbody');
+          if (body && !body.getAttribute('data-filled')) {
+            body.innerHTML = trendRankRowsHtml(trendRankRowsCache);
+            body.setAttribute('data-filled', '1');
+          }
+        }
+      }
+      if (e.target && e.target.classList && e.target.classList.contains('cross-server-details')) {
+        const open = !!e.target.open;
+        if (ui.crossServerOpen !== open) {
+          ui.crossServerOpen = open;
+          if (open) render();
+        }
       }
       if (e.target && e.target.classList && e.target.classList.contains('server-picker')) {
         ui.serverPickerOpen = !!e.target.open;
@@ -6907,6 +7035,9 @@
       ui.trendPickerQuery = '';
       ui.trendFilterOpen = false;
       ui.trendRankAllOpen = false;
+      ui.trendChartsAll = false;
+      ui.crossServerOpen = false;
+      ui.deepRankAllOpen = false;
       ui.serverPickerOpen = false;
       ui.serverProductPickerOpen = false;
       ui.serverProductQuery = '';

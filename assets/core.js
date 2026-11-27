@@ -165,6 +165,9 @@
   const Store = {
     state: null,
     storageOk: true,
+    // 内存内的数据修订号：页面内缓存 Calc.rows / stats 时用它判断是否需要重算。
+    // 不写进 state，避免把临时计数持久化到备份文件。
+    rev: 0,
 
     init: function () {
       let saved = null;
@@ -249,6 +252,7 @@
     },
 
     save: function () {
+      this.rev = (this.rev || 0) + 1;
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
       } catch (err) {
