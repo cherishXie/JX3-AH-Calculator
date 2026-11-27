@@ -2499,7 +2499,7 @@ html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fa
 .deep-skill-main { min-width: 0; }
 .deep-skill-main .nm { display: block; font-size: 11.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .deep-skill-main .ds { display: -webkit-box; margin-top: 2px; font-size: 9.5px; line-height: 13px; color: var(--muted); overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.deep-skill-price { text-align: right; font-size: 11px; font-variant-numeric: tabular-nums; }
+.deep-skill-price { text-align: right; font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .deep-skill-price i { font-style: normal; font-size: 9px; color: var(--muted-2); margin-left: 1px; }
 .deep-skill-change { text-align: right; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .deep-skill-change.pos { color: var(--positive); }
@@ -2510,7 +2510,7 @@ html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fa
 .deep-skill-score.hot b { color: var(--peak); }
 .deep-skill-score.warm b { color: var(--info); }
 .deep-skill-score.cool b { color: var(--muted); }
-.deep-skill-best-row { display: grid; grid-template-columns: 8px 72px minmax(0, 1fr) 56px 76px; gap: 8px; align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--border-soft); cursor: pointer; }
+.deep-skill-best-row { display: grid; grid-template-columns: 8px 72px 96px minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--border-soft); cursor: pointer; }
 .deep-skill-best-row:last-child { border-bottom: 0; }
 .deep-skill-best-row:hover { background: var(--accent-2); }
 .deep-skill-best-name { font-size: 11.5px; font-weight: 600; }
@@ -2550,9 +2550,114 @@ html:not(.light) .profit-page-tabs button.on { background: #334155; color: #f8fa
 
 @media (max-width: 768px) {
   .deep-strategy-card .card-head,
+  .deep-watch-card .card-head,
   .deep-listing-card .card-head,
   .deep-skill-card .card-head { flex-wrap: wrap; }
   .deep-strategy-card .card-tools,
+  .deep-watch-card .card-tools,
   .deep-listing-card .card-tools,
-  .deep-skill-card .card-tools { width: 100%; justify-content: flex-start; padding-top: 2px; }
+  .deep-skill-card .card-tools { flex: 0 0 100%; width: 100%; justify-content: flex-start; padding-top: 2px; }
+}
+
+/* 深度分析 · 策略/观察（简化版） */
+.deep-policy-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.deep-policy-card { padding: 9px 10px; border: 1px solid var(--border-soft); border-radius: 7px; background: var(--card); }
+.deep-policy-card span { display: block; font-size: 9px; color: var(--muted-2); letter-spacing: .04em; }
+.deep-policy-card b { display: block; margin-top: 3px; font-size: 13px; font-weight: 700; }
+.deep-policy-card p { margin-top: 3px; font-size: 9.5px; line-height: 14px; color: var(--muted); }
+.deep-policy-title { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; padding-top: 11px; border-top: 1px solid var(--border-soft); }
+.deep-policy-title b { font-size: 12px; }
+.deep-policy-title span { font-size: 10px; color: var(--muted-2); }
+.deep-policy-skills { margin-top: 4px; }
+.deep-policy-row { display: grid; grid-template-columns: 8px 70px 118px 48px minmax(0, 1fr); gap: 7px; align-items: center; padding: 6px 2px; border-bottom: 1px solid var(--border-soft); font-size: 10.5px; }
+.deep-policy-row:last-child { border-bottom: 0; }
+.deep-policy-row b { font-size: 11px; font-weight: 600; }
+.deep-policy-row .time { color: var(--text); font-variant-numeric: tabular-nums; }
+.deep-policy-row .tag { font-size: 9px; padding: 1px 4px; border-radius: 3px; text-align: center; }
+.deep-policy-row .tag.high { color: var(--positive); background: color-mix(in srgb, var(--positive) 10%, transparent); }
+.deep-policy-row .tag.mid { color: var(--info); background: color-mix(in srgb, var(--info) 10%, transparent); }
+.deep-policy-row .tag.low { color: var(--warning); background: color-mix(in srgb, var(--warning) 10%, transparent); }
+.deep-policy-row .note { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-policy-evidence { margin-top: 10px; border: 1px solid var(--border-soft); border-radius: 6px; background: var(--accent-2); }
+.deep-policy-evidence summary { padding: 8px 10px; cursor: pointer; font-size: 10.5px; font-weight: 600; color: var(--muted); }
+.deep-policy-evidence ul { margin: 0; padding: 0 12px 10px 26px; font-size: 10px; line-height: 16px; color: var(--muted); }
+.deep-policy-evidence li { margin: 3px 0; }
+.deep-policy-evidence li b { color: var(--text); }
+
+.deep-watch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.deep-watch-col { min-width: 0; }
+.deep-watch-head { display: flex; align-items: baseline; gap: 7px; padding: 2px 0 5px; border-bottom: 1px solid var(--border); }
+.deep-watch-head b { font-size: 12px; }
+.deep-watch-head span { font-size: 9.5px; color: var(--muted-2); }
+.deep-watch-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 7px 2px 0; cursor: pointer; }
+.deep-watch-row:hover { background: var(--accent-2); }
+.deep-watch-main { min-width: 0; }
+.deep-watch-main .nm { display: block; font-size: 11.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-watch-main .ds { display: block; margin-top: 1px; font-size: 9px; color: var(--muted-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-watch-price { font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.deep-watch-change { font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.deep-watch-change.pos { color: var(--positive); }
+.deep-watch-change.neg { color: var(--danger); }
+.deep-watch-tags { display: flex; gap: 4px; flex-wrap: wrap; padding: 3px 2px 6px; border-bottom: 1px solid var(--border-soft); }
+.deep-tag { display: inline-flex; align-items: center; height: 16px; padding: 0 4px; border-radius: 3px; background: var(--accent-2); color: var(--muted); font-size: 8.5px; white-space: nowrap; }
+
+.deep-skill-policy { padding: 8px 10px; border: 1px solid var(--border-soft); border-radius: 6px; background: var(--accent-2); }
+.deep-skill-policy b { font-size: 10px; color: var(--muted-2); font-weight: 600; }
+.deep-skill-policy span { margin-left: 7px; font-size: 10px; color: var(--text); }
+.deep-skill-policy em { margin-left: 7px; font-style: normal; font-size: 9px; color: var(--warning); white-space: nowrap; }
+.deep-skill-policy p { margin-top: 4px; font-size: 9.5px; line-height: 14px; color: var(--muted); }
+.deep-skill-sub { display: flex; align-items: baseline; gap: 8px; padding: 9px 2px 3px; }
+.deep-skill-sub b { font-size: 11px; }
+.deep-skill-sub span { font-size: 9px; color: var(--muted-2); }
+.deep-skill-kind { text-align: right; font-size: 9px; font-weight: 600; }
+.deep-skill-kind.strong { color: var(--positive); }
+.deep-skill-kind.weak { color: var(--danger); }
+.deep-skill-best-time { font-size: 9.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-skill-best-item { min-width: 0; display: flex; align-items: baseline; gap: 5px; overflow: hidden; }
+.deep-skill-best-item .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10.5px; }
+.deep-skill-best-item em { font-style: normal; font-size: 9.5px; font-weight: 600; flex: none; }
+.deep-skill-best-weak { min-width: 0; font-size: 9.5px; color: var(--muted-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deep-skill-best-weak em { font-style: normal; font-weight: 600; margin-left: 3px; }
+
+@media (max-width: 1080px) {
+  .deep-policy-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .deep-policy-row { grid-template-columns: 8px 64px minmax(0, 1fr) 44px; grid-template-areas: "dot name time conf" ". note note note"; gap: 3px 7px; }
+  .deep-policy-row .deep-skill-dot { grid-area: dot; }
+  .deep-policy-row b { grid-area: name; }
+  .deep-policy-row .time { grid-area: time; }
+  .deep-policy-row .tag { grid-area: conf; }
+  .deep-policy-row .note { grid-area: note; }
+  .deep-watch-grid { grid-template-columns: 1fr; gap: 14px; }
+  .deep-skill-best-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; padding: 7px 2px; }
+  .deep-skill-best-name { flex: none; }
+  .deep-skill-best-time { flex: 1 1 80px; }
+  .deep-skill-best-item { flex: 1 1 130px; }
+  .deep-skill-best-weak { flex: 1 1 100%; padding-left: 16px; }
+}
+
+.deep-quad-summary { display: flex; flex-direction: column; gap: 9px; padding: 2px 0 6px; }
+.deep-quad-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+.deep-quad-stat { padding: 8px 9px; border: 1px solid var(--border-soft); border-radius: 6px; background: var(--card); }
+.deep-quad-stat b { display: block; font-size: 18px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.deep-quad-stat span { display: block; margin-top: 2px; font-size: 10px; font-weight: 500; }
+.deep-quad-stat em { display: block; margin-top: 1px; font-style: normal; font-size: 8.5px; color: var(--muted-2); }
+.deep-quad-stat.is-improve b, .deep-quad-stat.is-improve span { color: var(--positive); }
+.deep-quad-stat.is-up b, .deep-quad-stat.is-up span { color: var(--warning); }
+.deep-quad-stat.is-squeeze b, .deep-quad-stat.is-squeeze span { color: var(--danger); }
+.deep-quad-stat.is-down b, .deep-quad-stat.is-down span { color: var(--info); }
+.deep-quad-read { padding: 9px 10px; border-left: 2px solid var(--info); background: var(--accent-2); border-radius: 0 5px 5px 0; }
+.deep-quad-read p { font-size: 11px; line-height: 16.5px; color: var(--text); }
+.deep-quad-read p b { color: var(--info); }
+.deep-quad-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px; font-size: 9.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.deep-quad-examples { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; font-size: 9.5px; color: var(--muted); }
+.deep-quad-example { display: inline-flex; align-items: baseline; gap: 3px; margin-right: 8px; }
+.deep-quad-example.improve { color: var(--positive); }
+.deep-quad-example.squeeze { color: var(--danger); }
+.deep-quad-example em { font-style: normal; opacity: .8; font-variant-numeric: tabular-nums; }
+@media (max-width: 768px) {
+  .deep-quad-stats { grid-template-columns: 1fr 1fr; }
+  .deep-quad-stat b { font-size: 16px; line-height: 18px; }
+  .deep-quad-examples { flex-direction: column; gap: 4px; }
 }

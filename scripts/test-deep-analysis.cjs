@@ -101,8 +101,12 @@ assert.equal(day.recipes.sameDirRate, 100, '成本与成品同向上涨');
 assert.ok(day.insights.length >= 3);
 assert.ok(day.insights.some(i => i.title === '上游 vs 成品'));
 assert.ok(day.strategies, '每日也应生成策略结构');
-assert.ok(Array.isArray(day.strategies.buy));
-assert.ok(Array.isArray(day.strategies.listing));
+assert.ok(Array.isArray(day.strategies.strong));
+assert.ok(Array.isArray(day.strategies.weak));
+assert.ok(Array.isArray(day.strategies.skills));
+assert.ok(day.strategies.regime.label);
+assert.equal(Deep.timePolicy.default.weekday, '周中 14–16 点');
+assert.equal(Deep.timePolicy.skills.length, 8);
 assert.ok(day.rows.every(r => r.p50 > 0 && r.coverage > 0 && r.position >= 0 && r.position <= 1));
 assert.equal(day.taxRate, 0.05, '默认税率 5%');
 
@@ -120,7 +124,9 @@ assert.equal(week.rows.find(r => r.id === 'fin').start, 105, '周口径取首个
 assert.ok(week.strategies.skills.length >= 2, '应按技艺分组');
 assert.ok(week.strategies.skills.every(s => s.best), '每个有样本的技艺都应有最佳物品');
 assert.ok(week.strategies.regime.label);
-assert.equal(week.strategies.taxRate, 0.05);
+assert.ok(week.strategies.strong.length > 0);
+assert.ok(Array.isArray(week.strategies.weak));
+assert.equal(week.taxRate, 0.05);
 assert.equal(Deep._test.percentile([1, 2, 3, 4], 0.5), 2.5);
 
 // 6. 只有一天时自动降级为日内口径，而不是报错。

@@ -35,6 +35,36 @@
   };
   const CLASS_ORDER = ['raw', 'mid', 'fin'];
 
+  // 来自《梦江南 · 10 天物价复盘（技艺 × 时间 × 周中/周末）》的定稿规则。
+  // 这是外部复盘结论，不是本页用 7 天数据重新拟合出来的“预测”；页面只把它
+  // 当方向参考，并把样本限制和不确定度一起展示。
+  const TIME_POLICY = {
+    source: '梦江南 10 天复盘 + 12 服回测（2026-11-27）',
+    sample: '10 天 · 62 物品 · 12–13 服',
+    default: {
+      weekday: '周中 14–16 点',
+      weekend: '周末 10–12 点',
+      avoid: '21–23 点',
+      neutral: '19–20 点'
+    },
+    evidence: [
+      '最终策略相对随机活跃时段约 +2.0pp；相对固定 20–23 点约 +3.8pp',
+      '全局规则 12/12 服为正；按技艺 11/12 服为正，但单次增益更小',
+      '周末只有 2 天、锻造只有 3 个物品，相关结论只能当方向'
+    ],
+    caution: '快照不是成交价，没有挂单深度和成交量；本服 7 天数据不足以给出每件物品的目标价，页面不展示净空间或收益承诺。',
+    skills: [
+      { id: 'caijin', weekday: '13 / 14 / 18 点', weekend: '10–12 点', avoid: '22–23 点', confidence: '中低', note: '跨服中位 +1.35，10/13 服为正' },
+      { id: 'shennong', weekday: '13 / 14 点', weekend: '10–12 点', avoid: '21–22 点', confidence: '中', note: '跨服中位 +1.16，11/13 服为正' },
+      { id: 'pengren', weekday: '10 / 14 点', weekend: '10–12 点', avoid: '22–23 点', confidence: '中高', note: '跨服中位 +0.77，13/13 服为正' },
+      { id: 'paoding', weekday: '按默认 14–16 点', weekend: '10–12 点', avoid: '20–22 点不跨服套用', confidence: '低', note: '梦江南本地 20–22 点有高峰，但跨服中位 -0.39' },
+      { id: 'fengren', weekday: '按默认 14–16 点', weekend: '10–12 点', avoid: '21–23 点', confidence: '中高', note: '跨服增益 <0.5，按默认更稳' },
+      { id: 'zhiyao', weekday: '按默认 14–16 点', weekend: '10–12 点', avoid: '21 / 23 点', confidence: '中', note: '跨服增益较小，优先保成交' },
+      { id: 'zijiang', weekday: '按默认 14–16 点', weekend: '10–12 点', avoid: '23 点', confidence: '中低', note: '样本偏少，方向为主' },
+      { id: 'duanzao', weekday: '按默认 14–16 点', weekend: '10–12 点', avoid: '21–22 点', confidence: '低（仅 3 物品）', note: '样本太少，不据此做稳定结论' }
+    ]
+  };
+
   // 低价物品的百分比很容易被 1 铜的跳动放大；只影响榜单，不影响中位数。
   const TOP_MIN_PRICE = 1;
   const TOP_MIN_CHANGE = 0.02;
@@ -391,7 +421,10 @@
         spread: spread,
         marginDelta: marginDelta,
         spanDays: minSpan === Number.MAX_SAFE_INTEGER ? 1 : minSpan,
-        quadrant: quadrant
+        quadrant: quadrant,
+        // 传导差/成本/成品任一变化过大时，多半是单点异常挂单或极低流动性；
+        // 仍画在象限图里，但不进入“代表配方”和 Top 榜。
+        extreme: Math.abs(spread) > 200 || Math.abs(costChange) * 100 > 150 || Math.abs(productChange) * 100 > 150
       });
     });
 
@@ -409,6 +442,9 @@
     const spreads = usable.map(function (row) { return row.spread; });
     const improved = usable.filter(function (row) { return row.spread > 0; }).length;
     const squeezed = usable.filter(function (row) { return row.spread < 0; }).length;
+    const normal = usable.filter(function (row) { return !row.extreme; });
+    const normalImproved = normal.filter(function (row) { return row.spread > 0; });
+    const normalSqueezed = normal.filter(function (row) { return row.spread < 0; });
 
     return {
       rows: usable,
@@ -421,8 +457,10 @@
       medianProductChange: median(usable.map(function (row) { return row.productChangePct; })),
       sameDirRate: comparable ? same / comparable * 100 : null,
       quadrants: quadrants,
-      topImproved: usable.slice(0, 6),
-      topSqueezed: usable.slice(-6).reverse()
+      topImproved: (normalImproved.length ? normalImproved : usable).slice(0, 6),
+      topSqueezed: (normalSqueezed.length ? normalSqueezed.slice(-6).reverse() : usable.slice(-6).reverse()),
+      extremeCount: usable.filter(function (row) { return row.extreme; }).length,
+      normalCount: normal.length
     };
   }
 
@@ -443,140 +481,55 @@
   /* ------------------------------------------------------------------ */
   /* 交易行套利 / 挂单策略                                               */
   /* ------------------------------------------------------------------ */
-  function rowSignal(row) {
-    if (row.position <= 0.3) return '低位';
-    if (row.position >= 0.7) return '高位';
-    if (row.changePct >= 3) return '趋势↑';
-    if (row.changePct <= -3) return '趋势↓';
-    return '区间';
-  }
-
-  function potentialScore(row) {
-    const upside = row.p75 > 0 ? row.p75 / row.latest - 1 : 0;
-    const momentum = row.changePct / 100;
-    const range = row.rangePct / 100;
-    // 规则评分：低吸空间 45%，趋势 25%，振幅 15%，报价覆盖 15%。
-    // 分数只用于同一屏内排序，不是收益预测。
-    let score = 50
-      + clamp(upside, -0.25, 0.4) * 120
-      + clamp(momentum, -0.3, 0.5) * 30
-      + clamp(range, 0, 0.5) * 20
-      + (row.coverage - 0.5) * 20;
-    if (row.latest < 1) score -= 15;
-    return Math.round(clamp(score, 0, 99));
-  }
-
   function rowTags(row) {
     const tags = [];
-    if (row.position <= 0.3) tags.push('低位');
-    else if (row.position >= 0.7) tags.push('高位');
-    if (row.changePct >= 3) tags.push('趋势↑');
-    else if (row.changePct <= -3) tags.push('趋势↓');
-    if (row.p75 > 0 && row.p75 / row.latest - 1 >= 0.08) tags.push('目标空间');
-    if (row.rangePct >= 25) tags.push('高波动');
-    if (row.coverage < 0.4) tags.push('报价少');
-    if (row.latest >= 1000) tags.push('高单价');
+    if (row.position <= 0.3) tags.push('相对低位');
+    else if (row.position >= 0.7) tags.push('相对高位');
+    if (row.changePct >= 5) tags.push('近期走强');
+    else if (row.changePct <= -5) tags.push('近期回落');
+    if (row.rangePct >= 25) tags.push('波动大');
+    if (row.coverage < 0.5) tags.push('报价少');
     if (row.tailRun <= -3) tags.push('连跌');
     else if (row.tailRun >= 3) tags.push('连涨');
-    return tags.slice(0, 5);
+    if (row.latest < 2) tags.push('低价');
+    return tags.slice(0, 4);
   }
 
   function buildStrategies(report, catalog) {
-    const taxRate = isFinite(report.taxRate) ? report.taxRate : 0.05;
-    const net = function (price) { return price * (1 - taxRate); };
-    // 只用稳健样本：现价≥1金、报价覆盖≥40%、p75/p25≤3、7日振幅≤80%。
-    // 低价、单点异常挂单和几乎没有报价的物品不进入策略，避免 500%+ 的假机会。
+    // 只做“本服近期观察”，不再用 p25/p75 推算目标价、净空间或收益。
+    // 数据没有成交量/挂单深度，7 天窗口也不足以下精确结论。
+    // 剔除明显的单点异常：现价相对 7 日中位超过 3 倍/低于 1/3，
+    // 或振幅过大。参考复盘的清洗口径，宁可少列，不拿异常挂单当结论。
     const valid = report.rows.filter(function (row) {
-      return row.latest >= 1 && row.p10 > 0 && row.p90 > 0 && row.p50 > 0 && row.p25 > 0 && row.p75 > 0 &&
-        row.latest >= row.p10 * 0.5 && row.latest <= row.p90 * 2 &&
-        row.coverage >= 0.4 && row.rangePct >= 2 && row.rangePct <= 80 && row.p75 / row.p25 <= 3;
-    });
-
-    const scored = valid.map(function (row) {
-      return { row: row, raw: potentialScore(row) };
-    }).sort(function (a, b) { return b.raw - a.raw; });
-    const scoreById = Object.create(null);
-    const total = scored.length;
-    scored.forEach(function (entry, index) {
-      // 潜力分取同期全部稳健样本的相对分位：99 = 最高，1 = 最低，50 ≈ 中位。
-      scoreById[entry.row.id] = total > 1 ? Math.round(99 - (index / (total - 1)) * 98) : 99;
+      return row.latest >= 1 && row.p50 > 0 &&
+        row.coverage >= 0.4 && row.rangePct >= 2 && row.rangePct <= 100 &&
+        row.latest >= row.p50 * 0.33 && row.latest <= row.p50 * 3 &&
+        Math.abs(row.changePct) <= 60;
     });
     const decorate = function (row) {
-      return Object.assign({}, row, {
-        score: scoreById[row.id] || 0,
-        tags: rowTags(row),
-        signal: rowSignal(row)
-      });
+      return Object.assign({}, row, { tags: rowTags(row) });
     };
-
-    const buy = valid.filter(function (row) {
-      return row.position <= 0.35 && row.rangePct >= 10;
-    }).sort(function (a, b) {
-      return (b.p75 / b.latest - a.p75 / a.latest) || (b.coverage - a.coverage);
-    }).slice(0, 6).map(decorate);
-
-    const range = valid.filter(function (row) {
-      return row.rangePct >= 15 && row.position >= 0.2 && row.position <= 0.8;
-    }).sort(function (a, b) {
-      return (b.rangePct * b.coverage) - (a.rangePct * a.coverage);
-    }).slice(0, 6).map(decorate);
-
-    const momentum = valid.filter(function (row) {
-      return row.changePct >= 3 && row.position >= 0.5;
-    }).sort(function (a, b) {
-      return b.changePct - a.changePct;
-    }).slice(0, 6).map(decorate);
-
-    const overheat = valid.filter(function (row) {
-      return row.position >= 0.85 && row.changePct > 0;
-    }).sort(function (a, b) {
-      return b.changePct - a.changePct;
-    }).slice(0, 4);
-
-    const recipe = (report.recipes.topImproved || []).filter(function (row) {
-      return row.spread > 2 && row.spread <= 300 && row.productChangePct > 0;
-    }).slice(0, 6);
-
-    const listing = valid.filter(function (row) {
-      return row.p75 > row.latest * 1.02;
-    }).map(function (row) {
-      const netRoom = net(row.p75) / row.latest - 1;
-      const fastNetRoom = net(row.p50) / row.latest - 1;
-      let risk = '正常';
-      if (row.p75 / row.p25 > 3 || row.rangePct > 60) risk = '异常波动';
-      else if (row.tailRun <= -3) risk = '连续下跌';
-      else if (row.changePct <= -20) risk = '大幅回落';
-      else if (row.coverage < 0.55) risk = '报价少';
-      else if (row.latest < 2) risk = '低价';
-      let strategy = row.position <= 0.35 ? '低吸等待'
-        : row.position >= 0.7 ? '高位分批' : '区间挂单';
-      if (row.tailRun <= -3 || row.changePct <= -20) strategy = '等企稳';
-      else if (row.tailRun >= 3 && row.position >= 0.7) strategy = '分批止盈';
-      return {
-        id: row.id, name: row.name, cls: row.cls, className: row.className,
-        skillName: row.skillName, recipeId: row.recipeId, color: row.color,
-        latest: row.latest, position: row.position, rangePct: row.rangePct, coverage: row.coverage,
-        fastPrice: row.p50, patientPrice: row.p75,
-        fastNetRoomPct: fastNetRoom * 100, netRoomPct: netRoom * 100,
-        changePct: row.changePct, risk: risk, strategy: strategy,
-        score: scoreById[row.id] || 0
-      };
-    }).filter(function (row) {
-      return row.netRoomPct > 1;
-    }).sort(function (a, b) {
-      return (b.netRoomPct * (0.5 + b.coverage * 0.5)) - (a.netRoomPct * (0.5 + a.coverage * 0.5));
-    }).slice(0, 8);
+    const byChange = valid.slice().sort(function (a, b) {
+      return b.changePct - a.changePct || b.coverage - a.coverage;
+    });
+    const strong = byChange.filter(function (row) { return row.changePct > 0; }).slice(0, 6).map(decorate);
+    const weak = byChange.filter(function (row) { return row.changePct < 0; }).slice(-6).reverse().map(decorate);
 
     const skills = (DATA.skills || []).map(function (skill) {
       const all = valid.filter(function (row) {
         const meta = catalog.items[row.id];
         return meta && (meta.skillIds || []).indexOf(skill.id) !== -1;
       }).map(decorate).sort(function (a, b) {
-        return b.score - a.score || b.p75 / b.latest - a.p75 / a.latest;
+        return b.changePct - a.changePct || b.coverage - a.coverage;
       });
+      const policy = TIME_POLICY.skills.filter(function (item) { return item.id === skill.id; })[0] || null;
+      const rising = all.filter(function (row) { return row.changePct > 0; });
+      const falling = all.filter(function (row) { return row.changePct < 0; });
       return {
         id: skill.id, name: skill.name, color: skill.color || '#64748B',
-        count: all.length, items: all.slice(0, 6), best: all[0] || null
+        count: all.length, strong: rising.slice(0, 3), weak: falling.slice(-2).reverse(),
+        best: all[0] || null, weakest: falling.length ? falling[falling.length - 1] : null,
+        policy: policy
       };
     });
 
@@ -584,36 +537,30 @@
     let regime;
     if (o.upShare != null && o.upShare >= 55 && o.median > 0) {
       regime = {
-        label: '偏强趋势', tone: 'pos',
-        playbook: '上涨面占优：优先做回踩确认，不追刚拉高的物品；材料端先动时，成品补涨往往滞后，可关注传导差为正的配方。'
+        label: '本服近 7 天偏强', tone: 'pos',
+        playbook: '上涨面占优，但不要追刚拉高的物品；挂单仍按默认时间窗口，先保成交。'
       };
     } else if (o.upShare != null && o.upShare <= 45 && o.median < 0) {
       regime = {
-        label: '偏弱下行', tone: 'neg',
-        playbook: '下跌面占优：先等成本回落，不急着抄底；已有库存按 p50/p75 分批挂单，宁可少赚也要保证成交。'
+        label: '本服近 7 天偏弱', tone: 'neg',
+        playbook: '下跌面占优，先等企稳；不在 21–23 点挂高价，现有库存按默认窗口分批出。'
       };
     } else {
       regime = {
-        label: '震荡分化', tone: 'info',
-        playbook: '涨跌分化：优先区间策略，低位分批低吸、p75 附近挂单；只做报价覆盖足够、振幅够大的物品。'
+        label: '本服近 7 天震荡分化', tone: 'info',
+        playbook: '涨跌分化，按默认时间窗口执行；不要用单日涨跌推断长期方向。'
       };
     }
     regime.upShare = o.upShare;
     regime.median = o.median;
     regime.sameDirRate = report.recipes.sameDirRate;
-    regime.taxRate = taxRate;
-    regime.scoredCount = valid.length;
+    regime.validCount = valid.length;
 
     return {
       regime: regime,
-      buy: buy,
-      range: range,
-      momentum: momentum,
-      overheat: overheat,
-      recipe: recipe,
-      listing: listing,
+      strong: strong,
+      weak: weak,
       skills: skills,
-      taxRate: taxRate,
       validCount: valid.length
     };
   }
@@ -900,6 +847,7 @@
     catalog: buildCatalog,
     classes: CLASSES,
     classOrder: CLASS_ORDER,
+    timePolicy: TIME_POLICY,
     _test: {
       median: median,
       summarize: summarize,
@@ -908,7 +856,6 @@
       pearson: pearson,
       dayDistance: dayDistance,
       percentile: percentile,
-      potentialScore: potentialScore,
       buildStrategies: buildStrategies
     }
   };
